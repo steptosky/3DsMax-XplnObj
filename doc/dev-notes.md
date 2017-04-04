@@ -1,0 +1,78 @@
+## Jenkins CI item example
+- Generate enivironment variables from the project description
+```
+cd cmake
+cmake -DCONTENT_PREFIX="Sts" -P StsProjectDescCiEnvGenerator.cmake 
+```
+- Use inject environment variables
+```
+cmake/variables.txt
+```
+```
+GITHUB_TOKEN=token here
+```
+The *GITHUB_TOKEN* is needed if you want to auto-upload the artifacts to github
+- Make build dir
+```
+# uncomment it if you want to remove the dir first
+#if [[ -d "build" ]]; then
+#    rm -r "build"
+#fi
+[ -d "build" ] || mkdir "build"
+```
+- Set conan user if it is needed
+``` 
+conan user username -r remote -p password 
+```
+- Build
+```
+cd build
+conan install .. --build=outdated
+cmake -G "Visual Studio 14 Win64" ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../output -DUSE_CONAN_CMAKE_MULTI=OFF 
+cmake --build . --target install --config Release
+```
+- Use the [github-release](https://github.com/aktau/github-release)
+    for uploading your artifacts to github
+- Create the release tag
+```
+github-release release --user steptosky --repo 3DsMax-XplnObj \
+    --tag ${StsProjectVersionTag} \
+    --name "${StsProjectOrganizationName} ${StsProjectShortName}" \
+    --description "${StsProjectDescription}" \
+    --pre-release
+```
+- Upload the artifacts
+```
+github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
+    --name "XplnObj-3DsMax9-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax9-x64.dlu"
+    
+github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
+    --name "XplnObj-3DsMax2008-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2008-x64.dlu"
+    
+github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
+    --name "XplnObj-3DsMax2009-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2009-x64.dlu"
+    
+github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
+    --name "XplnObj-3DsMax2010-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2010-x64.dlu"
+    
+github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
+    --name "XplnObj-3DsMax2011-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2011-x64.dlu"
+    
+github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
+    --name "XplnObj-3DsMax2012-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2012-x64.dlu"
+    
+github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
+    --name "XplnObj-3DsMax2013-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2013-x64.dlu"
+    
+github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
+    --name "XplnObj-3DsMax2014-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2014-x64.dlu"
+    
+github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
+    --name "XplnObj-3DsMax2015-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2015-x64.dlu"
+    
+github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
+    --name "XplnObj-3DsMax2016-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2016-x64.dlu"
+    
+github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
+    --name "XplnObj-3DsMax2017-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2017-x64.dlu"
+```

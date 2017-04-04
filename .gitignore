@@ -1,1 +1,11 @@
 *.orig
+*.max
+msvc/
+test_reports/*
+include/Info.h
+installer/*
+msvc.bat
+src/resource/xpln_obj_io.aps
+src/Info.h
+output/
+cmake/variables.txt
