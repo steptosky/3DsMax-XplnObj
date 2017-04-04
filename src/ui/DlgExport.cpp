@@ -145,7 +145,7 @@ namespace ui {
 						break;
 					}
 					case BTN_CHECK_FOR_UPDATE: {
-						ShellExecute(nullptr, _T("open"), _T("http://steptosky.com/index.php/software/8-x-obj-exporter"), nullptr, nullptr, SW_SHOWNORMAL);
+						ShellExecute(nullptr, _T("open"), _T("https://github.com/steptosky/3DsMax-XplnObj/releases"), nullptr, nullptr, SW_SHOWNORMAL);
 						break;
 					}
 					case BTN_ABOUT: {

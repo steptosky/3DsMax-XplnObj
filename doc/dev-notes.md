@@ -44,35 +44,35 @@ github-release release --user steptosky --repo 3DsMax-XplnObj \
 - Upload the artifacts
 ```
 github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
-    --name "XplnObj-3DsMax9-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax9-x64.dlu"
+    --name "3DsMax9-XplnObj-x64.dlu" --file "${WORKSPACE}/output/Release/3DsMax9-XplnObj-x64.dlu"
     
 github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
-    --name "XplnObj-3DsMax2008-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2008-x64.dlu"
+    --name "3DsMax2008-XplnObj-x64.dlu" --file "${WORKSPACE}/output/Release/3DsMax2008-XplnObj-x64.dlu"
     
 github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
-    --name "XplnObj-3DsMax2009-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2009-x64.dlu"
+    --name "3DsMax2009-XplnObj-x64.dlu" --file "${WORKSPACE}/output/Release/3DsMax2009-XplnObj-x64.dlu"
     
 github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
-    --name "XplnObj-3DsMax2010-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2010-x64.dlu"
+    --name "3DsMax2010-XplnObj-x64.dlu" --file "${WORKSPACE}/output/Release/3DsMax2010-XplnObj-x64.dlu"
     
 github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
-    --name "XplnObj-3DsMax2011-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2011-x64.dlu"
+    --name "3DsMax2011-XplnObj-x64.dlu" --file "${WORKSPACE}/output/Release/3DsMax2011-XplnObj-x64.dlu"
     
 github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
-    --name "XplnObj-3DsMax2012-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2012-x64.dlu"
+    --name "3DsMax2012-XplnObj-x64.dlu" --file "${WORKSPACE}/output/Release/3DsMax2012-XplnObj-x64.dlu"
     
 github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
-    --name "XplnObj-3DsMax2013-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2013-x64.dlu"
+    --name "3DsMax2013-XplnObj-x64.dlu" --file "${WORKSPACE}/output/Release/3DsMax2013-XplnObj-x64.dlu"
     
 github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
-    --name "XplnObj-3DsMax2014-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2014-x64.dlu"
+    --name "3DsMax2014-XplnObj-x64.dlu" --file "${WORKSPACE}/output/Release/3DsMax2014-XplnObj-x64.dlu"
     
 github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
-    --name "XplnObj-3DsMax2015-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2015-x64.dlu"
+    --name "3DsMax2015-XplnObj-x64.dlu" --file "${WORKSPACE}/output/Release/3DsMax2015-XplnObj-x64.dlu"
     
 github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
-    --name "XplnObj-3DsMax2016-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2016-x64.dlu"
+    --name "3DsMax2016-XplnObj-x64.dlu" --file "${WORKSPACE}/output/Release/3DsMax2016-XplnObj-x64.dlu"
     
 github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
-    --name "XplnObj-3DsMax2017-x64.dlu" --file "${WORKSPACE}/output/Release/XplnObj-3DsMax2017-x64.dlu"
+    --name "3DsMax2017-XplnObj-x64.dlu" --file "${WORKSPACE}/output/Release/3DsMax2017-XplnObj-x64.dlu"
 ```
