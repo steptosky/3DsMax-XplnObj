@@ -77,7 +77,11 @@ set(CONTENT "${CONTENT}${CONTENT_PREFIX}ProjectVersionMajor=${ProjectVersionMajo
 set(CONTENT "${CONTENT}${CONTENT_PREFIX}ProjectVersionMinor=${ProjectVersionMinor}\n")
 set(CONTENT "${CONTENT}${CONTENT_PREFIX}ProjectVersionPatch=${ProjectVersionPatch}\n")
 set(CONTENT "${CONTENT}${CONTENT_PREFIX}ProjectVersion=${ProjectVersion}\n")
-set(CONTENT "${CONTENT}${CONTENT_PREFIX}ProjectVersionTag=${ProjectVersion}-${ProjectReleaseType}\n")
+if (ProjectReleaseType)
+	set(CONTENT "${CONTENT}${CONTENT_PREFIX}ProjectVersionTag=${ProjectVersion}-${ProjectReleaseType}\n")
+else()
+	set(CONTENT "${CONTENT}${CONTENT_PREFIX}ProjectVersionTag=${ProjectVersion}\n")
+endif()
 
 set(CONTENT "${CONTENT}${CONTENT_PREFIX}ProjectGroupId=${ProjectGroupId}\n")
 set(CONTENT "${CONTENT}${CONTENT_PREFIX}ProjectId=${ProjectId}\n")
