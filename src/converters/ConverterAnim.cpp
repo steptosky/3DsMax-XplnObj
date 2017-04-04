@@ -192,13 +192,13 @@ void ConverterAnim::objAnimRotate(INode * node, xobj::Transform & transform) {
 	objAnimRotateAxis(node, rotateConrol, 'z', xEuler.pZ);
 
 	size_t animCount = 0;
-	if (xEuler.pX.isAnimated()) {
+	if (xEuler.pX.pKeys.size() > 1) {
 		++animCount;
 	}
-	if (xEuler.pY.isAnimated()) {
+	if (xEuler.pY.pKeys.size() > 1) {
 		++animCount;
 	}
-	if (xEuler.pZ.isAnimated()) {
+	if (xEuler.pZ.pKeys.size() > 1) {
 		++animCount;
 	}
 	if (animCount > 1) {
