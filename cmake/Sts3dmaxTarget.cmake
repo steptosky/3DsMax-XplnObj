@@ -102,8 +102,14 @@ function(SETUP_MAX_TERGET)
 		include(StsGroupFiles)
 		groupFiles("${CM_FILES}")
 
+		list(APPEND CM_FILES "${CMAKE_SOURCE_DIR}/changelog.md")
 		list(APPEND CM_FILES "${CMAKE_SOURCE_DIR}/readme.md")
+		list(APPEND CM_FILES "${CMAKE_SOURCE_DIR}/doc/dev-notes.md")
+		list(APPEND CM_FILES "${CMAKE_SOURCE_DIR}/doc/release-checklist.md")
+		source_group("doc" FILES "${CMAKE_SOURCE_DIR}/changelog.md")
 		source_group("doc" FILES "${CMAKE_SOURCE_DIR}/readme.md")
+		source_group("doc" FILES "${CMAKE_SOURCE_DIR}/doc/dev-notes.md")
+		source_group("doc" FILES "${CMAKE_SOURCE_DIR}/doc/release-checklist.md")
 
 		#--------------------------------------------------------------------------#
 		#//////////////////////////////////////////////////////////////////////////#
