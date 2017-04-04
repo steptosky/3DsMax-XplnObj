@@ -44,7 +44,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 #----------------------------------------------------------------------------------#
 # Solution
 
-project("XplnObj-3DsMax" LANGUAGES "CXX")
+project("3DsMax-XplnObj" LANGUAGES "CXX")
 
 #----------------------------------------------------------------------------------#
 # Info file

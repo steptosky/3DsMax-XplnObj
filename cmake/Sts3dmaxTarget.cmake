@@ -64,7 +64,7 @@ function(SETUP_MAX_TERGET)
 	if(TARGET CONAN_PKG::${SETUP_MAX_TERGET_SDK_TARGET})
 		message(STATUS "3DsMax + ${SETUP_MAX_TERGET_3DMAX_VERSION}")
 		set (PROJECT "3DsMax-${SETUP_MAX_TERGET_3DMAX_VERSION}")
-		set (OUTPUT_NAME "XplnObj-3DsMax${SETUP_MAX_TERGET_3DMAX_VERSION}")
+		set (OUTPUT_NAME "3DsMax${SETUP_MAX_TERGET_3DMAX_VERSION}-XplnObj")
 		
 		#--------------------------------------------------------------------------#
 		#//////////////////////////////////////////////////////////////////////////#

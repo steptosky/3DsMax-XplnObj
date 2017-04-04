@@ -70,8 +70,8 @@ set(ProjectOrganizationWebLink "www.steptosky.com")
 #----------------------------------------------------------------------------------#
 # Project info
 
-set(ProjectName "XplnObj-3DsMax Exporter/Importer for 3Ds-Max")
-set(ProjectShortName "XplnObj-3DsMax")
+set(ProjectName "3DsMax X-Plane Obj Exporter/Importer")
+set(ProjectShortName "3DsMax-XplnObj")
 set(ProjectDescription "This plug-in is for the 3DsMax that allows you to import or export x-plane's obj format.")
 set(ProjectWebLink "www.steptosky.com")
 set(ProjectSourcesWebLink "https://github.com/steptosky/3DsMax-XplnObj")
@@ -79,11 +79,11 @@ set(ProjectSourcesWebLink "https://github.com/steptosky/3DsMax-XplnObj")
 #----------------------------------------------------------------------------------#
 # Version / Dependency's system
 
-set(ProjectVersionMajor 1)
-set(ProjectVersionMinor 9)
-set(ProjectVersionPatch 16)
+set(ProjectVersionMajor 2)
+set(ProjectVersionMinor 0)
+set(ProjectVersionPatch 0)
 set(ProjectVersion "${ProjectVersionMajor}.${ProjectVersionMinor}.${ProjectVersionPatch}")
-set(ProjectReleaseType "alpha") # You can use any string you wish
+set(ProjectReleaseType "beta") # You can use any string you wish
 
 set(ProjectGroupId "steptosky")
 set(ProjectId ${ProjectShortName})
