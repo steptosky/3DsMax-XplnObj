@@ -1,9 +1,9 @@
-# Plugin for the 3DsMax that allows you to export/import X-Plane obj format.
+# The Plugin for the 3DsMax that allows you to export to X-Plane obj format.
 - The plugin is distributed under 
 [BSD (3-Clause)](http://opensource.org/licenses/BSD-3-Clause) 
 license for more information read the [license](license.txt) file.
-- The X-Plane official website is [here](http://www.x-plane.com/)
-- The X-Plane obj specification is [here](http://developer.x-plane.com/?article=obj8-file-format-specification)
+- [The X-Plane official website](http://www.x-plane.com/)
+- [The X-Plane obj specification](http://developer.x-plane.com/?article=obj8-file-format-specification)
 - The plugin supports 9-2017 3Ds Max (x64 only)
 - Minimum C++ standard is 14
 
@@ -17,7 +17,7 @@ The importing is still under developing and does not work correctly!
 - 3Ds Max SDK - Usually you can find it on 3Ds Max installation cd or image
 
 ## Build
-- The release check list is [here](doc/release-checklist.md)
+- [The release check](doc/release-checklist.md)
 - [ChangeLog](changelog.md) - this file is filling during the release process.
 - You have to get the 3DsMax sdk and then put it into conan repository, 
 see [this](https://bitbucket.org/steptosky/conan-recipe-3dsmax-sdk) for

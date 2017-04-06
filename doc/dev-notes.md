@@ -37,7 +37,7 @@ cmake --build . --target install --config Release
 ```
 github-release release --user steptosky --repo 3DsMax-XplnObj \
     --tag ${StsProjectVersionTag} \
-    --name "${StsProjectOrganizationName} ${StsProjectShortName}" \
+    --name "${StsProjectOrganizationName} ${StsProjectName}" \
     --description "${StsProjectDescription}" \
     --pre-release
 ```

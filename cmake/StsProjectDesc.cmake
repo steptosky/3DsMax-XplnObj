@@ -70,9 +70,9 @@ set(ProjectOrganizationWebLink "www.steptosky.com")
 #----------------------------------------------------------------------------------#
 # Project info
 
-set(ProjectName "3DsMax X-Plane Obj Exporter/Importer")
+set(ProjectName "3DsMax X-Plane Obj Exporter")
 set(ProjectShortName "3DsMax-XplnObj")
-set(ProjectDescription "This plug-in is for the 3DsMax that allows you to import or export x-plane's obj format.")
+set(ProjectDescription "This plugin is for the 3DsMax that allows you to import or export X-Plane's obj format.")
 set(ProjectWebLink "www.steptosky.com")
 set(ProjectSourcesWebLink "https://github.com/steptosky/3DsMax-XplnObj")
 
