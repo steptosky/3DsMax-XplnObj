@@ -75,4 +75,7 @@ github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectV
     
 github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
     --name "3DsMax2017-XplnObj-x64.dlu" --file "${WORKSPACE}/output/Release/3DsMax2017-XplnObj-x64.dlu"
+	
+github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
+    --name "changelog.txt" --file "${WORKSPACE}/changelog.txt"
 ```
