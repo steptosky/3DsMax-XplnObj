@@ -146,7 +146,7 @@ function(genInfoFile descriptionFile destinationFile)
 	set(CONTENT "${CONTENT}#define ${__prfix__}COMPILER_NAME \"${CMAKE_CXX_COMPILER_ID}\" \n")
 	set(CONTENT "${CONTENT}#define ${__prfix__}COMPILER_VERSION \"${CMAKE_CXX_COMPILER_VERSION}\" \n\n")
 
-	if (${ProjectVcsType} STREQUAL git)
+	if (${ProjectVcsType} AND ${ProjectVcsType} STREQUAL git)
 		if (NOT vcs_revision)
 			execute_process(
 					COMMAND "git" "log" "-1" "--pretty=format:%h"
