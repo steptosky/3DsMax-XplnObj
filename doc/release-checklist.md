@@ -1,6 +1,7 @@
 ## Documentation
 - Check whether this release-checklist is correct.
-- Check whether the changelog is correct.
+- Check whether the [install.txt](install.txt) is correct.
+- Check whether the [changelog.txt](changelog.txt) is correct.
 - Check whether the variables of the build system (CMake) are described correctly if they were changed, deleted, added.
 - Check whether the dependencies and their version are described correctly in the [readme.md](../readme.md) file. 
 
