@@ -38,6 +38,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
+/*! 
+ * \details For some reasons the 3ds max does not clone Application-specific data,
+ *             so this class is responsible for that data cloning.
+ */
 class CloneNodeChunk {
 public:
 
@@ -46,7 +50,9 @@ public:
 
 private:
 
-	static void sigNodesClone(void * param, NotifyInfo *);
+	static void sigPostNodesClone(void * param, NotifyInfo *);
+	static void cloneData(INode * origin, INode * clone);
+	static int sortFunction(const void * item1, const void * item2);
 
 };
 
