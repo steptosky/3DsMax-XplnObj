@@ -173,7 +173,7 @@ namespace sts {
 
 		eType mLevel = Debug;
 		CallBack mCallBack = defaultCallBack;
-		bool mThreadSafe = true;
+		bool mThreadSafe = false;
 		mutable std::mutex mMutex;
 		static BaseLogger mInstance;
 
