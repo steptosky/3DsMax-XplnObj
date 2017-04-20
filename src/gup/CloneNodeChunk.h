@@ -50,7 +50,7 @@ public:
 
 private:
 
-	static void sigPostNodesClone(void * param, NotifyInfo *);
+	static void slotPostNodesClone(void * param, NotifyInfo *);
 	static void cloneData(INode * origin, INode * clone);
 	static int sortFunction(const void * item1, const void * item2);
 

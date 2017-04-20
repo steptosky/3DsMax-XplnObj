@@ -42,18 +42,18 @@
 /**************************************************************************************************/
 
 CloneNodeChunk::CloneNodeChunk() {
-	RegisterNotification(sigPostNodesClone, this, NOTIFY_POST_NODES_CLONED);
+	RegisterNotification(slotPostNodesClone, this, NOTIFY_POST_NODES_CLONED);
 }
 
 CloneNodeChunk::~CloneNodeChunk() {
-	UnRegisterNotification(sigPostNodesClone, this, NOTIFY_POST_NODES_CLONED);
+	UnRegisterNotification(slotPostNodesClone, this, NOTIFY_POST_NODES_CLONED);
 }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void CloneNodeChunk::sigPostNodesClone(void * /* param */, NotifyInfo * info) {
+void CloneNodeChunk::slotPostNodesClone(void * /* param */, NotifyInfo * info) {
 	struct Data {
 		INodeTab * origNodes;
 		INodeTab * clonedNodes;

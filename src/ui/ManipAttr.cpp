@@ -104,22 +104,22 @@ namespace ui {
 	/**************************************************************************************************/
 
 	void ManipAttr::registerCallbacks() {
-		RegisterNotification(sigSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
-		RegisterNotification(sigObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
-		RegisterNotification(sigNodesClone, this, NOTIFY_POST_NODES_CLONED);
+		RegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
+		RegisterNotification(slotObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
+		RegisterNotification(slotNodesClone, this, NOTIFY_POST_NODES_CLONED);
 	}
 
 	void ManipAttr::unRegisterCallbacks() {
-		UnRegisterNotification(sigNodesClone, this, NOTIFY_POST_NODES_CLONED);
-		UnRegisterNotification(sigObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
-		UnRegisterNotification(sigSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
+		UnRegisterNotification(slotNodesClone, this, NOTIFY_POST_NODES_CLONED);
+		UnRegisterNotification(slotObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
+		UnRegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
 	}
 
 	/**************************************************************************************************/
 	//////////////////////////////////////////* Functions */////////////////////////////////////////////
 	/**************************************************************************************************/
 
-	void ManipAttr::sigObjectsDeleted(void * param, NotifyInfo * info) {
+	void ManipAttr::slotObjectsDeleted(void * param, NotifyInfo * info) {
 		ManipAttr * view = reinterpret_cast<ManipAttr*>(param);
 		Tab<INode*> * nodeTab = reinterpret_cast<Tab<INode*>*>(info->callParam);
 		if (view->mData.hasLink()) {
@@ -133,7 +133,7 @@ namespace ui {
 		}
 	}
 
-	void ManipAttr::sigSelectionChange(void * param, NotifyInfo *) {
+	void ManipAttr::slotSelectionChange(void * param, NotifyInfo *) {
 		ManipAttr * view = reinterpret_cast<ManipAttr*>(param);
 		int selectedCount = view->mIp->GetSelNodeCount();
 		if (selectedCount == 0) {
@@ -147,7 +147,7 @@ namespace ui {
 		}
 	}
 
-	void ManipAttr::sigNodesClone(void * param, NotifyInfo * /*info*/) {
+	void ManipAttr::slotNodesClone(void * param, NotifyInfo * /*info*/) {
 		ManipAttr * view = reinterpret_cast<ManipAttr*>(param);
 		view->mData.loadFromNode(view);
 	}

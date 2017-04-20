@@ -106,22 +106,22 @@ namespace ui {
 	/**************************************************************************************************/
 
 	void AnimTransView::registerCallbacks() {
-		RegisterNotification(sigSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
-		RegisterNotification(sigObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
-		RegisterNotification(sigAnimationModeOff, this, NOTIFY_ANIMATE_OFF);
+		RegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
+		RegisterNotification(slotObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
+		RegisterNotification(slotAnimationModeOff, this, NOTIFY_ANIMATE_OFF);
 	}
 
 	void AnimTransView::unRegisterCallbacks() {
-		UnRegisterNotification(sigObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
-		UnRegisterNotification(sigSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
-		UnRegisterNotification(sigAnimationModeOff, this, NOTIFY_ANIMATE_OFF);
+		UnRegisterNotification(slotObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
+		UnRegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
+		UnRegisterNotification(slotAnimationModeOff, this, NOTIFY_ANIMATE_OFF);
 	}
 
 	/**************************************************************************************************/
 	//////////////////////////////////////////* Functions */////////////////////////////////////////////
 	/**************************************************************************************************/
 
-	void AnimTransView::sigObjectsDeleted(void * param, NotifyInfo * info) {
+	void AnimTransView::slotObjectsDeleted(void * param, NotifyInfo * info) {
 		AnimTransView * view = reinterpret_cast<AnimTransView*>(param);
 		Tab<INode*> * nodeTab = reinterpret_cast<Tab<INode*>*>(info->callParam);
 
@@ -135,7 +135,7 @@ namespace ui {
 		}
 	}
 
-	void AnimTransView::sigSelectionChange(void * param, NotifyInfo *) {
+	void AnimTransView::slotSelectionChange(void * param, NotifyInfo *) {
 		AnimTransView * view = reinterpret_cast<AnimTransView*>(param);
 		int selectedCount = view->mIp->GetSelNodeCount();
 		if (selectedCount == 0) {
@@ -153,7 +153,7 @@ namespace ui {
 		view->toWindow();
 	}
 
-	void AnimTransView::sigAnimationModeOff(void * param, NotifyInfo *) {
+	void AnimTransView::slotAnimationModeOff(void * param, NotifyInfo *) {
 		AnimTransView * view = reinterpret_cast<AnimTransView*>(param);
 		view->toWindow();
 	}
