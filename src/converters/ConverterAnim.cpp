@@ -406,45 +406,25 @@ bool ConverterAnim::transAnimValidation(INode * node, Control * inControl, const
 /**************************************************************************************************/
 
 bool ConverterAnim::checkTransKeysValue(INode * node, const xobj::AnimTrans::KeyList & keyList, const char * inCtrlName) {
-	assert(node);
-	assert(inCtrlName);
+	DbgAssert(node);
+	DbgAssert(inCtrlName);
+	const float threshold = 0.0001f;
 	const size_t size = keyList.size();
 	//-------------------------------------------------------------------------
 	if (size == 0 || size == 1) {
 		return false;
 	}
 	//-------------------------------------------------------------------------
-	// first pair
-	if (keyList[0].pPosition == keyList[1].pPosition) {
-		CLError << LogNode(node) << "has the same position value [0:1] on \"" << inCtrlName << "\" controller.";
-		return false;
-	}
-
-	if (keyList[0].pDrfValue == keyList[1].pDrfValue) {
-		CLError << LogNode(node) << "has the same dataref value [0:1] on \"" << inCtrlName << "\" controller.";
-		return false;
-	}
-	//-------------------------------------------------------------------------
-	// firts pair has already checked 2 keys
 	if (size == 2) {
-		return true;
-	}
-	//-------------------------------------------------------------------------
-	// last pair
-	if (keyList[size - 2].pPosition == keyList[size - 1].pPosition) {
-		CLError << LogNode(node) << "has the same position value [" << size - 2 << ":" << size - 1 << "] on \""
-				<< inCtrlName << "\" controller.";
-		return false;
-	}
+		if (keyList[0].pPosition == keyList[1].pPosition) {
+			CLWarning << LogNode(node) << "has the same position value [0:1] on \"" << inCtrlName << "\" controller.";
+			return false;
+		}
 
-	if (keyList[size - 2].pDrfValue == keyList[size - 1].pDrfValue) {
-		CLError << LogNode(node) << "has the same dataref value [" << size - 2 << ":" << size - 1 << "] on \""
-				<< inCtrlName << "\" controller.";
-		return false;
-	}
-	//-------------------------------------------------------------------------
-	// firts and last pair have already checked 3 keys
-	if (size == 3) {
+		if (keyList[0].pDrfValue == keyList[1].pDrfValue) {
+			CLWarning << LogNode(node) << "has the same dataref value [0:1] on \"" << inCtrlName << "\" controller.";
+			return false;
+		}
 		return true;
 	}
 	//-------------------------------------------------------------------------
@@ -458,14 +438,14 @@ bool ConverterAnim::checkTransKeysValue(INode * node, const xobj::AnimTrans::Key
 
 		if (keyList[k1].pPosition == keyList[k2].pPosition &&
 			keyList[k2].pPosition == keyList[k3].pPosition) {
-			CLError << LogNode(node) << "has the same position value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
+			CLWarning << LogNode(node) << "has the same position value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
 					<< inCtrlName << "\" controller.";
 			return false;
 		}
 
-		if (keyList[k1].pDrfValue == keyList[k2].pDrfValue &&
-			keyList[k2].pDrfValue == keyList[k3].pDrfValue) {
-			CLError << LogNode(node) << "has the same dataref value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
+		if (sts::isEqual(keyList[k1].pDrfValue, keyList[k2].pDrfValue, threshold) &&
+			sts::isEqual(keyList[k2].pDrfValue, keyList[k3].pDrfValue, threshold)) {
+			CLWarning << LogNode(node) << "has the same dataref value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
 					<< inCtrlName << "\" controller.";
 			return false;
 		}
@@ -475,8 +455,8 @@ bool ConverterAnim::checkTransKeysValue(INode * node, const xobj::AnimTrans::Key
 }
 
 bool ConverterAnim::checkRotateKeysValue(INode * node, const xobj::AnimRotate::KeyList & keyList, const char * inCtrlName, char axis) {
-	assert(node);
-	assert(inCtrlName);
+	DbgAssert(node);
+	DbgAssert(inCtrlName);
 	const float threshold = 0.0001f;
 	const size_t size = keyList.size();
 	//-------------------------------------------------------------------------
@@ -484,37 +464,16 @@ bool ConverterAnim::checkRotateKeysValue(INode * node, const xobj::AnimRotate::K
 		return false;
 	}
 	//-------------------------------------------------------------------------
-	// first pair
-	if (sts::isEqual(keyList[0].pAngleDegrees, keyList[1].pAngleDegrees, threshold)) {
-		CLError << LogNode(node) << "has the same key value [0:1] on \"" << axis << "-" << inCtrlName << "\" controller.";
-		return false;
-	}
-
-	if (sts::isEqual(keyList[0].pDrfValue, keyList[1].pDrfValue, threshold)) {
-		CLError << LogNode(node) << "has the same dataref value [0:1] on \"" << axis << "-" << inCtrlName << "\" controller.";
-		return false;
-	}
-	//-------------------------------------------------------------------------
-	// firts pair has already checked 2 keys
 	if (size == 2) {
-		return true;
-	}
+		if (sts::isEqual(keyList[0].pAngleDegrees, keyList[1].pAngleDegrees, threshold)) {
+			CLWarning << LogNode(node) << "has the same key value [0:1] on \"" << axis << "-" << inCtrlName << "\" controller.";
+			return false;
+		}
 
-	// last pair
-	if (sts::isEqual(keyList[size - 2].pAngleDegrees, keyList[size - 1].pAngleDegrees, threshold)) {
-		CLError << LogNode(node) << "has the same key value [" << size - 2 << ":" << size - 1 << "] on \""
-				<< axis << "-" << inCtrlName << "\" controller.";
-		return false;
-	}
-
-	if (sts::isEqual(keyList[size - 2].pDrfValue, keyList[size - 1].pDrfValue, threshold)) {
-		CLError << LogNode(node) << "has the same dataref value [" << size - 2 << ":" << size - 1 << "] on \""
-				<< axis << "-" << inCtrlName << "\" controller.";
-		return false;
-	}
-	//-------------------------------------------------------------------------
-	// firts and last pair have already checked 3 keys
-	if (size == 3) {
+		if (sts::isEqual(keyList[0].pDrfValue, keyList[1].pDrfValue, threshold)) {
+			CLWarning << LogNode(node) << "has the same dataref value [0:1] on \"" << axis << "-" << inCtrlName << "\" controller.";
+			return false;
+		}
 		return true;
 	}
 	//-------------------------------------------------------------------------
@@ -528,14 +487,14 @@ bool ConverterAnim::checkRotateKeysValue(INode * node, const xobj::AnimRotate::K
 
 		if (sts::isEqual(keyList[k1].pAngleDegrees, keyList[k2].pAngleDegrees, threshold) &&
 			sts::isEqual(keyList[k2].pAngleDegrees, keyList[k3].pAngleDegrees, threshold)) {
-			CLError << LogNode(node) << "has the same key value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
+			CLWarning << LogNode(node) << "has the same key value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
 					<< axis << "-" << inCtrlName << "\" controller.";
 			return false;
 		}
 
 		if (sts::isEqual(keyList[k1].pDrfValue, keyList[k2].pDrfValue, threshold) &&
 			sts::isEqual(keyList[k2].pDrfValue, keyList[k3].pDrfValue, threshold)) {
-			CLError << LogNode(node) << "has the same dataref value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
+			CLWarning << LogNode(node) << "has the same dataref value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
 					<< axis << "-" << inCtrlName << "\" controller.";
 			return false;
 		}
