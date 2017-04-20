@@ -17,8 +17,7 @@ The importing is still under developing and does not work correctly!
 - 3Ds Max SDK - Usually you can find it on 3Ds Max installation cd or image
 
 ## Build
-- [The release check](doc/release-checklist.md)
-- [ChangeLog](changelog.md) - this file is filling during the release process.
+- The release [check list](doc/release-checklist.md) - is used for producing the releases.
 - You have to get the 3DsMax sdk and then put it into conan repository, 
 see [this](https://bitbucket.org/steptosky/conan-recipe-3dsmax-sdk) for
 more information.
