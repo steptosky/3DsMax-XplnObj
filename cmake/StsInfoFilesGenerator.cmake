@@ -34,6 +34,7 @@
 #
 # This module uses the StsProjectDesc module for generate ".h" file with information
 #
+# Version 1.1.1 (19.04.2017)
 # Version 1.1.0 (19.03.2017)
 # Version 1.0.1
 #
@@ -71,8 +72,8 @@ function(genInfoFile descriptionFile destinationFile)
 
 	#-------------------------------------------------------------------#
 
-	set(CONTENT "#pragma once\n")
-	set(CONTENT "/* This is the auto-genetared file with the cmake script */\n\n")
+	set(CONTENT "#pragma once\n\n")
+	set(CONTENT "${CONTENT}/* This is the auto-genetared file with the cmake script */\n\n")
 	set(CONTENT "${CONTENT}${__DECOR__}\n\n")
 
 	#-------------------------------------------------------------------#
