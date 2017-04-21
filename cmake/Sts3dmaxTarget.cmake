@@ -90,7 +90,8 @@ function(SETUP_MAX_TERGET)
 		# project files
 
 		file(GLOB_RECURSE CM_FILES 
-			"${CMAKE_SOURCE_DIR}/src/*.h" 
+			"${CMAKE_SOURCE_DIR}/src/*.h"
+			"${CMAKE_SOURCE_DIR}/src/*.hpp" 
 			"${CMAKE_SOURCE_DIR}/src/*.inl" 
 			"${CMAKE_SOURCE_DIR}/src/*.cpp"
 			"${CMAKE_SOURCE_DIR}/src/*.rc"
@@ -128,6 +129,7 @@ function(SETUP_MAX_TERGET)
 		add_library(${PROJECT} SHARED ${CM_FILES})
 		target_link_libraries(${PROJECT} CONAN_PKG::${SETUP_MAX_TERGET_SDK_TARGET})
 		target_link_libraries(${PROJECT} CONAN_PKG::XplnObj)
+		target_link_libraries(${PROJECT} optimized Winhttp debug Winhttp)
 
 		#--------------------------------------------------------------------------#
 		#//////////////////////////////////////////////////////////////////////////#

@@ -4,6 +4,8 @@ The 3DsMax X-Plane Obj Exporter change-log.
 Actual version
 2.0.0-beta (19.04.2017)
 
-- Fix: Cloning X-Plane object data during the objects clone in the 3Ds Max 2017
+- Added: Auto-check for update. If a new version is available you will see the information in the console.
+- Fixed: Incorrect error printing for the animation keys.
+- Fixed: Cloning X-Plane object data during the objects clone in the 3Ds Max 2017.
 
 ===============================================================================
