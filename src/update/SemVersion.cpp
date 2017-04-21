@@ -62,60 +62,62 @@ SemVersion::SemVersion() {
 	clear();
 }
 
-SemVersion::SemVersion(uint major, uint minor, uint patch) {
-	this->set(major, minor, patch);
+SemVersion::SemVersion(uint inMajor, uint inMinor, uint inPatch) {
+	set(inMajor, inMinor, inPatch);
 }
 
-SemVersion::SemVersion(uint major, uint minor, uint patch, const char * pre_release, const char * build) {
-	this->set(major, minor, patch, pre_release, build);
+SemVersion::SemVersion(uint inMajor, uint inMinor, uint inPatch,
+						const char * inPreRelease, const char * inBuild) {
+	set(inMajor, inMinor, inPatch, inPreRelease, inBuild);
 }
 
-SemVersion::SemVersion(uint major, uint minor, uint patch, const std::string & pre_release, const std::string & build) {
-	this->set(major, minor, patch, pre_release, build);
+SemVersion::SemVersion(uint inMajor, uint inMinor, uint inPatch,
+						const std::string & inPreRelease, const std::string & inBuild) {
+	set(inMajor, inMinor, inPatch, inPreRelease, inBuild);
 }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool SemVersion::compare(const SemVersion & other, bool preRelease, bool build) const {
-	if (this->operator!=(other)) {
+bool SemVersion::compare(const SemVersion & inOther, bool inPreRelease, bool inBuild) const {
+	if (this->operator!=(inOther)) {
 		return false;
 	}
-	if (preRelease && mPreRelease != other.mPreRelease) {
+	if (inPreRelease && preRelease != inOther.preRelease) {
 		return false;
 	}
-	if (build && mBuild != other.mBuild) {
+	if (inBuild && build != inOther.build) {
 		return false;
 	}
 	return true;
 }
 
-bool SemVersion::operator==(const SemVersion & other) const {
-	return mMajor == other.mMajor &&
-			mMinor == other.mMinor &&
-			mPatch == other.mPatch;
+bool SemVersion::operator==(const SemVersion & inOther) const {
+	return major == inOther.major &&
+			minor == inOther.minor &&
+			patch == inOther.patch;
 }
 
-bool SemVersion::operator>(const SemVersion & other) const {
-	if (this->mMajor > other.mMajor) {
+bool SemVersion::operator>(const SemVersion & inOther) const {
+	if (this->major > inOther.major) {
 		return true;
 	}
-	if (this->mMajor < other.mMajor) {
+	if (this->major < inOther.major) {
 		return false;
 	}
 
-	if (this->mMinor > other.mMinor) {
+	if (this->minor > inOther.minor) {
 		return true;
 	}
-	if (this->mMinor < other.mMinor) {
+	if (this->minor < inOther.minor) {
 		return false;
 	}
 
-	if (this->mPatch > other.mPatch) {
+	if (this->patch > inOther.patch) {
 		return true;
 	}
-	if (this->mPatch < other.mPatch) {
+	if (this->patch < inOther.patch) {
 		return false;
 	}
 	return false;
@@ -125,42 +127,43 @@ bool SemVersion::operator>(const SemVersion & other) const {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void SemVersion::set(uint major, uint minor, uint patch) {
-	mMajor = major;
-	mMinor = minor;
-	mPatch = patch;
-	mPreRelease.clear();
-	mBuild.clear();
+void SemVersion::set(uint inMajor, uint inMinor, uint inPatch) {
+	major = inMajor;
+	minor = inMinor;
+	patch = inPatch;
+	preRelease.clear();
+	build.clear();
 }
 
-void SemVersion::set(uint major, uint minor, uint patch, const char * preRelease, const char * build) {
-	set(major, minor, patch);
-	if (preRelease) {
-		mPreRelease = std::string(preRelease);
+void SemVersion::set(uint inMajor, uint inMinor, uint inPatch, const char * inPreRelease, const char * inBuild) {
+	set(inMajor, inMinor, inPatch);
+	if (inPreRelease) {
+		preRelease = std::string(inPreRelease);
 	}
 	else {
-		mPreRelease.clear();
+		preRelease.clear();
 	}
-	if (build) {
-		mBuild = std::string(build);
+	if (inBuild) {
+		build = std::string(inBuild);
 	}
 	else {
-		mBuild.clear();
+		build.clear();
 	}
 }
 
-void SemVersion::set(uint major, uint minor, uint patch, const std::string & preRelease, const std::string & build) {
-	set(major, minor, patch);
-	mPreRelease = preRelease;
-	mBuild = build;
+void SemVersion::set(uint inMajor, uint inMinor, uint inPatch,
+					const std::string & inPreRelease, const std::string & inBuild) {
+	set(inMajor, inMinor, inPatch);
+	preRelease = inPreRelease;
+	build = inBuild;
 }
 
 void SemVersion::clear() {
-	mMajor = 0;
-	mMinor = 0;
-	mPatch = 0;
-	mPreRelease.clear();
-	mBuild.clear();
+	major = 0;
+	minor = 0;
+	patch = 0;
+	preRelease.clear();
+	build.clear();
 }
 
 /**************************************************************************************************/
@@ -193,12 +196,12 @@ bool SemVersion::parse(const std::string & version) {
 
 std::string SemVersion::toString() const {
 	std::ostringstream stream;
-	stream << mMajor << '.' << mMinor << '.' << mPatch;
-	if (!mPreRelease.empty()) {
-		stream << '-' << mPreRelease;
+	stream << major << '.' << minor << '.' << patch;
+	if (!preRelease.empty()) {
+		stream << '-' << preRelease;
 	}
-	if (!mBuild.empty()) {
-		stream << '+' << mBuild;
+	if (!build.empty()) {
+		stream << '+' << build;
 	}
 	return stream.str();
 }

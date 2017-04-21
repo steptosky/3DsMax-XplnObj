@@ -36,11 +36,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
+/*!
+ * \details Represents Semantic Versioning
+ * \details http://semver.org/
+ */
 class SemVersion {
-
 	typedef uint32_t uint;
-
 public:
+
+	//-------------------------------------------------------------------------
 
 	SemVersion();
 	SemVersion(uint, uint, uint);
@@ -74,6 +78,8 @@ public:
 	void set(uint, uint, uint, const char *, const char *);
 	void set(uint, uint, uint, const std::string &, const std::string &);
 
+	//-------------------------------------------------------------------------
+
 	bool parse(const char *);
 	bool parse(const std::string &);
 
@@ -84,11 +90,11 @@ public:
 
 	//-------------------------------------------------------------------------
 
-	uint mMajor;
-	uint mMinor;
-	uint mPatch;
-	std::string mPreRelease;
-	std::string mBuild;
+	uint major;
+	uint minor;
+	uint patch;
+	std::string preRelease;
+	std::string build;
 
 	//-------------------------------------------------------------------------
 };
