@@ -369,8 +369,8 @@ namespace ui {
 			}
 			else {
 				if (upd.version > SemVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH)) {
-					CLMessage << "New version " << upd.version.toString()
-							<< " is available please, press <"
+					CLWarning << "New version " << upd.version.toString()
+							<< " is available please, press the <"
 							<< sts::toMbString(mBtnCheckUpdate.text())
 							<< "> button to get the new version.";
 				}
