@@ -214,10 +214,16 @@ std::string Logger::aboutInfo(bool inUseWinEol) {
 
 	stream << eol << "Open source libraries: " << eol;
 	for (size_t i = 0; i < XIO_ARRAY_LENGTH(XIO_LIBRARIES); ++i) {
-		stream << "    " << XIO_LIBRARIES[i].libName
-				<< " (" << XIO_LIBRARIES[i].license << ")"
-				<< " " << XIO_LIBRARIES[i].copyright
-				<< eol;
+		if (XIO_LIBRARIES[i].libName) {
+			stream << "    " << XIO_LIBRARIES[i].libName;
+		}
+		if (XIO_LIBRARIES[i].libName) {
+			stream << "    " << XIO_LIBRARIES[i].libName;
+		}
+		if (XIO_LIBRARIES[i].copyright) {
+			stream << "    " << XIO_LIBRARIES[i].copyright;
+		}
+		stream << eol;
 	}
 
 	//-------------------------------------------------------------------------
