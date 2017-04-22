@@ -84,7 +84,7 @@ set(ProjectSourcesWebLink "https://github.com/steptosky/3DsMax-XplnObj")
 
 set(ProjectVersionMajor 2)
 set(ProjectVersionMinor 0)
-set(ProjectVersionPatch 0)
+set(ProjectVersionPatch 1)
 set(ProjectVersion "${ProjectVersionMajor}.${ProjectVersionMinor}.${ProjectVersionPatch}")
 set(ProjectReleaseType "beta") # You can use any string you wish
 
@@ -106,10 +106,10 @@ list(APPEND ProjectContributors "StepToSky <info@steptosky.com>")
 
 #----------------------------------------------------------------------------------#
 # Open source libraries
-# Use the following format, the | is the separator
+# Use the following format. Symbol | is the separator
 # For unspecified fields use nothing but don't forget the separator
 # libname|lib url|copyright|copyrighter url|license|license url
-# example the urls are empty: "XplnObj||Copyright (c) 2017 StepToSky||BSD|"
+# example, the urls are empty: "XplnObj||Copyright (c) 2017 StepToSky||BSD|"
 
 set(ProjectLibraries "")
 list(APPEND ProjectLibraries "JSON for Modern C++|https://github.com/nlohmann/json|Copyright 2013-2017 Niels Lohmann|http://nlohmann.me|MIT|")
