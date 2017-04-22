@@ -108,20 +108,20 @@ namespace ui {
 	/**************************************************************************************************/
 
 	void AnimVisView::registerCallbacks() {
-		RegisterNotification(sigSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
-		RegisterNotification(sigObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
+		RegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
+		RegisterNotification(slotObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
 	}
 
 	void AnimVisView::unRegisterCallbacks() {
-		UnRegisterNotification(sigObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
-		UnRegisterNotification(sigSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
+		UnRegisterNotification(slotObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
+		UnRegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
 	}
 
 	/**************************************************************************************************/
 	//////////////////////////////////////////* Functions */////////////////////////////////////////////
 	/**************************************************************************************************/
 
-	void AnimVisView::sigObjectsDeleted(void * param, NotifyInfo * info) {
+	void AnimVisView::slotObjectsDeleted(void * param, NotifyInfo * info) {
 		AnimVisView * view = reinterpret_cast<AnimVisView*>(param);
 		Tab<INode*> * nodeTab = reinterpret_cast<Tab<INode*>*>(info->callParam);
 
@@ -135,7 +135,7 @@ namespace ui {
 		}
 	}
 
-	void AnimVisView::sigSelectionChange(void * param, NotifyInfo *) {
+	void AnimVisView::slotSelectionChange(void * param, NotifyInfo *) {
 		AnimVisView * view = reinterpret_cast<AnimVisView*>(param);
 		int selectedCount = view->mIp->GetSelNodeCount();
 		if (selectedCount == 0) {

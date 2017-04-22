@@ -34,6 +34,11 @@
 #
 # This module uses the StsProjectDesc module for generate ".h" file with information
 #
+# Version 1.2.0 (21.04.2017)
+#	- List of open source libraries
+#	- Fix for generation Contributors
+#
+# Version 1.1.0 (19.04.2017)
 # Version 1.1.0 (19.03.2017)
 # Version 1.0.1
 #
@@ -71,8 +76,8 @@ function(genInfoFile descriptionFile destinationFile)
 
 	#-------------------------------------------------------------------#
 
-	set(CONTENT "#pragma once\n")
-	set(CONTENT "/* This is the auto-genetared file with the cmake script */\n\n")
+	set(CONTENT "#pragma once\n\n")
+	set(CONTENT "${CONTENT}/* This is the auto-genetared file with the cmake script */\n\n")
 	set(CONTENT "${CONTENT}${__DECOR__}\n\n")
 
 	#-------------------------------------------------------------------#
@@ -123,15 +128,102 @@ function(genInfoFile descriptionFile destinationFile)
 	set(CONTENT "${CONTENT}#define ${__prfix__}LICENSE_TYPE \"${ProjectLicenseType}\"\n\n")
 	
 	#-------------------------------------------------------------------#
+	# License
+	
+	set(CONTENT "${CONTENT}/* Helpers */\n")
+	set(CONTENT "${CONTENT}#define ${__prfix__}ARRAY_LENGTH(a)(sizeof(a)/sizeof(*a))\n\n") 
+		
+	#-------------------------------------------------------------------#
 	# Contributors
 	
-	set(CONTENT "${CONTENT}/* Contributors Info */\n") 
-	set(CONTENT "${CONTENT}#define ${__prfix__}ARRAY_LENGTH(a)(sizeof(a)/sizeof(*a))\n") 
-	set(CONTENT "${CONTENT}static const char * ${__prfix__}CONTRIBUTORS[] = {\n")
-	foreach(Contributor ${ProjectContributors})
-		set(CONTENT "${CONTENT} \t\"${Contributor}\",\n")
-	endforeach()
-	set(CONTENT "${CONTENT}};\n\n")
+	set(CONTENT "${CONTENT}/* Contributors Info */\n")	
+	list(LENGTH ProjectContributors ProjectContributorsSize)
+	
+	if (NOT ${ProjectContributorsSize} EQUAL 0)
+		set(CONTENT "${CONTENT}static const char * ${__prfix__}CONTRIBUTORS[] = {\n")		
+		foreach(Contributor ${ProjectContributors})
+			set(CONTENT "${CONTENT} \t\"${Contributor}\",\n")
+		endforeach()
+		set(CONTENT "${CONTENT}};\n\n")		
+	else()
+		set(CONTENT "${CONTENT}\n\n")	
+	endif()
+	
+	#-------------------------------------------------------------------#
+	# Open source libraries
+	
+	set(CONTENT "${CONTENT}/* Open source libraries info*/\n") 
+	set(CONTENT "${CONTENT}struct ${__prfix__}LIBRARIES_DATA {\n")
+	
+	set(CONTENT "${CONTENT}\t${__prfix__}LIBRARIES_DATA(\n")
+	set(CONTENT "${CONTENT}\t\tconst char *inLibName,   const char *inLibUrl,\n")
+	set(CONTENT "${CONTENT}\t\tconst char *inCopyright, const char *inCopyrightUrl,\n")
+	set(CONTENT "${CONTENT}\t\tconst char *inLicense,   const char *inLicenseUrl)\n")
+	
+	set(CONTENT "${CONTENT}\t\t\t: libName(inLibName),     libUrl(inLibUrl),\n")
+	set(CONTENT "${CONTENT}\t\t\t  copyright(inCopyright), copyrightUrl(inCopyrightUrl),\n")
+	set(CONTENT "${CONTENT}\t\t\t  license(inLicense),     licenseUrl(inLicenseUrl) {}\n\n")
+
+	set(CONTENT "${CONTENT}\tconst char * libName = nullptr;\n")
+	set(CONTENT "${CONTENT}\tconst char * libUrl = nullptr;\n")
+	set(CONTENT "${CONTENT}\tconst char * copyright = nullptr;\n")
+	set(CONTENT "${CONTENT}\tconst char * copyrightUrl = nullptr;\n")
+	set(CONTENT "${CONTENT}\tconst char * license = nullptr;\n")
+	set(CONTENT "${CONTENT}\tconst char * licenseUrl = nullptr;\n")
+	set(CONTENT "${CONTENT}};\n")
+	list(LENGTH ProjectLibraries LibraryListSize)
+	
+	if (NOT ${LibraryListSize} EQUAL 0)
+		set(CONTENT "${CONTENT}static const ${__prfix__}LIBRARIES_DATA ${__prfix__}LIBRARIES[] = {\n")
+		foreach(Library ${ProjectLibraries})
+			string(REPLACE "|" ";" LibraryList ${Library})
+			list(LENGTH LibraryList LibraryListSize)
+			if (${LibraryListSize} EQUAL 6)
+				list(GET LibraryList "0" L_0)
+				list(GET LibraryList "1" L_1)
+				list(GET LibraryList "2" L_2)
+				list(GET LibraryList "3" L_3)
+				list(GET LibraryList "4" L_4)
+				list(GET LibraryList "5" L_5)
+				if(NOT ${L_0} STREQUAL "")
+					set(L_0 "\"${L_0}\"")
+				else()
+					set(L_0 "nullptr")
+				endif()
+				if(NOT ${L_1} STREQUAL "")
+					set(L_1 "\"${L_1}\"")
+				else()
+					set(L_1 "nullptr")
+				endif()
+				if(NOT ${L_2} STREQUAL "")
+					set(L_2 "\"${L_2}\"")
+				else()
+					set(L_2 "nullptr")
+				endif()
+				if(NOT ${L_3} STREQUAL "")
+					set(L_3 "\"${L_3}\"")
+				else()
+					set(L_3 "nullptr")
+				endif()
+				if(NOT ${L_4} STREQUAL "")
+					set(L_4 "\"${L_4}\"")
+				else()
+					set(L_4 "nullptr")
+				endif()
+				if(NOT ${L_5} STREQUAL "")
+					set(L_5 "\"${L_5}\"")
+				else()
+					set(L_5 "nullptr")
+				endif()
+				set(CONTENT "${CONTENT} \t${__prfix__}LIBRARIES_DATA(${L_0}, ${L_1}, ${L_2}, ${L_3}, ${L_4}, ${L_5}),\n")
+			else()
+				message(FATAL_ERROR "Library description has incorrect number of variables: ${LibraryListSize}\n\t${Library}")
+			endif()
+		endforeach()
+		set(CONTENT "${CONTENT}};\n\n")
+	else()
+		set(CONTENT "${CONTENT}\n\n")	
+	endif()
 	
 	#-------------------------------------------------------------------#
 	# Other
@@ -146,7 +238,7 @@ function(genInfoFile descriptionFile destinationFile)
 	set(CONTENT "${CONTENT}#define ${__prfix__}COMPILER_NAME \"${CMAKE_CXX_COMPILER_ID}\" \n")
 	set(CONTENT "${CONTENT}#define ${__prfix__}COMPILER_VERSION \"${CMAKE_CXX_COMPILER_VERSION}\" \n\n")
 
-	if (${ProjectVcsType} STREQUAL git)
+	if (${ProjectVcsType} AND ${ProjectVcsType} STREQUAL git)
 		if (NOT vcs_revision)
 			execute_process(
 					COMMAND "git" "log" "-1" "--pretty=format:%h"

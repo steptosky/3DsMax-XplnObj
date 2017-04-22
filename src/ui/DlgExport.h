@@ -33,6 +33,7 @@
 #include "Converters/Converterer.h"
 #include "ui/controls/Edit.h"
 #include "common/Logger.h"
+#include "update/UpdateChecker.h"
 
 namespace ui {
 
@@ -79,6 +80,7 @@ namespace ui {
 
 		int startExport();
 		static void collectMainNodes(INode * inRootNode, std::vector<INode*> & outMains);
+		void printUpdateAvailability() const;
 
 		Converterer mConverterer;
 		TimeValue mTime = 0;

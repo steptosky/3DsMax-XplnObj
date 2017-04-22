@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 **  Copyright(C) 2017, StepToSky
 **
@@ -27,70 +29,59 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
+#include <mutex>
+#include "SemVersion.h"
 
-#pragma warning(push, 0)
-#include <max.h>
-#include <istdplug.h>
-#include <iparamb2.h>
-#include <iparamm2.h> // for 3dmax 9
-#include <guplib.h>
-#pragma warning(pop)
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-#include "CloneNodeChunk.h"
-#include "sts/utilities/templates/Single.h"
-#include "Common/Config.h"
-#include "update/UpdateChecker.h"
-
-#define COMMON_CLASS_ID	Class_ID(0xf5226b9, 0x5b131ef2)
-
-namespace ui {
-	class ToolFrame;
-}
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-class ObjCommon : public GUP, public sts_t::Single<ObjCommon> {
+class UpdateChecker {
 public:
 
-	ObjCommon();
-	~ObjCommon();
+	struct Update {
+		bool valid = false;
+		std::string error;
+		SemVersion version;
+	};
 
 	//-------------------------------------------------------------------------
 
-	DWORD Start() override;
-	void Stop() override;
+	UpdateChecker() = default;
+	~UpdateChecker();
 
 	//-------------------------------------------------------------------------
 
-	DWORD_PTR Control(DWORD param) override;
+	void checkForUpdate();
+	void freeResources();
 
 	//-------------------------------------------------------------------------
 
-	IOResult Save(ISave * isave) override;
-	IOResult Load(ILoad * iload) override;
+	Update updateInfo() const;
 
 	//-------------------------------------------------------------------------
-
-	UpdateChecker::Update updateInfo() const { return mUpdateChecker.updateInfo(); }
 
 private:
 
-	void DeleteThis() override {
-		this->free();
-	}
+	Update mUpdateInfo;
+	std::thread * mThread = nullptr;
+	mutable std::mutex mMutex;
 
-	ui::ToolFrame * mToolFrame;
-	Config * mConfig;
-	CloneNodeChunk * mCloneNodeChunk;
-	UpdateChecker mUpdateChecker;
+	void setUpdateInfo(Update ipdate);
+	static void checkUpdateTask(void * inUserData);
+	static std::string extractVersion(const std::string & jsonData);
 
 	//-------------------------------------------------------------------------
 
+	struct Response {
+		bool error = false;
+		std::string body;
+	};
+
+	static Response latestReleaseTag();
+
 };
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/

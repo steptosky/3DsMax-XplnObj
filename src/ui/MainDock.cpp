@@ -43,12 +43,12 @@ namespace ui {
 	//////////////////////////////////////////* Static area *///////////////////////////////////////////
 	/**************************************************************************************************/
 
-	void MainDock::objectSelectionChange(void * param, NotifyInfo * /*info*/) {
+	void MainDock::slotObjectSelectionChange(void * param, NotifyInfo * /*info*/) {
 		MainDock * objCore = reinterpret_cast<MainDock*>(param);
 		objCore->selectionChanged();
 	}
 
-	void MainDock::objectsDeleted(void * param, NotifyInfo * info) {
+	void MainDock::slotObjectsDeleted(void * param, NotifyInfo * info) {
 		MainDock * objCore = reinterpret_cast<MainDock*>(param);
 		objCore->objectsDeleted(reinterpret_cast<Tab<INode*>*>(info->callParam));
 	}
@@ -170,13 +170,13 @@ namespace ui {
 	/**************************************************************************************************/
 
 	void MainDock::registerCallbacks() {
-		RegisterNotification(objectSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
-		RegisterNotification(objectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
+		RegisterNotification(slotObjectSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
+		RegisterNotification(slotObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
 	}
 
 	void MainDock::unRegisterCallbacks() {
-		UnRegisterNotification(objectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
-		UnRegisterNotification(objectSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
+		UnRegisterNotification(slotObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
+		UnRegisterNotification(slotObjectSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
 	}
 
 	/**************************************************************************************************/

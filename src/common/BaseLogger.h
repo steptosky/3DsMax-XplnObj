@@ -31,6 +31,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <mutex>
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,9 +51,11 @@ namespace sts {
 
 	/*! 
 	 * \details This is a base logger interface. By default it prints all messages to std::cout.
-	 * \pre Before you will be able to use this logger you must create its variable somewhere, this logger implements pattern singlton.
-	 * \code sts::BaseLogger * sts::BaseLogger::mInstance = nullptr; \endcode
+	 * \pre Before you will be able to use this logger you must create its variable somewhere,
+	 *      this logger implements the pattern singlton.
+	 * \code sts::BaseLogger sts::BaseLogger::mInstance; \endcode
 	 * \details Default log level is \"Debug\".
+	 * \details Default thread safe is \"false\".
 	 * \note The logger supports categories.
 	 * \code CategoryMessage("my category") << "my message"; \endcode
 	 */
@@ -79,10 +82,7 @@ namespace sts {
 		//-------------------------------------------------------------------------
 
 		static BaseLogger & instance() {
-			if (mInstance == nullptr) {
-				mInstance = new BaseLogger;
-			}
-			return *mInstance;
+			return mInstance;
 		}
 
 		//-------------------------------------------------------------------------
@@ -90,13 +90,28 @@ namespace sts {
 		void log(eType inType, const char * inMsg,
 				const char * inFile, int inLine, const char * inFunction,
 				const char * inCategory) const {
-
+			if (mThreadSafe) {
+				std::lock_guard<std::mutex> lock(mMutex);
+			}
 			if (inType <= mLevel) {
 				mCallBack(inType, inMsg, inFile, inLine, inFunction, inCategory);
 			}
 		}
 
 		//-------------------------------------------------------------------------
+
+		/*! 
+		 * \details Sets the thread safe logging. Default is false.
+		 * \warning It is strongly recommended to set this parameter once when your program is run
+		 *          otherwise in some cases it can lead to undefined behaviour.
+		 */
+		void setThreadSafe(bool state) {
+			mThreadSafe = state;
+		}
+
+		bool isThreadSafe() const {
+			return mThreadSafe;
+		}
 
 		void setLevel(eType inLevel) {
 			mLevel = inLevel;
@@ -158,7 +173,9 @@ namespace sts {
 
 		eType mLevel = Debug;
 		CallBack mCallBack = defaultCallBack;
-		static BaseLogger * mInstance;
+		bool mThreadSafe = false;
+		mutable std::mutex mMutex;
+		static BaseLogger mInstance;
 
 	};
 
@@ -171,9 +188,10 @@ namespace sts {
 	 * \note In normal way you should not use this class directly use macros instead.
 	 * \code LWarning << "My warning";
 	 * \note The message will be printed when destructor is called 
-	 * or if you manually force printing with the method LogMessage::push() or operator << with LogMessage::CmdPush param.
+	 *       or if you manually force printing with the method LogMessage::push() 
+	 *       or operator << with LogMessage::CmdPush param.
 	 * \code LWarning << "My warning" << LPush; \endcode
-	 * It can be needed when you process exceptions.
+	 *       It can be needed when you process exceptions.
 	 */
 	class LogMessage {
 	public:

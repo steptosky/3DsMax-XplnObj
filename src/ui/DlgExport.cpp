@@ -40,6 +40,7 @@
 #include "DlgAbout.h"
 #include "objects/MainObjParamsWrapper.h"
 #include "converters/ConverterUtils.h"
+#include "gup/ObjCommon.h"
 
 namespace ui {
 
@@ -351,12 +352,30 @@ namespace ui {
 		}
 
 		CLMessage << "Export completed with:\r\n\t" << mErrorCount << " errors \r\n\t" << mWarningCount << " warnings";
+		printUpdateAvailability();
 		Logger::unregisterUserConsoleCallback(&logCallback);
 		mFinished = true;
 		mBtnOk.setText(_T("Close"));
 		mBtnCancel.setText(_T("Close"));
 		exportFinished();
 		return result;
+	}
+
+	void DlgExport::printUpdateAvailability() const {
+		UpdateChecker::Update upd = ObjCommon::instance()->updateInfo();
+		if (upd.valid) {
+			if (!upd.error.empty()) {
+				CLError << "Error during update check: <" << upd.error << "> please, inform the developers.";
+			}
+			else {
+				if (upd.version > SemVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH)) {
+					CLWarning << "New version " << upd.version.toString()
+							<< " is available please, press the <"
+							<< sts::toMbString(mBtnCheckUpdate.text())
+							<< "> button to get the new version.";
+				}
+			}
+		}
 	}
 
 	/**************************************************************************************************/

@@ -51,7 +51,7 @@
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
-//sts::BaseLogger * sts::BaseLogger::mInstance = nullptr;
+sts::BaseLogger sts::BaseLogger::mInstance;
 std::list<Logger::UserConsoleCallBack> Logger::mCallbacks;
 LogSys * Logger::mMaxLog = nullptr;
 
@@ -210,6 +210,14 @@ std::string Logger::aboutInfo(bool inUseWinEol) {
 	stream << "Contributors: " << eol;
 	for (size_t i = 0; i < XIO_ARRAY_LENGTH(XIO_CONTRIBUTORS); ++i) {
 		stream << "    " << XIO_CONTRIBUTORS[i] << eol;
+	}
+
+	stream << eol << "Open source libraries: " << eol;
+	for (size_t i = 0; i < XIO_ARRAY_LENGTH(XIO_LIBRARIES); ++i) {
+		stream << "    " << XIO_LIBRARIES[i].libName
+				<< " (" << XIO_LIBRARIES[i].license << ")"
+				<< " " << XIO_LIBRARIES[i].copyright
+				<< eol;
 	}
 
 	//-------------------------------------------------------------------------

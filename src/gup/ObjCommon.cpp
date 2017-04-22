@@ -31,11 +31,11 @@
 #include "ui/toolFrame/ToolFrame.h"
 
 #ifndef IO_SAVE_CAST
-#if MAX_VERSION_MAJOR > 14
-#define IO_SAVE_CAST const BYTE
-#else
-#define IO_SAVE_CAST const void
-#endif
+#	if MAX_VERSION_MAJOR > 14
+#		define IO_SAVE_CAST const BYTE
+#	else
+#		define IO_SAVE_CAST const void
+#	endif
 #endif
 
 /**************************************************************************************************/
@@ -89,13 +89,13 @@ DWORD ObjCommon::Start() {
 	mToolFrame = ui::ToolFrame::instance();
 	mToolFrame->create();
 
-	//gDlgExportMain.show(gDlgExportMainData);
-	//mDlgHasNewVersion.show(mMdUpdateProgram);
+	mUpdateChecker.checkForUpdate();
 
 	return GUPRESULT_KEEP;
 }
 
 void ObjCommon::Stop() {
+	mUpdateChecker.freeResources();
 	mToolFrame->free();
 	delete mCloneNodeChunk;
 }

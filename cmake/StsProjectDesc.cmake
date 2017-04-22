@@ -34,6 +34,9 @@
 #
 # StepToSky project description.
 #
+# Version 1.2.0 (21.04.2017) 
+#	- List of open source libraries
+#
 # Version 1.1.0 (19.03.2017)
 # Version 1.0.0
 #
@@ -70,9 +73,9 @@ set(ProjectOrganizationWebLink "www.steptosky.com")
 #----------------------------------------------------------------------------------#
 # Project info
 
-set(ProjectName "3DsMax X-Plane Obj Exporter/Importer")
+set(ProjectName "3DsMax X-Plane Obj Exporter")
 set(ProjectShortName "3DsMax-XplnObj")
-set(ProjectDescription "This plug-in is for the 3DsMax that allows you to import or export x-plane's obj format.")
+set(ProjectDescription "This plugin is for the 3DsMax that allows you to import or export X-Plane's obj format.")
 set(ProjectWebLink "www.steptosky.com")
 set(ProjectSourcesWebLink "https://github.com/steptosky/3DsMax-XplnObj")
 
@@ -81,7 +84,7 @@ set(ProjectSourcesWebLink "https://github.com/steptosky/3DsMax-XplnObj")
 
 set(ProjectVersionMajor 2)
 set(ProjectVersionMinor 0)
-set(ProjectVersionPatch 0)
+set(ProjectVersionPatch 1)
 set(ProjectVersion "${ProjectVersionMajor}.${ProjectVersionMinor}.${ProjectVersionPatch}")
 set(ProjectReleaseType "beta") # You can use any string you wish
 
@@ -101,6 +104,16 @@ set(ProjectLicenseType "BSD 3-Clause")
 set(ProjectContributors "")
 list(APPEND ProjectContributors "StepToSky <info@steptosky.com>")
 
+#----------------------------------------------------------------------------------#
+# Open source libraries
+# Use the following format. Symbol | is the separator
+# For unspecified fields use nothing but don't forget the separator
+# libname|lib url|copyright|copyrighter url|license|license url
+# example, the urls are empty: "XplnObj||Copyright (c) 2017 StepToSky||BSD|"
+
+set(ProjectLibraries "")
+list(APPEND ProjectLibraries "JSON for Modern C++|https://github.com/nlohmann/json|Copyright 2013-2017 Niels Lohmann|http://nlohmann.me|MIT|")
+                                                                                  
 #----------------------------------------------------------------------------------#
 # Other
 

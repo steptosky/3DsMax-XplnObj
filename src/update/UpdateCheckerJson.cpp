@@ -27,69 +27,28 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
+#include "UpdateChecker.h"
+#include "3rdParties/json/json.hpp"
 
-#pragma warning(push, 0)
-#include <max.h>
-#include <istdplug.h>
-#include <iparamb2.h>
-#include <iparamm2.h> // for 3dmax 9
-#include <guplib.h>
-#pragma warning(pop)
+using namespace nlohmann;
 
-#include "CloneNodeChunk.h"
-#include "sts/utilities/templates/Single.h"
-#include "Common/Config.h"
-#include "update/UpdateChecker.h"
+/* 
+ * 
+ * 
+ * The <Windows.h> has defined the min/max macros those conflict with the stl min/max function
+ * so the logic with the json has got its own source file without the <Windows.h> include
+ * 
+ * 
+ */
 
-#define COMMON_CLASS_ID	Class_ID(0xf5226b9, 0x5b131ef2)
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-namespace ui {
-	class ToolFrame;
+std::string UpdateChecker::extractVersion(const std::string & jsonData) {
+	auto j3 = json::parse(jsonData);
+	return j3["tag_name"];
 }
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-class ObjCommon : public GUP, public sts_t::Single<ObjCommon> {
-public:
-
-	ObjCommon();
-	~ObjCommon();
-
-	//-------------------------------------------------------------------------
-
-	DWORD Start() override;
-	void Stop() override;
-
-	//-------------------------------------------------------------------------
-
-	DWORD_PTR Control(DWORD param) override;
-
-	//-------------------------------------------------------------------------
-
-	IOResult Save(ISave * isave) override;
-	IOResult Load(ILoad * iload) override;
-
-	//-------------------------------------------------------------------------
-
-	UpdateChecker::Update updateInfo() const { return mUpdateChecker.updateInfo(); }
-
-private:
-
-	void DeleteThis() override {
-		this->free();
-	}
-
-	ui::ToolFrame * mToolFrame;
-	Config * mConfig;
-	CloneNodeChunk * mCloneNodeChunk;
-	UpdateChecker mUpdateChecker;
-
-	//-------------------------------------------------------------------------
-
-};
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

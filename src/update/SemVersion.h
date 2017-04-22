@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 **  Copyright(C) 2017, StepToSky
 **
@@ -27,68 +29,74 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
-
-#pragma warning(push, 0)
-#include <max.h>
-#include <istdplug.h>
-#include <iparamb2.h>
-#include <iparamm2.h> // for 3dmax 9
-#include <guplib.h>
-#pragma warning(pop)
-
-#include "CloneNodeChunk.h"
-#include "sts/utilities/templates/Single.h"
-#include "Common/Config.h"
-#include "update/UpdateChecker.h"
-
-#define COMMON_CLASS_ID	Class_ID(0xf5226b9, 0x5b131ef2)
-
-namespace ui {
-	class ToolFrame;
-}
+#include <string>
+#include <cstdint>
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-class ObjCommon : public GUP, public sts_t::Single<ObjCommon> {
+/*!
+ * \details Represents Semantic Versioning
+ * \details http://semver.org/
+ */
+class SemVersion {
+	typedef uint32_t uint;
 public:
 
-	ObjCommon();
-	~ObjCommon();
+	//-------------------------------------------------------------------------
+
+	SemVersion();
+	SemVersion(uint, uint, uint);
+	SemVersion(uint, uint, uint, const char *, const char *);
+	SemVersion(uint, uint, uint, const std::string &, const std::string &);
 
 	//-------------------------------------------------------------------------
 
-	DWORD Start() override;
-	void Stop() override;
+	/*
+	 * \return True if the versions are equaled otherwise false.
+	 */
+	bool compare(const SemVersion & other, bool preRelease = false, bool build = false) const;
+
+	/*! 
+	 * \details It compares only major minor and patch.
+	 * \see SemVersion::compare
+	 */
+	bool operator==(const SemVersion & other) const;
+
+	/*!
+	 * \details It compares only major minor and patch.
+	 * \see SemVersion::compare
+	 */
+	bool operator!=(const SemVersion & other) const { return !this->operator==(other); }
+
+	bool operator>(const SemVersion &) const;
 
 	//-------------------------------------------------------------------------
 
-	DWORD_PTR Control(DWORD param) override;
+	void set(uint, uint, uint);
+	void set(uint, uint, uint, const char *, const char *);
+	void set(uint, uint, uint, const std::string &, const std::string &);
 
 	//-------------------------------------------------------------------------
 
-	IOResult Save(ISave * isave) override;
-	IOResult Load(ILoad * iload) override;
+	bool parse(const char *);
+	bool parse(const std::string &);
 
 	//-------------------------------------------------------------------------
 
-	UpdateChecker::Update updateInfo() const { return mUpdateChecker.updateInfo(); }
-
-private:
-
-	void DeleteThis() override {
-		this->free();
-	}
-
-	ui::ToolFrame * mToolFrame;
-	Config * mConfig;
-	CloneNodeChunk * mCloneNodeChunk;
-	UpdateChecker mUpdateChecker;
+	std::string toString() const;
+	void clear();
 
 	//-------------------------------------------------------------------------
 
+	uint major;
+	uint minor;
+	uint patch;
+	std::string preRelease;
+	std::string build;
+
+	//-------------------------------------------------------------------------
 };
 
 /**************************************************************************************************/

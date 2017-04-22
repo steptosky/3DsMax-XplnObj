@@ -37,9 +37,8 @@ cmake --build . --target install --config Release
 ```
 github-release release --user steptosky --repo 3DsMax-XplnObj \
     --tag ${StsProjectVersionTag} \
-    --name "${StsProjectOrganizationName} ${StsProjectShortName}" \
-    --description "${StsProjectDescription}" \
-    --pre-release
+    --name "${StsProjectOrganizationName} ${StsProjectName}" \
+    --description "${StsProjectDescription}"
 ```
 - Upload the artifacts
 ```
@@ -75,4 +74,10 @@ github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectV
     
 github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
     --name "3DsMax2017-XplnObj-x64.dlu" --file "${WORKSPACE}/output/Release/3DsMax2017-XplnObj-x64.dlu"
+	
+github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
+    --name "changelog.txt" --file "${WORKSPACE}/doc/changelog.txt"
+	
+github-release upload --user steptosky --repo 3DsMax-XplnObj --tag ${StsProjectVersionTag} \
+    --name "install.txt" --file "${WORKSPACE}/doc/install.txt"
 ```

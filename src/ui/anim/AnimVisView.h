@@ -107,8 +107,8 @@ namespace ui {
 		void registerCallbacks();
 		void unRegisterCallbacks();
 
-		static void sigSelectionChange(void * param, NotifyInfo *);
-		static void sigObjectsDeleted(void * param, NotifyInfo * info);
+		static void slotSelectionChange(void * param, NotifyInfo *);
+		static void slotObjectsDeleted(void * param, NotifyInfo * info);
 		//-------------------------------------------------------------------------
 
 	};

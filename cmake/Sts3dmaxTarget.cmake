@@ -90,7 +90,8 @@ function(SETUP_MAX_TERGET)
 		# project files
 
 		file(GLOB_RECURSE CM_FILES 
-			"${CMAKE_SOURCE_DIR}/src/*.h" 
+			"${CMAKE_SOURCE_DIR}/src/*.h"
+			"${CMAKE_SOURCE_DIR}/src/*.hpp" 
 			"${CMAKE_SOURCE_DIR}/src/*.inl" 
 			"${CMAKE_SOURCE_DIR}/src/*.cpp"
 			"${CMAKE_SOURCE_DIR}/src/*.rc"
@@ -102,11 +103,13 @@ function(SETUP_MAX_TERGET)
 		include(StsGroupFiles)
 		groupFiles("${CM_FILES}")
 
-		list(APPEND CM_FILES "${CMAKE_SOURCE_DIR}/changelog.md")
+		list(APPEND CM_FILES "${CMAKE_SOURCE_DIR}/doc/install.txt")
+		list(APPEND CM_FILES "${CMAKE_SOURCE_DIR}/doc/changelog.txt")
 		list(APPEND CM_FILES "${CMAKE_SOURCE_DIR}/readme.md")
 		list(APPEND CM_FILES "${CMAKE_SOURCE_DIR}/doc/dev-notes.md")
 		list(APPEND CM_FILES "${CMAKE_SOURCE_DIR}/doc/release-checklist.md")
-		source_group("doc" FILES "${CMAKE_SOURCE_DIR}/changelog.md")
+		source_group("doc" FILES "${CMAKE_SOURCE_DIR}/doc/install.txt")
+		source_group("doc" FILES "${CMAKE_SOURCE_DIR}/doc/changelog.txt")
 		source_group("doc" FILES "${CMAKE_SOURCE_DIR}/readme.md")
 		source_group("doc" FILES "${CMAKE_SOURCE_DIR}/doc/dev-notes.md")
 		source_group("doc" FILES "${CMAKE_SOURCE_DIR}/doc/release-checklist.md")
@@ -126,6 +129,7 @@ function(SETUP_MAX_TERGET)
 		add_library(${PROJECT} SHARED ${CM_FILES})
 		target_link_libraries(${PROJECT} CONAN_PKG::${SETUP_MAX_TERGET_SDK_TARGET})
 		target_link_libraries(${PROJECT} CONAN_PKG::XplnObj)
+		target_link_libraries(${PROJECT} optimized Winhttp debug Winhttp)
 
 		#--------------------------------------------------------------------------#
 		#//////////////////////////////////////////////////////////////////////////#
