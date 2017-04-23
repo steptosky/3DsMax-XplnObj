@@ -217,11 +217,11 @@ std::string Logger::aboutInfo(bool inUseWinEol) {
 		if (XIO_LIBRARIES[i].libName) {
 			stream << "    " << XIO_LIBRARIES[i].libName;
 		}
-		if (XIO_LIBRARIES[i].libName) {
-			stream << "    " << XIO_LIBRARIES[i].libName;
+		if (XIO_LIBRARIES[i].license) {
+			stream << " (" << XIO_LIBRARIES[i].license << ") ";
 		}
 		if (XIO_LIBRARIES[i].copyright) {
-			stream << "    " << XIO_LIBRARIES[i].copyright;
+			stream << " " << XIO_LIBRARIES[i].copyright;
 		}
 		stream << eol;
 	}

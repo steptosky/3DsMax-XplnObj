@@ -116,7 +116,7 @@ void ObjCommon::updateCheckWinCallback(HWND hwnd, UINT /*uMsg*/, UINT_PTR idEven
 				}
 			}
 			else {
-				LMessage << "[version] Got from remote: " << upd.version.toString();
+				LMessage << "[version] Got from the remote: " << upd.version.toString();
 			}
 		}
 	}
