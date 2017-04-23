@@ -361,7 +361,7 @@ namespace ui {
 		return result;
 	}
 
-	void DlgExport::printUpdateAvailability() const {
+	void DlgExport::printUpdateAvailability() {
 		UpdateChecker::Update upd = ObjCommon::instance()->updateInfo();
 		if (upd.valid) {
 			if (!upd.error.empty()) {
@@ -369,6 +369,7 @@ namespace ui {
 			}
 			else {
 				if (upd.version > SemVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH)) {
+					mBtnCheckUpdate.setText("Get update");
 					CLWarning << "New version " << upd.version.toString()
 							<< " is available please, press the <"
 							<< sts::toMbString(mBtnCheckUpdate.text())

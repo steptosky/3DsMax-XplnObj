@@ -80,7 +80,7 @@ namespace ui {
 
 		int startExport();
 		static void collectMainNodes(INode * inRootNode, std::vector<INode*> & outMains);
-		void printUpdateAvailability() const;
+		void printUpdateAvailability();
 
 		Converterer mConverterer;
 		TimeValue mTime = 0;
