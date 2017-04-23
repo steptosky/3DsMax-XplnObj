@@ -1,6 +1,11 @@
 
 The 3DsMax X-Plane Obj Exporter change-log.
 ===============================================================================
+2.0.2-beta (23.04.2017)
+
+- Fixed potential unstable code.
+
+===============================================================================
 2.0.1-beta (22.04.2017)
 
 - Added: Auto-check for update. If a new version is available after exporting you will see the information in the console.

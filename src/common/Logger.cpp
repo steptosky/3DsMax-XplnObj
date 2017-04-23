@@ -51,7 +51,7 @@
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
-sts::BaseLogger sts::BaseLogger::mInstance;
+//sts::BaseLogger * sts::BaseLogger::mInstance = nullptr;
 std::list<Logger::UserConsoleCallBack> Logger::mCallbacks;
 LogSys * Logger::mMaxLog = nullptr;
 

@@ -35,8 +35,8 @@
 #include <Winhttp.h>
 #include "UpdateChecker.h"
 #include <thread>
-#include "common/BaseLogger.h"
 #include "common/Logger.h"
+#include "common/String.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
@@ -65,7 +65,6 @@ void UpdateChecker::checkForUpdate() {
 		DbgAssert(false);
 		return;
 	}
-	sts::BaseLogger::instance().setThreadSafe(true);
 	mThread = new std::thread(checkUpdateTask, this);
 }
 
@@ -81,7 +80,6 @@ UpdateChecker::Update UpdateChecker::updateInfo() const {
 void UpdateChecker::setUpdateInfo(Update ipdate) {
 	std::lock_guard<std::mutex> lock(mMutex);
 	mUpdateInfo = ipdate;
-	sts::BaseLogger::instance().setThreadSafe(false);
 }
 
 /**************************************************************************************************/
@@ -89,27 +87,28 @@ void UpdateChecker::setUpdateInfo(Update ipdate) {
 /**************************************************************************************************/
 
 void UpdateChecker::checkUpdateTask(void * inUserData) {
-	LInfo << "[version] Start checking for new version";
 	UpdateChecker * updateChecker = reinterpret_cast<UpdateChecker*>(inUserData);
 	Update update{};
+	update.valid = true;
 	Response response = latestReleaseTag();
-	if (response.error) {
-		update.valid = true;
-		update.error = "Can't get information about the latest release. See log for more information.";
-		LError << "[version] " << update.error;
+	if (!response.error.empty()) {
+		update.error = response.error;
+		update.error.emplace_back("Can't get information about the latest release. See log for more information.");
 	}
 	else {
-		update.valid = true;
-		std::string ver = UpdateChecker::extractVersion(response.body);
-		LInfo << "[version] Got: " << ver;
-		if (!update.version.parse(ver)) {
-			update.error = "Can't parse the version: ";
-			update.error.append(ver);
-			LError << "[version] " << update.error;
+		try {
+			std::string ver = UpdateChecker::extractVersion(response.body);
+			if (!update.version.parse(ver)) {
+				update.error.emplace_back("Can't parse the version: ");
+				update.error.back().append(ver);
+			}
+		}
+		catch (std::exception & e) {
+			update.error.emplace_back("Can't parse version: ");
+			update.error.back().append(e.what());
 		}
 	}
 	updateChecker->setUpdateInfo(update);
-	LInfo << "[version] Finish checking for new version";
 }
 
 /**************************************************************************************************/
@@ -136,8 +135,11 @@ UpdateChecker::Response UpdateChecker::latestReleaseTag() {
 		hConnect = WinHttpConnect(hSession, url, INTERNET_DEFAULT_HTTPS_PORT, 0);
 	}
 	else {
-		LError << WinCode(GetLastError());
-		response.error = true;
+		response.error.emplace_back();
+		response.error.back()
+				.append(__STS_FUNC_NAME__)
+				.append(" wincode: ")
+				.append(sts::toMbString(uint64_t(GetLastError())));
 	}
 
 	HINTERNET hRequest = nullptr;
@@ -149,8 +151,11 @@ UpdateChecker::Response UpdateChecker::latestReleaseTag() {
 									WINHTTP_FLAG_SECURE);
 	}
 	else {
-		LError << WinCode(GetLastError());
-		response.error = true;
+		response.error.emplace_back();
+		response.error.back()
+				.append(__STS_FUNC_NAME__)
+				.append(" wincode: ")
+				.append(sts::toMbString(uint64_t(GetLastError())));
 	}
 
 	BOOL bResults = FALSE;
@@ -162,8 +167,11 @@ UpdateChecker::Response UpdateChecker::latestReleaseTag() {
 									0, 0);
 	}
 	else {
-		LError << WinCode(GetLastError());
-		response.error = true;
+		response.error.emplace_back();
+		response.error.back()
+				.append(__STS_FUNC_NAME__)
+				.append(" wincode: ")
+				.append(sts::toMbString(uint64_t(GetLastError())));
 	}
 
 	// End the request.
@@ -171,8 +179,11 @@ UpdateChecker::Response UpdateChecker::latestReleaseTag() {
 		bResults = WinHttpReceiveResponse(hRequest, NULL);
 	}
 	else {
-		LError << WinCode(GetLastError());
-		response.error = true;
+		response.error.emplace_back();
+		response.error.back()
+				.append(__STS_FUNC_NAME__)
+				.append(" wincode: ")
+				.append(sts::toMbString(uint64_t(GetLastError())));
 	}
 
 	// Keep checking for data until there is nothing left.
@@ -184,23 +195,31 @@ UpdateChecker::Response UpdateChecker::latestReleaseTag() {
 			// Check for available data.
 			dwSize = 0;
 			if (!WinHttpQueryDataAvailable(hRequest, &dwSize)) {
-				LError << WinCode(GetLastError());
-				response.error = true;
+				response.error.emplace_back();
+				response.error.back()
+						.append(__STS_FUNC_NAME__)
+						.append(" wincode: ")
+						.append(sts::toMbString(uint64_t(GetLastError())));
 			}
 
 			// Allocate space for the buffer.
 			pszOutBuffer = new char[dwSize + 1];
 			if (!pszOutBuffer) {
-				LError << "Out of memory";
-				response.error = true;
+				response.error.emplace_back();
+				response.error.back()
+						.append(__STS_FUNC_NAME__)
+						.append(" Out of memory");
 				dwSize = 0;
 			}
 			else {
 				// Read the data.
 				ZeroMemory(pszOutBuffer, dwSize + 1);
 				if (!WinHttpReadData(hRequest, (LPVOID)pszOutBuffer, dwSize, &dwDownloaded)) {
-					LError << WinCode(GetLastError());
-					response.error = true;
+					response.error.emplace_back();
+					response.error.back()
+							.append(__STS_FUNC_NAME__)
+							.append(" wincode: ")
+							.append(sts::toMbString(uint64_t(GetLastError())));
 				}
 				else {
 					response.body.append(pszOutBuffer);
@@ -214,8 +233,11 @@ UpdateChecker::Response UpdateChecker::latestReleaseTag() {
 
 	// Report any errors.
 	if (!bResults) {
-		LError << WinCode(GetLastError());
-		response.error = true;
+		response.error.emplace_back();
+		response.error.back()
+				.append(__STS_FUNC_NAME__)
+				.append(" wincode: ")
+				.append(sts::toMbString(uint64_t(GetLastError())));
 	}
 
 	// Close any open handles.

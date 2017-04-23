@@ -29,6 +29,7 @@
 
 #include "ObjCommon.h"
 #include "ui/toolFrame/ToolFrame.h"
+#include "common/Logger.h"
 
 #ifndef IO_SAVE_CAST
 #	if MAX_VERSION_MAJOR > 14
@@ -80,6 +81,47 @@ ObjCommon::~ObjCommon() {
 	mConfig->free();
 }
 
+void ObjCommon::DeleteThis() {
+	this->free();
+}
+
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
+
+//
+// Another example but it does not work in 3d max 9
+//
+// #define WM_TRIGGER_CALLBACK WM_USER+4764
+//
+// void ObjCommon::setUpdateCallBack() {
+//     PostMessage(GetCOREInterface()->GetMAXHWnd(), WM_TRIGGER_CALLBACK, (UINT_PTR)&ObjCommon::updateWinCallback, (UINT_PTR)this);
+// }
+//
+// void ObjCommon::updateWinCallback(UINT_PTR ptr) {}
+//
+
+#define WM_MY_TIMER_ID WM_USER+4764
+#define WM_MY_TIMER_TIME 5000
+
+void ObjCommon::updateCheckWinCallback(HWND hwnd, UINT /*uMsg*/, UINT_PTR idEvent, DWORD /*dwTime*/) {
+	HWND maxHWND = GetCOREInterface()->GetMAXHWnd();
+	if (maxHWND == hwnd && idEvent == WM_MY_TIMER_ID) {
+		UpdateChecker::Update upd = ObjCommon::instance()->updateInfo();
+		if (upd.valid) {
+			KillTimer(maxHWND, WM_MY_TIMER_ID);
+			if (!upd.error.empty()) {
+				for (auto & e : upd.error) {
+					LError << "[version] " << e;
+				}
+			}
+			else {
+				LMessage << "[version] Got from remote: " << upd.version.toString();
+			}
+		}
+	}
+}
+
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
@@ -90,6 +132,8 @@ DWORD ObjCommon::Start() {
 	mToolFrame->create();
 
 	mUpdateChecker.checkForUpdate();
+	SetTimer(GetCOREInterface()->GetMAXHWnd(), UINT_PTR(WM_MY_TIMER_ID),
+			UINT(WM_MY_TIMER_TIME), (TIMERPROC)&ObjCommon::updateCheckWinCallback);
 
 	return GUPRESULT_KEEP;
 }
@@ -113,7 +157,6 @@ DWORD_PTR ObjCommon::Control(DWORD /*param*/) {
 /**************************************************************************************************/
 
 IOResult ObjCommon::Save(ISave * /*isave*/) {
-	// TODO needs a try to save/load plugin version to the root node
 	return IO_OK;
 }
 

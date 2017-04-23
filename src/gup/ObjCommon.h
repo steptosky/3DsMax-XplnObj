@@ -78,9 +78,14 @@ public:
 
 private:
 
-	void DeleteThis() override {
-		this->free();
-	}
+	//-------------------------------------------------------------------------
+	// Thread safe check the result of the update checking
+
+	static void updateCheckWinCallback(HWND, UINT, UINT_PTR, DWORD);
+
+	//-------------------------------------------------------------------------
+
+	void DeleteThis() override;
 
 	ui::ToolFrame * mToolFrame;
 	Config * mConfig;
