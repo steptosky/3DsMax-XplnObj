@@ -12,8 +12,9 @@ cmake/variables.txt
 GITHUB_TOKEN=token here
 ```
 The *GITHUB_TOKEN* is needed if you want to auto-upload the artifacts to github
-- Make build dir
+- Make build dir and export environment variables
 ```
+export -p
 # uncomment it if you want to remove the dir first
 #if [[ -d "build" ]]; then
 #    rm -r "build"

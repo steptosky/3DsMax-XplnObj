@@ -53,7 +53,7 @@ namespace sts {
 	 * \details This is a base logger interface. By default it prints all messages to std::cout.
 	 * \pre Before you will be able to use this logger you must create its variable somewhere,
 	 *      this logger implements the pattern singlton.
-	 * \code sts::BaseLogger sts::BaseLogger::mInstance; \endcode
+	 * \code sts::BaseLogger * sts::BaseLogger::mInstance = nullptr; \endcode
 	 * \details Default log level is \"Debug\".
 	 * \details Default thread safe is \"false\".
 	 * \note The logger supports categories.
@@ -82,7 +82,10 @@ namespace sts {
 		//-------------------------------------------------------------------------
 
 		static BaseLogger & instance() {
-			return mInstance;
+			if (mInstance == nullptr) {
+				mInstance = new BaseLogger();
+			}
+			return *mInstance;
 		}
 
 		//-------------------------------------------------------------------------
@@ -175,7 +178,7 @@ namespace sts {
 		CallBack mCallBack = defaultCallBack;
 		bool mThreadSafe = false;
 		mutable std::mutex mMutex;
-		static BaseLogger mInstance;
+		static BaseLogger * mInstance;
 
 	};
 

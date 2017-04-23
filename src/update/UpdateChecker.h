@@ -31,6 +31,7 @@
 
 #include <mutex>
 #include "SemVersion.h"
+#include <vector>
 
 /********************************************************************************************************/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +42,7 @@ public:
 
 	struct Update {
 		bool valid = false;
-		std::string error;
+		std::vector<std::string> error;
 		SemVersion version;
 	};
 
@@ -74,7 +75,7 @@ private:
 	//-------------------------------------------------------------------------
 
 	struct Response {
-		bool error = false;
+		std::vector<std::string> error;
 		std::string body;
 	};
 

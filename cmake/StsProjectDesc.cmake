@@ -84,7 +84,7 @@ set(ProjectSourcesWebLink "https://github.com/steptosky/3DsMax-XplnObj")
 
 set(ProjectVersionMajor 2)
 set(ProjectVersionMinor 0)
-set(ProjectVersionPatch 1)
+set(ProjectVersionPatch 2)
 set(ProjectVersion "${ProjectVersionMajor}.${ProjectVersionMinor}.${ProjectVersionPatch}")
 set(ProjectReleaseType "beta") # You can use any string you wish
 
