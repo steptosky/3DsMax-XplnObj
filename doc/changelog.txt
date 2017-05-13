@@ -5,7 +5,7 @@ next
 
 - Added: Tooltips for the some controls of the export window.
 - Added: Ability to enable or disable x-obj export. It helps when you work with more then one x-obj in the scene. You can export only selected ones.
-- Added: Checkbox for enabling auto-export. If it is enabled then the export will be auto-started without pressing the 'Ok' button.
+- Added: Checkbox for enabling auto-export. If it is enabled then the export will be auto-started without pressing the 'Export' button.
 - Fixed: Link to donate. The button donate leads to the correct web page now.
 - Fixed: Loop animation attribute printing.
 

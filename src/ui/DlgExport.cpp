@@ -250,7 +250,7 @@ namespace ui {
 		mBtnSaveLog.setToolTip(_T("Saves log which can help the developers to determine the problems. Use it for bug reports."));
 		mBtnDonate.setToolTip(_T("If you like this plugin please, support the development."));
 		mBtnCheckUpdate.setToolTip(_T("Visit the download page for seeing if a new version is available."));
-		mChkAutoExport.setToolTip(_T("If it is enabled then the export will be auto-started without pressing the 'Ok' button. Value is saved with the scene."));
+		mChkAutoExport.setToolTip(_T("If it is enabled then the export will be auto-started without pressing the 'Export' button. Value is saved with the scene."));
 
 		collectMainNodes();
 		loadConfigData();
