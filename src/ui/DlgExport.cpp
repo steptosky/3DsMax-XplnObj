@@ -150,7 +150,7 @@ namespace ui {
 						break;
 					}
 					case BTN_DONATE: {
-						ShellExecute(nullptr, _T("open"), _T("http://steptosky.com/index.php/software/8-x-obj-exporter"), nullptr, nullptr, SW_SHOWNORMAL);
+						ShellExecute(nullptr, _T("open"), _T("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8AGCSV2WMXTES"), nullptr, nullptr, SW_SHOWNORMAL);
 						break;
 					}
 					case BTN_CHECK_FOR_UPDATE: {
