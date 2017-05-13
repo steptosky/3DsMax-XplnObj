@@ -29,11 +29,16 @@
 
 #pragma once
 
+#include <vector>
+#include <utility>
+
 #include "ui/controls/Base.h"
-#include "Converters/Converterer.h"
+#include "ui/controls/CheckBox.h"
 #include "ui/controls/Edit.h"
+#include "Converters/Converterer.h"
 #include "common/Logger.h"
 #include "update/UpdateChecker.h"
+#include "controls/ExportObjList.h"
 
 namespace ui {
 
@@ -50,6 +55,8 @@ namespace ui {
 		bool show(const TCHAR * inFileName, Interface * inIp, bool suppressPrompts, bool selectedOnly);
 
 	private:
+		typedef std::pair<INode *, int> NodeCollectionStruct;
+		typedef std::vector<NodeCollectionStruct> NodeCollection;
 
 		HWND mHWnd = nullptr;;
 		void InitDlg(HWND hWnd);
@@ -57,14 +64,18 @@ namespace ui {
 
 		win::Base mLblVersion;
 
+		win::Base mDlgMain;
 		win::Base mBtnCheckUpdate;
 		win::Base mBtnDonate;
 		win::Base mBtnSaveLog;
 		win::Base mBtnOk;
 		win::Base mBtnCancel;
 		win::Base mBtnAbout;;
+		win::Base mBtnSelAll;
+		win::Base mBtnUnSelAll;
 		win::Edit mEdtLog;
-		win::Base mDlgMain;
+		win::CheckBox mChkAutoExport;
+		win::ExportObjList mLstObjects;
 
 		//-------------------------------------------------------------------------
 
@@ -79,8 +90,11 @@ namespace ui {
 		//-------------------------------------------------------------------------
 
 		int startExport();
-		static void collectMainNodes(INode * inRootNode, std::vector<INode*> & outMains);
+		void collectMainNodes();
+		void collectMainNodes(INode * inRootNode, NodeCollection & outMains);
 		void printUpdateAvailability();
+		size_t selectedNodeCount();
+		void slotSelObjChanged(int idx);
 
 		Converterer mConverterer;
 		TimeValue mTime = 0;
@@ -94,7 +108,12 @@ namespace ui {
 
 		static DlgExport * gExportDlg;
 
+		NodeCollection mMainNodesCollection;
+
 		//-------------------------------------------------------------------------
+
+		void saveConfigData();
+		void loadConfigData();
 
 		void saveLogRequest();
 		void exportFinished();

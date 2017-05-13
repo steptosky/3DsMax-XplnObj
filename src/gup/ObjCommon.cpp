@@ -156,11 +156,90 @@ DWORD_PTR ObjCommon::Control(DWORD /*param*/) {
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-IOResult ObjCommon::Save(ISave * /*isave*/) {
+// It is necessary for compiling for old version of 3d max.
+#if MAX_VERSION_MAJOR > 14
+#	define myByte BYTE
+#else
+#	define myByte void
+#endif
+
+// The case ID is not started from 0 because some previous versions of the plugin are used 0 and 1
+// but that data is not necessary anymore.
+
+IOResult ObjCommon::Save(ISave * isave) {
+	// TODO Save current plugin version with the scene
+	try {
+		ULONG temp = 0;
+		std::string settings = pSettings.toString();
+		//------------------------------------
+		isave->BeginChunk(2);
+		isave->Write(reinterpret_cast<const myByte *>(&mIoVersion), sizeof(mIoVersion), &temp);
+		isave->EndChunk();
+		DbgAssert(sizeof(mIoVersion) == temp);
+		//------------------------------------
+		uint32_t strLength = uint32_t(settings.length());
+		isave->BeginChunk(3);
+		isave->Write(reinterpret_cast<const myByte *>(&strLength), sizeof(strLength), &temp);
+		isave->EndChunk();
+		DbgAssert(sizeof(strLength) == temp);
+		//------------------------------------
+		isave->BeginChunk(4);
+		isave->Write(reinterpret_cast<const myByte *>(settings.c_str()), strLength, &temp);
+		isave->EndChunk();
+		DbgAssert(strLength == temp);
+		//------------------------------------
+	}
+	catch (std::exception & e) {
+		LError << "Can't save " << TOTEXT(ObjCommon) << " Reason: " << e.what();
+		return IO_ERROR;
+	}
 	return IO_OK;
 }
 
-IOResult ObjCommon::Load(ILoad * /*iload*/) {
+IOResult ObjCommon::Load(ILoad * iload) {
+	try {
+		ULONG temp;
+		uint32_t version = 0;
+		uint32_t strLength = 0;
+		IOResult res;
+		while ((res = iload->OpenChunk()) == IO_OK) {
+			switch (iload->CurChunkID()) {
+				case 2: {
+					iload->Read(reinterpret_cast<myByte *>(&version), sizeof(version), &temp);
+					DbgAssert(sizeof(mIoVersion) == temp);
+					if (version != mIoVersion) {
+						LError << "Got incorrect version " << version << "/" << mIoVersion;
+						return IO_ERROR;
+					}
+					break;
+				}
+				case 3: {
+					iload->Read(reinterpret_cast<myByte *>(&strLength), sizeof(strLength), &temp);
+					DbgAssert(sizeof(strLength) == temp);
+					break;
+				}
+				case 4: {
+					char * str = new char[strLength];
+					iload->Read(reinterpret_cast<myByte *>(str), strLength, &temp);
+					DbgAssert(strLength == temp);
+					std::string stdstr(str, size_t(strLength));
+					delete[] str;
+					pSettings.fromString(stdstr);
+					break;
+				}
+				default: break;
+			}
+			iload->CloseChunk();
+			if (res != IO_OK) {
+				return res;
+			}
+		}
+		//------------------------------------
+	}
+	catch (std::exception & e) {
+		LError << "Can't load " << TOTEXT(ObjCommon) << " Reason: " << e.what();
+		return IO_ERROR;
+	}
 	return IO_OK;
 }
 

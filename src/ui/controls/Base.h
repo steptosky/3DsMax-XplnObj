@@ -61,9 +61,9 @@ namespace win {
 		//--------------------------------------------------
 
 		operator bool() const { return mHwnd != nullptr; }
-		bool setup(HWND inParent, int inControlID);
-		void setup(HWND inHWnd);
-		void release();
+		virtual bool setup(HWND inParent, int inControlID);
+		virtual void setup(HWND inHWnd);
+		virtual void release();
 
 		//--------------------------------------------------
 
@@ -98,7 +98,7 @@ namespace win {
 
 		//--------------------------------------------------
 
-		void setToolTip(const String & text);
+		void setToolTip(const String & text, const uint32_t showTimeMilisec = 10000);
 
 		//--------------------------------------------------
 

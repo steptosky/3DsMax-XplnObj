@@ -27,113 +27,109 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "Base.h"
-#include "commctrl.h"
+#include "ExportObjList.h"
+#include <windows.h>
+#include <commctrl.h>
 
 namespace win {
+
+	/**************************************************************************************************/
+	/////////////////////////////////////////* Static area *////////////////////////////////////////////
+	/**************************************************************************************************/
 
 	/**************************************************************************************************/
 	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
 	/**************************************************************************************************/
 
-	Base::Base() {
-		init();
-	}
+	ExportObjList::ExportObjList() { }
 
-	Base::Base(HWND inHWnd) {
-		init();
-		Base::setup(inHWnd);
-	}
-
-	Base::Base(HWND inParent, int inControlID) {
-		init();
-		Base::setup(inParent, inControlID);
-	}
-
-	Base::~Base() { }
-
-	void Base::init() {
-		mHwnd = nullptr;
-		mControlID = 0;
-	}
-
-	void Base::release() {
-		init();
-	}
+	ExportObjList::~ExportObjList() { }
 
 	/**************************************************************************************************/
 	///////////////////////////////////////////* Functions *////////////////////////////////////////////
 	/**************************************************************************************************/
 
-	bool Base::setup(HWND inParent, int inControlID) {
-		mControlID = inControlID;
-		mHwnd = GetDlgItem(inParent, inControlID);
-		return static_cast<bool>(*this); // there is the operator bool
-	}
-
-	void Base::setup(HWND inHWnd) {
-		mHwnd = inHWnd;
-	}
-
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
-
-	Base::String Base::text() const {
-		assert(mHwnd);
-		int textSize = GetWindowTextLength(mHwnd);
-		TCHAR * text = new TCHAR[textSize + 1];
-		GetWindowText(mHwnd, text, textSize + 1);
-		String t(text);
-		delete[] text;
-		return t;
-	}
-
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
-
-	void Base::setToolTip(const String & text, const uint32_t showTimeMilisec) {
-		assert(mHwnd);
-		// Create a tooltip.
-		HWND hwndTT = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL,
-												WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP,
-												CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-												mHwnd, NULL, NULL, NULL);
-
-		SetWindowPos(hwndTT, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-
-		// Set up "tool" information. In this case, the "tool" is the entire parent window.
-
-		TTTOOLINFO ti = {0};
-		ti.cbSize = sizeof(TTTOOLINFO);
-		ti.uFlags = TTF_SUBCLASS;
-		ti.hwnd = mHwnd;
-		ti.hinst = nullptr;
-
-		size_t length = text.length() + 1;
-		ti.lpszText = new TCHAR[length];
-		_tcscpy_s(ti.lpszText, length, text.c_str());
-
-		GetClientRect(mHwnd, &ti.rect);
-		// Associate the tooltip with the "tool" window.
-		SendMessage(hwndTT, TTM_ADDTOOL, 0, (LPARAM)(LPTOOLINFO)&ti);
-		SendMessage(hwndTT, TTM_SETDELAYTIME, TTDT_AUTOPOP, MAKELPARAM((showTimeMilisec), (0)));
-	}
-
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
-
-	void Base::setIndeterminate(bool inState, const String & text) {
-		mIsIndeterminate = inState;
-		if (inState) {
-			mTmpIndetStr = this->text();
-			setText(text);
+	bool ExportObjList::setup(HWND inParent, int inControlID) {
+		bool res = Base::setup(inParent, inControlID);
+		if (!res) {
+			return res;
 		}
-		else {
-			setText(mTmpIndetStr.c_str());
+		setup();
+		return false;
+	}
+
+	void ExportObjList::setup(HWND inParent) {
+		Base::setup(inParent);
+		setup();
+	}
+
+	/**************************************************************************************************/
+	///////////////////////////////////////////* Functions *////////////////////////////////////////////
+	/**************************************************************************************************/
+
+	void ExportObjList::checkAll(bool state) {
+		assert(hwnd());
+		for (int nItem = 0; nItem < ListView_GetItemCount(hwnd()); nItem++) {
+			checkItem(nItem, state);
 		}
+	}
+
+	void ExportObjList::checkItem(int idx, bool state) {
+		assert(hwnd());
+		ListView_SetCheckState(hwnd(), idx, state);
+	}
+
+	/**************************************************************************************************/
+	///////////////////////////////////////////* Functions *////////////////////////////////////////////
+	/**************************************************************************************************/
+
+	int ExportObjList::addItem(const String & inName) {
+		assert(hwnd());
+		LVITEM lvi = {0};
+		lvi.iItem = mLastFreeId;
+
+		// Insert the item itself
+		// Since we're always inserting item 0, new items will appear on top
+		int idx = ListView_InsertItem(hwnd(), &lvi);
+		if (idx == -1) {
+			return idx;
+		}
+		++mLastFreeId;
+
+		// Insert the subitems (columns)
+		lvi.mask = LVIF_TEXT;
+		lvi.iSubItem = 1;
+
+		size_t length = inName.length() + 1;
+		lvi.pszText = new TCHAR[length];
+		_tcscpy_s(lvi.pszText, length, inName.c_str());
+
+		ListView_SetItem(hwnd(), &lvi);
+		return mLastFreeId - 1;
+	}
+
+	bool ExportObjList::isChecked(int idx) {
+		assert(hwnd());
+		if (idx == -1) {
+			return false;
+		}
+		return ListView_GetCheckState(hwnd(), idx) != 0;
+	}
+
+	void ExportObjList::setup() {
+		assert(hwnd());
+		ListView_SetExtendedListViewStyle(hwnd(), LVS_EX_CHECKBOXES | LVS_EX_FULLROWSELECT);
+
+		LVCOLUMN lvc = {0};
+		ListView_InsertColumn(hwnd(), 0, &lvc);
+		lvc.mask = LVCF_TEXT;
+		lvc.iSubItem++;
+		lvc.pszText = _T("X-Objects");
+		ListView_InsertColumn(hwnd(), 1, &lvc);
+
+		// Set column widths
+		ListView_SetColumnWidth(hwnd(), 0, LVSCW_AUTOSIZE_USEHEADER);
+		ListView_SetColumnWidth(hwnd(), 1, LVSCW_AUTOSIZE_USEHEADER);
 	}
 
 	/**************************************************************************************************/

@@ -298,6 +298,12 @@
 #define SPN_V2                          1236
 #define SPN_V1                          1237
 #define LBL_NAME                        1238
+#define CHK_AUTOEXPORT                  1239
+#define IDC_LIST1                       1240
+#define LST_OBJECTS                     1240
+#define BTN_SELECT_ALL                  1241
+#define BTN_UNSELECT_ALL                1242
+#define STC_XOBJ_EXPORT                 1243
 
 // Next default values for new objects
 // 
@@ -305,7 +311,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        163
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1239
+#define _APS_NEXT_CONTROL_VALUE         1244
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

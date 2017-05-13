@@ -160,6 +160,8 @@ enum eMainObjExpParams : ParamID {
 	MainObjExp_NameDummies,
 	MainObjExp_TreeHierarchy,
 
+	MainObjAttr_ExportEnable = 50,
+
 	//-------------------------------------
 };
 

@@ -38,29 +38,26 @@
 /**************************************************************************************************/
 
 /*!
- * \details Access to the external config (ini) file
+ * \details Access to the settings which are stored with the GUP (ObjCommon) class.
+ * \Note This settings are saved with the scene, so each scene has its own parameters.
  */
-class Config : public sts::Settings, public sts_t::Single<Config> {
+class Settings : public sts::Settings {
 public:
 
-	bool load() {
-		return Settings::load(mConfigFile);
+	Settings() = default;
+
+	bool fromString(const std::string & str) {
+		std::stringstream stream(str);
+		return Settings::load(stream);
 	}
 
-	bool save() const {
-		return Settings::save(mConfigFile);
+	std::string toString() const {
+		std::stringstream stream;
+		if (!Settings::save(stream)) {
+			return "";
+		}
+		return stream.str();
 	}
-
-	Config();
-
-	virtual ~Config() {
-		save();
-	}
-
-private:
-
-	std::string mConfigFile;
-
 };
 
 /**************************************************************************************************/
