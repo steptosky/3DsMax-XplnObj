@@ -95,6 +95,8 @@ namespace ui {
 		win::Base cBtnAddShow;
 		win::Base cBtnAddHide;
 		win::Base cBtnDelete;
+		win::Base cStcValue1;
+		win::Base cStcValue2;
 		win::CheckBox cChkEnable;
 		ICustEdit * cEditDataRef = nullptr;
 		ISpinnerControl * cSpnValue1 = nullptr;

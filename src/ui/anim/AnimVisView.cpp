@@ -203,6 +203,8 @@ namespace ui {
 		cBtnDelete.setup(hWnd, BTN_DELETE);
 		cSpnValue1 = SetupFloatSpinner(hWnd, SPN_VISIBILITY_V1, SPN_VISIBILITY_V1_EDIT, -10000.0f, 10000.0f, 0.0f, 0.01f);
 		cSpnValue2 = SetupFloatSpinner(hWnd, SPN_VISIBILITY_V2, SPN_VISIBILITY_V2_EDIT, -10000.0f, 10000.0f, 1.0f, 0.01f);
+		cStcValue1.setup(hWnd, STC_VALUE1);
+		cStcValue2.setup(hWnd, STC_VALUE2);
 
 		cChkEnable.setToolTip(sts::toString("Enable exporting the animation."));
 		cBtnAddShow.setToolTip(sts::toString("Add show animaion."));
@@ -221,6 +223,8 @@ namespace ui {
 		cBtnDelete.release();
 		ReleaseISpinner(cSpnValue1);
 		ReleaseISpinner(cSpnValue2);
+		cStcValue1.release();
+		cStcValue2.release();
 	}
 
 	/**************************************************************************************************/
@@ -253,6 +257,8 @@ namespace ui {
 		cBtnDelete.enable();
 		cSpnValue1->Enable();
 		cSpnValue2->Enable();
+		cStcValue1.enable();
+		cStcValue2.enable();
 	}
 
 	void AnimVisView::disableControls() {
@@ -265,6 +271,8 @@ namespace ui {
 		cBtnDelete.disable();
 		cSpnValue1->Disable();
 		cSpnValue2->Disable();
+		cStcValue1.disable();
+		cStcValue2.disable();
 	}
 
 	/**************************************************************************************************/
