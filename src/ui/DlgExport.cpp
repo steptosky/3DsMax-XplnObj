@@ -41,6 +41,8 @@
 #include "objects/MainObjParamsWrapper.h"
 #include "converters/ConverterUtils.h"
 #include "gup/ObjCommon.h"
+#include <windows.h>
+#include <commctrl.h>
 
 namespace ui {
 
@@ -168,12 +170,20 @@ namespace ui {
 			case WM_NOTIFY: {
 				switch (LOWORD(wParam)) {
 					case LST_OBJECTS: {
-						// Note: There is the loop call when the state is changed from the code while main nodes searching.
-						if (reinterpret_cast<LPNMHDR>(lParam)->code == LVN_ITEMCHANGED) {
-							LPNMLISTVIEW pnmv = reinterpret_cast<LPNMLISTVIEW>(lParam);
-							if (pnmv->uChanged == LVIF_STATE) {
-								theDlg->slotSelObjChanged(pnmv->iItem);
+						LPNMHDR some_item = reinterpret_cast<LPNMHDR>(lParam);
+						switch (some_item->code) {
+							case LVN_ITEMCHANGED: {
+								// Note: There is the loop call when the state is changed from the code while main nodes searching.
+								LPNMLISTVIEW pnmv = reinterpret_cast<LPNMLISTVIEW>(lParam);
+								if (pnmv->uChanged == LVIF_STATE) {
+									theDlg->slotSelObjChanged(pnmv->iItem);
+								}
+								break;
 							}
+							case NM_CUSTOMDRAW: {
+								return theDlg->mLstObjects.draw(lParam);
+							}
+							default: break;
 						}
 						break;
 					}

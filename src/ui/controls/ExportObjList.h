@@ -55,12 +55,27 @@ namespace win {
 
 		//-------------------------------------------------------------------------
 
+		// It applies the 3dmax's theme
+		LRESULT draw(LPARAM lParam);
+
+		//-------------------------------------------------------------------------
+
 	private:
 
 		void setup();
+		static LRESULT subClassProc(HWND hWnd,UINT uMsg, WPARAM wParam, LPARAM lParam,
+									UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
+		static LRESULT drawItems(LPARAM lParam, ExportObjList * data);
+
 		int mHeaderId = 0;
 		unsigned mLastFreeId = 0;
+		HWND mHeader = nullptr;
 
+		COLORREF mWinColor;
+		COLORREF mWinTextColor;
+		HBRUSH mWinBrush = nullptr;
+
+		TCHAR *mHeadersText[2]={_T("V"), _T("X-Objects")};
 	};
 
 	/**************************************************************************************************/
