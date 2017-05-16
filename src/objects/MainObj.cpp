@@ -731,6 +731,10 @@ static ParamBlockDesc2 gMainExpPb(MainObjExpParams, _T("X-Obj-Options"), 0, &gOb
 								ROLL_MAINOBJ_EXP, IDS_ROLL_MAINOBJ_EXP, 0, APPENDROLL_CLOSED, NULL,
 								//-------------------------------------------------------------------------
 								// Export Params
+								MainObjAttr_ExportEnable, _T("Enable-export"), TYPE_BOOL, 0, NO_IDS,
+								p_default, TRUE,
+								p_end,
+
 								MainObjExp_Meshes, _T("Enable-mesh"), TYPE_BOOL, 0, NO_IDS,
 								p_default, TRUE,
 								p_ui, TYPE_SINGLECHECKBOX, CHK_ENABLE_MESH,

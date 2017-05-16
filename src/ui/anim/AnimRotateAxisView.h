@@ -84,6 +84,9 @@ namespace ui {
 		win::Base cBtnDataRef;
 		win::Base cBtnReverseValue;
 		win::Base cBtnCalculateValue;
+		win::Base cBtnUpdate;
+		win::Base cStcValue1;
+		win::Base cStcValue2;
 		win::List cListKeys;
 		win::CheckBox cChkEnable;
 		win::CheckBox cChkReverse;

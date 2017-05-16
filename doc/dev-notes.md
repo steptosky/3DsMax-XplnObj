@@ -1,4 +1,11 @@
 ## Jenkins CI item example
+- Use _"Inject passwords to the build as environment variables"_ for the confidential data
+  ```
+  CONAN_USER
+  CONAN_PASS
+  GITHUB_TOKEN
+  ```
+  The *GITHUB_TOKEN* is needed if you want to auto-upload the artifacts to github
 - Generate enivironment variables from the project description
 ```
 cd cmake
@@ -9,9 +16,10 @@ cmake -DCONTENT_PREFIX="Sts" -P StsProjectDescCiEnvGenerator.cmake
 cmake/variables.txt
 ```
 ```
-GITHUB_TOKEN=token here
+# If you need then add
+CONAN_REMOTE=?
 ```
-The *GITHUB_TOKEN* is needed if you want to auto-upload the artifacts to github
+
 - Make build dir and export environment variables
 ```
 export -p
@@ -23,7 +31,7 @@ export -p
 ```
 - Set conan user if it is needed
 ``` 
-conan user username -r remote -p password 
+conan user ${CONAN_USER} -r ${CONAN_REMOTE} -p ${CONAN_PASS}
 ```
 - Build
 ```

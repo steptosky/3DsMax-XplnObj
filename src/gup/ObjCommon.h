@@ -41,6 +41,7 @@
 #include "sts/utilities/templates/Single.h"
 #include "Common/Config.h"
 #include "update/UpdateChecker.h"
+#include "Settings.h"
 
 #define COMMON_CLASS_ID	Class_ID(0xf5226b9, 0x5b131ef2)
 
@@ -52,6 +53,7 @@ namespace ui {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
+// TODO make the correct singlton for this class, it should return nullptr if it is deleted
 class ObjCommon : public GUP, public sts_t::Single<ObjCommon> {
 public:
 
@@ -76,6 +78,8 @@ public:
 
 	UpdateChecker::Update updateInfo() const { return mUpdateChecker.updateInfo(); }
 
+	Settings pSettings;
+
 private:
 
 	//-------------------------------------------------------------------------
@@ -93,6 +97,8 @@ private:
 	UpdateChecker mUpdateChecker;
 
 	//-------------------------------------------------------------------------
+
+	static const uint32_t mIoVersion = 1;
 
 };
 

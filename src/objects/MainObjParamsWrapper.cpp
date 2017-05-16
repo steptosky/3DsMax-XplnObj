@@ -75,6 +75,19 @@ bool MainObjParamsWrapper::isMainObj(INode * inNode) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
+bool MainObjParamsWrapper::isExportEnable() {
+	BOOL val = TRUE;
+	if (mPbExp) {
+		if (!mPbExp->GetValue(MainObjAttr_ExportEnable, mT, val, mInterval)) {
+			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_ExportEnable);
+		}
+	}
+	else {
+		LError << "Pointer to IParamBlock2 is nullptr";
+	}
+	return val == TRUE;
+}
+
 bool MainObjParamsWrapper::isMeshExport() {
 	BOOL val = TRUE;
 	if (mPbExp) {
@@ -167,6 +180,17 @@ bool MainObjParamsWrapper::isDebug() {
 }
 
 //-------------------------------------------------------------------------
+
+void MainObjParamsWrapper::setExportEnable(bool inState) {
+	if (mPbExp) {
+		if (!mPbExp->SetValue(MainObjAttr_ExportEnable, mT, int(inState))) {
+			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_ExportEnable);
+		}
+	}
+	else {
+		LError << "Pointer to IParamBlock2 is nullptr";
+	}
+}
 
 void MainObjParamsWrapper::setMeshExport(bool inState) {
 	if (mPbExp) {

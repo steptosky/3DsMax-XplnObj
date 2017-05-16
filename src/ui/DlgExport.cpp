@@ -41,6 +41,8 @@
 #include "objects/MainObjParamsWrapper.h"
 #include "converters/ConverterUtils.h"
 #include "gup/ObjCommon.h"
+#include <windows.h>
+#include <commctrl.h>
 
 namespace ui {
 
@@ -137,12 +139,20 @@ namespace ui {
 						theDlg->saveLogRequest();
 						break;
 					}
+					case BTN_SELECT_ALL: {
+						theDlg->mLstObjects.checkAll(true);
+						break;
+					}
+					case BTN_UNSELECT_ALL: {
+						theDlg->mLstObjects.checkAll(false);
+						break;
+					}
 					case BTN_CANCEL: {
 						EndDialog(hWnd, 0);
 						break;
 					}
 					case BTN_DONATE: {
-						ShellExecute(nullptr, _T("open"), _T("http://steptosky.com/index.php/software/8-x-obj-exporter"), nullptr, nullptr, SW_SHOWNORMAL);
+						ShellExecute(nullptr, _T("open"), _T("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8AGCSV2WMXTES"), nullptr, nullptr, SW_SHOWNORMAL);
 						break;
 					}
 					case BTN_CHECK_FOR_UPDATE: {
@@ -151,6 +161,30 @@ namespace ui {
 					}
 					case BTN_ABOUT: {
 						DlgAbout::show();
+						break;
+					}
+					default: break;
+				}
+				break;
+			}
+			case WM_NOTIFY: {
+				switch (LOWORD(wParam)) {
+					case LST_OBJECTS: {
+						LPNMHDR some_item = reinterpret_cast<LPNMHDR>(lParam);
+						switch (some_item->code) {
+							case LVN_ITEMCHANGED: {
+								// Note: There is the loop call when the state is changed from the code while main nodes searching.
+								LPNMLISTVIEW pnmv = reinterpret_cast<LPNMLISTVIEW>(lParam);
+								if (pnmv->uChanged == LVIF_STATE) {
+									theDlg->slotSelObjChanged(pnmv->iItem);
+								}
+								break;
+							}
+							case NM_CUSTOMDRAW: {
+								return theDlg->mLstObjects.draw(lParam);
+							}
+							default: break;
+						}
 						break;
 					}
 					default: break;
@@ -209,30 +243,85 @@ namespace ui {
 		mBtnOk.setup(hWnd, BTN_OK);
 		mBtnCancel.setup(hWnd, BTN_CANCEL);
 		mBtnAbout.setup(hWnd, BTN_ABOUT);
+		mBtnSelAll.setup(hWnd, BTN_SELECT_ALL);
+		mBtnUnSelAll.setup(hWnd, BTN_UNSELECT_ALL);
 		mBtnDonate.setup(hWnd, BTN_DONATE);
 		mEdtLog.setup(hWnd, USER_OUPUT);
+		mChkAutoExport.setup(hWnd, CHK_AUTOEXPORT);
+		mLstObjects.setup(hWnd, LST_OBJECTS);
 		mDlgMain.show();
 
 		mBtnSaveLog.disable();
 
 		sts::Str str(_T("Version: "));
-		str.append(_T(XIO_VERSION_STRING)).append(_T("-")).append(_T(XIO_RELEASE_TYPE));
+		str.append(sts::toString(Logger::versionShortString()));
 		mLblVersion.setText(str);
+
+		mBtnSaveLog.setToolTip(_T("Saves log which can help the developers to determine the problems. Use it for bug reports."));
+		mBtnDonate.setToolTip(_T("If you like this plugin please, support the development."));
+		mBtnCheckUpdate.setToolTip(_T("Visit the download page for seeing if a new version is available."));
+		mChkAutoExport.setToolTip(_T("If it is enabled then the export will be auto-started without pressing the 'Export' button. Value is saved with the scene."));
+
+		collectMainNodes();
+		loadConfigData();
+
+		if (mChkAutoExport.isChecked()) {
+			startExport();
+		}
 	}
 
 	void DlgExport::DestroyDlg(HWND /*hWnd*/) {
+		saveConfigData();
 		mLblVersion.release();
 		mBtnCheckUpdate.release();
 		mBtnSaveLog.release();
 		mBtnOk.release();
 		mBtnCancel.release();
 		mBtnAbout.release();
+		mBtnSelAll.release();
+		mBtnUnSelAll.release();
 		mBtnDonate.release();
+		mChkAutoExport.release();
+		mLstObjects.release();
 	}
 
 	/**************************************************************************************************/
 	//////////////////////////////////////////* Functions */////////////////////////////////////////////
 	/**************************************************************************************************/
+
+	void DlgExport::saveConfigData() {
+		ObjCommon * cmn = ObjCommon::instance();
+		if (cmn) {
+			Settings & conf = cmn->pSettings;
+			conf.beginGroup(TOTEXT(DlgExport));
+			conf.setValue(TOTEXT(mChkAutoExport), mChkAutoExport.isChecked());
+			conf.endGroup();
+		}
+	}
+
+	void DlgExport::loadConfigData() {
+		ObjCommon * cmn = ObjCommon::instance();
+		if (cmn) {
+			Settings & conf = cmn->pSettings;
+			conf.beginGroup(TOTEXT(DlgExport));
+			mChkAutoExport.setState(conf.value(TOTEXT(mChkAutoExport), false));
+			conf.endGroup();
+		}
+	}
+
+	/**************************************************************************************************/
+	//////////////////////////////////////////* Functions */////////////////////////////////////////////
+	/**************************************************************************************************/
+
+	void DlgExport::slotSelObjChanged(int idx) {
+		for (auto & i : mMainNodesCollection) {
+			if (i.second == idx) {
+				MainObjParamsWrapper wrapper(i.first, mTime, FOREVER);
+				wrapper.setExportEnable(mLstObjects.isChecked(idx));
+				return;
+			}
+		}
+	}
 
 	void DlgExport::saveLogRequest() {
 		Interface8 * ip = GetCOREInterface8();
@@ -285,16 +374,7 @@ namespace ui {
 
 		//----------------------------------
 
-		std::vector<INode*> mainNodes;
-		INode * nodeRoot = mIp->GetRootNode();
-		int count = nodeRoot->NumberOfChildren();
-		for (int i = 0; i < count; ++i) {
-			collectMainNodes(nodeRoot->GetChildNode(i), mainNodes);
-		}
-
-		//----------------------------------
-
-		if (mainNodes.empty()) {
+		if (mMainNodesCollection.empty()) {
 			MessageBoxA(GetActiveWindow(), "There are no X-Obj found.", "Warning", MB_OK | MB_ICONWARNING);
 			CLError << "There are no X-Obj object found.";
 		}
@@ -303,21 +383,23 @@ namespace ui {
 
 		std::string mainFileName(sts::toMbString(mExpFileName));
 		bool produceDerivedFiles = false;
-		if (mainNodes.size() > 1) {
-			CLMessage << "Found " << mainNodes.size() << " main objects";
+		size_t selNodeCoun = selectedNodeCount();
+		if (selectedNodeCount() > 1) {
 			produceDerivedFiles = true;
 		}
-		else {
-			CLMessage << "Found " << mainNodes.size() << " main object";
-		}
+		CLMessage << "Found " << mMainNodesCollection.size() << " main object. Selected " << selNodeCoun;
 
-		for (auto currMainNode : mainNodes) {
-			if (!currMainNode) {
+		for (auto currMainNode : mMainNodesCollection) {
+			if (!currMainNode.first) {
+				continue;
+			}
+			if (!mLstObjects.isChecked(currMainNode.second)) {
+				CLMessage << "Object " << sts::toMbString(currMainNode.first->GetName()) << " is skipped.";
 				continue;
 			}
 
 			std::string exportFilePath(mainFileName);
-			const TCHAR * nodeName = currMainNode->GetName();
+			const TCHAR * nodeName = currMainNode.first->GetName();
 
 			if (produceDerivedFiles) {
 				if (_tcslen(nodeName) < 1) {
@@ -330,7 +412,7 @@ namespace ui {
 
 			xobj::ObjMain xMain;
 			ConverterUtils::toXTMatrix(ConverterUtils::TOOGL_MTX, xMain.pMatrix);
-			MainObjParamsWrapper mwrapper(currMainNode, GetCOREInterface()->GetTime(), FOREVER);
+			MainObjParamsWrapper mwrapper(currMainNode.first, GetCOREInterface()->GetTime(), FOREVER);
 			result = mConverterer.toXpln(&mwrapper, xMain) ? TRUE : FALSE;
 			if (result == FALSE) {
 				CLError << "Export object: \"" << sts::toMbString(nodeName) << "\" is FAILED";
@@ -344,10 +426,10 @@ namespace ui {
 			xMain.pExportOptions.setSignature(signature);
 
 			if (!xMain.exportToFile(exportFilePath)) {
-				CLError << "Export object: \"" << sts::toMbString(currMainNode->GetName()) << "\" is FAILED";
+				CLError << "Export object: \"" << sts::toMbString(currMainNode.first->GetName()) << "\" is FAILED";
 			}
 			else {
-				CLMessage << "Export object: \"" << sts::toMbString(currMainNode->GetName()) << "\" is OK";
+				CLMessage << "Export object: \"" << sts::toMbString(currMainNode.first->GetName()) << "\" is OK";
 			}
 		}
 
@@ -371,21 +453,46 @@ namespace ui {
 				if (upd.version > SemVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH)) {
 					mBtnCheckUpdate.setText("Get update");
 					CLWarning << "New version " << upd.version.toString()
-							<< " is available please, press the <"
-							<< sts::toMbString(mBtnCheckUpdate.text())
-							<< "> button to get the new version.";
+					<< " is available please, press the <"
+					<< sts::toMbString(mBtnCheckUpdate.text())
+					<< "> button to get the new version.";
 				}
 			}
 		}
+	}
+
+	size_t DlgExport::selectedNodeCount() {
+		size_t count = 0;
+		for (auto currMainNode : mMainNodesCollection) {
+			if (!currMainNode.first) {
+				continue;
+			}
+			if (mLstObjects.isChecked(currMainNode.second)) {
+				++count;
+			}
+		}
+		return count;
 	}
 
 	/**************************************************************************************************/
 	///////////////////////////////////////////* Functions *////////////////////////////////////////////
 	/**************************************************************************************************/
 
-	void DlgExport::collectMainNodes(INode * inRootNode, std::vector<INode*> & outMains) {
+	void DlgExport::collectMainNodes() {
+		INode * nodeRoot = mIp->GetRootNode();
+		int count = nodeRoot->NumberOfChildren();
+		for (int i = 0; i < count; ++i) {
+			collectMainNodes(nodeRoot->GetChildNode(i), mMainNodesCollection);
+		}
+	}
+
+	void DlgExport::collectMainNodes(INode * inRootNode, NodeCollection & outMains) {
+		assert(mLstObjects);
 		if (MainObjParamsWrapper::isMainObj(inRootNode)) {
-			outMains.push_back(inRootNode);
+			MainObjParamsWrapper wrapper(inRootNode, mTime, FOREVER);
+			int idx = mLstObjects.addItem(inRootNode->GetName());
+			outMains.emplace_back(NodeCollectionStruct(inRootNode, idx));
+			mLstObjects.checkItem(idx, wrapper.isExportEnable());
 		}
 		int count = inRootNode->NumberOfChildren();
 		for (int i = 0; i < count; ++i) {

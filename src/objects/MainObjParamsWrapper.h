@@ -65,6 +65,7 @@ public:
 
 	/***************************************************************************************/
 
+	void setExportEnable(bool inState);
 	void setMeshExport(bool inState);
 	void setLinesExport(bool inState);
 	void setLightsExport(bool inState);
@@ -73,6 +74,7 @@ public:
 	void setInstancing(bool inState);
 	void setDebug(bool inState);
 
+	bool isExportEnable();
 	bool isMeshExport();
 	bool isLinesExport();
 	bool isLightsExport();

@@ -1,6 +1,7 @@
 *.orig
 *.max
 msvc/
+files/*
 test_reports/*
 include/Info.h
 installer/*

@@ -62,6 +62,8 @@ namespace ui {
 						break;
 					case BTN_CALC_VALUE: calculateValues();
 						break;
+					case BTN_UPDATE: toWindow();
+						break;
 					default: break;
 				}
 				break;
@@ -201,6 +203,9 @@ namespace ui {
 		cSpnLoopValue = SetupFloatSpinner(hWnd, SPN_LOOP, SPN_LOOP_EDIT, -1000000.0f, 1000000.0f, 0.0f, 0.1f);
 		cBtnReverseValue.setup(hWnd, BTN_REVERSE_VALUE);
 		cBtnCalculateValue.setup(hWnd, BTN_CALC_VALUE);
+		cBtnUpdate.setup(hWnd, BTN_UPDATE);
+		cStcValue1.setup(hWnd, STC_VALUE1);
+		cStcValue2.setup(hWnd, STC_VALUE2);
 
 		cChkEnable.setToolTip(sts::toString("Enable exporting the animation."));
 		cChkReverse.setToolTip(sts::toString("The keys order will be reversed while exporting."));
@@ -208,6 +213,7 @@ namespace ui {
 		cBtnDataRef.setToolTip(sts::toString("Is not supported yet."));
 		cBtnReverseValue.setToolTip(sts::toString("Reverse order of keys's value."));
 		cBtnCalculateValue.setToolTip(sts::toString("Auto-calculate data ref values. It takes into account the position of the frame."));
+		cBtnUpdate.setToolTip(sts::toString("Update animation keys. Use it to update your animation keys when you have changed your animation without pressing auto-key button."));
 	}
 
 	void AnimTransView::destroyWindow(HWND /*hWnd*/) {
@@ -269,6 +275,9 @@ namespace ui {
 		cSpnLoopValue->Enable();
 		cBtnReverseValue.enable();
 		cBtnCalculateValue.enable();
+		cBtnUpdate.enable();
+		cStcValue1.enable();
+		cStcValue2.enable();
 	}
 
 	void AnimTransView::disableControls() {
@@ -282,6 +291,9 @@ namespace ui {
 		cSpnLoopValue->Disable();
 		cBtnReverseValue.disable();
 		cBtnCalculateValue.disable();
+		cBtnUpdate.disable();
+		cStcValue1.disable();
+		cStcValue2.disable();
 	}
 
 	/**************************************************************************************************/

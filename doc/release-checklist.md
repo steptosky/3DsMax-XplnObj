@@ -10,6 +10,9 @@
 
 ## Cmake
 - Check whether the information in the [StsProjectDesc.cmake](../cmake/StsProjectDesc.cmake) file is correct.
+  - Contributors description
+  - Open source libraries description
+  - Etc...
 
 ## Conan
 - Check whether the [conanfile.txt](../conanfile.txt) uses the correct dependencies and their version.  

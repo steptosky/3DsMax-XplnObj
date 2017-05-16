@@ -42,12 +42,12 @@ namespace win {
 
 	Base::Base(HWND inHWnd) {
 		init();
-		setup(inHWnd);
+		Base::setup(inHWnd);
 	}
 
 	Base::Base(HWND inParent, int inControlID) {
 		init();
-		setup(inParent, inControlID);
+		Base::setup(inParent, inControlID);
 	}
 
 	Base::~Base() { }
@@ -93,7 +93,7 @@ namespace win {
 	///////////////////////////////////////////* Functions *////////////////////////////////////////////
 	/**************************************************************************************************/
 
-	void Base::setToolTip(const String & text) {
+	void Base::setToolTip(const String & text, const uint32_t showTimeMilisec) {
 		assert(mHwnd);
 		// Create a tooltip.
 		HWND hwndTT = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL,
@@ -101,8 +101,7 @@ namespace win {
 												CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 												mHwnd, NULL, NULL, NULL);
 
-		SetWindowPos(hwndTT, HWND_TOPMOST, 0, 0, 0, 0,
-					SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+		SetWindowPos(hwndTT, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 
 		// Set up "tool" information. In this case, the "tool" is the entire parent window.
 
@@ -110,16 +109,16 @@ namespace win {
 		ti.cbSize = sizeof(TTTOOLINFO);
 		ti.uFlags = TTF_SUBCLASS;
 		ti.hwnd = mHwnd;
-		ti.hinst = NULL;
+		ti.hinst = nullptr;
 
 		size_t length = text.length() + 1;
 		ti.lpszText = new TCHAR[length];
 		_tcscpy_s(ti.lpszText, length, text.c_str());
 
 		GetClientRect(mHwnd, &ti.rect);
-
 		// Associate the tooltip with the "tool" window.
 		SendMessage(hwndTT, TTM_ADDTOOL, 0, (LPARAM)(LPTOOLINFO)&ti);
+		SendMessage(hwndTT, TTM_SETDELAYTIME, TTDT_AUTOPOP, MAKELPARAM((showTimeMilisec), (0)));
 	}
 
 	/**************************************************************************************************/
