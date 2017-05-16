@@ -1,7 +1,7 @@
 
 The 3DsMax X-Plane Obj Exporter change-log.
 ===============================================================================
-next
+2.1.0 (16.05.2017)
 
 - Added: Update buttons for the animation rollups.
 - Added: Tooltips for the some controls of the export window.
