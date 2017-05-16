@@ -134,12 +134,20 @@ public:
 
 	//-------------------------------------------------------------------------
 
+	static const std::string & versionShortString() { return Logger::mVersionShortString; }
+	static const std::string & versionString() { return Logger::mVersionString; }
+
+	//-------------------------------------------------------------------------
+
 private:
 
 	static void printInformation();
+	static void createVersionStrings();
 
 	static std::list<UserConsoleCallBack> mCallbacks;
 	static LogSys * mMaxLog;
+	static std::string mVersionShortString;
+	static std::string mVersionString;
 
 };
 

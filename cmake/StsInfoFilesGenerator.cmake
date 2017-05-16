@@ -34,10 +34,11 @@
 #
 # This module uses the StsProjectDesc module for generate ".h" file with information
 #
+# Version 1.2.1 (16.15.2017)
+#	- Fixed vcs detection
 # Version 1.2.0 (21.04.2017)
 #	- List of open source libraries
-#	- Fix for generation Contributors
-#
+#	- Fixed for generation Contributors
 # Version 1.1.0 (19.04.2017)
 # Version 1.1.0 (19.03.2017)
 # Version 1.0.1
@@ -238,7 +239,7 @@ function(genInfoFile descriptionFile destinationFile)
 	set(CONTENT "${CONTENT}#define ${__prfix__}COMPILER_NAME \"${CMAKE_CXX_COMPILER_ID}\" \n")
 	set(CONTENT "${CONTENT}#define ${__prfix__}COMPILER_VERSION \"${CMAKE_CXX_COMPILER_VERSION}\" \n\n")
 
-	if (${ProjectVcsType} AND ${ProjectVcsType} STREQUAL git)
+	if (${ProjectVcsType} STREQUAL git)
 		if (NOT vcs_revision)
 			execute_process(
 					COMMAND "git" "log" "-1" "--pretty=format:%h"

@@ -54,6 +54,8 @@
 //sts::BaseLogger * sts::BaseLogger::mInstance = nullptr;
 std::list<Logger::UserConsoleCallBack> Logger::mCallbacks;
 LogSys * Logger::mMaxLog = nullptr;
+std::string Logger::mVersionString;
+std::string Logger::mVersionShortString;
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
@@ -159,6 +161,12 @@ Logger::Logger() {
 		mMaxLog = GetCOREInterface()->Log();
 	}
 
+	//--------------------------------
+
+	createVersionStrings();
+
+	//--------------------------------
+
 	sts::BaseLogger & log = sts::BaseLogger::instance();
 	log.setCallBack(&Logger::logCallBack);
 	//xobj::ExternalLog::registerCallBack(&xLibLogCallBack);
@@ -169,6 +177,22 @@ Logger::Logger() {
 
 Logger::~Logger() {
 	xobj::ExternalLog::unRegisterCallBack();
+}
+
+void Logger::createVersionStrings() {
+	std::stringstream strstream;
+	strstream << XIO_VERSION_STRING;
+	if (strlen(XIO_RELEASE_TYPE) > 0) {
+		strstream << "-" << XIO_RELEASE_TYPE;
+	}
+	mVersionShortString = strstream.str();
+
+	strstream << "+" << XIO_VCS_REVISION << " (" << XIO_VCS_BRANCH << ") " << XIO_COMPILE_DATE;
+#ifndef NDEBAG
+	strstream << " (" << XIO_COMPILE_TIME << ") " << "DEBUG";
+#endif
+
+	mVersionString = strstream.str();
 }
 
 /**************************************************************************************************/
@@ -198,8 +222,7 @@ std::string Logger::aboutInfo(bool inUseWinEol) {
 	stream << "Desc: " << XIO_PROJECT_DESCRIPTION << eol;
 	stream << "Link: " << XIO_PROJECT_WEBLINK << eol;
 
-	stream << "Version: " XIO_VERSION_STRING << "-" << XIO_RELEASE_TYPE << "+" << XIO_VCS_REVISION << " (" << XIO_VCS_BRANCH << ") "
-			<< XIO_COMPILE_DATE << Debug(" (" << XIO_COMPILE_TIME << ") " << "DEBUG" << ) eol;
+	stream << "Version: " << versionString() << eol;
 
 	stream << "Compiler: " << XIO_COMPILER_NAME << " " << XIO_COMPILER_VERSION << eol;
 	stream << XIO_COPYRIGHT << eol;
@@ -241,8 +264,7 @@ std::string Logger::shortAboutInfo(bool inUseWinEol) {
 #else
 	stream << "Project: " XIO_PROJECT_NAME << " " << MAX_PRODUCT_YEAR_NUMBER << " (" << MAX_VERSION_MAJOR << ")" << eol;
 #endif
-	stream << "Version: " XIO_VERSION_STRING << "-" << XIO_RELEASE_TYPE << "+" << XIO_VCS_REVISION << " (" << XIO_VCS_BRANCH << ") "
-			<< XIO_COMPILE_DATE << Debug(" (" << XIO_COMPILE_TIME << ") " << "DEBUG" << ) eol;
+	stream << "Version: " << versionString() << eol;
 
 	stream << "Compiler: " << XIO_COMPILER_NAME << " " << XIO_COMPILER_VERSION << eol;
 
