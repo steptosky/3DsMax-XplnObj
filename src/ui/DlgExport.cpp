@@ -254,7 +254,7 @@ namespace ui {
 		mBtnSaveLog.disable();
 
 		sts::Str str(_T("Version: "));
-		str.append(_T(XIO_VERSION_STRING)).append(_T("-")).append(_T(XIO_RELEASE_TYPE));
+		str.append(sts::toString(Logger::versionShortString()));
 		mLblVersion.setText(str);
 
 		mBtnSaveLog.setToolTip(_T("Saves log which can help the developers to determine the problems. Use it for bug reports."));

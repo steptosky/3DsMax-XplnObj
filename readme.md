@@ -12,7 +12,7 @@ The importing is still under developing and does not work correctly!
 
 ## Dependencies
 - [CMake 3.7.0+](https://cmake.org/)
-- [Conan 0.21+](https://www.conan.io) - dependency tool
+- [Conan 0.22+](https://www.conan.io) - dependency tool
 - [StepToSky X-Plane obj library](https://github.com/steptosky/XplnObj) - used through the conan
 - 3Ds Max SDK - Usually you can find it on 3Ds Max installation cd or image
 
