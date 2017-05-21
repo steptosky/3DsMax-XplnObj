@@ -452,10 +452,11 @@ namespace ui {
 			else {
 				if (upd.version > SemVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH)) {
 					mBtnCheckUpdate.setText("Get update");
-					CLWarning << "New version " << upd.version.toString()
-					<< " is available please, press the <"
+					CLWarning << "New version '" << upd.version.toString()
+					<< "' is available. Please, press the '"
 					<< sts::toMbString(mBtnCheckUpdate.text())
-					<< "> button to get the new version.";
+					<< "' button to get the new version." << "\r\n"
+					<< "\tSee the 'changelog.txt' file there to get the information about the changes.";
 				}
 			}
 		}
