@@ -43,6 +43,7 @@
 #include "gup/ObjCommon.h"
 #include <windows.h>
 #include <commctrl.h>
+#include "models/MdLinks.h"
 
 namespace ui {
 
@@ -152,11 +153,11 @@ namespace ui {
 						break;
 					}
 					case BTN_DONATE: {
-						ShellExecute(nullptr, _T("open"), _T("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8AGCSV2WMXTES"), nullptr, nullptr, SW_SHOWNORMAL);
+						MdLinks::openDonate();
 						break;
 					}
 					case BTN_CHECK_FOR_UPDATE: {
-						ShellExecute(nullptr, _T("open"), _T("https://github.com/steptosky/3DsMax-XplnObj/releases"), nullptr, nullptr, SW_SHOWNORMAL);
+						MdLinks::openPluginBinary();
 						break;
 					}
 					case BTN_ABOUT: {
