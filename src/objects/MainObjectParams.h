@@ -41,8 +41,8 @@
 #define MAINOBJ_CLASS_ID Class_ID(0x529d4c97, 0x2b78149c)
 
 /*!
-* \details Parameter blocks of the X-Obj object
-*/
+ * \details Parameter blocks of the X-Obj object
+ */
 enum eMainObjParamsBlocks : BlockID {
 	MainObjAttrParams, //<! Attribute params
 	MainObjExpParams, //<! Export params
@@ -76,7 +76,7 @@ enum eMainObjAttrParams : ParamID {
 	MainObjAttr_DryWet = 20, //<! int 
 
 	//-------------------------------------
-	// nulti-values
+	// multi-values
 
 	MainObjAttr_BlendingType = 25, //<! int 
 	MainObjAttr_BlendingRatio, //<! float 

@@ -210,7 +210,7 @@ namespace ui {
 		cChkReverse.setToolTip(sts::toString("The keys order will be reversed while exporting."));
 		cChkLoop.setToolTip(sts::toString("See obj specification."));
 		cBtnDataRef.setToolTip(sts::toString("Is not supported yet."));
-		cBtnReverseValue.setToolTip(sts::toString("Reverse order of keys's value."));
+		cBtnReverseValue.setToolTip(sts::toString("Reverse order of keys' value."));
 		cBtnCalculateValue.setToolTip(sts::toString("Auto-calculate data ref values. It takes into account the position of the frame."));
 		cBtnUpdate.setToolTip(sts::toString("Update animation keys. Use it to update your animation keys when you have changed your animation without pressing auto-key button."));
 

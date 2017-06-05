@@ -29,12 +29,6 @@
 
 #pragma once
 
-/*
-* \copyright STEPTOSKY 2009
-* http://www.steptosky.com
-*
-*/
-
 #pragma warning(push, 0)
 #include <max.h>
 #pragma warning(pop)

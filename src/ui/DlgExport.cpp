@@ -332,7 +332,7 @@ namespace ui {
 		FilterList extensionList;
 		extensionList.Append(_T("Log files(*.log)"));
 		extensionList.Append(_T("*.log"));
-		bool res = ip->DoMaxSaveAsDialog(GetCOREInterface()->GetMAXHWnd(), _T("Log saveing"), fileName, initialDir, extensionList);
+		bool res = ip->DoMaxSaveAsDialog(GetCOREInterface()->GetMAXHWnd(), _T("Log saving"), fileName, initialDir, extensionList);
 		if (res) {
 			Logger::instance()->saveLog(fileName);
 		}

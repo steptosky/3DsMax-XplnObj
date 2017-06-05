@@ -37,7 +37,7 @@
 /**************************************************************************************************/
 
 /*!
- * \details This class is helper for working with the resources.
+ * \details This is the helper for working with the resources.
  */
 class ResHelper {
 public:

@@ -142,10 +142,10 @@ void ObjCommon::updateCheckWinCallback(HWND hwnd, UINT /*uMsg*/, UINT_PTR idEven
 /**************************************************************************************************/
 
 DWORD ObjCommon::Start() {
-	//-- MeinManu ---------------------------
+	//-- Mein Menu ---------------------------
 	mMainMenuView.reset(ui::Factory::cereateMainMenuView());
 	mMainMenuPresenter = std::make_unique<MainMenuPresenter>(mMainMenuView.get());
-	//---------------------------------------
+	//----------------------------------------
 
 	mCloneNodeChunk = new CloneNodeChunk();
 	mToolFrame = ui::ToolFrame::instance();
@@ -159,10 +159,10 @@ DWORD ObjCommon::Start() {
 }
 
 void ObjCommon::Stop() {
-	//-- MeinManu ---------------------------
+	//-- Mein Menu ---------------------------
 	mMainMenuPresenter.reset();
 	mMainMenuView.reset();
-	//---------------------------------------
+	//----------------------------------------
 
 	mUpdateChecker.freeResources();
 	mToolFrame->free();

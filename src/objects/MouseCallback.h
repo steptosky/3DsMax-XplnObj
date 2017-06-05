@@ -44,6 +44,8 @@ class MouseCallback : public CreateMouseCallBack {
 
 public:
 
+	virtual ~MouseCallback() = default;
+
 	int proc(ViewExp * vpt, int msg, int point, int flags, IPoint2 m, Matrix3 & mat) override;
 
 };

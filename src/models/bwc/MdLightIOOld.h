@@ -43,7 +43,7 @@ namespace bcw { // backward compatibility
 
 	/*!
 	 * \details This class is for backward compatibility.
-	 * It loads the light data from the previous version.
+	 *          It loads the light data from the previous version.
 	 */
 	class MdLightIOOld {
 		MdLightIOOld() = default;

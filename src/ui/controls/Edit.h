@@ -30,7 +30,7 @@
 #pragma once
 
 #ifndef STS_EDITCONTROL_MAXCHARS
-#define STS_EDITCONTROL_MAXCHARS 128
+#	define STS_EDITCONTROL_MAXCHARS 128
 #endif
 
 #include "Base.h"

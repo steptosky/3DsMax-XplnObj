@@ -39,8 +39,8 @@
 /**************************************************************************************************/
 
 /*!
-* \details This class is for easy read and write x-plane and other data of 3d max object.
-*/
+ * \details This class is for easy read and write x-plane and other data of 3d max object.
+ */
 class LodObjParamsWrapper {
 public:
 
