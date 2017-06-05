@@ -35,8 +35,7 @@
 
 #include "resource/resource.h"
 #include "ui/UiUtilities.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -157,9 +156,8 @@ namespace ui {
 	}
 
 	void LightSpillCust::create(HWND inParent) {
-		assert(hInstance);
 		assert(inParent);
-		mHwnd.setup(CreateDialogParam(hInstance,
+		mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
 									MAKEINTRESOURCE(IDD_ROLL_LIGHT_SPILLCUST_OBJ),
 									inParent,
 									reinterpret_cast<DLGPROC>(panelProc),

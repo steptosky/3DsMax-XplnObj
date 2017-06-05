@@ -32,6 +32,7 @@
 #include "common/Logger.h"
 #include "ui/Factory.h"
 #include "ui/main-menu/MainMenuActions.h"
+#include "resource/ResHelper.h"
 
 #ifndef IO_SAVE_CAST
 #	if MAX_VERSION_MAJOR > 14
@@ -45,14 +46,12 @@
 /////////////////////////////////////////* Static area *////////////////////////////////////////////
 /**************************************************************************************************/
 
-extern HINSTANCE hInstance;
-
 class ObjCommonClassDesc : public ClassDesc2 {
 public:
 
 	int IsPublic() override { return TRUE; }
 	void * Create(BOOL /*loading = FALSE*/) override { return reinterpret_cast<void *>(ObjCommon::instance()); }
-	HINSTANCE HInstance() override { return hInstance; }
+	HINSTANCE HInstance() override { return ResHelper::hInstance; }
 
 	SClass_ID SuperClassID() override { return GUP_CLASS_ID; }
 	Class_ID ClassID() override { return COMMON_CLASS_ID; }

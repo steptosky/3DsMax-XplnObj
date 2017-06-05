@@ -32,8 +32,7 @@
 #include "Resource/resource.h"
 #include "ui/AnimCalc.h"
 #include "ui/UiUtilities.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -96,7 +95,7 @@ namespace ui {
 	/**************************************************************************************************/
 
 	AnimVisView::AnimVisView()
-		: RollupBase(hInstance),
+		: RollupBase(ResHelper::hInstance),
 		mIp(GetCOREInterface()) {}
 
 	AnimVisView::~AnimVisView() {

@@ -32,8 +32,7 @@
 #include "Resource/resource.h"
 #include "ui/UiUtilities.h"
 #include "ui/AnimCalc.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -96,7 +95,7 @@ namespace ui {
 	/**************************************************************************************************/
 
 	AnimRotateAxisView::AnimRotateAxisView(MdAnimRot::eAxis axis)
-		: BaseProc(hInstance),
+		: BaseProc(ResHelper::hInstance),
 		mData(axis),
 		mIp(GetCOREInterface()) {}
 
@@ -164,7 +163,7 @@ namespace ui {
 	/**************************************************************************************************/
 
 	bool AnimRotateAxisView::create(HWND parent) {
-		HWND res = CreateDialogParam(hInstance,
+		HWND res = CreateDialogParam(ResHelper::hInstance,
 									MAKEINTRESOURCE(DLG_ANIM),
 									parent,
 									BaseDlgProc, reinterpret_cast<LPARAM>(this));

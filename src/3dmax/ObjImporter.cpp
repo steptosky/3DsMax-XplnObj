@@ -29,6 +29,7 @@
 
 #include "ObjImporter.h"
 #include "Info.h"
+#include "resource/ResHelper.h"
 
 #pragma warning(push, 0)
 #include <iparamb2.h>
@@ -38,14 +39,12 @@
 /////////////////////////////////////////* Static area *////////////////////////////////////////////
 /**************************************************************************************************/
 
-extern HINSTANCE hInstance;
-
 class OBJIClassDesc : public ClassDesc2 {
 public:
 
 	int IsPublic() override { return TRUE; }
 	void * Create(BOOL /*loading = FALSE*/) override { return new ObjImporter(); }
-	HINSTANCE HInstance() override { return hInstance; }
+	HINSTANCE HInstance() override { return ResHelper::hInstance; }
 
 	SClass_ID SuperClassID() override { return SCENE_IMPORT_CLASS_ID; }
 	Class_ID ClassID() override { return OBJI_CLASS_ID; }

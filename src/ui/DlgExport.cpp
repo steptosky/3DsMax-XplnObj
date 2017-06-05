@@ -44,6 +44,7 @@
 #include <commctrl.h>
 #include "models/MdLinks.h"
 #include "Factory.h"
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -227,7 +228,7 @@ namespace ui {
 		mErrorCount = 0;
 		mWarningCount = 0;
 
-		INT_PTR res = DialogBoxParam(hInstance, MAKEINTRESOURCE(DLG_EXPORT), GetCOREInterface()->GetMAXHWnd(),
+		INT_PTR res = DialogBoxParam(ResHelper::hInstance, MAKEINTRESOURCE(DLG_EXPORT), GetCOREInterface()->GetMAXHWnd(),
 									callBack, reinterpret_cast<LPARAM>(this));
 		gExportDlg = nullptr;
 		return res != 0;

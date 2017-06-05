@@ -32,8 +32,7 @@
 #include "UiUtilities.h"
 #include "resource/resource.h"
 #include "common/Config.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -177,7 +176,7 @@ namespace ui {
 	/**************************************************************************************************/
 
 	ObjAttr::ObjAttr()
-		: RollupBase(hInstance) {}
+		: RollupBase(ResHelper::hInstance) {}
 
 	ObjAttr::~ObjAttr() {
 		ObjAttr::destroy();

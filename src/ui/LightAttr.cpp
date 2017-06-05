@@ -36,8 +36,7 @@
 #include "light/LightParam.h"
 #include "light/LightSpillCust.h"
 #include "Resource/resource.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
 
 #define UI_LIGHT_NONE "None"
 #define UI_LIGHT_CUSTOM "Custom"
@@ -76,7 +75,7 @@ namespace ui {
 	/**************************************************************************************************/
 
 	LightAttr::LightAttr()
-		: RollupBase(hInstance) {
+		: RollupBase(ResHelper::hInstance) {
 		mData = nullptr;
 		currSubWin = nullptr;
 

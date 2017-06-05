@@ -30,8 +30,7 @@
 #include "ManipAttrNoop.h"
 #include "resource/resource.h"
 #include "common/Logger.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -61,9 +60,8 @@ namespace ui {
 	/**************************************************************************************************/
 
 	void ManipAttrNoop::create(HWND inParent) {
-		assert(hInstance);
 		assert(inParent);
-		mHwnd.setup(CreateDialogParam(hInstance,
+		mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
 									MAKEINTRESOURCE(ROLL_MANIP_NOOP),
 									inParent,
 									reinterpret_cast<DLGPROC>(panelProc),

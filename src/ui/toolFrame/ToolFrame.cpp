@@ -31,8 +31,6 @@
 #include "ui/MainDock.h"
 #include "common/Config.h"
 
-extern HINSTANCE hInstance;
-
 namespace ui {
 
 	/**************************************************************************************************/

@@ -62,7 +62,7 @@ namespace ui {
 	MainMenuActions::MainMenuActions()
 		: ActionTable(mTableId, mTableContextId, nameNotConst()) {
 
-		BuildActionTable(nullptr, NumElements(spActions), spActions, hInstance);
+		BuildActionTable(nullptr, NumElements(spActions), spActions, ResHelper::hInstance);
 		DbgAssert(MainMenuActions::Count() == NumElements(spActions));
 	}
 

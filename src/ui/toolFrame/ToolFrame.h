@@ -36,8 +36,6 @@
 #include <Windows.h>
 #include "sts/utilities/templates/Single.h"
 
-extern HINSTANCE hInstance;
-
 namespace ui {
 
 	/**************************************************************************************************/

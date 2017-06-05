@@ -30,8 +30,7 @@
 #include "AnimRotateRollup.h"
 #include "common/Logger.h"
 #include "Resource/resource.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -48,7 +47,7 @@ namespace ui {
 	/**************************************************************************************************/
 
 	AnimRotateRollup::AnimRotateRollup()
-		: RollupBase(hInstance) {}
+		: RollupBase(ResHelper::hInstance) {}
 
 	AnimRotateRollup::~AnimRotateRollup() {
 		AnimRotateRollup::destroy();

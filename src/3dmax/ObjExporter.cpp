@@ -30,6 +30,7 @@
 #include "ObjExporter.h "
 #include "Info.h"
 #include "common/String.h"
+#include "resource/ResHelper.h"
 
 #pragma warning(push, 0)
 #include <iparamb2.h>
@@ -39,14 +40,12 @@
 /////////////////////////////////////////* Static area *////////////////////////////////////////////
 /**************************************************************************************************/
 
-extern HINSTANCE hInstance;
-
 class OBJEClassDesc : public ClassDesc2 {
 public:
 
 	int IsPublic() override { return TRUE; }
 	void * Create(BOOL /*loading = FALSE*/) override { return new ObjExporter(); }
-	HINSTANCE HInstance() override { return hInstance; }
+	HINSTANCE HInstance() override { return ResHelper::hInstance; }
 
 	SClass_ID SuperClassID() override { return SCENE_EXPORT_CLASS_ID; }
 	Class_ID ClassID() override { return OBJE_CLASS_ID; }

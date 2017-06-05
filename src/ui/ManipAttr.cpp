@@ -49,8 +49,7 @@
 #include "manip/ManipAttrCmdLr.h"
 #include "manip/ManipAttrCmdUd.h"
 #include "manip/ManipAttrNoop.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -84,7 +83,7 @@ namespace ui {
 	/**************************************************************************************************/
 
 	ManipAttr::ManipAttr()
-		: RollupBase(hInstance),
+		: RollupBase(ResHelper::hInstance),
 		mIRollup(nullptr),
 		currSubWin(nullptr),
 		mIp(GetCOREInterface()) {

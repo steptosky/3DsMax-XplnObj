@@ -37,8 +37,7 @@
 #include <xpln/enums/ECursor.h>
 #include "resource/resource.h"
 #include "common/Logger.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -168,9 +167,8 @@ namespace ui {
 	/**************************************************************************************************/
 
 	void ManipAttrDragXy::create(HWND inParent) {
-		assert(hInstance);
 		assert(inParent);
-		mHwnd.setup(CreateDialogParam(hInstance,
+		mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
 									MAKEINTRESOURCE(ROLL_MANIP_DRAGXY),
 									inParent,
 									reinterpret_cast<DLGPROC>(panelProc),

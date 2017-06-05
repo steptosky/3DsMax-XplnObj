@@ -41,6 +41,7 @@
 #include "common/Logger.h"
 #include "common/String.h"
 #include "sts/utilities/Compare.h"
+#include "resource/ResHelper.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,14 +55,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-extern HINSTANCE hInstance;
-
 class ObjLodClassDesc : public ClassDesc2 {
 public:
 
 	int IsPublic() override { return TRUE; }
 	void * Create(BOOL /*loading = FALSE*/) override { return new LodObject(); }
-	HINSTANCE HInstance() override { return hInstance; }
+	HINSTANCE HInstance() override { return ResHelper::hInstance; }
 
 	SClass_ID SuperClassID() override { return HELPER_CLASS_ID; }
 	Class_ID ClassID() override { return LODOBJ_CLASS_ID; }

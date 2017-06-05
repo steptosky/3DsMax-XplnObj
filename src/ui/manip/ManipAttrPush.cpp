@@ -38,8 +38,7 @@
 #include "resource/resource.h"
 #include "common/BaseLogger.h"
 #include "common/Logger.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -140,9 +139,8 @@ namespace ui {
 	/**************************************************************************************************/
 
 	void ManipAttrPush::create(HWND inParent) {
-		assert(hInstance);
 		assert(inParent);
-		mHwnd.setup(CreateDialogParam(hInstance,
+		mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
 									MAKEINTRESOURCE(ROLL_MANIP_PUSH),
 									inParent,
 									reinterpret_cast<DLGPROC>(panelProc),

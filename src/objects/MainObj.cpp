@@ -48,6 +48,7 @@
 #include <xpln/obj/attributes/AttrWetDry.h>
 #include "ui/DlgMessageBox.h"
 #include "MainObjParamsWrapper.h"
+#include "resource/ResHelper.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,14 +66,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-extern HINSTANCE hInstance;
-
 class ObjMainClassDesc : public ClassDesc2 {
 public:
 
 	int IsPublic() override { return TRUE; }
 	void * Create(BOOL /*loading = FALSE*/) override { return new MainObject(); }
-	HINSTANCE HInstance() override { return hInstance; }
+	HINSTANCE HInstance() override { return ResHelper::hInstance; }
 
 	SClass_ID SuperClassID() override { return HELPER_CLASS_ID; }
 	Class_ID ClassID() override { return MAINOBJ_CLASS_ID; }
