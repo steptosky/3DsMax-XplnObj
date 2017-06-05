@@ -49,6 +49,13 @@
 #define IDS_BTN_DELETE                  147
 #define IDS_ROLL_GLOB_ATTR              150
 #define IDS_ROLL_GLOB_COCKPIT           151
+#define IDS_MAIN_MENU_CATEGORY          163
+#define IDS_MAIN_MENU_DONATE            164
+#define IDS_MAIN_MENU_DOC               165
+#define IDS_MAIN_MENU_UPDATE            166
+#define IDS_MAIN_MENU_ABOUT             167
+#define IDS_MAIN_MENU_ACTION_TABLE_CATEGORY 168
+#define IDS_MAIN_MENU_SETTINGS          169
 #define ROLL_MANIP_WHEEL                200
 #define ROLL_MANIP_COMMAND_KNOB         201
 #define ROLL_MANIP_AXIS_KNOB            204
@@ -313,7 +320,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        163
+#define _APS_NEXT_RESOURCE_VALUE        170
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1248
 #define _APS_NEXT_SYMED_VALUE           101

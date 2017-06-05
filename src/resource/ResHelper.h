@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 **  Copyright(C) 2017, StepToSky
 **
@@ -27,82 +29,40 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
-
-#pragma warning(push, 0)
-#include <max.h>
-#include <istdplug.h>
-#include <iparamb2.h>
-#include <iparamm2.h> // for 3dmax 9
-#include <guplib.h>
-#pragma warning(pop)
-
-#include "CloneNodeChunk.h"
-#include "sts/utilities/templates/Single.h"
-#include "Common/Config.h"
-#include "update/UpdateChecker.h"
-#include "Settings.h"
-#include "presenters/MainMenuPresenter.h"
-
-#define COMMON_CLASS_ID	Class_ID(0xf5226b9, 0x5b131ef2)
-
-namespace ui {
-	class ToolFrame;
-}
+#include <tchar.h>
+#include <Windows.h>
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-// TODO make the correct singleton for this class, it should return nullptr if it is deleted
-class ObjCommon : public GUP, public sts_t::Single<ObjCommon> {
+/*!
+ * \details This class is helper for working with the resources.
+ */
+class ResHelper {
 public:
 
-	ObjCommon();
-	~ObjCommon();
+	//-------------------------------------------------------------------------
+
+	static HINSTANCE hInstance;
 
 	//-------------------------------------------------------------------------
 
-	DWORD Start() override;
-	void Stop() override;
+	/*!
+	 * \details Gets the string by its resource identifier using 256 bytes buffer.
+	 * \param id string resource identifier.
+	 * \return null terminated string.
+	 */
+	static const TCHAR * string256(int id);
 
 	//-------------------------------------------------------------------------
 
-	DWORD_PTR Control(DWORD param) override;
+	/*!
+	 * \details It must be used once when the library is initializing.
+	 */
+	static void setHInstance(HINSTANCE inHInstance) { hInstance = inHInstance; }
 
 	//-------------------------------------------------------------------------
-
-	IOResult Save(ISave * isave) override;
-	IOResult Load(ILoad * iload) override;
-
-	//-------------------------------------------------------------------------
-
-	UpdateChecker::Update updateInfo() const { return mUpdateChecker.updateInfo(); }
-
-	Settings pSettings;
-
-private:
-
-	//-------------------------------------------------------------------------
-	// Thread safe check the result of the update checking
-
-	static void updateCheckWinCallback(HWND, UINT, UINT_PTR, DWORD);
-
-	//-------------------------------------------------------------------------
-
-	void DeleteThis() override;
-
-	ui::ToolFrame * mToolFrame;
-	Config * mConfig;
-	CloneNodeChunk * mCloneNodeChunk;
-	UpdateChecker mUpdateChecker;
-
-	std::unique_ptr<MainMenuPresenter::IView> mMainMenuView;
-	std::unique_ptr<MainMenuPresenter> mMainMenuPresenter;
-
-	//-------------------------------------------------------------------------
-
-	static const uint32_t mIoVersion = 1;
 
 };
 

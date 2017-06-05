@@ -27,84 +27,20 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
+#include "ResHelper.h"
 
-#pragma warning(push, 0)
-#include <max.h>
-#include <istdplug.h>
-#include <iparamb2.h>
-#include <iparamm2.h> // for 3dmax 9
-#include <guplib.h>
-#pragma warning(pop)
+/**************************************************************************************************/
+/////////////////////////////////////////* Static area *////////////////////////////////////////////
+/**************************************************************************************************/
 
-#include "CloneNodeChunk.h"
-#include "sts/utilities/templates/Single.h"
-#include "Common/Config.h"
-#include "update/UpdateChecker.h"
-#include "Settings.h"
-#include "presenters/MainMenuPresenter.h"
+HINSTANCE ResHelper::hInstance = nullptr;
 
-#define COMMON_CLASS_ID	Class_ID(0xf5226b9, 0x5b131ef2)
-
-namespace ui {
-	class ToolFrame;
+const TCHAR * ResHelper::string256(int id) {
+	static TCHAR buf[256];
+	if (hInstance)
+		return LoadString(hInstance, id, buf, _countof(buf)) ? buf : NULL;
+	return nullptr;
 }
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-// TODO make the correct singleton for this class, it should return nullptr if it is deleted
-class ObjCommon : public GUP, public sts_t::Single<ObjCommon> {
-public:
-
-	ObjCommon();
-	~ObjCommon();
-
-	//-------------------------------------------------------------------------
-
-	DWORD Start() override;
-	void Stop() override;
-
-	//-------------------------------------------------------------------------
-
-	DWORD_PTR Control(DWORD param) override;
-
-	//-------------------------------------------------------------------------
-
-	IOResult Save(ISave * isave) override;
-	IOResult Load(ILoad * iload) override;
-
-	//-------------------------------------------------------------------------
-
-	UpdateChecker::Update updateInfo() const { return mUpdateChecker.updateInfo(); }
-
-	Settings pSettings;
-
-private:
-
-	//-------------------------------------------------------------------------
-	// Thread safe check the result of the update checking
-
-	static void updateCheckWinCallback(HWND, UINT, UINT_PTR, DWORD);
-
-	//-------------------------------------------------------------------------
-
-	void DeleteThis() override;
-
-	ui::ToolFrame * mToolFrame;
-	Config * mConfig;
-	CloneNodeChunk * mCloneNodeChunk;
-	UpdateChecker mUpdateChecker;
-
-	std::unique_ptr<MainMenuPresenter::IView> mMainMenuView;
-	std::unique_ptr<MainMenuPresenter> mMainMenuPresenter;
-
-	//-------------------------------------------------------------------------
-
-	static const uint32_t mIoVersion = 1;
-
-};
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

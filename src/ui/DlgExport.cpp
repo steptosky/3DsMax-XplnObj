@@ -37,13 +37,13 @@
 #include "resource/resource.h"
 #include "Info.h"
 #include "common/Logger.h"
-#include "DlgAbout.h"
 #include "objects/MainObjParamsWrapper.h"
 #include "converters/ConverterUtils.h"
 #include "gup/ObjCommon.h"
 #include <windows.h>
 #include <commctrl.h>
 #include "models/MdLinks.h"
+#include "Factory.h"
 
 namespace ui {
 
@@ -161,7 +161,7 @@ namespace ui {
 						break;
 					}
 					case BTN_ABOUT: {
-						DlgAbout::show();
+						Factory::showAboutWindow();
 						break;
 					}
 					default: break;

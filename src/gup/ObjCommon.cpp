@@ -30,6 +30,8 @@
 #include "ObjCommon.h"
 #include "ui/toolFrame/ToolFrame.h"
 #include "common/Logger.h"
+#include "ui/Factory.h"
+#include "ui/main-menu/MainMenuActions.h"
 
 #ifndef IO_SAVE_CAST
 #	if MAX_VERSION_MAJOR > 14
@@ -56,8 +58,22 @@ public:
 	Class_ID ClassID() override { return COMMON_CLASS_ID; }
 
 	const TCHAR * ClassName() override { return _T("X-Common"); }
-	const TCHAR * Category() override { return _T("X-Plane Obj coomon class"); }
+	const TCHAR * Category() override { return _T("X-Plane Obj common class"); }
 	const TCHAR * InternalName() override { return _T("xCommonObject"); }
+
+	int NumActionTables() override { return 1; }
+
+	ActionTable * GetActionTable(int idx) override {
+		DbgAssert(idx == 0);
+		if (mActionTable == nullptr) {
+			mActionTable = new ui::MainMenuActions();
+		}
+		return mActionTable;
+	}
+
+private:
+
+	ActionTable * mActionTable = nullptr;
 
 };
 
@@ -127,18 +143,28 @@ void ObjCommon::updateCheckWinCallback(HWND hwnd, UINT /*uMsg*/, UINT_PTR idEven
 /**************************************************************************************************/
 
 DWORD ObjCommon::Start() {
+	//-- MeinManu ---------------------------
+	mMainMenuView.reset(ui::Factory::cereateMainMenuView());
+	mMainMenuPresenter = std::make_unique<MainMenuPresenter>(mMainMenuView.get());
+	//---------------------------------------
+
 	mCloneNodeChunk = new CloneNodeChunk();
 	mToolFrame = ui::ToolFrame::instance();
 	mToolFrame->create();
 
 	mUpdateChecker.checkForUpdate();
 	SetTimer(GetCOREInterface()->GetMAXHWnd(), UINT_PTR(WM_MY_TIMER_ID),
-			UINT(WM_MY_TIMER_TIME), (TIMERPROC)&ObjCommon::updateCheckWinCallback);
+			UINT(WM_MY_TIMER_TIME), reinterpret_cast<TIMERPROC>(&ObjCommon::updateCheckWinCallback));
 
 	return GUPRESULT_KEEP;
 }
 
 void ObjCommon::Stop() {
+	//-- MeinManu ---------------------------
+	mMainMenuPresenter.reset();
+	mMainMenuView.reset();
+	//---------------------------------------
+
 	mUpdateChecker.freeResources();
 	mToolFrame->free();
 	delete mCloneNodeChunk;

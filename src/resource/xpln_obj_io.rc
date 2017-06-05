@@ -1167,6 +1167,17 @@ BEGIN
     NO_IDS                  "unavailable"
 END
 
+STRINGTABLE
+BEGIN
+    IDS_MAIN_MENU_CATEGORY  "X-Plane Menu"
+    IDS_MAIN_MENU_DONATE    "Donate"
+    IDS_MAIN_MENU_DOC       "Get Help"
+    IDS_MAIN_MENU_UPDATE    "Check for update"
+    IDS_MAIN_MENU_ABOUT     "About the X-Plane plugin"
+    IDS_MAIN_MENU_ACTION_TABLE_CATEGORY "XplnMainMenu_ActionTable"
+    IDS_MAIN_MENU_SETTINGS  "Settings"
+END
+
 #endif    // Russian (Russia) resources
 /////////////////////////////////////////////////////////////////////////////
 

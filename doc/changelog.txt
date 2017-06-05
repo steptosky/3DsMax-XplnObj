@@ -1,9 +1,15 @@
 
 The 3DsMax X-Plane Obj Exporter change-log.
 ===============================================================================
+next
+
+- Added: 'X-Plane' menu on the 3Ds Max's top menu bar.
+- Added: Documentation in the separated repository. Use the 'X-Plane' menu to get it.
+
+===============================================================================
 2.1.0 (16.05.2017)
 
-- Added: Update buttons for the animation rollups.
+- Added: '(U) Update' buttons for the animation rollups, allows you to re-synchronize animation keys and values.
 - Added: Tooltips for the some controls of the export window.
 - Added: Ability to enable or disable x-obj export. It helps when you work with more then one x-obj in the scene. You can export only selected ones.
 - Added: Checkbox for enabling auto-export. If it is enabled then the export will be auto-started without pressing the 'Export' button.

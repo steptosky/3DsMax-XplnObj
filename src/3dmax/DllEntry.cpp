@@ -34,6 +34,7 @@
 
 #include "Info.h"
 #include "common/Logger.h"
+#include "resource/ResHelper.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,6 +54,7 @@ extern ClassDesc2 * GetObjMainDesc();
 extern ClassDesc2 * GetObjLodDesc();
 extern ClassDesc2 * GetObjCommonDesc();
 
+// TODO change all to use ResHelper
 HINSTANCE hInstance = nullptr;
 
 /**************************************************************************************************/
@@ -71,6 +73,7 @@ extern "C" {
 
 	BOOL WINAPI DllMain(HINSTANCE hinstDLL, ULONG fdwReason, LPVOID /*lpvReserved*/) {
 		if (fdwReason == DLL_PROCESS_ATTACH) {
+			ResHelper::setHInstance(hinstDLL);
 			hInstance = hinstDLL;
 			DisableThreadLibraryCalls(hInstance);
 		}
