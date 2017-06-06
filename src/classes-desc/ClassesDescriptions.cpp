@@ -27,32 +27,41 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
-
-#pragma warning(push, 0)
-#include <max.h>
-#include <iparamb2.h>
-#pragma warning(pop)
+#include "ClassesDescriptions.h "
+#include "CommonClassDesc.h"
+#include "MainObjDesc.h"
+#include "LodObjDesc.h"
+#include "ExporterDesc.h"
+#include "ImporterDesc.h"
 
 /**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////* Static area *////////////////////////////////////////////
 /**************************************************************************************************/
 
-/*!
- * \details Parameter blocks of the X-Lod object
- */
-enum eLodObjParamsBlocks : BlockID {
-	LodObjParams = 0,
-	LodObjDisplay, //!< For internal using
-};
+ClassDesc2 * ClassesDescriptions::exporter() {
+	static ExporterDesc desc;
+	return &desc;
+}
 
-/*!
- * \details Values of the eLodObjParamsBlocks::LodObjParams parameters block.
- */
-enum eLodParams : ParamID {
-	PLodObjNear, //!< Float
-	PLodObjFar, //!< Float
-};
+ClassDesc2 * ClassesDescriptions::importer() {
+	static ImporterDesc desc;
+	return &desc;
+}
+
+ClassDesc2 * ClassesDescriptions::mainObj() {
+	static MainObjDesc desc;
+	return &desc;
+}
+
+ClassDesc2 * ClassesDescriptions::lodObj() {
+	static LodObjDesc desc;
+	return &desc;
+}
+
+ClassDesc2 * ClassesDescriptions::commonClass() {
+	static CommonClassDesc desc;
+	return &desc;
+}
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -42,6 +42,7 @@
 #include "common/String.h"
 #include "sts/utilities/Compare.h"
 #include "resource/ResHelper.h"
+#include "classes-desc/ClassesDescriptions.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,26 +51,6 @@
 #if MAX_VERSION_MAJOR < 15
 #	define p_end end
 #endif
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-class ObjLodClassDesc : public ClassDesc2 {
-public:
-
-	int IsPublic() override { return TRUE; }
-	void * Create(BOOL /*loading = FALSE*/) override { return new LodObject(); }
-	HINSTANCE HInstance() override { return ResHelper::hInstance; }
-
-	SClass_ID SuperClassID() override { return HELPER_CLASS_ID; }
-	Class_ID ClassID() override { return LODOBJ_CLASS_ID; }
-
-	const TCHAR * ClassName() override { return _T("X-Lod"); }
-	const TCHAR * Category() override { return _T("X-Plane"); }
-	const TCHAR * InternalName() override { return _T("xObjectLod"); }
-
-};
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
@@ -133,19 +114,14 @@ public:
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
-static ObjLodClassDesc gObjLodDesc;
 MouseCallback LodObject::mMouseCallback;
 LodObject * LodObject::mEditOb = nullptr;
-
-ClassDesc2 * GetObjLodDesc() {
-	return &gObjLodDesc;
-}
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
-static ParamBlockDesc2 gLodParamsPb(LodObjParams, _T("X-Lod"), 0, &gObjLodDesc, P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
+static ParamBlockDesc2 gLodParamsPb(LodObjParams, _T("X-Lod"), 0, ClassesDescriptions::lodObj(), P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
 									PARAMS_PB_VERSION, LodObjParamsOrder,
 									//-------------------------------------------------------------------------
 									// Rollouts
@@ -170,7 +146,7 @@ static ParamBlockDesc2 gLodParamsPb(LodObjParams, _T("X-Lod"), 0, &gObjLodDesc, 
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
-static ParamBlockDesc2 gLodDisplayPb(LodObjDisplay, _T("X-Lod-Display"), 0, &gObjLodDesc, P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
+static ParamBlockDesc2 gLodDisplayPb(LodObjDisplay, _T("X-Lod-Display"), 0, ClassesDescriptions::lodObj(), P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
 									DISPLAY_PB_VERSION, LodObjDisplayOrder,
 									//-------------------------------------------------------------------------
 									// Rollouts
@@ -192,7 +168,7 @@ static ParamBlockDesc2 gLodDisplayPb(LodObjDisplay, _T("X-Lod-Display"), 0, &gOb
 /**************************************************************************************************/
 
 LodObject::LodObject() {
-	gObjLodDesc.MakeAutoParamBlocks(this);
+	ClassesDescriptions::lodObj()->MakeAutoParamBlocks(this);
 	mObjColor = Point3(1.0, 0.7, 0.4);
 	makeIcon();
 }
@@ -336,13 +312,13 @@ IOResult LodObject::Save(ISave * /*isave*/) {
 void LodObject::BeginEditParams(IObjParam * ip, ULONG flags, Animatable * prev) {
 	mIp = ip;
 	mEditOb = this;
-	gObjLodDesc.BeginEditParams(ip, this, flags, prev);
+	ClassesDescriptions::lodObj()->BeginEditParams(ip, this, flags, prev);
 }
 
 void LodObject::EndEditParams(IObjParam * ip, ULONG flags, Animatable * next) {
 	mEditOb = nullptr;
 	mIp = nullptr;
-	gObjLodDesc.EndEditParams(ip, this, flags, next);
+	ClassesDescriptions::lodObj()->EndEditParams(ip, this, flags, next);
 	ClearAFlag(A_OBJ_CREATING);
 }
 
@@ -396,7 +372,7 @@ TCHAR * LodObject::GetObjectName() {
 //-------------------------------------------------------------------------
 
 Class_ID LodObject::ClassID() {
-	return LODOBJ_CLASS_ID;
+	return ClassesDescriptions::lodObj()->ClassID();
 }
 
 SClass_ID LodObject::SuperClassID() {
@@ -591,7 +567,7 @@ void LodObject::makeIcon() {
 	float size = 1.0f;
 	Interval interval = FOREVER;
 	if (!mDisplayPb->GetValue(PLodObjIconScale, mIp ? mIp->GetTime() : 0, size, interval)) {
-		LError << "Can't retrive scale value from param block";
+		LError << "Can't retrieve scale value from param block";
 	}
 
 	if (sts::isEqual(mLastIconScale, size, 0.001f) && mIconMesh.getNumVerts() != 0) {

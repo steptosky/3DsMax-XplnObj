@@ -35,6 +35,9 @@
 #include "Info.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
+#include "classes-desc/ClassesDescriptions.h"
+
+#define FnExport __declspec(dllexport)
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,16 +46,6 @@
 #ifndef NDEBUG
 #	define CONSOLE_ENABLED
 #endif
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-extern ClassDesc2 * GetObjEDesc();
-extern ClassDesc2 * GetObjIDesc();
-extern ClassDesc2 * GetObjMainDesc();
-extern ClassDesc2 * GetObjLodDesc();
-extern ClassDesc2 * GetObjCommonDesc();
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,18 +72,18 @@ extern "C" {
 	/***************************************************************************************/
 
 	// This function returns the number of plug-in classes this DLL
-	__declspec(dllexport) int LibNumberClasses() {
+	FnExport int LibNumberClasses() {
 		return 5;
 	}
 
 	// This function returns the number of plug-in classes this DLL
-	__declspec(dllexport) ClassDesc * LibClassDesc(int i) {
+	FnExport ClassDesc * LibClassDesc(int i) {
 		switch (i) {
-			case 0: return GetObjCommonDesc();
-			case 1: return GetObjMainDesc();
-			case 2: return GetObjLodDesc();
-			case 3: return GetObjEDesc();
-			case 4: return GetObjIDesc();
+			case 0: return ClassesDescriptions::commonClass();
+			case 1: return ClassesDescriptions::mainObj();
+			case 2: return ClassesDescriptions::lodObj();
+			case 3: return ClassesDescriptions::exporter();
+			case 4: return ClassesDescriptions::importer();
 			default: return nullptr;
 		}
 	}
@@ -100,13 +93,13 @@ extern "C" {
 	// This function returns a pre-defined constant indicating the version of 
 	// the system under which it was compiled.  It is used to allow the system
 	// to catch obsolete DLLs.
-	__declspec(dllexport) ULONG LibVersion() {
+	FnExport ULONG LibVersion() {
 		return VERSION_3DSMAX;
 	}
 
 	// This function returns a string that describes the DLL and where the user
 	// could purchase the DLL if they don't have it.
-	__declspec(dllexport) const TCHAR * LibDescription() {
+	FnExport const TCHAR * LibDescription() {
 		return _T(XIO_PROJECT_NAME);
 	}
 
@@ -117,7 +110,7 @@ extern "C" {
 	// Return TRUE if you deem your plugin successfully loaded, or FALSE otherwise. If 
 	// the function returns FALSE, the system will NOT load the plugin, it will then call FreeLibrary
 	// on your DLL, and send you a message.
-	__declspec(dllexport) int LibInitialize(void) {
+	FnExport int LibInitialize(void) {
 #ifdef CONSOLE_ENABLED
 		// console in debug mode
 		AllocConsole();
@@ -132,7 +125,7 @@ extern "C" {
 	// This function is called once, just before the plugin is unloaded. 
 	// Perform one-time plugin un-initialization in this method."
 	// The system doesn't pay attention to a return value.
-	__declspec(dllexport) int LibShutdown(void) {
+	FnExport int LibShutdown(void) {
 #ifdef CONSOLE_ENABLED
 		// console in debug mode
 		fclose(stdout);

@@ -42,6 +42,7 @@
 #include "objects/MainObj.h"
 #include "objects/MainObjectParams.h"
 #include "objects/LodObjParams.h"
+#include "classes-desc/ClassesDescriptions.h"
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
@@ -49,7 +50,8 @@
 
 INode * ConverterMain::toMax(const xobj::ObjMain & inXObj) {
 	Interface * ip = GetCOREInterface();
-	HelperObject * pobj = reinterpret_cast<MainObject*>(ip->CreateInstance(HELPER_CLASS_ID, MAINOBJ_CLASS_ID));
+	HelperObject * pobj = reinterpret_cast<MainObject*>(ip->CreateInstance(HELPER_CLASS_ID,
+																			ClassesDescriptions::mainObj()->ClassID()));
 	if (pobj == nullptr) {
 		LCritical << "Main object <" << inXObj.objectName() << "> couldn't be created.";
 		return nullptr;
@@ -90,7 +92,7 @@ INode * ConverterMain::toMax(const xobj::ObjMain & inXObj) {
 
 	if (resPrefix1 != resPrefix2 && resPrefix2 != resPrefix3) {
 		CLWarning << "Textures have different prefix, only one <"
-				<< resPrefix1 << "> prefix will be used.";
+		<< resPrefix1 << "> prefix will be used.";
 	}
 
 	attr.setNoShadow(inXObj.pAttr.isNoShadow());
@@ -175,7 +177,7 @@ bool ConverterMain::toXpln(INode * inNode, xobj::ObjMain & outMain) {
 
 INode * ConverterMain::toMax(const xobj::ObjLodGroup & inXObj) {
 	Interface * ip = GetCOREInterface();
-	HelperObject * pobj = reinterpret_cast<MainObject*>(ip->CreateInstance(HELPER_CLASS_ID, LODOBJ_CLASS_ID));
+	HelperObject * pobj = reinterpret_cast<MainObject*>(ip->CreateInstance(HELPER_CLASS_ID, ClassesDescriptions::lodObj()->ClassID()));
 	if (pobj == nullptr) {
 		LCritical << "Lod object <" << inXObj.objectName() << "> couldn't be created.";
 		return nullptr;

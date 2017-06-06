@@ -32,6 +32,7 @@
 #pragma warning(push, 0)
 #include <max.h>
 #include <iparamb2.h>
+#include <iparamm2.h> // for 3dmax 9
 #pragma warning(pop)
 
 /**************************************************************************************************/
@@ -39,19 +40,18 @@
 /**************************************************************************************************/
 
 /*!
- * \details Parameter blocks of the X-Lod object
+ * \details This is the collector for all the plugin's ClassDesc2.
+ * \see The 3Ds Max's ClassDesc2 for more information.
  */
-enum eLodObjParamsBlocks : BlockID {
-	LodObjParams = 0,
-	LodObjDisplay, //!< For internal using
-};
+class ClassesDescriptions {
+public:
 
-/*!
- * \details Values of the eLodObjParamsBlocks::LodObjParams parameters block.
- */
-enum eLodParams : ParamID {
-	PLodObjNear, //!< Float
-	PLodObjFar, //!< Float
+	static ClassDesc2 * exporter();
+	static ClassDesc2 * importer();
+	static ClassDesc2 * mainObj();
+	static ClassDesc2 * lodObj();
+	static ClassDesc2 * commonClass();
+
 };
 
 /**************************************************************************************************/

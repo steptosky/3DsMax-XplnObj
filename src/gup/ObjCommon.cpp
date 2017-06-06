@@ -43,46 +43,6 @@
 #endif
 
 /**************************************************************************************************/
-/////////////////////////////////////////* Static area *////////////////////////////////////////////
-/**************************************************************************************************/
-
-class ObjCommonClassDesc : public ClassDesc2 {
-public:
-
-	int IsPublic() override { return TRUE; }
-	void * Create(BOOL /*loading = FALSE*/) override { return reinterpret_cast<void *>(ObjCommon::instance()); }
-	HINSTANCE HInstance() override { return ResHelper::hInstance; }
-
-	SClass_ID SuperClassID() override { return GUP_CLASS_ID; }
-	Class_ID ClassID() override { return COMMON_CLASS_ID; }
-
-	const TCHAR * ClassName() override { return _T("X-Common"); }
-	const TCHAR * Category() override { return _T("X-Plane Obj common class"); }
-	const TCHAR * InternalName() override { return _T("xCommonObject"); }
-
-	int NumActionTables() override { return 1; }
-
-	ActionTable * GetActionTable(int idx) override {
-		DbgAssert(idx == 0);
-		if (mActionTable == nullptr) {
-			mActionTable = new ui::MainMenuActions();
-		}
-		return mActionTable;
-	}
-
-private:
-
-	ActionTable * mActionTable = nullptr;
-
-};
-
-static ObjCommonClassDesc ObjGupDesc;
-
-ClassDesc2 * GetObjCommonDesc() {
-	return &ObjGupDesc;
-}
-
-/**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
 /**************************************************************************************************/
 

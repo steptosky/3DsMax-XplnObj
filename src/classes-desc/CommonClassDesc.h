@@ -32,6 +32,7 @@
 #pragma warning(push, 0)
 #include <max.h>
 #include <iparamb2.h>
+#include <iparamm2.h> // for 3dmax 9
 #pragma warning(pop)
 
 /**************************************************************************************************/
@@ -39,19 +40,29 @@
 /**************************************************************************************************/
 
 /*!
- * \details Parameter blocks of the X-Lod object
+ * \see The 3Ds Max's ClassDesc2 for more information.
  */
-enum eLodObjParamsBlocks : BlockID {
-	LodObjParams = 0,
-	LodObjDisplay, //!< For internal using
-};
+class CommonClassDesc : public ClassDesc2 {
+public:
 
-/*!
- * \details Values of the eLodObjParamsBlocks::LodObjParams parameters block.
- */
-enum eLodParams : ParamID {
-	PLodObjNear, //!< Float
-	PLodObjFar, //!< Float
+	int IsPublic() override;
+	void * Create(BOOL /*loading = FALSE*/) override;
+	HINSTANCE HInstance() override;
+
+	SClass_ID SuperClassID() override;
+	Class_ID ClassID() override;
+
+	const TCHAR * ClassName() override;
+	const TCHAR * Category() override;
+	const TCHAR * InternalName() override;
+
+	int NumActionTables() override;
+	ActionTable * GetActionTable(int idx) override;
+
+private:
+
+	ActionTable * mActionTable = nullptr;
+
 };
 
 /**************************************************************************************************/

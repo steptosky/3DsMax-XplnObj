@@ -39,6 +39,7 @@
 #include "common/Logger.h"
 #include "ui/DlgMessageBox.h"
 #include <sstream>
+#include "classes-desc/ClassesDescriptions.h"
 
 namespace bcw { // backward compatibility
 
@@ -49,7 +50,8 @@ namespace bcw { // backward compatibility
 	bool MdObjAttrIOOld::canApply(INode * node) {
 		assert(node);
 		Class_ID id = node->GetObjectRef()->ClassID();
-		if (id == MAINOBJ_CLASS_ID || id == LODOBJ_CLASS_ID)
+		if (id == ClassesDescriptions::mainObj()->ClassID() ||
+			id == ClassesDescriptions::lodObj()->ClassID())
 			return false;
 		SClass_ID sid = node->GetObjectRef()->SuperClassID();
 		if (sid == GEOMOBJECT_CLASS_ID)

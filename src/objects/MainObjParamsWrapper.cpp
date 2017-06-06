@@ -31,6 +31,7 @@
 #include "MainObjectParams.h"
 #include "common/Logger.h"
 #include "common/String.h"
+#include "classes-desc/ClassesDescriptions.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
@@ -66,7 +67,7 @@ MainObjParamsWrapper::MainObjParamsWrapper(IParamBlock2 * pbAttr, IParamBlock2 *
 bool MainObjParamsWrapper::isMainObj(INode * inNode) {
 	Object * obj = inNode->GetObjectRef();
 	if (obj != nullptr) {
-		return (obj->ClassID() == MAINOBJ_CLASS_ID) == TRUE;
+		return (obj->ClassID() == ClassesDescriptions::mainObj()->ClassID()) == TRUE;
 	}
 	return false;
 }
@@ -79,7 +80,7 @@ bool MainObjParamsWrapper::isExportEnable() {
 	BOOL val = TRUE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObjAttr_ExportEnable, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_ExportEnable);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_ExportEnable);
 		}
 	}
 	else {
@@ -92,7 +93,7 @@ bool MainObjParamsWrapper::isMeshExport() {
 	BOOL val = TRUE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObjExp_Meshes, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjExp_Meshes);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Meshes);
 		}
 	}
 	else {
@@ -105,7 +106,7 @@ bool MainObjParamsWrapper::isLinesExport() {
 	BOOL val = TRUE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObjExp_Lines, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjExp_Lines);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Lines);
 		}
 	}
 	else {
@@ -118,7 +119,7 @@ bool MainObjParamsWrapper::isLightsExport() {
 	BOOL val = TRUE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObjExp_Lights, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjExp_Lights);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Lights);
 		}
 	}
 	else {
@@ -131,7 +132,7 @@ bool MainObjParamsWrapper::isAnimationExport() {
 	BOOL val = TRUE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObjExp_Animation, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjExp_Animation);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Animation);
 		}
 	}
 	else {
@@ -144,7 +145,7 @@ bool MainObjParamsWrapper::isOptimisation() {
 	BOOL val = TRUE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObjExp_Optimisation, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjExp_Optimisation);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Optimisation);
 		}
 	}
 	else {
@@ -157,7 +158,7 @@ bool MainObjParamsWrapper::isInstancing() {
 	BOOL val = FALSE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObjExp_Instancing, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjExp_Instancing);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Instancing);
 		}
 	}
 	else {
@@ -170,7 +171,7 @@ bool MainObjParamsWrapper::isDebug() {
 	BOOL val = FALSE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObjExp_Debug, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjExp_Debug);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Debug);
 		}
 	}
 	else {
@@ -277,7 +278,7 @@ bool MainObjParamsWrapper::isNameMesh() {
 	BOOL val = TRUE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObjExp_NameMeshes, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjExp_NameMeshes);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameMeshes);
 		}
 	}
 	else {
@@ -290,7 +291,7 @@ bool MainObjParamsWrapper::isNameLines() {
 	BOOL val = TRUE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObjExp_NameLines, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjExp_NameLines);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameLines);
 		}
 	}
 	else {
@@ -303,7 +304,7 @@ bool MainObjParamsWrapper::isNameLights() {
 	BOOL val = TRUE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObjExp_NameLights, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjExp_NameLights);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameLights);
 		}
 	}
 	else {
@@ -316,7 +317,7 @@ bool MainObjParamsWrapper::isNameDummies() {
 	BOOL val = TRUE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObjExp_NameDummies, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjExp_NameDummies);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameDummies);
 		}
 	}
 	else {
@@ -329,7 +330,7 @@ bool MainObjParamsWrapper::isTreeHierarchy() {
 	BOOL val = TRUE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObjExp_TreeHierarchy, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjExp_TreeHierarchy);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_TreeHierarchy);
 		}
 	}
 	else {
@@ -403,7 +404,7 @@ bool MainObjParamsWrapper::isManualScale() {
 	BOOL val = TRUE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObj_ScaleEnabled, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObj_ScaleEnabled);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObj_ScaleEnabled);
 		}
 	}
 	else {
@@ -416,7 +417,7 @@ float MainObjParamsWrapper::scale() {
 	float val = TRUE;
 	if (mPbExp) {
 		if (!mPbExp->GetValue(MainObj_ScaleValue, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObj_ScaleValue);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObj_ScaleValue);
 		}
 	}
 	else {
@@ -453,7 +454,7 @@ std::string MainObjParamsWrapper::pathPrefix() {
 #endif
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_PathPrefix, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_PathPrefix);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_PathPrefix);
 			return "";
 		}
 	}
@@ -471,7 +472,7 @@ std::string MainObjParamsWrapper::texture() {
 #endif
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_Texture, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_Texture);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_Texture);
 			return "";
 		}
 	}
@@ -489,7 +490,7 @@ std::string MainObjParamsWrapper::textureLit() {
 #endif
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_TextureLit, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_TextureLit);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TextureLit);
 			return "";
 		}
 	}
@@ -507,7 +508,7 @@ std::string MainObjParamsWrapper::textureNormal() {
 #endif
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_TextureNormal, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_TextureNormal);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TextureNormal);
 			return "";
 		}
 	}
@@ -599,7 +600,7 @@ bool MainObjParamsWrapper::isBlendGlass() {
 	BOOL val = TRUE;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_BlendGlass, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_BlendGlass);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_BlendGlass);
 		}
 	}
 	else {
@@ -612,7 +613,7 @@ bool MainObjParamsWrapper::isNormalMetalness() {
 	BOOL val = TRUE;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_NormalMetalness, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_NormalMetalness);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_NormalMetalness);
 		}
 	}
 	else {
@@ -625,7 +626,7 @@ bool MainObjParamsWrapper::isNoShadow() {
 	BOOL val = TRUE;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_NoShadow, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_NoShadow);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_NoShadow);
 		}
 	}
 	else {
@@ -638,7 +639,7 @@ bool MainObjParamsWrapper::isTilted() {
 	BOOL val = TRUE;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_Tilted, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_Tilted);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_Tilted);
 		}
 	}
 	else {
@@ -651,7 +652,7 @@ bool MainObjParamsWrapper::isCockpitLit() {
 	BOOL val = TRUE;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_CockpitLit, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_CockpitLit);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_CockpitLit);
 		}
 	}
 	else {
@@ -725,7 +726,7 @@ xobj::AttrWetDry MainObjParamsWrapper::wetDry() {
 	int val = 0;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_DryWet, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_DryWet);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_DryWet);
 		}
 	}
 	else {
@@ -740,10 +741,10 @@ xobj::AttrBlend MainObjParamsWrapper::blend() {
 	int type = 0;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_BlendingType, mT, type, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_BlendingType);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_BlendingType);
 		}
 		if (!mPbAttr->GetValue(MainObjAttr_BlendingRatio, mT, ratio, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_BlendingRatio);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_BlendingRatio);
 		}
 	}
 	else {
@@ -764,11 +765,11 @@ xobj::AttrLayerGroup MainObjParamsWrapper::layerGroup() {
 	int offset = 0;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_LayerGroupLayer, mT, layer, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_LayerGroupLayer);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupLayer);
 			return xobj::AttrLayerGroup();
 		}
 		if (!mPbAttr->GetValue(MainObjAttr_LayerGroupOffset, mT, offset, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_LayerGroupOffset);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupOffset);
 			return xobj::AttrLayerGroup();
 		}
 	}
@@ -791,11 +792,11 @@ xobj::AttrDrapedLayerGroup MainObjParamsWrapper::drapedLayerGroup() {
 	int offset = 0;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_LayerGroupDrapedLayer, mT, layer, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_LayerGroupDrapedLayer);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupDrapedLayer);
 			return xobj::AttrDrapedLayerGroup();
 		}
 		if (!mPbAttr->GetValue(MainObjAttr_LayerGroupDrapedOffset, mT, offset, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_LayerGroupDrapedOffset);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupDrapedOffset);
 			return xobj::AttrDrapedLayerGroup();
 		}
 	}
@@ -814,10 +815,10 @@ xobj::AttrLodDrap MainObjParamsWrapper::lodDrap() {
 	BOOL enabled = TRUE;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_LodDrapEnable, mT, enabled, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_LodDrapEnable);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LodDrapEnable);
 		}
 		if (!mPbAttr->GetValue(MainObjAttr_LodDrapDistance, mT, dist, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_LodDrapDistance);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LodDrapDistance);
 		}
 	}
 	else {
@@ -834,10 +835,10 @@ xobj::AttrSlungLoadWeight MainObjParamsWrapper::slungWeight() {
 	BOOL enabled = TRUE;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_SlungLoadWeightEnable, mT, enabled, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_SlungLoadWeightEnable);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlungLoadWeightEnable);
 		}
 		if (!mPbAttr->GetValue(MainObjAttr_SlungLoadWeight, mT, weight, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_SlungLoadWeight);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlungLoadWeight);
 		}
 	}
 	else {
@@ -854,10 +855,10 @@ xobj::AttrSpecular MainObjParamsWrapper::specular() {
 	BOOL enabled = TRUE;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_SpecularEnable, mT, enabled, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_SpecularEnable);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SpecularEnable);
 		}
 		if (!mPbAttr->GetValue(MainObjAttr_SpecularRatio, mT, ratio, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_SpecularRatio);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SpecularRatio);
 		}
 	}
 	else {
@@ -875,13 +876,13 @@ xobj::AttrTint MainObjParamsWrapper::tint() {
 	BOOL enabled = TRUE;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_TintEnable, mT, enabled, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_TintEnable);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TintEnable);
 		}
 		if (!mPbAttr->GetValue(MainObjAttr_TintAlbedo, mT, albedo, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_TintAlbedo);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TintAlbedo);
 		}
 		if (!mPbAttr->GetValue(MainObjAttr_TintEmissive, mT, emissive, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_TintEmissive);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TintEmissive);
 		}
 	}
 	else {
@@ -901,19 +902,19 @@ xobj::AttrSlopeLimit MainObjParamsWrapper::slopeLimit() {
 	BOOL enabled = TRUE;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(MainObjAttr_SlopeLimitEnable, mT, enabled, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_SlopeLimitEnable);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitEnable);
 		}
 		if (!mPbAttr->GetValue(MainObjAttr_SlopeLimitMinPitch, mT, minPitch, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_SlopeLimitMinPitch);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitMinPitch);
 		}
 		if (!mPbAttr->GetValue(MainObjAttr_SlopeLimitMaxPitch, mT, maxPitch, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_SlopeLimitMaxPitch);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitMaxPitch);
 		}
 		if (!mPbAttr->GetValue(MainObjAttr_SlopeLimitMinRoll, mT, minRoll, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_SlopeLimitMinRoll);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitMinRoll);
 		}
 		if (!mPbAttr->GetValue(MainObjAttr_SlopeLimitMaxRoll, mT, maxRoll, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(MainObjAttr_SlopeLimitMaxRoll);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitMaxRoll);
 		}
 	}
 	else {
@@ -979,19 +980,19 @@ xobj::AttrCockpitRegion MainObjParamsWrapper::cockpitRegion(xobj::AttrCockpitReg
 	BOOL enabled = TRUE;
 	if (mPbAttr) {
 		if (!mPbAttr->GetValue(pEnabled, mT, enabled, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(pEnabled);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pEnabled);
 		}
 		if (!mPbAttr->GetValue(pLeft, mT, left, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(pLeft);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pLeft);
 		}
 		if (!mPbAttr->GetValue(pBottom, mT, bottom, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(pBottom);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pBottom);
 		}
 		if (!mPbAttr->GetValue(pRight, mT, right, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(pRight);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pRight);
 		}
 		if (!mPbAttr->GetValue(pTop, mT, top, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrive value:" << TOTEXT(pTop);
+			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pTop);
 		}
 	}
 	else {

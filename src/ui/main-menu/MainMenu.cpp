@@ -35,13 +35,11 @@
 #include <max.h>
 #include <imenuman.h>
 #include <iparamb2.h>
+#include "classes-desc/ClassesDescriptions.h"
 #pragma warning(pop)
 
 #define MENU_ID MenuContextId(0xba20d03)
 #define MENU_NAME "X-Plane"
-
-// TODO Remove all the extern, maybe create a class factory with the static methods
-extern ClassDesc2 * GetObjCommonDesc();
 
 namespace ui {
 
@@ -66,8 +64,8 @@ namespace ui {
 	/**************************************************************************************************/
 
 	void MainMenu::create() {
-		DbgAssert(GetObjCommonDesc()->NumActionTables() > 0);
-		mActionTable = GetObjCommonDesc()->GetActionTable(0);
+		DbgAssert(ClassesDescriptions::commonClass()->NumActionTables() > 0);
+		mActionTable = ClassesDescriptions::commonClass()->GetActionTable(0);
 
 		// Set up our actions / callbacks
 		IActionManager * actionMgr = mIp->GetActionManager();

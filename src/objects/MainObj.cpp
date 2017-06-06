@@ -49,6 +49,7 @@
 #include "ui/DlgMessageBox.h"
 #include "MainObjParamsWrapper.h"
 #include "resource/ResHelper.h"
+#include "classes-desc/ClassesDescriptions.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,26 +62,6 @@
 #if MAX_VERSION_MAJOR < 19
 #	define TYPE_SINGLECHECKBOX TYPE_SINGLECHEKBOX
 #endif
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-class ObjMainClassDesc : public ClassDesc2 {
-public:
-
-	int IsPublic() override { return TRUE; }
-	void * Create(BOOL /*loading = FALSE*/) override { return new MainObject(); }
-	HINSTANCE HInstance() override { return ResHelper::hInstance; }
-
-	SClass_ID SuperClassID() override { return HELPER_CLASS_ID; }
-	Class_ID ClassID() override { return MAINOBJ_CLASS_ID; }
-
-	const TCHAR * ClassName() override { return _T("X-Obj"); }
-	const TCHAR * Category() override { return _T("X-Plane"); }
-	const TCHAR * InternalName() override { return _T("xObjectMain"); }
-
-};
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
@@ -188,13 +169,8 @@ public:
 
 static MainObjUiCallback gMainObjUiCallback;
 static MainObjAttrCallback gMainObjAttrCallback;
-static ObjMainClassDesc gObjMainDesc;
 MouseCallback MainObject::mMouseCallback;
 MainObject * MainObject::mEditOb = nullptr;
-
-ClassDesc2 * GetObjMainDesc() {
-	return &gObjMainDesc;
-}
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -341,7 +317,7 @@ static GlobAttrDlgProc gGlobAttrDlgProc;
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
-static ParamBlockDesc2 gMainAttrPb(MainObjAttrParams, _T("X-Obj-Attributes"), 0, &gObjMainDesc,
+static ParamBlockDesc2 gMainAttrPb(MainObjAttrParams, _T("X-Obj-Attributes"), 0, ClassesDescriptions::mainObj(),
 									P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION + P_MULTIMAP,
 									ATTR_PB_VERSION, MainObjAttrParamsOrder, RollCount,
 									//-------------------------------------------------------------------------
@@ -723,7 +699,7 @@ static ParamBlockDesc2 gMainAttrPb(MainObjAttrParams, _T("X-Obj-Attributes"), 0,
 									//-------------------------------------------------------------------------
 									p_end);
 
-static ParamBlockDesc2 gMainExpPb(MainObjExpParams, _T("X-Obj-Options"), 0, &gObjMainDesc, P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
+static ParamBlockDesc2 gMainExpPb(MainObjExpParams, _T("X-Obj-Options"), 0, ClassesDescriptions::mainObj(), P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
 								EXP_PB_VERSION, MainObjExpParamsOrder,
 								//-------------------------------------------------------------------------
 								// Rollouts
@@ -808,7 +784,7 @@ static ParamBlockDesc2 gMainExpPb(MainObjExpParams, _T("X-Obj-Options"), 0, &gOb
 								//-------------------------------------------------------------------------
 								p_end);
 
-static ParamBlockDesc2 gMainDispPb(MainObjDisplay, _T("X-Obj-Display"), 0, &gObjMainDesc, P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
+static ParamBlockDesc2 gMainDispPb(MainObjDisplay, _T("X-Obj-Display"), 0, ClassesDescriptions::mainObj(), P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
 									DISPLAY_PB_VERSION, MainObjDisplayOrder,
 									//-------------------------------------------------------------------------
 									// Rollouts
@@ -830,7 +806,7 @@ static ParamBlockDesc2 gMainDispPb(MainObjDisplay, _T("X-Obj-Display"), 0, &gObj
 /**************************************************************************************************/
 
 MainObject::MainObject() {
-	gObjMainDesc.MakeAutoParamBlocks(this);
+	ClassesDescriptions::mainObj()->MakeAutoParamBlocks(this);
 	mObjColor = Point3(1.0, 0.7, 0.4);
 	makeIcon();
 }
@@ -1271,7 +1247,7 @@ IOResult MainObject::Save(ISave * /*isave*/) {
 void MainObject::BeginEditParams(IObjParam * ip, ULONG flags, Animatable * prev) {
 	mIp = ip;
 	mEditOb = this;
-	gObjMainDesc.BeginEditParams(ip, this, flags, prev);
+	ClassesDescriptions::mainObj()->BeginEditParams(ip, this, flags, prev);
 	updateTexturesButtons();
 	updateBlendSpinEnabling();
 	updateLyerGroupSpinEnabling();
@@ -1280,7 +1256,7 @@ void MainObject::BeginEditParams(IObjParam * ip, ULONG flags, Animatable * prev)
 void MainObject::EndEditParams(IObjParam * ip, ULONG flags, Animatable * next) {
 	mEditOb = nullptr;
 	mIp = nullptr;
-	gObjMainDesc.EndEditParams(ip, this, flags, next);
+	ClassesDescriptions::mainObj()->EndEditParams(ip, this, flags, next);
 	ClearAFlag(A_OBJ_CREATING);
 }
 
@@ -1334,7 +1310,7 @@ TCHAR * MainObject::GetObjectName() {
 //-------------------------------------------------------------------------
 
 Class_ID MainObject::ClassID() {
-	return MAINOBJ_CLASS_ID;
+	return ClassesDescriptions::mainObj()->ClassID();
 }
 
 SClass_ID MainObject::SuperClassID() {
@@ -1528,7 +1504,7 @@ void MainObject::makeIcon() {
 	float size = 1.0f;
 	Interval interval = FOREVER;
 	if (!mDisplayPb->GetValue(MainObjDisp_IconScale, mIp ? mIp->GetTime() : 0, size, interval)) {
-		LError << "Can't retrive scale value from param block";
+		LError << "Can't retrieve scale value from param block";
 	}
 
 	if (sts::isEqual(mLastIconScale, size, 0.001f) && mIconMesh.getNumVerts() != 0) {

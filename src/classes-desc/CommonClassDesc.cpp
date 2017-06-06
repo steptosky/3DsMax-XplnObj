@@ -27,93 +27,48 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "LodObjParamsWrapper.h"
-#include "common/Logger.h"
-#include "LodObjParams.h"
-#include "common/String.h"
-#include "classes-desc/ClassesDescriptions.h"
+#include "CommonClassDesc.h"
+#include "resource/ResHelper.h"
+#include "ui/main-menu/MainMenuActions.h"
+#include "gup/ObjCommon.h"
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
-
-LodObjParamsWrapper::LodObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval)
-	: mInterval(interval),
-	mT(t),
-	mNode(node) {
-
-	DbgAssert(node);
-	DbgAssert(isLodObj(node));
-	mPb2 = node->GetObjectRef()->GetParamBlockByID(LodObjParams);
-	DbgAssert(mPb2);
-}
+#define COMMON_CLASS_ID	Class_ID(0xf5226b9, 0x5b131ef2)
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool LodObjParamsWrapper::isLodObj(INode * inNode) {
-	Object * obj = inNode->GetObjectRef();
-	if (obj != nullptr) {
-		return (obj->ClassID() == ClassesDescriptions::lodObj()->ClassID()) == TRUE;
-	}
-	return false;
-}
+int CommonClassDesc::IsPublic() { return TRUE; }
+void * CommonClassDesc::Create(BOOL /*loading = FALSE*/) { return reinterpret_cast<void *>(ObjCommon::instance()); }
+HINSTANCE CommonClassDesc::HInstance() { return ResHelper::hInstance; }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void LodObjParamsWrapper::setNearValue(float inVal) {
-	if (mPb2) {
-		if (!mPb2->SetValue(PLodObjNear, mT, inVal)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-}
-
-void LodObjParamsWrapper::setFarValue(float inVal) {
-	if (mPb2) {
-		if (!mPb2->SetValue(PLodObjFar, mT, inVal)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjFar);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-}
+SClass_ID CommonClassDesc::SuperClassID() { return GUP_CLASS_ID; }
+Class_ID CommonClassDesc::ClassID() { return COMMON_CLASS_ID; }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-float LodObjParamsWrapper::nearValue() {
-	float val = 0.0f;
-	if (mPb2) {
-		if (!mPb2->GetValue(PLodObjNear, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-	return val;
-}
+const TCHAR * CommonClassDesc::ClassName() { return _T("X-Common"); }
+const TCHAR * CommonClassDesc::Category() { return _T("X-Plane Obj common class"); }
+const TCHAR * CommonClassDesc::InternalName() { return _T("xCommonObject"); }
 
-float LodObjParamsWrapper::farValue() {
-	float val = 0.0f;
-	if (mPb2) {
-		if (!mPb2->GetValue(PLodObjFar, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(PLodObjFar);
-		}
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+int CommonClassDesc::NumActionTables() { return 1; }
+
+ActionTable * CommonClassDesc::GetActionTable(int idx) {
+	DbgAssert(idx == 0);
+	if (mActionTable == nullptr) {
+		mActionTable = new ui::MainMenuActions();
 	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-	return val;
+	return mActionTable;
 }
 
 /**************************************************************************************************/

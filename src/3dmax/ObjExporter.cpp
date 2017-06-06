@@ -37,32 +37,6 @@
 #pragma warning(pop)
 
 /**************************************************************************************************/
-/////////////////////////////////////////* Static area *////////////////////////////////////////////
-/**************************************************************************************************/
-
-class OBJEClassDesc : public ClassDesc2 {
-public:
-
-	int IsPublic() override { return TRUE; }
-	void * Create(BOOL /*loading = FALSE*/) override { return new ObjExporter(); }
-	HINSTANCE HInstance() override { return ResHelper::hInstance; }
-
-	SClass_ID SuperClassID() override { return SCENE_EXPORT_CLASS_ID; }
-	Class_ID ClassID() override { return OBJE_CLASS_ID; }
-
-	const TCHAR * ClassName() override { return _T("X-Obj-Export"); }
-	const TCHAR * Category() override { return _T("Obj export"); }
-	const TCHAR * InternalName() override { return _T("ExportObj"); }
-
-};
-
-static OBJEClassDesc OBJEDesc;
-
-ClassDesc2 * GetObjEDesc() {
-	return &OBJEDesc;
-}
-
-/**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
 /**************************************************************************************************/
 

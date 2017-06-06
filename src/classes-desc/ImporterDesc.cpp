@@ -27,94 +27,34 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "LodObjParamsWrapper.h"
-#include "common/Logger.h"
-#include "LodObjParams.h"
-#include "common/String.h"
-#include "classes-desc/ClassesDescriptions.h"
+#include "ImporterDesc.h"
+#include "3dmax/ObjImporter.h"
+#include "resource/ResHelper.h"
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
-
-LodObjParamsWrapper::LodObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval)
-	: mInterval(interval),
-	mT(t),
-	mNode(node) {
-
-	DbgAssert(node);
-	DbgAssert(isLodObj(node));
-	mPb2 = node->GetObjectRef()->GetParamBlockByID(LodObjParams);
-	DbgAssert(mPb2);
-}
+#define OBJI_CLASS_ID Class_ID(0x67596e83, 0x66b03bdb)
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool LodObjParamsWrapper::isLodObj(INode * inNode) {
-	Object * obj = inNode->GetObjectRef();
-	if (obj != nullptr) {
-		return (obj->ClassID() == ClassesDescriptions::lodObj()->ClassID()) == TRUE;
-	}
-	return false;
-}
+int ImporterDesc::IsPublic() { return TRUE; }
+void * ImporterDesc::Create(BOOL /*loading = FALSE*/) { return new ObjImporter(); }
+HINSTANCE ImporterDesc::HInstance() { return ResHelper::hInstance; }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void LodObjParamsWrapper::setNearValue(float inVal) {
-	if (mPb2) {
-		if (!mPb2->SetValue(PLodObjNear, mT, inVal)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-}
-
-void LodObjParamsWrapper::setFarValue(float inVal) {
-	if (mPb2) {
-		if (!mPb2->SetValue(PLodObjFar, mT, inVal)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjFar);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-}
+SClass_ID ImporterDesc::SuperClassID() { return SCENE_IMPORT_CLASS_ID; }
+Class_ID ImporterDesc::ClassID() { return OBJI_CLASS_ID; }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-float LodObjParamsWrapper::nearValue() {
-	float val = 0.0f;
-	if (mPb2) {
-		if (!mPb2->GetValue(PLodObjNear, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-	return val;
-}
-
-float LodObjParamsWrapper::farValue() {
-	float val = 0.0f;
-	if (mPb2) {
-		if (!mPb2->GetValue(PLodObjFar, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(PLodObjFar);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-	return val;
-}
+const TCHAR * ImporterDesc::ClassName() { return _T("X-Obj-Import"); }
+const TCHAR * ImporterDesc::Category() { return _T("Obj import"); }
+const TCHAR * ImporterDesc::InternalName() { return _T("ImportObj"); }
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -27,94 +27,34 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "LodObjParamsWrapper.h"
-#include "common/Logger.h"
-#include "LodObjParams.h"
-#include "common/String.h"
-#include "classes-desc/ClassesDescriptions.h"
+#include "LodObjDesc.h"
+#include "objects/LodObj.h"
+#include "resource/ResHelper.h"
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
-
-LodObjParamsWrapper::LodObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval)
-	: mInterval(interval),
-	mT(t),
-	mNode(node) {
-
-	DbgAssert(node);
-	DbgAssert(isLodObj(node));
-	mPb2 = node->GetObjectRef()->GetParamBlockByID(LodObjParams);
-	DbgAssert(mPb2);
-}
+#define LODOBJ_CLASS_ID	Class_ID(0xf5726b9, 0x5b133ef2)
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool LodObjParamsWrapper::isLodObj(INode * inNode) {
-	Object * obj = inNode->GetObjectRef();
-	if (obj != nullptr) {
-		return (obj->ClassID() == ClassesDescriptions::lodObj()->ClassID()) == TRUE;
-	}
-	return false;
-}
+int LodObjDesc::IsPublic() { return TRUE; }
+void * LodObjDesc::Create(BOOL /*loading = FALSE*/) { return new LodObject(); }
+HINSTANCE LodObjDesc::HInstance() { return ResHelper::hInstance; }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void LodObjParamsWrapper::setNearValue(float inVal) {
-	if (mPb2) {
-		if (!mPb2->SetValue(PLodObjNear, mT, inVal)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-}
-
-void LodObjParamsWrapper::setFarValue(float inVal) {
-	if (mPb2) {
-		if (!mPb2->SetValue(PLodObjFar, mT, inVal)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjFar);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-}
+SClass_ID LodObjDesc::SuperClassID() { return HELPER_CLASS_ID; }
+Class_ID LodObjDesc::ClassID() { return LODOBJ_CLASS_ID; }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-float LodObjParamsWrapper::nearValue() {
-	float val = 0.0f;
-	if (mPb2) {
-		if (!mPb2->GetValue(PLodObjNear, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-	return val;
-}
-
-float LodObjParamsWrapper::farValue() {
-	float val = 0.0f;
-	if (mPb2) {
-		if (!mPb2->GetValue(PLodObjFar, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(PLodObjFar);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-	return val;
-}
+const TCHAR * LodObjDesc::ClassName() { return _T("X-Lod"); }
+const TCHAR * LodObjDesc::Category() { return _T("X-Plane"); }
+const TCHAR * LodObjDesc::InternalName() { return _T("xObjectLod"); }
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
