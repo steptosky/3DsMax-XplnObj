@@ -45,6 +45,8 @@ public:
 	static INode * toMax(const xobj::ObjAbstract * xObj);
 	static xobj::ObjMesh * toXpln(INode * node);
 
+	static Mesh * extractMesh(INode * inNode);
+
 	ConverterMesh() = default;
 	~ConverterMesh() = default;
 
@@ -76,7 +78,6 @@ private:
 	typedef std::vector<MFace> FaceList;
 	typedef std::vector<MPoint> VertList;
 
-	static Mesh * extractMesh(INode * inNode);
 	static Point3 vertexNormal(Mesh * mesh, int faceNo, RVertex * rv);
 	static void addFace(FaceList & faces, VertList & vertices, int inFaceIdx, Mesh * inMesh);
 	static size_t idx(VertList & vertices, const MPoint & p);
