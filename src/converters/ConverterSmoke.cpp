@@ -28,11 +28,11 @@
 */
 
 #include "ConverterSmoke.h"
-#include "objects/SmokeObjParamsWrapper.h"
 #include <memory>
 #include "common/String.h"
 #include "ConverterUtils.h"
-#include "objects/SmokeObj.h"
+#include "objects/smoke/SmokeObjParamsWrapper.h"
+#include "objects/smoke/SmokeObj.h"
 #include "common/BaseLogger.h"
 #include "classes-desc/ClassesDescriptions.h"
 

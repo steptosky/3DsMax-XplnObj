@@ -29,8 +29,8 @@
 
 #include "ObjAttrIO.h "
 #include "sts/io/DataStream.h"
-#include "objects/MainObjectParams.h"
-#include "objects/LodObjParams.h"
+#include "objects/main/MainObjectParams.h"
+#include "objects/lod/LodObjParams.h"
 #include "NodeIO.h"
 #include "models/eDataId.h"
 #include "common/String.h"

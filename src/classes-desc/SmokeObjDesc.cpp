@@ -28,7 +28,7 @@
 */
 
 #include "SmokeObjDesc.h"
-#include "objects/SmokeObj.h"
+#include "objects/smoke/SmokeObj.h"
 #include "resource/ResHelper.h"
 
 #define SMOKE_OBJ_CLASS_ID	Class_ID(0x618843df, 0x26105dcd)

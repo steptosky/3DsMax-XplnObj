@@ -32,8 +32,8 @@
 #include <Windows.h>
 #include "resource/resource.h"
 #include "MainObjectParams.h"
-#include "ScaleDim.h"
-#include "DirectDim.h"
+#include "objects/ScaleDim.h"
+#include "objects/DirectDim.h"
 #include "common/Logger.h"
 #include "common/String.h"
 #include "sts/utilities/Compare.h"

@@ -37,7 +37,7 @@
 #include "resource/resource.h"
 #include "Info.h"
 #include "common/Logger.h"
-#include "objects/MainObjParamsWrapper.h"
+#include "objects/main/MainObjParamsWrapper.h"
 #include "converters/ConverterUtils.h"
 #include "gup/ObjCommon.h"
 #include <windows.h>

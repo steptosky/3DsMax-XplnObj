@@ -33,7 +33,7 @@
 #pragma warning(pop)
 
 #include <xpln/obj/ObjMain.h>
-#include "objects/MainObjParamsWrapper.h"
+#include "objects/main/MainObjParamsWrapper.h"
 
 class StdMat;
 class RawExpOption;

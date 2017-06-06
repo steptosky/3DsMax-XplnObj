@@ -32,12 +32,10 @@
 #include "gup/ObjCommon.h"
 #include "models/eDataId.h"
 #include "NodeIO.h"
-#include "objects/MainObj.h"
+#include "objects/main/MainObj.h"
 
 #include "common/String.h"
 #include "models/bwc/MdAnimIoOld.h"
-#include "objects/MainObjectParams.h"
-#include "objects/LodObjParams.h"
 #include "classes-desc/ClassesDescriptions.h"
 
 /**************************************************************************************************/

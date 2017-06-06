@@ -28,7 +28,7 @@
 */
 
 #include "MainObjDesc.h "
-#include "objects/MainObj.h"
+#include "objects/main/MainObj.h"
 #include "resource/ResHelper.h"
 
 #define MAINOBJ_CLASS_ID Class_ID(0x529d4c97, 0x2b78149c)

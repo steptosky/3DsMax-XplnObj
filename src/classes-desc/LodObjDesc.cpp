@@ -28,7 +28,7 @@
 */
 
 #include "LodObjDesc.h"
-#include "objects/LodObj.h"
+#include "objects/lod/LodObj.h"
 #include "resource/ResHelper.h"
 
 #define LODOBJ_CLASS_ID	Class_ID(0xf5726b9, 0x5b133ef2)

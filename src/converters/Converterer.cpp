@@ -40,7 +40,7 @@
 #include "ConverterUtils.h"
 
 #include <cassert>
-#include "objects/LodObjParamsWrapper.h"
+#include "objects/lod/LodObjParamsWrapper.h"
 #include "common/String.h"
 #include <xpln/obj/ObjSmoke.h>
 #include "ConverterSmoke.h"

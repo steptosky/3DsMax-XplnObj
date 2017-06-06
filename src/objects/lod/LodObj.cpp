@@ -33,7 +33,7 @@
 #include "models/bwc/SerializationId.h"
 #include "LodObjParams.h"
 #include <vector>
-#include "ScaleDim.h"
+#include "objects/ScaleDim.h"
 #include "common/Logger.h"
 #include "common/String.h"
 #include "sts/utilities/Compare.h"

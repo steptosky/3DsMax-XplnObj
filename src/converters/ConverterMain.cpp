@@ -37,11 +37,9 @@
 #include "Common/String.h"
 #include "common/Logger.h"
 
-#include "objects/LodObjParamsWrapper.h"
-#include "objects/MainObjParamsWrapper.h"
-#include "objects/MainObj.h"
-#include "objects/MainObjectParams.h"
-#include "objects/LodObjParams.h"
+#include "objects/lod/LodObjParamsWrapper.h"
+#include "objects/main/MainObjParamsWrapper.h"
+#include "objects/main/MainObj.h"
 #include "classes-desc/ClassesDescriptions.h"
 
 /**************************************************************************************************/
