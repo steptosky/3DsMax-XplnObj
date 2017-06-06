@@ -27,47 +27,36 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "ClassesDescriptions.h "
-#include "CommonClassDesc.h"
-#include "MainObjDesc.h"
-#include "LodObjDesc.h"
-#include "SmokeObjDesc.h"
-#include "ExporterDesc.h"
-#include "ImporterDesc.h"
+#pragma once
+
+#pragma warning(push, 0)
+#include <max.h>
+#include <iparamb2.h>
+#include <iparamm2.h> // for 3dmax 9
+#pragma warning(pop)
 
 /**************************************************************************************************/
-/////////////////////////////////////////* Static area *////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-ClassDesc2 * ClassesDescriptions::exporter() {
-	static ExporterDesc desc;
-	return &desc;
-}
+/*!
+ * \see The 3Ds Max's ClassDesc2 for more information.
+ */
+class SmokeObjDesc : public ClassDesc2 {
+public:
 
-ClassDesc2 * ClassesDescriptions::importer() {
-	static ImporterDesc desc;
-	return &desc;
-}
+	int IsPublic() override;
+	void * Create(BOOL /*loading = FALSE*/) override;
+	HINSTANCE HInstance() override;
 
-ClassDesc2 * ClassesDescriptions::mainObj() {
-	static MainObjDesc desc;
-	return &desc;
-}
+	SClass_ID SuperClassID() override;
+	Class_ID ClassID() override;
 
-ClassDesc2 * ClassesDescriptions::smokeObj() {
-	static SmokeObjDesc desc;
-	return &desc;
-}
+	const TCHAR * ClassName() override;
+	const TCHAR * Category() override;
+	const TCHAR * InternalName() override;
 
-ClassDesc2 * ClassesDescriptions::lodObj() {
-	static LodObjDesc desc;
-	return &desc;
-}
-
-ClassDesc2 * ClassesDescriptions::commonClass() {
-	static CommonClassDesc desc;
-	return &desc;
-}
+};
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

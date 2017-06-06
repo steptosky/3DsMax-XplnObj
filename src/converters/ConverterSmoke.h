@@ -27,47 +27,26 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "ClassesDescriptions.h "
-#include "CommonClassDesc.h"
-#include "MainObjDesc.h"
-#include "LodObjDesc.h"
-#include "SmokeObjDesc.h"
-#include "ExporterDesc.h"
-#include "ImporterDesc.h"
+#pragma once
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
+
+#include <xpln/obj/ObjSmoke.h>
 
 /**************************************************************************************************/
-/////////////////////////////////////////* Static area *////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-ClassDesc2 * ClassesDescriptions::exporter() {
-	static ExporterDesc desc;
-	return &desc;
-}
+class ConverterSmoke {
+	ConverterSmoke() = default;
+	~ConverterSmoke() = default;
+public:
 
-ClassDesc2 * ClassesDescriptions::importer() {
-	static ImporterDesc desc;
-	return &desc;
-}
+	static xobj::ObjSmoke * toXpln(INode * node);
+	static INode * toMax(const xobj::ObjAbstract * object);
 
-ClassDesc2 * ClassesDescriptions::mainObj() {
-	static MainObjDesc desc;
-	return &desc;
-}
-
-ClassDesc2 * ClassesDescriptions::smokeObj() {
-	static SmokeObjDesc desc;
-	return &desc;
-}
-
-ClassDesc2 * ClassesDescriptions::lodObj() {
-	static LodObjDesc desc;
-	return &desc;
-}
-
-ClassDesc2 * ClassesDescriptions::commonClass() {
-	static CommonClassDesc desc;
-	return &desc;
-}
+};
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

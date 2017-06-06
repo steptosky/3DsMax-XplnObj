@@ -160,7 +160,7 @@ namespace win {
 	/**************************************************************************************************/
 
 	LRESULT ExportObjList::subClassProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam,
-										UINT_PTR /*uIdSubclass*/, DWORD_PTR dwRefData) {
+										UINT_PTR /*uIdSubclass*/, DWORD_PTR /*dwRefData*/) {
 		//ExportObjList * control = reinterpret_cast<ExportObjList*>(dwRefData);
 		switch (uMsg) {
 				// Note for future

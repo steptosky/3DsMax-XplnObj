@@ -73,7 +73,7 @@ extern "C" {
 
 	// This function returns the number of plug-in classes this DLL
 	FnExport int LibNumberClasses() {
-		return 5;
+		return 6;
 	}
 
 	// This function returns the number of plug-in classes this DLL
@@ -82,8 +82,9 @@ extern "C" {
 			case 0: return ClassesDescriptions::commonClass();
 			case 1: return ClassesDescriptions::mainObj();
 			case 2: return ClassesDescriptions::lodObj();
-			case 3: return ClassesDescriptions::exporter();
-			case 4: return ClassesDescriptions::importer();
+			case 3: return ClassesDescriptions::smokeObj();
+			case 4: return ClassesDescriptions::exporter();
+			case 5: return ClassesDescriptions::importer();
 			default: return nullptr;
 		}
 	}

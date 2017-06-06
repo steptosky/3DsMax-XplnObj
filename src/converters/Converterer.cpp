@@ -42,6 +42,8 @@
 #include <cassert>
 #include "objects/LodObjParamsWrapper.h"
 #include "common/String.h"
+#include <xpln/obj/ObjSmoke.h>
+#include "ConverterSmoke.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
@@ -118,10 +120,12 @@ void Converterer::processXTransformObjects(INode * parent, xobj::Transform * xTr
 }
 
 INode * Converterer::processXObjects(const xobj::ObjAbstract & xObj) {
-	INode * node = nullptr;
-	node = ConverterMesh::toMax(&xObj);
+	INode * node = ConverterMesh::toMax(&xObj);
 	if (!node) {
 		node = ConverterLight::toMax(&xObj);
+	}
+	else if (!node) {
+		node = ConverterSmoke::toMax(&xObj);
 	}
 	else if (!node) {
 		node = ConverterDummy::toMax(&xObj);
@@ -166,7 +170,7 @@ bool Converterer::toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMa
 		//-------------------------------------------------------------------------
 		float scale = mainNode->scale();
 		if (!mainNode->isManualScale()) {
-			// TODO Needs implementation of autoscale value relative system units
+			// TODO Needs implementation of auto-scale value relative system units
 			scale = 1.0f;
 		}
 		//-------------------------------------------------------------------------
@@ -248,10 +252,18 @@ void Converterer::toXpln(INode * inNode, const Matrix3 & baseTm, ObjAbstractList
 			return;
 		}
 	}
-	xobj::ObjAbstract * xObj = ConverterDummy::toXpln(inNode);
-	if (xObj) {
-		ConverterAttr::toXpln(*xObj, inNode);
-		outList.emplace_back(xObj);
+
+	xobj::ObjSmoke * xSmokeObj = ConverterSmoke::toXpln(inNode);
+	if (xSmokeObj) {
+		outList.emplace_back(xSmokeObj);
+		return;
+	}
+
+	xobj::ObjAbstract * xDummyObj = ConverterDummy::toXpln(inNode);
+	if (xDummyObj) {
+		ConverterAttr::toXpln(*xDummyObj, inNode);
+		outList.emplace_back(xDummyObj);
+		return;
 	}
 }
 
@@ -263,8 +275,8 @@ bool Converterer::collectLods(INode * ownerNode, INode * currNode, std::vector<I
 	if (LodObjParamsWrapper::isLodObj(currNode)) {
 		if (currNode->GetParentNode() != ownerNode) {
 			CLError << "The lod object <"
-					<< sts::toMbString(currNode->GetName()) << "> is not linked to <"
-					<< sts::toMbString(ownerNode->GetName()) << ">";
+			<< sts::toMbString(currNode->GetName()) << "> is not linked to <"
+			<< sts::toMbString(ownerNode->GetName()) << ">";
 			return false;
 		}
 		outLods.emplace_back(currNode);

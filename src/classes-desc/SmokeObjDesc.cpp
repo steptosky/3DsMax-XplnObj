@@ -27,47 +27,34 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "ClassesDescriptions.h "
-#include "CommonClassDesc.h"
-#include "MainObjDesc.h"
-#include "LodObjDesc.h"
 #include "SmokeObjDesc.h"
-#include "ExporterDesc.h"
-#include "ImporterDesc.h"
+#include "objects/SmokeObj.h"
+#include "resource/ResHelper.h"
+
+#define SMOKE_OBJ_CLASS_ID	Class_ID(0x618843df, 0x26105dcd)
 
 /**************************************************************************************************/
-/////////////////////////////////////////* Static area *////////////////////////////////////////////
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-ClassDesc2 * ClassesDescriptions::exporter() {
-	static ExporterDesc desc;
-	return &desc;
-}
+int SmokeObjDesc::IsPublic() { return TRUE; }
+void * SmokeObjDesc::Create(BOOL /*loading = FALSE*/) { return new SmokeObject(); }
+HINSTANCE SmokeObjDesc::HInstance() { return ResHelper::hInstance; }
 
-ClassDesc2 * ClassesDescriptions::importer() {
-	static ImporterDesc desc;
-	return &desc;
-}
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-ClassDesc2 * ClassesDescriptions::mainObj() {
-	static MainObjDesc desc;
-	return &desc;
-}
+SClass_ID SmokeObjDesc::SuperClassID() { return HELPER_CLASS_ID; }
+Class_ID SmokeObjDesc::ClassID() { return SMOKE_OBJ_CLASS_ID; }
 
-ClassDesc2 * ClassesDescriptions::smokeObj() {
-	static SmokeObjDesc desc;
-	return &desc;
-}
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-ClassDesc2 * ClassesDescriptions::lodObj() {
-	static LodObjDesc desc;
-	return &desc;
-}
-
-ClassDesc2 * ClassesDescriptions::commonClass() {
-	static CommonClassDesc desc;
-	return &desc;
-}
+const TCHAR * SmokeObjDesc::ClassName() { return _T("X-Smoke"); }
+const TCHAR * SmokeObjDesc::Category() { return _T("X-Plane"); }
+const TCHAR * SmokeObjDesc::InternalName() { return _T("xObjectSmoke"); }
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

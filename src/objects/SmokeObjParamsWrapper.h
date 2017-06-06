@@ -27,47 +27,52 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "ClassesDescriptions.h "
-#include "CommonClassDesc.h"
-#include "MainObjDesc.h"
-#include "LodObjDesc.h"
-#include "SmokeObjDesc.h"
-#include "ExporterDesc.h"
-#include "ImporterDesc.h"
+#pragma once
+
+#pragma warning(push, 0)
+#include <max.h>
+#include <iparamb2.h>
+#pragma warning(pop)
+
+#include "xpln/obj/ObjSmoke.h"
 
 /**************************************************************************************************/
-/////////////////////////////////////////* Static area *////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-ClassDesc2 * ClassesDescriptions::exporter() {
-	static ExporterDesc desc;
-	return &desc;
-}
+/*!
+ * \details This class is for easy read and write x-plane and other data of 3d max object.
+ */
+class SmokeObjParamsWrapper {
+public:
 
-ClassDesc2 * ClassesDescriptions::importer() {
-	static ImporterDesc desc;
-	return &desc;
-}
+	SmokeObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval);
+	~SmokeObjParamsWrapper() = default;
 
-ClassDesc2 * ClassesDescriptions::mainObj() {
-	static MainObjDesc desc;
-	return &desc;
-}
+	//-------------------------------------------------------------------------
 
-ClassDesc2 * ClassesDescriptions::smokeObj() {
-	static SmokeObjDesc desc;
-	return &desc;
-}
+	static bool isSmokeObj(INode * inNode);
 
-ClassDesc2 * ClassesDescriptions::lodObj() {
-	static LodObjDesc desc;
-	return &desc;
-}
+	//-------------------------------------------------------------------------
 
-ClassDesc2 * ClassesDescriptions::commonClass() {
-	static CommonClassDesc desc;
-	return &desc;
-}
+	void setType(const xobj::ObjSmoke::eSmokeType val);
+	void setSize(const float val);
+
+	//-------------------------------------------------------------------------
+
+	xobj::ObjSmoke::eSmokeType type();
+	float size();
+
+	//-------------------------------------------------------------------------
+
+private:
+
+	Interval mInterval;
+	TimeValue mT = 0;
+	IParamBlock2 * mPb2 = nullptr;
+	INode * mNode = nullptr;
+
+};
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

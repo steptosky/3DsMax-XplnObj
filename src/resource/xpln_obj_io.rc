@@ -746,6 +746,27 @@ BEGIN
     PUSHBUTTON      "U",BTN_UPDATE,87,8,16,12
 END
 
+ROLL_SMOKEOBJ_DISPLAY DIALOGEX 0, 0, 108, 41
+STYLE DS_SETFONT | WS_CHILD | WS_VISIBLE
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    GROUPBOX        "Icon",IDC_STATIC,4,4,100,33
+    CONTROL         "",IDC_SCALE_EDIT,"CustEdit",WS_TABSTOP,43,18,35,10
+    CONTROL         "",IDC_SCALE_SPIN,"SpinnerControl",0x0,78,18,7,10
+    LTEXT           "Scale:",IDC_STATIC,20,18,23,9
+END
+
+ROLL_SMOKEOBJ_ATTR DIALOGEX 0, 0, 108, 56
+STYLE DS_SETFONT | WS_CHILD | WS_VISIBLE
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    CONTROL         "",SPN_SMOKE_SIZE_EDIT,"CustEdit",WS_TABSTOP,44,34,25,10
+    CONTROL         "",SPN_SMOKE_SIZE,"SpinnerControl",0x0,69,34,7,10
+    RTEXT           "Size:",-1,26,35,15,10
+    GROUPBOX        "",-1,4,3,100,48
+    COMBOBOX        CMB_SMOKE_TYPE,8,16,91,200,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -978,6 +999,22 @@ BEGIN
         TOPMARGIN, 1
         BOTTOMMARGIN, 136
     END
+
+    ROLL_SMOKEOBJ_DISPLAY, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 104
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 37
+    END
+
+    ROLL_SMOKEOBJ_ATTR, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 104
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 52
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -1132,6 +1169,16 @@ BEGIN
     0
 END
 
+ROLL_SMOKEOBJ_DISPLAY AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+ROLL_SMOKEOBJ_ATTR AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1176,6 +1223,8 @@ BEGIN
     IDS_MAIN_MENU_ABOUT     "About the X-Plane plugin"
     IDS_MAIN_MENU_ACTION_TABLE_CATEGORY "XplnMainMenu_ActionTable"
     IDS_MAIN_MENU_SETTINGS  "Settings"
+    IDS_ROLL_SMOKE_ATTR     "Options"
+    IDS_ROLL_SMOKE_DISPLY   "Display"
 END
 
 #endif    // Russian (Russia) resources

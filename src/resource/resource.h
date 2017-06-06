@@ -56,6 +56,8 @@
 #define IDS_MAIN_MENU_ABOUT             167
 #define IDS_MAIN_MENU_ACTION_TABLE_CATEGORY 168
 #define IDS_MAIN_MENU_SETTINGS          169
+#define IDS_ROLL_SMOKE_ATTR             170
+#define IDS_ROLL_SMOKE_DISPLY           171
 #define ROLL_MANIP_WHEEL                200
 #define ROLL_MANIP_COMMAND_KNOB         201
 #define ROLL_MANIP_AXIS_KNOB            204
@@ -67,7 +69,6 @@
 #define CHK_SLOPELIMIT                  1016
 #define CHK_SHADOW                      1017
 #define CHK_NORMAL_METALNESS            1017
-#define CHK_NORMAL_METALNESS2           1018
 #define CHK_BLEND_GLASS                 1018
 #define CHK_SUNLIGHT                    1024
 #define CHK_TWO_SIDED                   1025
@@ -162,8 +163,10 @@
 #define ROLL_MAINOBJ_EXP                1135
 #define BTN_CHECK_FOR_UPDATE            1136
 #define SPN_LAYERGROUP_DRAPED_EDIT      1136
+#define ROLL_SMOKEOBJ_DISPLAY           1136
 #define LBL_VERSION                     1137
 #define SPN_LAYERGROUP_DRAPED           1137
+#define ROLL_SMOKEOBJ_ATTR              1137
 #define USER_OUPUT                      1138
 #define SPN_LODDRAPED_DIST_EDIT         1138
 #define BTN_OK                          1139
@@ -306,7 +309,6 @@
 #define SPN_V1                          1237
 #define LBL_NAME                        1238
 #define CHK_AUTOEXPORT                  1239
-#define IDC_LIST1                       1240
 #define LST_OBJECTS                     1240
 #define BTN_SELECT_ALL                  1241
 #define BTN_UNSELECT_ALL                1242
@@ -314,15 +316,17 @@
 #define BTN_UPDATE                      1244
 #define STC_VALUE2                      1245
 #define STC_VALUE1                      1246
-#define STC_VALEU1                      1247
+#define CMB_SMOKE_TYPE                  1248
+#define SPN_SMOKE_SIZE_EDIT             1249
+#define SPN_SMOKE_SIZE                  1250
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        170
+#define _APS_NEXT_RESOURCE_VALUE        171
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1248
+#define _APS_NEXT_CONTROL_VALUE         1251
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

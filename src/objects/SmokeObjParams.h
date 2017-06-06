@@ -27,47 +27,32 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "ClassesDescriptions.h "
-#include "CommonClassDesc.h"
-#include "MainObjDesc.h"
-#include "LodObjDesc.h"
-#include "SmokeObjDesc.h"
-#include "ExporterDesc.h"
-#include "ImporterDesc.h"
+#pragma once
+
+#pragma warning(push, 0)
+#include <max.h>
+#include <iparamb2.h>
+#pragma warning(pop)
 
 /**************************************************************************************************/
-/////////////////////////////////////////* Static area *////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-ClassDesc2 * ClassesDescriptions::exporter() {
-	static ExporterDesc desc;
-	return &desc;
-}
+/*!
+ * \details Parameter blocks of the X-Smoke object
+ */
+enum eSmokeObjParamsBlocks : BlockID {
+	SmokeObjParams = 0,
+	SmokeObjDisplay, //!< For internal using
+};
 
-ClassDesc2 * ClassesDescriptions::importer() {
-	static ImporterDesc desc;
-	return &desc;
-}
-
-ClassDesc2 * ClassesDescriptions::mainObj() {
-	static MainObjDesc desc;
-	return &desc;
-}
-
-ClassDesc2 * ClassesDescriptions::smokeObj() {
-	static SmokeObjDesc desc;
-	return &desc;
-}
-
-ClassDesc2 * ClassesDescriptions::lodObj() {
-	static LodObjDesc desc;
-	return &desc;
-}
-
-ClassDesc2 * ClassesDescriptions::commonClass() {
-	static CommonClassDesc desc;
-	return &desc;
-}
+/*!
+ * \details Values of the \link eSmokeObjParamsBlocks::SmokeObjParams \endlink parameters block.
+ */
+enum eSmokeParams : ParamID {
+	PSmokeObjAttr_SmokeType = 25, //<! int 
+	PSmokeObjAttr_Size = 50, //!< Float
+};
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
