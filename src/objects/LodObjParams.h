@@ -47,7 +47,7 @@ enum eLodObjParamsBlocks : BlockID {
 };
 
 /*!
- * \details Values of the eLodObjParamsBlocks::LodObjParams parameters block.
+ * \details Values of the \link eLodObjParamsBlocks::LodObjParams \endlink parameters block.
  */
 enum eLodParams : ParamID {
 	PLodObjNear, //!< Float

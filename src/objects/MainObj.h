@@ -32,6 +32,7 @@
 #pragma warning(push, 0)
 #include <max.h>
 #include <iparamb2.h>
+#include <iparamm2.h>
 #pragma warning(pop)
 
 #include "objects/MouseCallback.h"
@@ -46,7 +47,7 @@ class MainObject : public HelperObject {
 public:
 
 	MainObject();
-	~MainObject();
+	virtual ~MainObject();
 
 	void DeleteThis() override { delete this; }
 
@@ -147,6 +148,7 @@ private:
 	IParamBlock2 * mExpPb = nullptr;
 	IParamBlock2 * mDisplayPb = nullptr;
 
+	ClassDesc2 * mDesc;
 	IObjParam * mIp = nullptr;
 	Point3 mObjColor;
 	Mesh mIconMesh;

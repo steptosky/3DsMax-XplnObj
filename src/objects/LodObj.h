@@ -29,6 +29,12 @@
 
 #pragma once
 
+#pragma warning(push, 0)
+#include <max.h>
+#include <iparamb2.h>
+#include <iparamm2.h>
+#pragma warning(pop)
+
 #include "objects/MouseCallback.h"
 #include "models/bwc/stsu_data_stream.h"
 #include <vector>
@@ -41,7 +47,7 @@ class LodObject : public HelperObject {
 public:
 
 	LodObject();
-	~LodObject();
+	virtual ~LodObject();
 
 	void DeleteThis() override { delete this; }
 
@@ -132,6 +138,8 @@ private:
 
 	IParamBlock2 * mParamsPb = nullptr;
 	IParamBlock2 * mDisplayPb = nullptr;
+
+	ClassDesc2 * mDesc;
 	IObjParam * mIp = nullptr;
 	Point3 mObjColor;
 	Mesh mIconMesh;

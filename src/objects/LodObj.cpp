@@ -29,10 +29,6 @@
 
 #include "LodObj.h"
 
-#pragma warning(push, 0)
-#include <iparamb2.h>
-#pragma warning(pop)
-
 #include "resource/resource.h"
 #include "models/bwc/SerializationId.h"
 #include "LodObjParams.h"
@@ -41,7 +37,6 @@
 #include "common/Logger.h"
 #include "common/String.h"
 #include "sts/utilities/Compare.h"
-#include "resource/ResHelper.h"
 #include "classes-desc/ClassesDescriptions.h"
 
 /**************************************************************************************************/
@@ -168,7 +163,8 @@ static ParamBlockDesc2 gLodDisplayPb(LodObjDisplay, _T("X-Lod-Display"), 0, Clas
 /**************************************************************************************************/
 
 LodObject::LodObject() {
-	ClassesDescriptions::lodObj()->MakeAutoParamBlocks(this);
+	mDesc = ClassesDescriptions::lodObj();
+	mDesc->MakeAutoParamBlocks(this);
 	mObjColor = Point3(1.0, 0.7, 0.4);
 	makeIcon();
 }
@@ -312,13 +308,13 @@ IOResult LodObject::Save(ISave * /*isave*/) {
 void LodObject::BeginEditParams(IObjParam * ip, ULONG flags, Animatable * prev) {
 	mIp = ip;
 	mEditOb = this;
-	ClassesDescriptions::lodObj()->BeginEditParams(ip, this, flags, prev);
+	mDesc->BeginEditParams(ip, this, flags, prev);
 }
 
 void LodObject::EndEditParams(IObjParam * ip, ULONG flags, Animatable * next) {
 	mEditOb = nullptr;
 	mIp = nullptr;
-	ClassesDescriptions::lodObj()->EndEditParams(ip, this, flags, next);
+	mDesc->EndEditParams(ip, this, flags, next);
 	ClearAFlag(A_OBJ_CREATING);
 }
 
@@ -326,28 +322,20 @@ void LodObject::EndEditParams(IObjParam * ip, ULONG flags, Animatable * next) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-ObjectState LodObject::Eval(TimeValue /*t*/) {
-	return ObjectState(this);
-}
-
-Object * LodObject::ConvertToType(TimeValue /*t*/, Class_ID /*obtype*/) {
-	return nullptr;
-}
-
-int LodObject::CanConvertToType(Class_ID /*obtype*/) {
-	return FALSE;
-}
+ObjectState LodObject::Eval(TimeValue) { return ObjectState(this); }
+Object * LodObject::ConvertToType(TimeValue, Class_ID) { return nullptr; }
+int LodObject::CanConvertToType(Class_ID) { return FALSE; }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void LodObject::GetWorldBoundBox(TimeValue /*t*/, INode * inode, ViewExp * /*vpt*/, Box3 & box) {
+void LodObject::GetWorldBoundBox(TimeValue, INode * inode, ViewExp *, Box3 & box) {
 	Matrix3 tm = inode->GetObjectTM(GetCOREInterface()->GetTime());
 	box = mIconMesh.getBoundingBox() * tm;
 }
 
-void LodObject::GetLocalBoundBox(TimeValue /*t*/, INode * /*inode*/, ViewExp * /*vpt*/, Box3 & box) {
+void LodObject::GetLocalBoundBox(TimeValue, INode *, ViewExp *, Box3 & box) {
 	box = mIconMesh.getBoundingBox();
 }
 
@@ -356,57 +344,32 @@ void LodObject::GetLocalBoundBox(TimeValue /*t*/, INode * /*inode*/, ViewExp * /
 /**************************************************************************************************/
 
 #if MAX_VERSION_MAJOR > 14
-
-const MCHAR * LodObject::GetObjectName() {
-	return _T("X-Lod");
-}
-
+const MCHAR * LodObject::GetObjectName() {return _T("X-Lod");}
 #else
-
-TCHAR * LodObject::GetObjectName() {
-	return _T("X-Lod");
-}
-
+TCHAR * LodObject::GetObjectName() { return _T("X-Lod"); }
 #endif
+
+void LodObject::InitNodeName(TSTR & s) { s = _T("X-Lod-"); }
 
 //-------------------------------------------------------------------------
 
-Class_ID LodObject::ClassID() {
-	return ClassesDescriptions::lodObj()->ClassID();
-}
-
-SClass_ID LodObject::SuperClassID() {
-	return HELPER_CLASS_ID;
-}
-
-void LodObject::GetClassName(TSTR & s) {
-	s = _T("X-Lod");
-}
+Class_ID LodObject::ClassID() { return mDesc->ClassID(); }
+SClass_ID LodObject::SuperClassID() { return mDesc->SuperClassID(); }
+void LodObject::GetClassName(TSTR & s) { s = mDesc->ClassName(); }
 
 RefTargetHandle LodObject::Clone(RemapDir & remap) {
 	LodObject * newob = new LodObject();
 	newob->ReplaceReference(LodObjParamsOrder, mParamsPb->Clone(remap));
 	newob->ReplaceReference(LodObjDisplayOrder, mDisplayPb->Clone(remap));
-	//newob->ivalid.SetEmpty();
 	BaseClone(this, newob, remap);
 	return (newob);
-}
-
-void LodObject::InitNodeName(TSTR & s) {
-	s = _T("X-Lod-");
 }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-Animatable * LodObject::SubAnim(int i) {
-	switch (i) {
-		case LodObjParamsOrder: return mParamsPb;
-		case LodObjDisplayOrder: return mDisplayPb;
-		default: return nullptr;
-	}
-}
+Animatable * LodObject::SubAnim(int i) { return GetParamBlock(i); }
 
 TSTR LodObject::SubAnimName(int i) {
 	switch (i) {
@@ -420,17 +383,8 @@ TSTR LodObject::SubAnimName(int i) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-int LodObject::GetParamBlockIndex(int id) {
-	return id;
-	//	if (mParamsPb && id >= 0 && id < mParamsPb->NumParams()) {
-	//		return id;
-	//	}
-	//	return -1;
-}
-
-int LodObject::NumParamBlocks() {
-	return 2;
-}
+int LodObject::GetParamBlockIndex(int id) { return id; }
+int LodObject::NumParamBlocks() { return 2; }
 
 IParamBlock2 * LodObject::GetParamBlock(int i) {
 	switch (i) {
@@ -448,9 +402,11 @@ IParamBlock2 * LodObject::GetParamBlockByID(BlockID id) {
 	}
 }
 
-int LodObject::NumRefs() {
-	return 2;
-}
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+int LodObject::NumRefs() { return 2; }
 
 RefTargetHandle LodObject::GetReference(int i) {
 	switch (i) {
@@ -501,11 +457,9 @@ RefResult LodObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /*
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void LodObject::GetMat(TimeValue t, INode * inode, ViewExp * /*vpt*/, Matrix3 & tm) {
+void LodObject::GetMat(TimeValue t, INode * inode, ViewExp *, Matrix3 & tm) {
 	tm = inode->GetObjectTM(t);
 	tm.NoScale();
-	//float scaleFactor = vpt->NonScalingObjectSize() * vpt->GetVPWorldWidth(tm.GetTrans())/(float)360.0;
-	//tm.Scale(Point3(scaleFactor,scaleFactor,scaleFactor));
 }
 
 int LodObject::HitTest(TimeValue t, INode * inode, int type, int crossing, int flags, IPoint2 * p, ViewExp * vpt) {
@@ -531,9 +485,7 @@ int LodObject::HitTest(TimeValue t, INode * inode, int type, int crossing, int f
 
 //-------------------------------------------------------------------------
 
-int LodObject::UsesWireColor() {
-	return TRUE;
-}
+int LodObject::UsesWireColor() { return TRUE; }
 
 //-------------------------------------------------------------------------
 
@@ -574,19 +526,19 @@ void LodObject::makeIcon() {
 		return;
 	}
 
-	// Because box size is 2 meters we make it 1 meter, if the icon is changed the scale must be corrected.
+	// Because the box size is 2 meters we make it 1 meter, if the icon is changed the scale must be corrected.
 	size *= 0.5f;
 
 	float masterScale = static_cast<float>(GetMasterScale(UNITS_METERS));
 	if (masterScale != -1.0f) {
 		masterScale = 1.0f / masterScale;
 		size = size * masterScale;
-		if (size < 0.000001f) {
-			size = 0.000001f;
+		if (size < 0.00001f) {
+			size = 0.00001f;
 			LError << "The icon scale is too small";
 		}
 	}
-
+	// todo make icon with the Mesh2Cpp
 	mLastIconScale = size;
 
 	mIconMesh = Mesh();

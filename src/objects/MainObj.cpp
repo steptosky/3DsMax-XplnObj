@@ -29,12 +29,7 @@
 
 #include "MainObj.h "
 
-#pragma warning(push, 0)
-#include <iparamb2.h>
-#include <iparamm2.h>
 #include <Windows.h>
-#pragma warning(pop)
-
 #include "resource/resource.h"
 #include "MainObjectParams.h"
 #include "ScaleDim.h"
@@ -48,7 +43,6 @@
 #include <xpln/obj/attributes/AttrWetDry.h>
 #include "ui/DlgMessageBox.h"
 #include "MainObjParamsWrapper.h"
-#include "resource/ResHelper.h"
 #include "classes-desc/ClassesDescriptions.h"
 
 /**************************************************************************************************/
@@ -399,7 +393,7 @@ static ParamBlockDesc2 gMainAttrPb(MainObjAttrParams, _T("X-Obj-Attributes"), 0,
 									p_default, 0,
 									p_accessor, &gMainObjAttrCallback,
 									p_end,
-									// 3d max 9 doesnot support 
+									// 3d max 9 does not support 
 									//p_ui, RollGlobShading, TYPE_INT_COMBOBOX,
 									//CMB_BLEND, 3,
 									//IDS_BLEND_ENABLE,
@@ -639,7 +633,7 @@ static ParamBlockDesc2 gMainAttrPb(MainObjAttrParams, _T("X-Obj-Attributes"), 0,
 									p_default, 0,
 									p_accessor, &gMainObjAttrCallback,
 									p_end,
-									// 3d max 9 doesnot support 
+									// 3d max 9 does not support 
 									//p_ui, RollGlobAttr, TYPE_INT_COMBOBOX,
 									//CMB_LAYERGROUP, 0,
 									//p_default, 0,
@@ -670,7 +664,7 @@ static ParamBlockDesc2 gMainAttrPb(MainObjAttrParams, _T("X-Obj-Attributes"), 0,
 									p_default, 0,
 									p_accessor, &gMainObjAttrCallback,
 									p_end,
-									// 3d max 9 doesnot support 
+									// 3d max 9 does not support 
 									//p_ui, RollGlobAttr, TYPE_INT_COMBOBOX,
 									//CMB_LAYERGROUP_DRAPED, 0,
 									//p_default, 0,
@@ -688,7 +682,7 @@ static ParamBlockDesc2 gMainAttrPb(MainObjAttrParams, _T("X-Obj-Attributes"), 0,
 									p_default, 0,
 									p_accessor, &gMainObjAttrCallback,
 									p_end,
-									// 3d max 9 doesnot support 
+									// 3d max 9 does not support 
 									//p_ui, RollGlobAttr, TYPE_INT_COMBOBOX,
 									//CMB_WETDRY, 3,
 									//IDS_WETDRY_DISABLE,
@@ -730,7 +724,7 @@ static ParamBlockDesc2 gMainExpPb(MainObjExpParams, _T("X-Obj-Options"), 0, Clas
 								p_ui, TYPE_SINGLECHECKBOX, CHK_ENABLE_ANIM,
 								p_end,
 
-								MainObjExp_Optimisation, _T("Enable-optimisation"), TYPE_BOOL, 0, NO_IDS,
+								MainObjExp_Optimisation, _T("Enable-optimization"), TYPE_BOOL, 0, NO_IDS,
 								p_default, TRUE,
 								p_ui, TYPE_SINGLECHECKBOX, CHK_ENABLE_OPTIMISATION,
 								p_end,
@@ -806,7 +800,8 @@ static ParamBlockDesc2 gMainDispPb(MainObjDisplay, _T("X-Obj-Display"), 0, Class
 /**************************************************************************************************/
 
 MainObject::MainObject() {
-	ClassesDescriptions::mainObj()->MakeAutoParamBlocks(this);
+	mDesc = ClassesDescriptions::mainObj();
+	mDesc->MakeAutoParamBlocks(this);
 	mObjColor = Point3(1.0, 0.7, 0.4);
 	makeIcon();
 }
@@ -1247,7 +1242,7 @@ IOResult MainObject::Save(ISave * /*isave*/) {
 void MainObject::BeginEditParams(IObjParam * ip, ULONG flags, Animatable * prev) {
 	mIp = ip;
 	mEditOb = this;
-	ClassesDescriptions::mainObj()->BeginEditParams(ip, this, flags, prev);
+	mDesc->BeginEditParams(ip, this, flags, prev);
 	updateTexturesButtons();
 	updateBlendSpinEnabling();
 	updateLyerGroupSpinEnabling();
@@ -1256,7 +1251,7 @@ void MainObject::BeginEditParams(IObjParam * ip, ULONG flags, Animatable * prev)
 void MainObject::EndEditParams(IObjParam * ip, ULONG flags, Animatable * next) {
 	mEditOb = nullptr;
 	mIp = nullptr;
-	ClassesDescriptions::mainObj()->EndEditParams(ip, this, flags, next);
+	mDesc->EndEditParams(ip, this, flags, next);
 	ClearAFlag(A_OBJ_CREATING);
 }
 
@@ -1264,28 +1259,20 @@ void MainObject::EndEditParams(IObjParam * ip, ULONG flags, Animatable * next) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-ObjectState MainObject::Eval(TimeValue /*t*/) {
-	return ObjectState(this);
-}
-
-Object * MainObject::ConvertToType(TimeValue /*t*/, Class_ID /*obtype*/) {
-	return nullptr;
-}
-
-int MainObject::CanConvertToType(Class_ID /*obtype*/) {
-	return FALSE;
-}
+ObjectState MainObject::Eval(TimeValue) { return ObjectState(this); }
+Object * MainObject::ConvertToType(TimeValue, Class_ID) { return nullptr; }
+int MainObject::CanConvertToType(Class_ID) { return FALSE; }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void MainObject::GetWorldBoundBox(TimeValue /*t*/, INode * inode, ViewExp * /*vpt*/, Box3 & box) {
+void MainObject::GetWorldBoundBox(TimeValue, INode * inode, ViewExp *, Box3 & box) {
 	Matrix3 tm = inode->GetObjectTM(GetCOREInterface()->GetTime());
 	box = mIconMesh.getBoundingBox() * tm;
 }
 
-void MainObject::GetLocalBoundBox(TimeValue /*t*/, INode * /*inode*/, ViewExp * /*vpt*/, Box3 & box) {
+void MainObject::GetLocalBoundBox(TimeValue, INode *, ViewExp *, Box3 & box) {
 	box = mIconMesh.getBoundingBox();
 }
 
@@ -1294,59 +1281,33 @@ void MainObject::GetLocalBoundBox(TimeValue /*t*/, INode * /*inode*/, ViewExp * 
 /**************************************************************************************************/
 
 #if MAX_VERSION_MAJOR > 14
-
-const MCHAR * MainObject::GetObjectName() {
-	return _T("X-Obj");
-}
-
+const MCHAR * MainObject::GetObjectName() {return _T("X-Obj");}
 #else
-
-TCHAR * MainObject::GetObjectName() {
-	return _T("X-Obj");
-}
-
+TCHAR * MainObject::GetObjectName() { return _T("X-Obj"); }
 #endif
+
+void MainObject::InitNodeName(TSTR & s) { s = _T("X-Obj-"); }
 
 //-------------------------------------------------------------------------
 
-Class_ID MainObject::ClassID() {
-	return ClassesDescriptions::mainObj()->ClassID();
-}
-
-SClass_ID MainObject::SuperClassID() {
-	return HELPER_CLASS_ID;
-}
-
-void MainObject::GetClassName(TSTR & s) {
-	s = _T("X-Obj");
-}
+Class_ID MainObject::ClassID() { return mDesc->ClassID(); }
+SClass_ID MainObject::SuperClassID() { return mDesc->SuperClassID(); }
+void MainObject::GetClassName(TSTR & s) { s = mDesc->ClassName(); }
 
 RefTargetHandle MainObject::Clone(RemapDir & remap) {
 	MainObject * newob = new MainObject();
 	newob->ReplaceReference(MainObjAttrParamsOrder, mAttrParamsPb->Clone(remap));
 	newob->ReplaceReference(MainObjExpParamsOrder, mExpPb->Clone(remap));
 	newob->ReplaceReference(MainObjDisplayOrder, mDisplayPb->Clone(remap));
-	//newob->ivalid.SetEmpty();
 	BaseClone(this, newob, remap);
 	return (newob);
-}
-
-void MainObject::InitNodeName(TSTR & s) {
-	s = _T("X-Obj-");
 }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-Animatable * MainObject::SubAnim(int i) {
-	switch (i) {
-		case MainObjAttrParamsOrder: return mAttrParamsPb;
-		case MainObjExpParamsOrder: return mExpPb;
-		case MainObjDisplayOrder: return mDisplayPb;
-		default: return nullptr;
-	}
-}
+Animatable * MainObject::SubAnim(int i) { return GetParamBlock(i); }
 
 TSTR MainObject::SubAnimName(int i) {
 	switch (i) {
@@ -1361,13 +1322,8 @@ TSTR MainObject::SubAnimName(int i) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-int MainObject::GetParamBlockIndex(int id) {
-	return id;
-}
-
-int MainObject::NumParamBlocks() {
-	return 3;
-}
+int MainObject::GetParamBlockIndex(int id) { return id; }
+int MainObject::NumParamBlocks() { return 3; }
 
 IParamBlock2 * MainObject::GetParamBlock(int i) {
 	switch (i) {
@@ -1387,9 +1343,11 @@ IParamBlock2 * MainObject::GetParamBlockByID(BlockID id) {
 	}
 }
 
-int MainObject::NumRefs() {
-	return 3;
-}
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+int MainObject::NumRefs() { return 3; }
 
 RefTargetHandle MainObject::GetReference(int i) {
 	switch (i) {
@@ -1450,12 +1408,11 @@ int MainObject::HitTest(TimeValue t, INode * inode, int type, int crossing, int 
 	HitRegion hitRegion;
 	DWORD savedLimits;
 	int res = 0;
-	Matrix3 m;
 	GraphicsWindow * gw = vpt->getGW();
 	Material * mtl = gw->getMaterial();
 	MakeHitRegion(hitRegion, type, crossing, 4, p);
 	gw->setRndLimits(((savedLimits = gw->getRndLimits()) | GW_PICK) & ~GW_ILLUM);
-	m = inode->GetObjectTM(t);
+	Matrix3 m = inode->GetObjectTM(t);
 	gw->setTransform(m);
 	gw->clearHitCode();
 	if (mIconMesh.select(gw, mtl, &hitRegion, flags & HIT_ABORTONHIT)) {
@@ -1468,9 +1425,7 @@ int MainObject::HitTest(TimeValue t, INode * inode, int type, int crossing, int 
 
 //-------------------------------------------------------------------------
 
-int MainObject::UsesWireColor() {
-	return TRUE;
-}
+int MainObject::UsesWireColor() { return TRUE; }
 
 //-------------------------------------------------------------------------
 
@@ -1511,19 +1466,20 @@ void MainObject::makeIcon() {
 		return;
 	}
 
-	// Because box size is 2 meters we make it 1 meter, if the icon is changed the scale must be corrected.
+	// Because the box size is 2 meters we make it 1 meter, if the icon is changed the scale must be corrected.
 	size *= 0.5f;
 
 	float masterScale = static_cast<float>(GetMasterScale(UNITS_METERS));
 	if (masterScale != -1.0f) {
 		masterScale = 1.0f / masterScale;
 		size = size * masterScale;
-		if (size < 0.000001f) {
-			size = 0.000001f;
+		if (size < 0.00001f) {
+			size = 0.00001f;
 			LError << "The icon scale is too small";
 		}
 	}
 
+	// todo make icon with the Mesh2Cpp
 	mLastIconScale = size;
 
 	mIconMesh.setNumVerts(93);
