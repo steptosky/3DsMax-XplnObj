@@ -425,7 +425,7 @@ int SmokeObject::Display(TimeValue t, INode * inode, ViewExp * vpt, int /*flags*
 	mObjColor.x = color.r;
 	mObjColor.y = color.g;
 	mObjColor.z = color.b;
-	gw->setTransform(inode->GetNodeTM(t));
+	gw->setTransform(inode->GetObjectTM(t));
 	//-------------------------------------------------------------------------
 	DWORD rlim = gw->getRndLimits();
 	gw->setRndLimits(GW_WIREFRAME | GW_EDGES_ONLY | GW_BACKCULL | (rlim & GW_Z_BUFFER));
