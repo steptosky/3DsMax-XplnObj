@@ -133,7 +133,8 @@ void Logger::saveLog(const MSTR & where) const {
 	else {
 		if (!CopyFile(p.GetCStr(), where.data(),FALSE)) {
 			DWORD err = GetLastError();
-			MessageBoxA(GetActiveWindow(), std::string("Can't save log file. code:").append(sts::toMbString(uint64_t(err))).c_str(),
+			MessageBoxA(GetActiveWindow(),
+						sts::MbStrUtils::join("Can't save log file. code: ", err).c_str(),
 						"Error", MB_ICONERROR);
 		}
 	}
@@ -159,7 +160,8 @@ Logger::Logger() {
 	// So I fixed it. (hello Autodesk :D)
 	if (!paths->DoesFileExist(p)) {
 		if (!paths->CreateDirectoryHierarchy(p)) {
-			MessageBox(GetActiveWindow(), sts::Str(_T(" Can't create dir for the log file: ")).append(p.GetCStr()).c_str(),
+			MessageBox(GetActiveWindow(),
+						sts::StrUtils::joinStr(_T(" Can't create dir for the log file: "), p.GetCStr()).c_str(),
 						_T("Error"), MB_ICONERROR);
 		}
 	}

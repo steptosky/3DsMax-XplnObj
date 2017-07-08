@@ -178,10 +178,7 @@ namespace ui {
 		mBtnDonate.setup(hWnd, BTN_DONATE);
 		mEdtLog.setup(hWnd, USER_OUPUT);
 		mDlgMain.show();
-
-		sts::Str str(_T("Version: "));
-		str.append(_T(XIO_VERSION_STRING)).append(_T("-")).append(_T(XIO_RELEASE_TYPE));
-		mLblVersion.setText(str);
+		mLblVersion.setText(sts::StrUtils::joinStr(_T(XIO_VERSION_STRING), _T("-"), _T(XIO_RELEASE_TYPE)));
 	}
 
 	void DlgImport::DestroyDlg(HWND /*hWnd*/) {

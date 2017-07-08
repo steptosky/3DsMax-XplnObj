@@ -30,6 +30,7 @@
 #include "Mesh2Cpp.h"
 #include <fstream>
 #include "converters/ConverterMesh.h"
+#include "additional/utils/StringUtils.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,8 +49,8 @@ void Mesh2Cpp::saveSelected(const std::string & name, const std::string & folder
 }
 
 void Mesh2Cpp::save(const Mesh & mesh, const std::string & name, const std::string & folderPath) {
-	writeHeader(name, std::string(folderPath).append("/").append(name).append("-gen.h"));
-	writeCpp(mesh, name, std::string(folderPath).append("/").append(name).append("-gen.cpp"));
+	writeHeader(name, sts::MbStrUtils::joinStr(folderPath, "/", name, "-gen.h"));
+	writeCpp(mesh, name, sts::MbStrUtils::joinStr(folderPath, "/", name, "-gen.cpp"));
 }
 
 /**************************************************************************************************/

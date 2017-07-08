@@ -308,11 +308,10 @@ namespace ui {
 
 	sts::Str AnimVisView::toText(MdAnimVis::Key & inKey) {
 		sts::Str strTmp;
-		sts::Str strTmp2;
 		strTmp.append(1, inKey.pType);
 		strTmp.append(_T(" = ")).append(sts::toString(inKey.pValue1, 4)).append(_T(" "));
 		strTmp.append(sts::toString(inKey.pValue2, 4));
-		strTmp2 = sts::toString(inKey.pDrf);
+		sts::Str strTmp2 = sts::toString(inKey.pDrf);
 		strTmp.append(_T(" ")).append(strTmp2.empty() ? _T("none") : strTmp2);
 		return strTmp;
 	}

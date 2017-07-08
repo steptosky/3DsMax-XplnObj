@@ -421,10 +421,8 @@ namespace ui {
 				break;
 			}
 
-			std::string signature(XIO_ORGANIZATION_NAME);
-			signature.append(" ").append(XIO_PROJECT_NAME).append(":");
-			signature.append(" ").append(XIO_VERSION_STRING).append("-").append(XIO_RELEASE_TYPE);
-			signature.append("+[").append(XIO_COMPILE_DATE).append("]");
+			std::string signature = sts::MbStrUtils::joinStr(XIO_ORGANIZATION_NAME, " ", XIO_PROJECT_NAME, ": ",
+															XIO_VERSION_STRING, "-", XIO_RELEASE_TYPE, "+[", XIO_COMPILE_DATE, "]");
 			xMain.pExportOptions.setSignature(signature);
 
 			if (!xMain.exportToFile(exportFilePath)) {

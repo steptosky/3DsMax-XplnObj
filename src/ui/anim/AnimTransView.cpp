@@ -309,13 +309,8 @@ namespace ui {
 		}
 
 		int tpt = GetTicksPerFrame();
-		sts::Str strTmp;
 		for (size_t i = 0; i < tList.size(); ++i) {
-			strTmp.clear();
-			strTmp.append(_T("#:")).append(sts::toString(i + 1)).append(_T("  "));
-			strTmp.append(_T("F:")).append(sts::toString(tList[i] / tpt)).append(_T("  "));
-			strTmp.append(_T("V:")).append(sts::toString(vList[i]));
-			cListKeys.addItem(strTmp);
+			cListKeys.addItem(sts::StrUtils::join(_T("#:"), i + 1, _T(" F:"), tList[i] / tpt, _T(" V:"), vList[i]));
 		}
 		cListKeys.setCurrSelected(sCurrSelected);
 		mData.saveToNode();
