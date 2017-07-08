@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 **  Copyright(C) 2017, StepToSky
 **
@@ -27,35 +29,29 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
 #include <stdio.h>
 
-namespace sts_t {
+namespace sts {
 
 	/**************************************************************************************************/
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/**************************************************************************************************/
 
 	/*!
-	* \details Guarantees only one instance in process scope.\n
-	* Example of using
-	* \code
-	  class SingleTest : public sts_t::Single< SingleTest > {
-	  
-	      friend sts_t::Single< SingleTest >;
-	      SingleTest() = default;
-	      ~SingleTest() = default;
-	      
-	      public:
-	      
-	      //...
-	  
-	  };
+	 * \details Guarantees only one instance in process scope.\n
+	 * Example of using
+	 * \code
+	 * class SingleTest : public sts::Single< SingleTest > {
+	 *
+	 *    friend sts::Single< SingleTest >;
+	 *    SingleTest() = default;
+	 *    ~SingleTest() = default;
+	 *    
+	 *    public:
+	 *    
+	 *    //...
+	 *
+	 * };
 	 * \endcode
 	 */
 	template<class Type>

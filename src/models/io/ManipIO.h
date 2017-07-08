@@ -34,7 +34,7 @@
 #pragma warning(pop)
 
 #include "common/Logger.h"
-#include "sts/io/DataStream.h"
+#include "additional/stsio/DataStream.h"
 #include <xpln/enums/EManipulator.h>
 #include <xpln/obj/manipulators/AttrManipAxisKnob.h>
 #include <xpln/obj/manipulators/AttrManipAxisSwitchLeftRight.h>

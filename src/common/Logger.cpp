@@ -272,8 +272,8 @@ std::string Logger::shortAboutInfo(bool inUseWinEol) {
 }
 
 void Logger::printInformation() {
-	auto msg1 = sts::StringUtils<char>::split<std::list<std::string>>(shortAboutInfo(false), "\n");
-	auto msg2 = sts::StringUtils<char>::split<std::list<std::string>>(shortAboutXLibInfo(false), "\n");
+	auto msg1 = sts::MbStrUtils::splitToList(shortAboutInfo(false), "\n");
+	auto msg2 = sts::MbStrUtils::splitToList(shortAboutXLibInfo(false), "\n");
 	LMessage << "************************************************************";
 	for (auto s : msg1) {
 		LMessage << s;

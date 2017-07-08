@@ -30,8 +30,8 @@
 #pragma once
 
 #include <list>
-#include "sts/utilities/templates/Single.h"
-#include "sts/BaseLogger.h"
+#include "additional/utils/Single.h"
+#include "additional/utils/BaseLogger.h"
 
 #pragma warning(push, 0)
 #include <strclass.h>
@@ -97,7 +97,7 @@
 
 class LogSys;
 
-class Logger : public sts_t::Single<Logger> {
+class Logger : public sts::Single<Logger> {
 	friend Single<Logger>;
 	Logger();
 public:

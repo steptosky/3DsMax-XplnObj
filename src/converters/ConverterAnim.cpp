@@ -29,7 +29,6 @@
 
 #include "ConverterAnim.h"
 #include "ConverterUtils.h"
-#include "sts/geometry/DrConverters.h"
 #include "Common/String.h"
 #include "common/Logger.h"
 #include <cassert>
@@ -37,7 +36,8 @@
 #include "models/MdAnimVis.h"
 #include "models/io/AnimIO.h"
 #include <memory>
-#include "sts/utilities/Compare.h"
+#include "additional/math/Compare.h"
+#include "additional/math/Rad.h"
 
 /********************************************************************************************************/
 //////////////////////////////////////////////* Functions *///////////////////////////////////////////////
@@ -95,7 +95,7 @@ xobj::AnimRotate::KeyList * ConverterAnim::getRotateAxisAnimation(Control * inAx
 		if (inIsReversed)
 			value = -value;
 		xobj::AnimRotate::Key & key = (*xAnim)[static_cast<size_t>(currentKey)];
-		key.pAngleDegrees = sts::toDegrees(value);
+		key.pAngleDegrees = stsff::math::radToDeg(value);
 		key.pDrfValue = inVals[currentKey];
 	}
 	//------------------------------------------------------------
@@ -150,7 +150,7 @@ void ConverterAnim::objAnimRotateAxis(INode * node, Control * control, char axis
 					<< "\" rotate animation export but the object does not have any animation keys.";
 		}
 		float value = rotateValue(rotateConrol, GetCOREInterface()->GetTime());
-		outXAnim.pKeys.emplace_back(xobj::AnimRotate::Key(sts::toDegrees(value), 0.0f));
+		outXAnim.pKeys.emplace_back(xobj::AnimRotate::Key(stsff::math::radToDeg(value), 0.0f));
 		return;
 	}
 	//------------------------------------------------------------
@@ -325,7 +325,7 @@ bool ConverterAnim::rotAnimValidation(INode * node, Control * inControl, const c
 	if (!ikeys) {
 		CLError << LogNode(node) << "does not have valid \""
 				<< axis << " " << inCtrlName << "\" controller."
-				<< " Please, use either bezier float or linear float controller.";
+				<< " Please, use either Bezier float or linear float controller.";
 		return false;
 	}
 
@@ -337,16 +337,16 @@ bool ConverterAnim::rotAnimValidation(INode * node, Control * inControl, const c
 				ikeys->GetKey(i, &key);
 				if (GetInTanType(key.flags) != BEZKEY_LINEAR || GetOutTanType(key.flags) != BEZKEY_LINEAR) {
 					CLWarning << LogNode(node)
-							<< "has unsupported bezier tangets in key number \"" << i << "\""
+							<< "has unsupported Bezier tangents in key number \"" << i << "\""
 							<< " of " << "\"" << axis << " " << inCtrlName << "\" controller."
-							<< " Please, use linear \"in\" and linear \"out\" tangets.";
+							<< " Please, use linear \"in\" and linear \"out\" tangents.";
 				}
 			}
 		}
 		else if (inControl->ClassID() != Class_ID(LININTERP_FLOAT_CLASS_ID, 0)) {
 			CLError << LogNode(node)
 					<< "has unsupported \"" << inCtrlName << "\" controller on \"" << axis << "\" axis."
-					<< " Please, use either bezier float or linear float controller.";
+					<< " Please, use either Bezier float or linear float controller.";
 			return false;
 		}
 	}
@@ -369,7 +369,7 @@ bool ConverterAnim::transAnimValidation(INode * node, Control * inControl, const
 	if (!ikeys) {
 		CLError << LogNode(node) << "does not have valid \""
 				<< axis << " " << inCtrlName << "\" controller."
-				<< " Please, use either bezier float or linear float controller.";
+				<< " Please, use either Bezier float or linear float controller.";
 		return false;
 	}
 
@@ -381,16 +381,16 @@ bool ConverterAnim::transAnimValidation(INode * node, Control * inControl, const
 				ikeys->GetKey(i, &key);
 				if (GetInTanType(key.flags) != BEZKEY_LINEAR || GetOutTanType(key.flags) != BEZKEY_LINEAR) {
 					CLWarning << LogNode(node)
-							<< "has unsupported bezier tangets in key number \"" << i << "\""
+							<< "has unsupported Bezier tangents in key number \"" << i << "\""
 							<< " of " << "\"" << axis << " " << inCtrlName << "\" controller."
-							<< " Please, use linear 'in' and linear 'out' tangets.";
+							<< " Please, use linear 'in' and linear 'out' tangents.";
 				}
 			}
 		}
 		else if (inControl->ClassID() != Class_ID(LININTERP_FLOAT_CLASS_ID, 0)) {
 			CLError << LogNode(node)
 					<< "has unsupported \"" << inCtrlName << "\" controller on \"" << axis << "\" axis."
-					<< " Please, use either bezier float or linear float controller.";
+					<< " Please, use either Bezier float or linear float controller.";
 			return false;
 		}
 	}
@@ -443,8 +443,8 @@ bool ConverterAnim::checkTransKeysValue(INode * node, const xobj::AnimTrans::Key
 			return false;
 		}
 
-		if (sts::isEqual(keyList[k1].pDrfValue, keyList[k2].pDrfValue, threshold) &&
-			sts::isEqual(keyList[k2].pDrfValue, keyList[k3].pDrfValue, threshold)) {
+		if (stsff::math::isEqual(keyList[k1].pDrfValue, keyList[k2].pDrfValue, threshold) &&
+			stsff::math::isEqual(keyList[k2].pDrfValue, keyList[k3].pDrfValue, threshold)) {
 			CLWarning << LogNode(node) << "has the same dataref value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
 					<< inCtrlName << "\" controller.";
 			return false;
@@ -465,12 +465,12 @@ bool ConverterAnim::checkRotateKeysValue(INode * node, const xobj::AnimRotate::K
 	}
 	//-------------------------------------------------------------------------
 	if (size == 2) {
-		if (sts::isEqual(keyList[0].pAngleDegrees, keyList[1].pAngleDegrees, threshold)) {
+		if (stsff::math::isEqual(keyList[0].pAngleDegrees, keyList[1].pAngleDegrees, threshold)) {
 			CLWarning << LogNode(node) << "has the same key value [0:1] on \"" << axis << "-" << inCtrlName << "\" controller.";
 			return false;
 		}
 
-		if (sts::isEqual(keyList[0].pDrfValue, keyList[1].pDrfValue, threshold)) {
+		if (stsff::math::isEqual(keyList[0].pDrfValue, keyList[1].pDrfValue, threshold)) {
 			CLWarning << LogNode(node) << "has the same dataref value [0:1] on \"" << axis << "-" << inCtrlName << "\" controller.";
 			return false;
 		}
@@ -485,15 +485,15 @@ bool ConverterAnim::checkRotateKeysValue(INode * node, const xobj::AnimRotate::K
 			return true;
 		}
 
-		if (sts::isEqual(keyList[k1].pAngleDegrees, keyList[k2].pAngleDegrees, threshold) &&
-			sts::isEqual(keyList[k2].pAngleDegrees, keyList[k3].pAngleDegrees, threshold)) {
+		if (stsff::math::isEqual(keyList[k1].pAngleDegrees, keyList[k2].pAngleDegrees, threshold) &&
+			stsff::math::isEqual(keyList[k2].pAngleDegrees, keyList[k3].pAngleDegrees, threshold)) {
 			CLWarning << LogNode(node) << "has the same key value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
 					<< axis << "-" << inCtrlName << "\" controller.";
 			return false;
 		}
 
-		if (sts::isEqual(keyList[k1].pDrfValue, keyList[k2].pDrfValue, threshold) &&
-			sts::isEqual(keyList[k2].pDrfValue, keyList[k3].pDrfValue, threshold)) {
+		if (stsff::math::isEqual(keyList[k1].pDrfValue, keyList[k2].pDrfValue, threshold) &&
+			stsff::math::isEqual(keyList[k2].pDrfValue, keyList[k3].pDrfValue, threshold)) {
 			CLWarning << LogNode(node) << "has the same dataref value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
 					<< axis << "-" << inCtrlName << "\" controller.";
 			return false;

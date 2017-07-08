@@ -33,7 +33,7 @@
 #include <max.h>
 #pragma warning(pop)
 
-#include "sts/utilities/templates/Single.h"
+#include "additional/utils/Single.h"
 #include <xpln/obj/Transform.h>
 #include "models/MdAnimRot.h"
 #include "xpln/common/EulerXyzHelper.h"
@@ -42,7 +42,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-class ConverterAnim : public sts_t::Single<ConverterAnim> {
+class ConverterAnim : public sts::Single<ConverterAnim> {
 
 	ConverterAnim() = default;
 	~ConverterAnim() = default;

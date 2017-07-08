@@ -34,7 +34,7 @@
 #pragma warning(pop)
 
 #include "common/Logger.h"
-#include "sts/io/DataStream.h"
+#include "additional/stsio/DataStream.h"
 #include <xpln/obj/ObjLightCustom.h>
 #include <xpln/obj/ObjLightNamed.h>
 #include <xpln/obj/ObjLightParam.h>

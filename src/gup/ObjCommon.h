@@ -38,7 +38,7 @@
 #pragma warning(pop)
 
 #include "CloneNodeChunk.h"
-#include "sts/utilities/templates/Single.h"
+#include "additional/utils/Single.h"
 #include "Common/Config.h"
 #include "update/UpdateChecker.h"
 #include "Settings.h"
@@ -55,7 +55,7 @@ namespace ui {
 /**************************************************************************************************/
 
 // TODO make the correct singleton for this class, it should return nullptr if it is deleted
-class ObjCommon : public GUP, public sts_t::Single<ObjCommon> {
+class ObjCommon : public GUP, public sts::Single<ObjCommon> {
 public:
 
 	ObjCommon();

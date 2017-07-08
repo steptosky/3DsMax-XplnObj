@@ -36,7 +36,6 @@
 #include "objects/DirectDim.h"
 #include "common/Logger.h"
 #include "common/String.h"
-#include "sts/utilities/Compare.h"
 #include <xpln/enums/ELayer.h>
 #include "models/bwc/SerializationId.h"
 #include <xpln/obj/attributes/AttrBlend.h>
@@ -44,6 +43,7 @@
 #include "ui/DlgMessageBox.h"
 #include "MainObjParamsWrapper.h"
 #include "classes-desc/ClassesDescriptions.h"
+#include "additional/math/Compare.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1157,7 +1157,7 @@ void MainObject::loadRawExpOption(sts_bwc::DataStream & stream) const {
 			wrapper.setNameDummies((oFlags & EXP_MARK_DUMMY) == EXP_MARK_DUMMY);
 			wrapper.setTreeHierarchy((oFlags & EXP_MARK_TREE) == EXP_MARK_TREE);
 			//-------------------------------------------------------------------------
-			if (!sts::isEqual(scale, 1.0)) {
+			if (!stsff::math::isEqual(scale, 1.0)) {
 				wrapper.setScale(true, float(scale));
 			}
 			//-------------------------------------------------------------------------
@@ -1462,7 +1462,7 @@ void MainObject::makeIcon() {
 		LError << "Can't retrieve scale value from param block";
 	}
 
-	if (sts::isEqual(mLastIconScale, size, 0.001f) && mIconMesh.getNumVerts() != 0) {
+	if (stsff::math::isEqual(mLastIconScale, size, 0.001f) && mIconMesh.getNumVerts() != 0) {
 		return;
 	}
 

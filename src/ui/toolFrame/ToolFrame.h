@@ -34,7 +34,7 @@
 #pragma warning(pop)
 
 #include <Windows.h>
-#include "sts/utilities/templates/Single.h"
+#include "additional/utils/Single.h"
 
 namespace ui {
 
@@ -44,7 +44,7 @@ namespace ui {
 
 	class MainDock;
 
-	class ToolFrame : public CUIFrameMsgHandler, public CUIPosData, public sts_t::Single<ToolFrame> {
+	class ToolFrame : public CUIFrameMsgHandler, public CUIPosData, public sts::Single<ToolFrame> {
 
 		ToolFrame(const ToolFrame &) {}
 

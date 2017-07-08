@@ -37,6 +37,7 @@
 #include "common/String.h"
 #include "models/bwc/MdAnimIoOld.h"
 #include "classes-desc/ClassesDescriptions.h"
+#include "additional/stsio/DataStream.h"
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////

@@ -213,12 +213,11 @@ bool ConverterMain::toXpln(INode * inNode, xobj::ObjLodGroup & outLod) {
 /**************************************************************************************************/
 
 std::string ConverterMain::makeTexturePath(const std::string & texture, const std::string & prefix) {
-	typedef std::list<std::string> Container;
 	if (texture == "none" || texture.empty()) {
 		return "";
 	}
 
-	Container res = sts::StringUtils<char>::split<Container>(texture, "\\/");
+	auto res = sts::MbStrUtils::splitToList(texture, "\\/");
 	DbgAssert(!res.empty());
 	std::string out(prefix);
 	if (!prefix.empty()) {

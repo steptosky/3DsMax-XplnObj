@@ -29,9 +29,8 @@
 
 #pragma once
 
-#include <iostream> // Fix for "sts/settings/Settings.h"
-#include "sts/utilities/templates/Single.h"
-#include "sts/settings/Settings.h"
+#include "additional/utils/Single.h"
+#include "additional/utils/Settings.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,18 +45,6 @@ public:
 
 	Settings() = default;
 
-	bool fromString(const std::string & str) {
-		std::stringstream stream(str);
-		return Settings::load(stream);
-	}
-
-	std::string toString() const {
-		std::stringstream stream;
-		if (!Settings::save(stream)) {
-			return "";
-		}
-		return stream.str();
-	}
 };
 
 /**************************************************************************************************/

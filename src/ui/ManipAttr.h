@@ -35,7 +35,7 @@
 #include "ui/controls/Combo.h"
 #include "models/MdManip.h"
 #include "ui/manip/ManipInterface.h"
-#include "sts/notification/Signal.h"
+#include "additional/utils/Signal.h"
 
 #pragma warning(push, 0)
 #include <notify.h>

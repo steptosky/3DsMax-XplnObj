@@ -34,7 +34,7 @@
 #include <IPathConfigMgr.h>
 #pragma warning(pop)
 
-#include "sts/string/StringConverters.h"
+#include "common/String.h"
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////

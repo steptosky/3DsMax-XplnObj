@@ -36,8 +36,8 @@
 #include "objects/ScaleDim.h"
 #include "common/Logger.h"
 #include "common/String.h"
-#include "sts/utilities/Compare.h"
 #include "classes-desc/ClassesDescriptions.h"
+#include "additional/math/Compare.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -522,7 +522,7 @@ void LodObject::makeIcon() {
 		LError << "Can't retrieve scale value from param block";
 	}
 
-	if (sts::isEqual(mLastIconScale, size, 0.001f) && mIconMesh.getNumVerts() != 0) {
+	if (stsff::math::isEqual(mLastIconScale, size, 0.001f) && mIconMesh.getNumVerts() != 0) {
 		return;
 	}
 

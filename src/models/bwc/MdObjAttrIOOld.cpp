@@ -29,7 +29,7 @@
 
 #include "MdObjAttrIOOld.h"
 #include "models/bwc/eClassesOld.h"
-#include "sts/io/DataStream.h"
+#include "additional/stsio/DataStream.h"
 #include "objects/main/MainObjectParams.h"
 #include "objects/lod/LodObjParams.h"
 #include "models/io/NodeIO.h"

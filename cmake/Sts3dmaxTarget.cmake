@@ -95,6 +95,7 @@ function(SETUP_MAX_TERGET)
 			"${CMAKE_SOURCE_DIR}/src/*.inl" 
 			"${CMAKE_SOURCE_DIR}/src/*.cpp"
 			"${CMAKE_SOURCE_DIR}/src/*.rc"
+			"${CMAKE_SOURCE_DIR}/src/*.txt"
 			"${CMAKE_SOURCE_DIR}/include/*.h" 
 			"${CMAKE_SOURCE_DIR}/include/*.inl" 
 			"${CMAKE_SOURCE_DIR}/include/*.cpp"

@@ -392,7 +392,7 @@ namespace ui {
 			LError << "Internal error 1.";
 			return;
 		}
-		sts::StrUtils::trim(list1[2], STS_STRING_TRIM);
+		sts::StrUtils::trim(list1[2]);
 		auto list2 = sts::StrUtils::split<sts::StrUtils::Vector>(list1[2], _T(":"));
 		if (list2.size() != 2) {
 			LError << "Internal error 2.";

@@ -61,7 +61,7 @@ namespace sts {
 		// Writing operators
 
 		/*! 
-		 * \detailes This method is useful when you want specify the type explicitly. 
+		 * \details This method is useful when you want specify the type explicitly. 
 		 * When it can be need? You want the compiler to show a warning if the type is not expected.
 		 * \code stream.setValue<float>(double(2.0)) // warning \endcode
 		 */
