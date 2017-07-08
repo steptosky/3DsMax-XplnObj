@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 **  Copyright(C) 2017, StepToSky
 **
@@ -27,8 +29,6 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
-
 #include <iostream>
 #include <sstream>
 #include <mutex>
@@ -37,10 +37,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-#ifdef _MSC_VER
-#	define __STS_FUNC_NAME__ __FUNCTION__
-#else
-#	define __STS_FUNC_NAME__ __PRETTY_FUNCTION__
+#ifndef __STS_FUNC_NAME__
+#	ifdef _MSC_VER
+#		define __STS_FUNC_NAME__ __FUNCTION__
+#	else
+#		define __STS_FUNC_NAME__ __PRETTY_FUNCTION__
+#	endif
 #endif
 
 /**************************************************************************************************/
@@ -52,12 +54,13 @@ namespace sts {
 	/*! 
 	 * \details This is a base logger interface. By default it prints all messages to std::cout.
 	 * \pre Before you will be able to use this logger you must create its variable somewhere,
-	 *      this logger implements the pattern singlton.
+	 *      this logger implements the pattern singleton.
 	 * \code sts::BaseLogger * sts::BaseLogger::mInstance = nullptr; \endcode
 	 * \details Default log level is \"Debug\".
 	 * \details Default thread safe is \"false\".
-	 * \note The logger supports categories.
+	 * \details The logger supports categories.
 	 * \code CategoryMessage("my category") << "my message"; \endcode
+	 * \note You can define log printing for your own types. \see \link LogMessage \endlink
 	 */
 	class BaseLogger {
 	public:
@@ -79,7 +82,8 @@ namespace sts {
 								const char * file, int line, const char * function,
 								const char * category);
 
-		//-------------------------------------------------------------------------
+		//---------------------------------------------------------------
+		// @{
 
 		static BaseLogger & instance() {
 			if (mInstance == nullptr) {
@@ -88,7 +92,9 @@ namespace sts {
 			return *mInstance;
 		}
 
-		//-------------------------------------------------------------------------
+		// @}
+		//---------------------------------------------------------------
+		// @{
 
 		void log(eType inType, const char * inMsg,
 				const char * inFile, int inLine, const char * inFunction,
@@ -101,12 +107,14 @@ namespace sts {
 			}
 		}
 
-		//-------------------------------------------------------------------------
+		// @}
+		//---------------------------------------------------------------
+		// @{
 
 		/*! 
 		 * \details Sets the thread safe logging. Default is false.
 		 * \warning It is strongly recommended to set this parameter once when your program is run
-		 *          otherwise in some cases it can lead to undefined behaviour.
+		 *          otherwise in some cases it can lead to undefined behavior.
 		 */
 		void setThreadSafe(bool state) {
 			mThreadSafe = state;
@@ -116,6 +124,10 @@ namespace sts {
 			return mThreadSafe;
 		}
 
+		// @}
+		//---------------------------------------------------------------
+		// @{
+
 		void setLevel(eType inLevel) {
 			mLevel = inLevel;
 		}
@@ -124,7 +136,9 @@ namespace sts {
 			return mLevel;
 		}
 
-		//-------------------------------------------------------------------------
+		// @}
+		//---------------------------------------------------------------
+		// @{
 
 		void setCallBack(CallBack inCallBack) {
 			mCallBack = inCallBack;
@@ -133,6 +147,10 @@ namespace sts {
 		void removeCallBack() {
 			mCallBack = defaultCallBack;
 		}
+
+		// @}
+		//---------------------------------------------------------------
+		// @{
 
 		static const char * typeAsString(eType inType) {
 			switch (inType) {
@@ -146,6 +164,9 @@ namespace sts {
 				default: return "";
 			}
 		}
+
+		// @}
+		//---------------------------------------------------------------
 
 	private:
 
@@ -188,20 +209,32 @@ namespace sts {
 
 	/*!
 	 * \details Represents one log message.
-	 * \note In normal way you should not use this class directly use macros instead.
-	 * \code LWarning << "My warning";
+	 * \note In normal way you should not use this class directly use the macros instead.
+	 * \code LWarning << "My warning"; \endcode
 	 * \note The message will be printed when destructor is called 
 	 *       or if you manually force printing with the method LogMessage::push() 
-	 *       or operator << with LogMessage::CmdPush param.
+	 *       or operator << with LogMessage::CmdPush param. 
+	 *       Also you can use the macro LPush.
 	 * \code LWarning << "My warning" << LPush; \endcode
-	 *       It can be needed when you process exceptions.
+	 *       It can be needed when you process the exceptions.
+	 * \note As the class has template operator operator<< you can define log printing for your own types. 
+	 * \code 
+	 * // define somewhere
+	 * template<>
+	 * inline sts::LogMessage & sts::LogMessage::operator<<<MyType>(const MyType & msg) {
+	 *     this->operator<< msg; // fix it for your type
+	 *     return *this;
+	 * }
+	 * \endcode
 	 */
 	class LogMessage {
 	public:
 
 		struct CmdPush {};
 
-		//-------------------------------------------------------------------------
+		// @}
+		//---------------------------------------------------------------
+		// @{
 
 		LogMessage()
 			: mLog(&BaseLogger::instance()),
@@ -225,7 +258,9 @@ namespace sts {
 			push();
 		}
 
-		//-------------------------------------------------------------------------
+		// @}
+		//---------------------------------------------------------------
+		// @{
 
 		template<class T>
 		LogMessage & operator<<(const T & msg) {
@@ -240,7 +275,9 @@ namespace sts {
 			return *this;
 		}
 
-		//-------------------------------------------------------------------------
+		// @}
+		//---------------------------------------------------------------
+		// @{
 
 		LogMessage & debug() {
 			mType = BaseLogger::Debug;
@@ -277,7 +314,9 @@ namespace sts {
 			return *this;
 		}
 
-		//-------------------------------------------------------------------------
+		// @}
+		//---------------------------------------------------------------
+		// @{
 
 		void push() {
 			if (!mPushed) {
@@ -285,6 +324,9 @@ namespace sts {
 				mPushed = true;
 			}
 		}
+
+		// @}
+		//---------------------------------------------------------------
 
 	private:
 

@@ -40,12 +40,12 @@
 #include <xpln/common/ExternalLog.h>
 
 #ifndef NDEBUG
-#	define LOGLEVEL sts::BaseLogger::eType::Debug
+#	define LOG_LEVEL sts::BaseLogger::eType::Debug
 #else
-#	define LOGLEVEL sts::BaseLogger::eType::Msg
+#	define LOG_LEVEL sts::BaseLogger::eType::Msg
 #endif
 
-#define LOGPREFIX "[X-Obj]"
+#define LOG_PREFIX "[X-Obj]"
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
@@ -61,22 +61,13 @@ std::string Logger::mVersionShortString;
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
-void xLibLogCallBack(xobj::ExternalLog::eType inType, const char * inMsg,
-					const char * file, int line, const char * function, const char * category) {
-	Logger::logCallBack(static_cast<sts::BaseLogger::eType>(inType), inMsg, file, line, function, category);
-}
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
-
 /*!
- * \note Example path to log file "C:\Users\Alex\AppData\Local\Autodesk\3dsMax\2016 - 64bit\ENU\Network\Max.log"
+ * \note Example path to the log file "C:\Users\%username%\AppData\Local\Autodesk\3dsMax\2016 - 64bit\ENU\Network\Max.log"
  */
 void Logger::logCallBack(sts::BaseLogger::eType inType, const char * inMsg,
 						const char * inFile, int inLine, const char * inFunction, const char * inCategory) {
 
-	if (inType > LOGLEVEL) {
+	if (inType > LOG_LEVEL) {
 		return;
 	}
 
@@ -111,15 +102,15 @@ void Logger::logCallBack(sts::BaseLogger::eType inType, const char * inMsg,
 
 	if (msgType == SYSLOG_INFO) {
 		mMaxLog->LogEntry(msgType, dialog, _M(XIO_PROJECT_SHORT_NAME), inCategory ? _M("%s %s %s") : _M("%s%s %s"),
-						_M(LOGPREFIX), inCategory ? sts::toString(inCategory).c_str() : _M(""), sts::toString(inMsg).c_str());
+						_M(LOG_PREFIX), inCategory ? sts::toString(inCategory).c_str() : _M(""), sts::toString(inMsg).c_str());
 		Debug(std::cout << sts::BaseLogger::typeAsString(inType) << ": "
 			<< (inCategory ? inCategory : "") << (inCategory ? " " : "") << (inMsg ? inMsg : "") << std::endl);
 	}
 	else {
 		mMaxLog->LogEntry(msgType, dialog, _M(XIO_PROJECT_SHORT_NAME), inCategory ? _M("%s %s %s") : _M("%s%s %s"),
-						_M(LOGPREFIX), inCategory ? sts::toString(inCategory).c_str() : _M(""), sts::toString(inMsg).c_str());
+						_M(LOG_PREFIX), inCategory ? sts::toString(inCategory).c_str() : _M(""), sts::toString(inMsg).c_str());
 		mMaxLog->LogEntry(msgType, NO_DIALOG, _M(XIO_PROJECT_SHORT_NAME), _M("%s\t\t<%s -> %s(%d)>"),
-						_M(LOGPREFIX), sts::toString(inFunction).c_str(), sts::toString(inFile).c_str(), inLine);
+						_M(LOG_PREFIX), sts::toString(inFunction).c_str(), sts::toString(inFile).c_str(), inLine);
 		Debug(std::cout << sts::BaseLogger::typeAsString(inType) << ": "
 			<< (inCategory ? inCategory : "") << (inCategory ? " " : "") << (inMsg ? inMsg : "") << LEOL <<"\t<"
 			<< (inFunction ? inFunction : "") << " -> " << (inFile ? inFile : "")
@@ -131,16 +122,12 @@ void Logger::logCallBack(sts::BaseLogger::eType inType, const char * inMsg,
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void Logger::saveLog(const MSTR & where) {
+void Logger::saveLog(const MSTR & where) const {
 	IPathConfigMgr * paths = IPathConfigMgr::GetPathConfigMgr();
-	MaxSDK::Util::Path p(paths->GetDir(APP_MAXDATA_DIR));
-	p.AddTrailingBackslash();
-	p.Append(_T("Network"));
-	p.AddTrailingBackslash();
-	p.Append(_T("Max.Log"));
+	MaxSDK::Util::Path p(mLogFile);
 	if (!paths->DoesFileExist(p)) {
 		MessageBoxA(GetActiveWindow(),
-					"The log file does not exist. For some reason the 3DsMax did not provide this file.\r\nCheck 3DsMax log settings.",
+					"The log file does not exist. For some reason the 3DsMax or the plug-in did not provide this file.\r\nCheck 3DsMax log settings.",
 					"Error", MB_ICONERROR);
 	}
 	else {
@@ -160,24 +147,35 @@ Logger::Logger() {
 	if (!mMaxLog) {
 		mMaxLog = GetCOREInterface()->Log();
 	}
-
 	//--------------------------------
-
 	createVersionStrings();
-
 	//--------------------------------
-
+	IPathConfigMgr * paths = IPathConfigMgr::GetPathConfigMgr();
+	MaxSDK::Util::Path p(paths->GetDir(APP_MAXDATA_DIR));
+	p.AddTrailingBackslash();
+	p.Append(_T("Network"));
+	// 3d max 9 and maybe some later versions can't create 
+	// Max.log file because the folder "Network" does not exist.
+	// So I fixed it. (hello Autodesk :D)
+	if (!paths->DoesFileExist(p)) {
+		if (!paths->CreateDirectoryHierarchy(p)) {
+			MessageBox(GetActiveWindow(), sts::Str(_T(" Can't create dir for the log file: ")).append(p.GetCStr()).c_str(),
+						_T("Error"), MB_ICONERROR);
+		}
+	}
+	p.AddTrailingBackslash();
+	p.Append(_T("Max.log"));
+	mLogFile = p.GetString();
+	//--------------------------------
 	sts::BaseLogger & log = sts::BaseLogger::instance();
 	log.setCallBack(&Logger::logCallBack);
-	//xobj::ExternalLog::registerCallBack(&xLibLogCallBack);
 	log.setLevel(sts::BaseLogger::eType::Debug);
 	printInformation();
-	log.setLevel(LOGLEVEL);
+	log.setLevel(LOG_LEVEL);
+	//--------------------------------
 }
 
-Logger::~Logger() {
-	xobj::ExternalLog::unRegisterCallBack();
-}
+Logger::~Logger() {}
 
 void Logger::createVersionStrings() {
 	std::stringstream strstream;
@@ -291,13 +289,13 @@ void Logger::printInformation() {
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-void Logger::registerUserConsoleCallback(UserConsoleCallBack inCallback) {
-	mCallbacks.emplace_back(inCallback);
+void Logger::registerUserConsoleCallback(UserConsoleCallBack callback) {
+	mCallbacks.emplace_back(callback);
 }
 
-void Logger::unregisterUserConsoleCallback(UserConsoleCallBack inCallback) {
+void Logger::unregisterUserConsoleCallback(UserConsoleCallBack callback) {
 	for (auto it = mCallbacks.begin(); it != mCallbacks.end(); ++it) {
-		if (*it == inCallback) {
+		if (*it == callback) {
 			mCallbacks.erase(it);
 			return;
 		}

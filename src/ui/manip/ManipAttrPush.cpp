@@ -36,7 +36,6 @@
 #include "ui/UiUtilities.h"
 #include <xpln/enums/ECursor.h>
 #include "resource/resource.h"
-#include "common/BaseLogger.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
 

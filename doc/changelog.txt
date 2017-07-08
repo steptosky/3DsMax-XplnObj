@@ -6,6 +6,7 @@ next
 - Added: 'Smoke' object. It can be found near 'X-Obj' and 'X-Lod'.
 - Added: 'X-Plane' menu on the 3Ds Max's top menu bar.
 - Added: Documentation in the separated repository. Use the 'X-Plane' menu to get it.
+- Fixed: Log file creation for some 3d max versions.
 
 ===============================================================================
 2.1.0 (16.05.2017)

@@ -31,7 +31,7 @@
 #include <cassert>
 #include "models/MdLinks.h"
 #include "ui/Factory.h"
-#include "common/BaseLogger.h"
+#include "common/Logger.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////

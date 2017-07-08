@@ -28,7 +28,7 @@
 */
 
 #include "MainMenu.h"
-#include "common/BaseLogger.h"
+#include "common/Logger.h"
 #include "MainMenuActions.h"
 
 #pragma warning(push, 0)

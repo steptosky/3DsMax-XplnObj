@@ -33,7 +33,7 @@
 #include "ConverterUtils.h"
 #include "objects/smoke/SmokeObjParamsWrapper.h"
 #include "objects/smoke/SmokeObj.h"
-#include "common/BaseLogger.h"
+#include "common/Logger.h"
 #include "classes-desc/ClassesDescriptions.h"
 
 /**************************************************************************************************/
