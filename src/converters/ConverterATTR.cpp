@@ -94,6 +94,10 @@ struct ManipGetter : ManipIO::IManipIo {
 		mMesh->pAttr.setManipulator(inManip.clone());
 	}
 
+	void gotAttrManip(const xobj::AttrManipPanel & inManip) override {
+		mMesh->pAttr.setManipulator(inManip.clone());
+	}
+
 	void gotAttrManip(const xobj::AttrManipPush & inManip) override {
 		mMesh->pAttr.setManipulator(inManip.clone());
 	}

@@ -169,6 +169,8 @@
 #define ROLL_SMOKEOBJ_ATTR              1137
 #define USER_OUPUT                      1138
 #define SPN_LODDRAPED_DIST_EDIT         1138
+#define ROLL_MANIP_NOOP1                1138
+#define ROLL_MANIP_PANEL                1138
 #define BTN_OK                          1139
 #define SPN_LODDRAPED_DIST              1139
 #define BTN_CANCEL                      1140

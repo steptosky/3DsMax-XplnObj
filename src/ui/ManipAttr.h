@@ -129,6 +129,7 @@ namespace ui {
 		void gotAttrManip(const xobj::AttrManipDragAxisPix & inManip) override;
 		void gotAttrManip(const xobj::AttrManipDragXy & inManip) override;
 		void gotAttrManip(const xobj::AttrManipNoop & inManip) override;
+		void gotAttrManip(const xobj::AttrManipPanel & inManip) override;
 		void gotAttrManip(const xobj::AttrManipPush & inManip) override;
 		void gotAttrManip(const xobj::AttrManipRadio & inManip) override;
 		void gotAttrManip(const xobj::AttrManipToggle & inManip) override;

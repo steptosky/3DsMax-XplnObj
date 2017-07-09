@@ -40,8 +40,6 @@
 #include "manip/ManipAttrDelta.h"
 #include "manip/ManipAttrCmd.h"
 #include "manip/ManipAttrCmdAxis.h"
-#include <xpln/obj/manipulators/AttrManipNone.h>
-#include "resource/resource.h"
 #include "manip/ManipAttrAxisKnob.h"
 #include "manip/ManipAttrAxisSwitchLr.h"
 #include "manip/ManipAttrAxisSwitchUd.h"
@@ -49,7 +47,10 @@
 #include "manip/ManipAttrCmdLr.h"
 #include "manip/ManipAttrCmdUd.h"
 #include "manip/ManipAttrNoop.h"
+#include "manip/ManipAttrPanel.h"
+
 #include "resource/ResHelper.h"
+#include "resource/resource.h"
 
 namespace ui {
 
@@ -324,6 +325,10 @@ namespace ui {
 			gotAttrManip(xobj::AttrManipNoop());
 			return;
 		}
+		if (currItem == sts::toString(xobj::EManipulator(xobj::EManipulator::panel).toUiString())) {
+			gotAttrManip(xobj::AttrManipPanel());
+			return;
+		}
 		if (currItem == sts::toString(xobj::EManipulator(xobj::EManipulator::push).toUiString())) {
 			gotAttrManip(xobj::AttrManipPush());
 			return;
@@ -396,6 +401,11 @@ namespace ui {
 
 	void ManipAttr::gotAttrManip(const xobj::AttrManipNoop & inManip) {
 		createSubWin<xobj::AttrManipNoop, ManipAttrNoop>(inManip);
+		mData.saveToNode(inManip);
+	}
+
+	void ManipAttr::gotAttrManip(const xobj::AttrManipPanel & inManip) {
+		createSubWin<xobj::AttrManipPanel, ManipAttrPanel>(inManip);
 		mData.saveToNode(inManip);
 	}
 
