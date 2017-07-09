@@ -30,6 +30,9 @@
 */
 
 #include "presenters/MainMenuPresenter.h"
+#include "common/String.h"
+
+class INode;
 
 namespace ui {
 
@@ -53,6 +56,9 @@ namespace ui {
 		static void showSettingsWindow();
 
 		static MainMenuPresenter::IView * cereateMainMenuView();
+
+		static void showUpdatedObjects(const std::vector<INode *> & nodes);
+		static void sceneUpdateInfo(const TCHAR * text);
 
 	};
 

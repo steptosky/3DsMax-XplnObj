@@ -27,30 +27,36 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
-
-#include "additional/utils/Settings.h"
-#include "additional/utils/SemVersion.h"
+#include "Settings.h"
+#include "Info.h"
 
 /**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
 /**************************************************************************************************/
 
-/*!
- * \details Access to the settings which are stored with the GUP (ObjCommon) class.
- * \Note This settings are saved with the scene, so each scene has its own parameters.
- */
-class Settings : public sts::Settings {
-public:
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-	Settings() = default;
+void Settings::prepareDataForSave() {
+	setSceneVersion(currentVersion());
+}
 
-	void prepareDataForSave();
-	void setSceneVersion(const sts::SemVersion & version);
-	sts::SemVersion sceneVersion() const;
-	static sts::SemVersion currentVersion();
+void Settings::setSceneVersion(const sts::SemVersion & version) {
+	setValue("verMajor", version.major);
+	setValue("verMinor", version.minor);
+	setValue("verPatch", version.patch);
+}
 
-};
+sts::SemVersion Settings::sceneVersion() const {
+	return sts::SemVersion(value("verMajor", uint32_t(0)),
+							value("verMinor", uint32_t(0)),
+							value("verPatch", uint32_t(0)));
+}
+
+sts::SemVersion Settings::currentVersion() {
+	return sts::SemVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH);
+}
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

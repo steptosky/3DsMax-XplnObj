@@ -169,10 +169,10 @@
 #define ROLL_SMOKEOBJ_ATTR              1137
 #define USER_OUPUT                      1138
 #define SPN_LODDRAPED_DIST_EDIT         1138
-#define ROLL_MANIP_NOOP1                1138
 #define ROLL_MANIP_PANEL                1138
 #define BTN_OK                          1139
 #define SPN_LODDRAPED_DIST              1139
+#define IDD_UPDATED_OBJECTS             1139
 #define BTN_CANCEL                      1140
 #define SPN_SLOPELIMIT_ROLLMAX_EDIT     1140
 #define BTN_ABOUT                       1141
@@ -321,14 +321,16 @@
 #define CMB_SMOKE_TYPE                  1248
 #define SPN_SMOKE_SIZE_EDIT             1249
 #define SPN_SMOKE_SIZE                  1250
+#define EDT_INFO                        1252
+#define EDT_OBJECTS                     1255
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        171
+#define _APS_NEXT_RESOURCE_VALUE        172
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1251
+#define _APS_NEXT_CONTROL_VALUE         1256
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

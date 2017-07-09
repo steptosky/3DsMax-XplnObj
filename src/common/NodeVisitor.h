@@ -1,3 +1,4 @@
+#pragma once
 /*
 **  Copyright(C) 2017, StepToSky
 **
@@ -27,28 +28,51 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
+#include <functional>
 
-#include "additional/utils/Settings.h"
-#include "additional/utils/SemVersion.h"
+class INode;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
 /*!
- * \details Access to the settings which are stored with the GUP (ObjCommon) class.
- * \Note This settings are saved with the scene, so each scene has its own parameters.
+ * \details Helper
  */
-class Settings : public sts::Settings {
+class NodeVisitor {
 public:
 
-	Settings() = default;
+	/*!
+	 * \return false if you want to stop the process otherwise true.
+	 */
+	typedef std::function<bool(INode *)> Function;
 
-	void prepareDataForSave();
-	void setSceneVersion(const sts::SemVersion & version);
-	sts::SemVersion sceneVersion() const;
-	static sts::SemVersion currentVersion();
+	/*!
+	 * \details Visit all the INode in the scene according to their hierarchy
+	 *          and call specified function for each one.
+	 * \param fn function which will receive each INode. 
+	 * \return false if process was stopped by the function 
+	 *         otherwise true which means that all the nodes were processed.
+	 */
+	static bool visitAll(const Function & fn);
+
+	/*!
+	 * \details Visit all the INode of the given root one according to their hierarchy
+	 *          and call specified function for each one.
+	 * \param fn function which will receive each INode. 
+	 * \return false if process was stopped by the function 
+	 *         otherwise true which means that all the nodes were processed.
+	 */
+	static bool visitAllOf(INode * root, const Function & fn);
+
+	/*!
+	 * \details Visit all the children INode of the given root one according to their order
+	 *          and call specified function for each one.
+	 * \param fn function which will receive each INode. 
+	 * \return false if process was stopped by the function 
+	 *         otherwise true which means that all the nodes were processed.
+	 */
+	static bool visitChildrenOf(INode * root, const Function & fn);
 
 };
 

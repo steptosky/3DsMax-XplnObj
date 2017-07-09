@@ -115,6 +115,8 @@ DWORD ObjCommon::Start() {
 	SetTimer(GetCOREInterface()->GetMAXHWnd(), UINT_PTR(WM_MY_TIMER_ID),
 			UINT(WM_MY_TIMER_TIME), reinterpret_cast<TIMERPROC>(&ObjCommon::updateCheckWinCallback));
 
+	RegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
+
 	return GUPRESULT_KEEP;
 }
 
@@ -123,7 +125,7 @@ void ObjCommon::Stop() {
 	mMainMenuPresenter.reset();
 	mMainMenuView.reset();
 	//----------------------------------------
-
+	UnRegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
 	mUpdateChecker.freeResources();
 	mToolFrame->free();
 	delete mCloneNodeChunk;
@@ -155,6 +157,7 @@ IOResult ObjCommon::Save(ISave * isave) {
 	// TODO Save current plugin version with the scene
 	try {
 		ULONG temp = 0;
+		pSettings.prepareDataForSave();
 		std::string settings = pSettings.toString();
 		//------------------------------------
 		isave->BeginChunk(2);
@@ -210,6 +213,7 @@ IOResult ObjCommon::Load(ILoad * iload) {
 					std::string stdstr(str, size_t(strLength));
 					delete[] str;
 					pSettings.fromString(stdstr);
+					// todo check version, the scene must not be loaded if scene version more than plugin's one
 					break;
 				}
 				default: break;
@@ -226,6 +230,15 @@ IOResult ObjCommon::Load(ILoad * iload) {
 		return IO_ERROR;
 	}
 	return IO_OK;
+}
+
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+void ObjCommon::slotFileOpened(void * param, NotifyInfo *) {
+	ObjCommon * d = static_cast<ObjCommon*>(param);
+	d->mSceneUpdater.update(d->pSettings.sceneVersion(), d->pSettings.currentVersion());
 }
 
 /**************************************************************************************************/

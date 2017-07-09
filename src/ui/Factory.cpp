@@ -30,6 +30,7 @@
 #include "Factory.h"
 #include "DlgAbout.h"
 #include "main-menu/MainMenu.h"
+#include "UpdatedObjects.h"
 
 namespace ui {
 
@@ -52,6 +53,15 @@ namespace ui {
 
 	MainMenuPresenter::IView * Factory::cereateMainMenuView() {
 		return new MainMenu();
+	}
+
+	void Factory::sceneUpdateInfo(const TCHAR * text) {
+		DbgAssert(text);
+		MessageBox(GetActiveWindow(), text ? text : _T("undefined text"), _T("Update required"), MB_ICONINFORMATION);
+	}
+
+	void Factory::showUpdatedObjects(const std::vector<INode *> & nodes) {
+		UpdatedObjects().show(&nodes, GetActiveWindow());
 	}
 
 	/**************************************************************************************************/

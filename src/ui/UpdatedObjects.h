@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 **  Copyright(C) 2017, StepToSky
 **
@@ -27,31 +29,47 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
 
-#include "additional/utils/Settings.h"
-#include "additional/utils/SemVersion.h"
+#include <vector>
+#include "ui/controls/Base.h"
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+namespace ui {
 
-/*!
- * \details Access to the settings which are stored with the GUP (ObjCommon) class.
- * \Note This settings are saved with the scene, so each scene has its own parameters.
- */
-class Settings : public sts::Settings {
-public:
+	/********************************************************************************************************/
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/********************************************************************************************************/
 
-	Settings() = default;
+	class UpdatedObjects {
+	public:
 
-	void prepareDataForSave();
-	void setSceneVersion(const sts::SemVersion & version);
-	sts::SemVersion sceneVersion() const;
-	static sts::SemVersion currentVersion();
+		UpdatedObjects();
+		virtual ~UpdatedObjects();
 
-};
+		bool show(const std::vector<INode *> * nodes, HWND parent);
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+	private:
+
+		void destroy();
+
+		static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		void initWindow(HWND hWnd);
+		void destroyWindow(HWND hWnd);
+
+		void showData();
+
+		win::Base cBtnOk;
+		win::Base mEditInfo;
+		win::Base mLstObjects;
+		win::Base mMainWin;
+		const std::vector<INode *> * mData = nullptr;
+		HWND mParent;
+
+	};
+
+	/********************************************************************************************************/
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/********************************************************************************************************/
+}

@@ -27,30 +27,42 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
+#include "NodeVisitor.h"
 
-#include "additional/utils/Settings.h"
-#include "additional/utils/SemVersion.h"
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
 
 /**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-/*!
- * \details Access to the settings which are stored with the GUP (ObjCommon) class.
- * \Note This settings are saved with the scene, so each scene has its own parameters.
- */
-class Settings : public sts::Settings {
-public:
+bool NodeVisitor::visitChildrenOf(INode * root, const Function & fn) {
+	DbgAssert(fn);
+	int numChildren = root->NumberOfChildren();
+	for (int idx = 0; idx < numChildren; ++idx) {
+		if (!fn(root->GetChildNode(idx))) {
+			return false;
+		}
+	}
+	return true;
+}
 
-	Settings() = default;
+bool NodeVisitor::visitAllOf(INode * root, const Function & fn) {
+	DbgAssert(fn);
+	int numChildren = root->NumberOfChildren();
+	for (int idx = 0; idx < numChildren; ++idx) {
+		INode * currNode = root->GetChildNode(idx);
+		if (!fn(currNode) || !visitAllOf(currNode, fn)) {
+			return false;
+		}
+	}
+	return true;
+}
 
-	void prepareDataForSave();
-	void setSceneVersion(const sts::SemVersion & version);
-	sts::SemVersion sceneVersion() const;
-	static sts::SemVersion currentVersion();
-
-};
+bool NodeVisitor::visitAll(const Function & fn) {
+	return visitAllOf(GetCOREInterface()->GetRootNode(), fn);
+}
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
