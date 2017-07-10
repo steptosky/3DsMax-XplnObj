@@ -83,7 +83,7 @@ set(ProjectSourcesWebLink "https://github.com/steptosky/3DsMax-XplnObj")
 # Version / Dependency's system
 
 set(ProjectVersionMajor 2)
-set(ProjectVersionMinor 1)
+set(ProjectVersionMinor 2)
 set(ProjectVersionPatch 0)
 set(ProjectVersion "${ProjectVersionMajor}.${ProjectVersionMinor}.${ProjectVersionPatch}")
 set(ProjectReleaseType "") # You can use any string you wish
