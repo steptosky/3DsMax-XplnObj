@@ -1,7 +1,7 @@
 
 The 3DsMax X-Plane Obj Exporter change-log.
 ===============================================================================
-next
+2.2.0 (10.07.2017)
 
 - Modified: By default all the manipulators are disabled now! 
             Previous behaviour was: the 'panel' manipulator was implicitly set 
