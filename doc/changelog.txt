@@ -18,7 +18,7 @@ next
 
 - Fixed: Log file creation for some 3d max versions.
 - Fixed: Manipulators' state machine. There were some problems in the state machine 
-         one of them could lead to undefined behavior, it was fixed now.
+         one of them could lead to undefined behavior, it was fixed.
 
 ===============================================================================
 2.1.0 (16.05.2017)
