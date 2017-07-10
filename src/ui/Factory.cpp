@@ -31,6 +31,9 @@
 #include "DlgAbout.h"
 #include "main-menu/MainMenu.h"
 #include "UpdatedObjects.h"
+#include "gup/Settings.h"
+#include "gup/ObjCommon.h"
+#include "Info.h"
 
 namespace ui {
 
@@ -49,6 +52,17 @@ namespace ui {
 
 	void Factory::showNotImplemented() {
 		MessageBoxA(GetActiveWindow(), "It is not implemented yet", "Info", MB_ICONINFORMATION);
+	}
+
+	void Factory::showVersionIncompatible() {
+		std::string msg = sts::MbStrUtils::joinStr("The scene you are trying to open was made with (",
+													ObjCommon::instance()->pSettings.sceneVersion().toString(false, false),
+													") ", XIO_PROJECT_SHORT_NAME,
+													" plugin version which is newer than you have installed (",
+													ObjCommon::instance()->pSettings.currentVersion().toString(false, false),
+													")\r\n\r\nYou must update your ", XIO_PROJECT_SHORT_NAME,
+													" plugin before open this scene. Please use X-Plane menu to get the latest plugin version.");
+		MessageBoxA(GetActiveWindow(), msg.c_str(), "Incompatible Version", MB_ICONWARNING);
 	}
 
 	/**************************************************************************************************/

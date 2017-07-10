@@ -152,7 +152,6 @@ DWORD_PTR ObjCommon::Control(DWORD /*param*/) {
 
 // The case ID is not started from 0 because some previous versions of the plugin are used 0 and 1
 // but that data is not necessary anymore.
-
 IOResult ObjCommon::Save(ISave * isave) {
 	// TODO Save current plugin version with the scene
 	try {
@@ -213,7 +212,10 @@ IOResult ObjCommon::Load(ILoad * iload) {
 					std::string stdstr(str, size_t(strLength));
 					delete[] str;
 					pSettings.fromString(stdstr);
-					// todo check version, the scene must not be loaded if scene version more than plugin's one
+					if (pSettings.isSavedAsXplnScene() && pSettings.currentVersion() < pSettings.sceneVersion()) {
+						ui::Factory::showVersionIncompatible();
+						return IO_ERROR;
+					}
 					break;
 				}
 				default: break;

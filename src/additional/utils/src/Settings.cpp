@@ -510,8 +510,6 @@ namespace sts {
 			throw std::runtime_error(exctxt1("Incorrect file path"));
 		}
 
-		clear();
-
 		std::ifstream file(fileName.c_str(), std::ios_base::in);
 		if (!file.is_open()) {
 			throw std::runtime_error(exctxt2("Can't open file: ", fileName));
@@ -557,6 +555,7 @@ namespace sts {
 	/**************************************************************************************************/
 
 	void Settings::fromStream(std::istream & stream) {
+		clear();
 		Values * actualVals = nullptr;
 		while (stream.good()) {
 			std::string line;

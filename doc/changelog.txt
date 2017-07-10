@@ -10,6 +10,8 @@ next
 - Added: Panel-Click manipulator. This manipulator should be used for 
          the cockpit geometry (ATTR_cockpit) when 
          you want to enable the panel manipulators.	 
+- Added: Checking if opening scene was created with a newer plugin version.
+         If so then the scene will not be loaded and a warning will be printed.
 - Added: 'Smoke' object. It can be found near 'X-Obj' and 'X-Lod'.
 - Added: 'X-Plane' menu on the 3Ds Max's top menu bar.
 - Added: Documentation in the separated repository. Use the 'X-Plane' menu to get it.
