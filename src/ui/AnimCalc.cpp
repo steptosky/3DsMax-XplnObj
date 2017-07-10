@@ -29,12 +29,12 @@
 
 #include "AnimCalc.h"
 #include "Resource/resource.h"
+#include "resource/ResHelper.h"
+
 #pragma warning(push, 0)
 #include <max.h>
 #include <3dsmaxport.h>
 #pragma warning(pop)
-
-extern HINSTANCE hInstance;
 
 namespace ui {
 
@@ -111,7 +111,7 @@ namespace ui {
 		mData = &inOutData;
 		mParent = inParent;
 		return DialogBoxParam(
-							 hInstance,
+							 ResHelper::hInstance,
 							 MAKEINTRESOURCE(IDD_TOOL_CALC_ANIM_VALUE),
 							 inParent,
 							 reinterpret_cast<DLGPROC>(panelProc),

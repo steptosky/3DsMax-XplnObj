@@ -28,11 +28,6 @@
 */
 
 #pragma once
-/*
-* \copyright STEPTOSKY 2009
-* http://www.steptosky.com
-*
-*/
 
 #pragma warning(push, 0)
 #include <max.h>
@@ -48,7 +43,7 @@ namespace bcw { // backward compatibility
 
 	/*!
 	 * \details This class is for backward compatibility.
-	 * It loads the manipulators data from the previous version.
+	 *          It loads the manipulators data from the previous version.
 	 */
 	class MdManipIoOld {
 		MdManipIoOld() = default;

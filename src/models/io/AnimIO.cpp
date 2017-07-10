@@ -32,12 +32,12 @@
 #include "gup/ObjCommon.h"
 #include "models/eDataId.h"
 #include "NodeIO.h"
-#include "objects/MainObj.h"
+#include "objects/main/MainObj.h"
 
 #include "common/String.h"
 #include "models/bwc/MdAnimIoOld.h"
-#include "objects/MainObjectParams.h"
-#include "objects/LodObjParams.h"
+#include "classes-desc/ClassesDescriptions.h"
+#include "additional/stsio/DataStream.h"
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
@@ -46,7 +46,8 @@
 bool AnimIO::canApply(INode * node) {
 	assert(node != nullptr);
 	Class_ID id = node->GetObjectRef()->ClassID();
-	return id != MAINOBJ_CLASS_ID && id != LODOBJ_CLASS_ID;
+	return id != ClassesDescriptions::mainObj()->ClassID() &&
+			id != ClassesDescriptions::lodObj()->ClassID();
 }
 
 /**************************************************************************************************/

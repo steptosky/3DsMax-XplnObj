@@ -40,7 +40,7 @@
 
 /*! 
  * \details For some reasons the 3ds max does not clone Application-specific data,
- *             so this class is responsible for that data cloning.
+ *          so this class is responsible for that.
  */
 class CloneNodeChunk {
 public:

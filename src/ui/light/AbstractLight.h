@@ -29,8 +29,8 @@
 
 #pragma once
 
-#include "sts/notification/Signal.h"
 #include "ui/controls/Base.h"
+#include "additional/utils/Signal.h"
 
 namespace ui {
 
@@ -44,7 +44,7 @@ namespace ui {
 		AbstractLight() = default;
 		virtual ~AbstractLight() = default;
 
-		sts_t::Signal<bool> eventParamChanged;
+		sts::Signal<bool> eventParamChanged;
 
 		virtual win::Base & getCBase() = 0;
 		virtual void create(HWND inParent) = 0;

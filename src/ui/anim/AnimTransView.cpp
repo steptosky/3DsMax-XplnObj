@@ -32,8 +32,8 @@
 #include "Resource/resource.h"
 #include "ui/UiUtilities.h"
 #include "ui/AnimCalc.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
+#include "ui/Factory.h"
 
 namespace ui {
 
@@ -56,7 +56,7 @@ namespace ui {
 						break;
 					case CHK_LOOP: setLoopEnable();
 						break;
-					case BTN_DATAREF: MessageBoxA(GetActiveWindow(), "Is not supporting right now.", "Info", 0);
+					case BTN_DATAREF: Factory::showNotImplemented();;
 						break;
 					case BTN_REVERSE_VALUE: reverseValues();
 						break;
@@ -96,7 +96,7 @@ namespace ui {
 	/**************************************************************************************************/
 
 	AnimTransView::AnimTransView()
-		: RollupBase(hInstance),
+		: RollupBase(ResHelper::hInstance),
 		mIp(GetCOREInterface()) {}
 
 	AnimTransView::~AnimTransView() {
@@ -310,13 +310,8 @@ namespace ui {
 		}
 
 		int tpt = GetTicksPerFrame();
-		sts::Str strTmp;
 		for (size_t i = 0; i < tList.size(); ++i) {
-			strTmp.clear();
-			strTmp.append(_T("#:")).append(sts::toString(i + 1)).append(_T("  "));
-			strTmp.append(_T("F:")).append(sts::toString(tList[i] / tpt)).append(_T("  "));
-			strTmp.append(_T("V:")).append(sts::toString(vList[i]));
-			cListKeys.addItem(strTmp);
+			cListKeys.addItem(sts::StrUtils::join(_T("#:"), i + 1, _T(" F:"), tList[i] / tpt, _T(" V:"), vList[i]));
 		}
 		cListKeys.setCurrSelected(sCurrSelected);
 		mData.saveToNode();
@@ -366,7 +361,7 @@ namespace ui {
 			LError << "Internal error 1.";
 			return;
 		}
-		sts::StrUtils::trim(list1[2], STS_STRING_TRIM);
+		sts::StrUtils::trim(list1[2]);
 		auto list2 = sts::StrUtils::split<sts::StrUtils::Vector>(list1[2], _T(":"));
 		if (list2.size() != 2) {
 			LError << "Internal error 2.";

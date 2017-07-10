@@ -30,8 +30,8 @@
 #pragma once
 
 #include <list>
-#include "sts/utilities/templates/Single.h"
-#include "BaseLogger.h"
+#include "additional/utils/Single.h"
+#include "additional/utils/BaseLogger.h"
 
 #pragma warning(push, 0)
 #include <strclass.h>
@@ -97,7 +97,7 @@
 
 class LogSys;
 
-class Logger : public sts_t::Single<Logger> {
+class Logger : public sts::Single<Logger> {
 	friend Single<Logger>;
 	Logger();
 public:
@@ -108,16 +108,18 @@ public:
 
 	//-------------------------------------------------------------------------
 
-	static void registerUserConsoleCallback(UserConsoleCallBack inCallback);
-	static void unregisterUserConsoleCallback(UserConsoleCallBack inCallback);
+	/*!
+	 * \details The callback will be called only for messages 
+	 *          that must be displayed in the user console.
+	 * \param callback [in] 
+	 */
+	static void registerUserConsoleCallback(UserConsoleCallBack callback);
 
-	//-------------------------------------------------------------------------
-
-	static std::string aboutXLibInfo(bool inUseWinEol);
-	static std::string shortAboutXLibInfo(bool inUseWinEol);
-
-	static std::string aboutInfo(bool inUseWinEol);
-	static std::string shortAboutInfo(bool inUseWinEol);
+	/*!
+	 * \see \link Logger::registerUserConsoleCallback \endlink
+	 * \param callback [in] 
+	 */
+	static void unregisterUserConsoleCallback(UserConsoleCallBack callback);
 
 	//-------------------------------------------------------------------------
 
@@ -130,16 +132,28 @@ public:
 
 	//-------------------------------------------------------------------------
 
-	void saveLog(const MSTR & where);
+	/*!
+	 * \details Saves current log to the given file path.
+	 * \param where 
+	 */
+	void saveLog(const MSTR & where) const;
 
 	//-------------------------------------------------------------------------
 
-	static const std::string & versionShortString() { return Logger::mVersionShortString; }
-	static const std::string & versionString() { return Logger::mVersionString; }
+	static std::string aboutXLibInfo(bool inUseWinEol);
+	static std::string shortAboutXLibInfo(bool inUseWinEol);
+
+	static std::string aboutInfo(bool inUseWinEol);
+	static std::string shortAboutInfo(bool inUseWinEol);
+
+	static const std::string & versionShortString() { return mVersionShortString; }
+	static const std::string & versionString() { return mVersionString; }
 
 	//-------------------------------------------------------------------------
 
 private:
+
+	//-------------------------------------------------------------------------
 
 	static void printInformation();
 	static void createVersionStrings();
@@ -148,6 +162,10 @@ private:
 	static LogSys * mMaxLog;
 	static std::string mVersionShortString;
 	static std::string mVersionString;
+
+	MSTR mLogFile;
+
+	//-------------------------------------------------------------------------
 
 };
 

@@ -29,11 +29,6 @@
 
 #pragma once
 
-/*!
-*  \copyright STEPTOSKY 2009
-*	http://www.steptosky.com
-*/
-
 #include <iostream>
 #include <cstdint>
 
@@ -44,8 +39,8 @@ namespace bcw { // backward compatibility
 	/**************************************************************************************************/
 
 	/*!
-	\details Class identification of serialization.
-	*/
+	 * \details Class identification of serialization.
+	 */
 	class SerializationId {
 	public:
 

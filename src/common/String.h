@@ -34,15 +34,14 @@
 #pragma warning(pop)
 
 #include <tchar.h>
-#include "sts/string/StringConverters.h"
-#include "sts/string/StringUtils.h"
+#include "additional/utils/StringUtils.h"
 
 /**************************************************************************************************/
 /////////////////////////////////////* UNICODE UTILS *//////////////////////////////////////////////
 /**************************************************************************************************/
 
 /* 
- * Utilities for unicode for different versions of the 3Ds Max.
+ * Utilities for Unicode for different versions of the 3Ds Max.
  */
 
 /**************************************************************************************************/

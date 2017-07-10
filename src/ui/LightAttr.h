@@ -31,10 +31,10 @@
 #include <map>
 #include "common/String.h"
 #include "ui/controls/Combo.h"
-#include "sts/notification/Signal.h"
 #include "models/MdLight.h"
 #include "light/AbstractLight.h"
 #include "ui/controls/RollupBase.h"
+#include "additional/utils/Signal.h"
 
 namespace ui {
 

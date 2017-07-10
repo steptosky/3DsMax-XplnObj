@@ -29,18 +29,12 @@
 
 #pragma once
 
-/*
-* \copyright STEPTOSKY 2009
-* http://www.steptosky.com
-*
-*/
-
 #pragma warning(push, 0)
 #include <max.h>
 #pragma warning(pop)
 
 #include "common/Logger.h"
-#include "sts/io/DataStream.h"
+#include "additional/stsio/DataStream.h"
 #include <xpln/obj/ObjLightCustom.h>
 #include <xpln/obj/ObjLightNamed.h>
 #include <xpln/obj/ObjLightParam.h>

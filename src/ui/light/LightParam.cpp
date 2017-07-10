@@ -36,8 +36,7 @@
 #include "resource/resource.h"
 #include "ui/UiUtilities.h"
 #include <xpln/enums/ELightParams.h>
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -135,9 +134,8 @@ namespace ui {
 	}
 
 	void LightParam::create(HWND inParent) {
-		assert(hInstance);
 		assert(inParent);
-		mHwnd.setup(CreateDialogParam(hInstance,
+		mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
 									MAKEINTRESOURCE(IDD_ROLL_LIGHT_PARAM_OBJ),
 									inParent,
 									reinterpret_cast<DLGPROC>(panelProc),

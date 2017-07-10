@@ -97,6 +97,10 @@ namespace bcw { // backward compatibility
 			mAttr.setManipulator(inManip.clone());
 		}
 
+		void gotAttrManip(const xobj::AttrManipPanel & inManip) override {
+			mAttr.setManipulator(inManip.clone());
+		}
+
 		void gotAttrManip(const xobj::AttrManipPush & inManip) override {
 			mAttr.setManipulator(inManip.clone());
 		}
@@ -497,6 +501,21 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipNoop 
 
 /***************************************************************************************/
 
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipPanel & /*inManip*/) {
+	stream.setValue<uint8_t>(uint8_t(1)); // manip io version
+}
+
+bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipPanel & /*outManip*/) {
+	uint8_t version = stream.value<uint8_t>();
+	if (version != 1) {
+		log_unexpected_version(node, version);
+		return false;
+	}
+	return true;
+}
+
+/***************************************************************************************/
+
 void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipPush & inManip) {
 	stream.setValue<uint8_t>(uint8_t(1)); // manip io version
 	stream.setValue<int32_t>(inManip.cursor().id());
@@ -817,6 +836,15 @@ bool ManipIO::loadFromNode(INode * inNode, IManipIo * inCallback) {
 			inCallback->gotAttrManip(manip);
 			break;
 		}
+		case xobj::EManipulator::eId::panel: {
+			xobj::AttrManipPanel manip;
+			if (!load(inNode, stream, manip)) {
+				inCallback->gotNoManip();
+				return false;
+			}
+			inCallback->gotAttrManip(manip);
+			break;
+		}
 		case xobj::EManipulator::eId::push: {
 			xobj::AttrManipPush manip;
 			if (!load(inNode, stream, manip)) {
@@ -908,6 +936,9 @@ void ManipIO::saveToNode(INode * outNode, const xobj::AttrManipBase * inManip) {
 			break;
 		case xobj::EManipulator::noop:
 			saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipNoop *>(inManip));
+			break;
+		case xobj::EManipulator::panel:
+			saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipPanel *>(inManip));
 			break;
 		case xobj::EManipulator::push:
 			saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipPush *>(inManip));

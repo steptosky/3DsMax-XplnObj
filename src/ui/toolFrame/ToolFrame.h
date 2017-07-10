@@ -34,9 +34,7 @@
 #pragma warning(pop)
 
 #include <Windows.h>
-#include "sts/utilities/templates/Single.h"
-
-extern HINSTANCE hInstance;
+#include "additional/utils/Single.h"
 
 namespace ui {
 
@@ -46,7 +44,7 @@ namespace ui {
 
 	class MainDock;
 
-	class ToolFrame : public CUIFrameMsgHandler, public CUIPosData, public sts_t::Single<ToolFrame> {
+	class ToolFrame : public CUIFrameMsgHandler, public CUIPosData, public sts::Single<ToolFrame> {
 
 		ToolFrame(const ToolFrame &) {}
 

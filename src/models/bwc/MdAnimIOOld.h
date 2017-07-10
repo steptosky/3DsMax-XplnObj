@@ -45,7 +45,7 @@ namespace bcw { // backward compatibility
 
 	/*!
 	 * \details This class is for backward compatibility.
-	 * It loads the animation data from the previous version.
+	 *          It loads the animation data from the previous version.
 	 */
 	class MdAnimIoOld {
 

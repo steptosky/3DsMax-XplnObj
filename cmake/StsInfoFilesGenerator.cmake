@@ -34,7 +34,9 @@
 #
 # This module uses the StsProjectDesc module for generate ".h" file with information
 #
-# Version 1.2.1 (16.15.2017)
+# Version 1.2.2 (01.06.2017)
+#	- Generates hidden from doxygen file 
+# Version 1.2.1 (16.05.2017)
 #	- Fixed vcs detection
 # Version 1.2.0 (21.04.2017)
 #	- List of open source libraries
@@ -78,7 +80,11 @@ function(genInfoFile descriptionFile destinationFile)
 	#-------------------------------------------------------------------#
 
 	set(CONTENT "#pragma once\n\n")
-	set(CONTENT "${CONTENT}/* This is the auto-genetared file with the cmake script */\n\n")
+	
+	# hides content for doxygen
+	set(CONTENT "${CONTENT}/// @cond sts_info_gen\n\n") 
+	
+	set(CONTENT "${CONTENT}/* This is the auto-generated file with the cmake script */\n\n")
 	set(CONTENT "${CONTENT}${__DECOR__}\n\n")
 
 	#-------------------------------------------------------------------#
@@ -277,10 +283,13 @@ function(genInfoFile descriptionFile destinationFile)
 	#-------------------------------#
 	
 	set(CONTENT "${CONTENT}#define ${__prfix__}VCS_REVISION \"${vcs_revision}\" \n")
-	set(CONTENT "${CONTENT}#define ${__prfix__}VCS_BRANCH \"${vcs_branch}\" \n")
+	set(CONTENT "${CONTENT}#define ${__prfix__}VCS_BRANCH \"${vcs_branch}\" \n\n")
 
 	#-------------------------------------------------------------------#
 
+	# hides content for doxygen
+	set(CONTENT "${CONTENT}/// @endcond\n\n")
+	
 	set(CONTENT "${CONTENT}\n${__DECOR__}")
 	file(WRITE ${destinationFile} "${CONTENT}")
 

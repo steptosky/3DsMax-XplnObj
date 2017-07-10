@@ -40,6 +40,7 @@
 #include "DlgAbout.h"
 #include "converters/ConverterMain.h"
 #include "converters/ConverterUtils.h"
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -158,7 +159,7 @@ namespace ui {
 		mErrorCount = 0;
 		mWarningCount = 0;
 
-		INT_PTR res = DialogBoxParam(hInstance, MAKEINTRESOURCE(DLG_EXPORT), GetCOREInterface()->GetMAXHWnd(),
+		INT_PTR res = DialogBoxParam(ResHelper::hInstance, MAKEINTRESOURCE(DLG_EXPORT), GetCOREInterface()->GetMAXHWnd(),
 									callBack, reinterpret_cast<LPARAM>(this));
 		gImportDlg = nullptr;
 		return res != 0;
@@ -177,10 +178,7 @@ namespace ui {
 		mBtnDonate.setup(hWnd, BTN_DONATE);
 		mEdtLog.setup(hWnd, USER_OUPUT);
 		mDlgMain.show();
-
-		sts::Str str(_T("Version: "));
-		str.append(_T(XIO_VERSION_STRING)).append(_T("-")).append(_T(XIO_RELEASE_TYPE));
-		mLblVersion.setText(str);
+		mLblVersion.setText(sts::StrUtils::joinStr(_T(XIO_VERSION_STRING), _T("-"), _T(XIO_RELEASE_TYPE)));
 	}
 
 	void DlgImport::DestroyDlg(HWND /*hWnd*/) {

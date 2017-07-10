@@ -32,8 +32,8 @@
 #include "Resource/resource.h"
 #include "ui/AnimCalc.h"
 #include "ui/UiUtilities.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
+#include "ui/Factory.h"
 
 namespace ui {
 
@@ -62,7 +62,7 @@ namespace ui {
 						break;
 					case BTN_DELETE: deleteItem();
 						break;
-					case BTN_DATAREF: MessageBoxA(GetActiveWindow(), "Is not supporting right now.", "Info", 0);
+					case BTN_DATAREF: Factory::showNotImplemented();;
 						break;
 					default: break;
 				}
@@ -96,7 +96,7 @@ namespace ui {
 	/**************************************************************************************************/
 
 	AnimVisView::AnimVisView()
-		: RollupBase(hInstance),
+		: RollupBase(ResHelper::hInstance),
 		mIp(GetCOREInterface()) {}
 
 	AnimVisView::~AnimVisView() {
@@ -309,11 +309,10 @@ namespace ui {
 
 	sts::Str AnimVisView::toText(MdAnimVis::Key & inKey) {
 		sts::Str strTmp;
-		sts::Str strTmp2;
 		strTmp.append(1, inKey.pType);
 		strTmp.append(_T(" = ")).append(sts::toString(inKey.pValue1, 4)).append(_T(" "));
 		strTmp.append(sts::toString(inKey.pValue2, 4));
-		strTmp2 = sts::toString(inKey.pDrf);
+		sts::Str strTmp2 = sts::toString(inKey.pDrf);
 		strTmp.append(_T(" ")).append(strTmp2.empty() ? _T("none") : strTmp2);
 		return strTmp;
 	}
@@ -338,7 +337,7 @@ namespace ui {
 			LError << "Internal error 1.";
 			return;
 		}
-		sts::StrUtils::trim(list1[1], STS_STRING_TRIM);
+		sts::StrUtils::trim(list1[1]);
 		auto list2 = sts::StrUtils::split<sts::StrUtils::Vector>(list1[1], _T(" "));
 		if (list2.size() != 3) {
 			LError << "Internal error 2.";

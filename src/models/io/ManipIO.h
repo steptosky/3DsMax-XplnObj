@@ -29,18 +29,12 @@
 
 #pragma once
 
-/*
-* \copyright STEPTOSKY 2009
-* http://www.steptosky.com
-*
-*/
-
 #pragma warning(push, 0)
 #include <max.h>
 #pragma warning(pop)
 
 #include "common/Logger.h"
-#include "sts/io/DataStream.h"
+#include "additional/stsio/DataStream.h"
 #include <xpln/enums/EManipulator.h>
 #include <xpln/obj/manipulators/AttrManipAxisKnob.h>
 #include <xpln/obj/manipulators/AttrManipAxisSwitchLeftRight.h>
@@ -54,6 +48,7 @@
 #include <xpln/obj/manipulators/AttrManipCmdAxis.h>
 #include <xpln/obj/manipulators/AttrManipDragAxis.h>
 #include <xpln/obj/manipulators/AttrManipDelta.h>
+#include <xpln/obj/manipulators/AttrManipPanel.h>
 #include <xpln/obj/manipulators/AttrManipPush.h>
 #include <xpln/obj/manipulators/AttrManipRadio.h>
 #include <xpln/obj/manipulators/AttrManipToggle.h>
@@ -89,6 +84,7 @@ public:
 		virtual void gotAttrManip(const xobj::AttrManipDragAxisPix & inManip) = 0;
 		virtual void gotAttrManip(const xobj::AttrManipDragXy & inManip) = 0;
 		virtual void gotAttrManip(const xobj::AttrManipNoop & inManip) = 0;
+		virtual void gotAttrManip(const xobj::AttrManipPanel & inManip) = 0;
 		virtual void gotAttrManip(const xobj::AttrManipPush & inManip) = 0;
 		virtual void gotAttrManip(const xobj::AttrManipRadio & inManip) = 0;
 		virtual void gotAttrManip(const xobj::AttrManipToggle & inManip) = 0;
@@ -145,6 +141,7 @@ private:
 	static void save(sts::DataStreamO & stream, const xobj::AttrManipDragAxisPix & inManip);
 	static void save(sts::DataStreamO & stream, const xobj::AttrManipDragXy & inManip);
 	static void save(sts::DataStreamO & stream, const xobj::AttrManipNoop & inManip);
+	static void save(sts::DataStreamO & stream, const xobj::AttrManipPanel & inManip);
 	static void save(sts::DataStreamO & stream, const xobj::AttrManipPush & inManip);
 	static void save(sts::DataStreamO & stream, const xobj::AttrManipRadio & inManip);
 	static void save(sts::DataStreamO & stream, const xobj::AttrManipToggle & inManip);
@@ -163,6 +160,7 @@ private:
 	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragAxisPix & outManip);
 	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragXy & outManip);
 	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipNoop & outManip);
+	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipPanel & outManip);
 	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipPush & outManip);
 	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipRadio & outManip);
 	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipToggle & outManip);

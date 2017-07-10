@@ -29,9 +29,9 @@
 
 #pragma once
 
-#include <iostream> // Fix for "sts/settings/Settings.h"
-#include "sts/utilities/templates/Single.h"
-#include "sts/settings/Settings.h"
+#include "additional/utils/Single.h"
+#include "additional/utils/Settings.h"
+#include "additional/utils/BaseLogger.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,15 +40,29 @@
 /*!
  * \details Access to the external config (ini) file
  */
-class Config : public sts::Settings, public sts_t::Single<Config> {
+class Config : public sts::Settings, public sts::Single<Config> {
 public:
 
 	bool load() {
-		return Settings::load(mConfigFile);
+		try {
+			loadFile(mConfigFile);
+			return true;
+		}
+		catch (const std::exception & e) {
+			LError << e.what();
+			return false;
+		}
 	}
 
 	bool save() const {
-		return Settings::save(mConfigFile);
+		try {
+			saveFile(mConfigFile);
+			return true;
+		}
+		catch (const std::exception & e) {
+			LError << e.what();
+			return false;
+		}
 	}
 
 	Config();

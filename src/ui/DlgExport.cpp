@@ -37,12 +37,14 @@
 #include "resource/resource.h"
 #include "Info.h"
 #include "common/Logger.h"
-#include "DlgAbout.h"
-#include "objects/MainObjParamsWrapper.h"
+#include "objects/main/MainObjParamsWrapper.h"
 #include "converters/ConverterUtils.h"
 #include "gup/ObjCommon.h"
 #include <windows.h>
 #include <commctrl.h>
+#include "models/MdLinks.h"
+#include "Factory.h"
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -152,15 +154,15 @@ namespace ui {
 						break;
 					}
 					case BTN_DONATE: {
-						ShellExecute(nullptr, _T("open"), _T("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8AGCSV2WMXTES"), nullptr, nullptr, SW_SHOWNORMAL);
+						MdLinks::openDonate();
 						break;
 					}
 					case BTN_CHECK_FOR_UPDATE: {
-						ShellExecute(nullptr, _T("open"), _T("https://github.com/steptosky/3DsMax-XplnObj/releases"), nullptr, nullptr, SW_SHOWNORMAL);
+						MdLinks::openPluginBinary();
 						break;
 					}
 					case BTN_ABOUT: {
-						DlgAbout::show();
+						Factory::showAboutWindow();
 						break;
 					}
 					default: break;
@@ -226,7 +228,7 @@ namespace ui {
 		mErrorCount = 0;
 		mWarningCount = 0;
 
-		INT_PTR res = DialogBoxParam(hInstance, MAKEINTRESOURCE(DLG_EXPORT), GetCOREInterface()->GetMAXHWnd(),
+		INT_PTR res = DialogBoxParam(ResHelper::hInstance, MAKEINTRESOURCE(DLG_EXPORT), GetCOREInterface()->GetMAXHWnd(),
 									callBack, reinterpret_cast<LPARAM>(this));
 		gExportDlg = nullptr;
 		return res != 0;
@@ -330,7 +332,7 @@ namespace ui {
 		FilterList extensionList;
 		extensionList.Append(_T("Log files(*.log)"));
 		extensionList.Append(_T("*.log"));
-		bool res = ip->DoMaxSaveAsDialog(GetCOREInterface()->GetMAXHWnd(), _T("Log saveing"), fileName, initialDir, extensionList);
+		bool res = ip->DoMaxSaveAsDialog(GetCOREInterface()->GetMAXHWnd(), _T("Log saving"), fileName, initialDir, extensionList);
 		if (res) {
 			Logger::instance()->saveLog(fileName);
 		}
@@ -419,10 +421,8 @@ namespace ui {
 				break;
 			}
 
-			std::string signature(XIO_ORGANIZATION_NAME);
-			signature.append(" ").append(XIO_PROJECT_NAME).append(":");
-			signature.append(" ").append(XIO_VERSION_STRING).append("-").append(XIO_RELEASE_TYPE);
-			signature.append("+[").append(XIO_COMPILE_DATE).append("]");
+			std::string signature = sts::MbStrUtils::joinStr(XIO_ORGANIZATION_NAME, " ", XIO_PROJECT_NAME, ": ",
+															XIO_VERSION_STRING, "-", XIO_RELEASE_TYPE, "+[", XIO_COMPILE_DATE, "]");
 			xMain.pExportOptions.setSignature(signature);
 
 			if (!xMain.exportToFile(exportFilePath)) {
@@ -452,10 +452,11 @@ namespace ui {
 			else {
 				if (upd.version > SemVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH)) {
 					mBtnCheckUpdate.setText("Get update");
-					CLWarning << "New version " << upd.version.toString()
-					<< " is available please, press the <"
+					CLWarning << "New version '" << upd.version.toString()
+					<< "' is available. Please, press the '"
 					<< sts::toMbString(mBtnCheckUpdate.text())
-					<< "> button to get the new version.";
+					<< "' button to get the new version." << "\r\n"
+					<< "\tSee the 'changelog.txt' file there to get the information about the changes.";
 				}
 			}
 		}

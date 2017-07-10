@@ -36,6 +36,7 @@
 
 #include "resource/resource.h"
 #include "common/Logger.h"
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -101,7 +102,7 @@ namespace ui {
 	/**************************************************************************************************/
 
 	void DlgAbout::open() {
-		DialogBoxParam(hInstance, MAKEINTRESOURCE(DLG_ABOUT), GetCOREInterface()->GetMAXHWnd(),
+		DialogBoxParam(ResHelper::hInstance, MAKEINTRESOURCE(DLG_ABOUT), GetCOREInterface()->GetMAXHWnd(),
 						callBack, reinterpret_cast<LPARAM>(this));
 	}
 

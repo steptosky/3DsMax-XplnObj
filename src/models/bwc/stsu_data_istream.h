@@ -41,7 +41,7 @@ namespace sts_bwc { // backward compatibility
 
 	/*!
 	\details Data Input Stream class provide a stream operation with data which interpreted like bytes (not characters, e.t.c.).
-	Used std::istream like internal byte buffer.
+	         Used std::istream like internal byte buffer.
 	*/
 	class DataStreamI {
 	protected:

@@ -35,8 +35,8 @@
 
 #include "resource/resource.h"
 #include "ui/UiUtilities.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
+#include "ui/Factory.h"
 
 namespace ui {
 
@@ -68,7 +68,7 @@ namespace ui {
 			case WM_COMMAND: {
 				switch (LOWORD(wParam)) {
 					case IDC_BTN_DATAREF: {
-						MessageBoxA(GetActiveWindow(), "Is not supporting right now.", "Info", 0);
+						Factory::showNotImplemented();;
 						break;
 					}
 					default: break;
@@ -193,9 +193,8 @@ namespace ui {
 	}
 
 	void LightCust::create(HWND inParent) {
-		assert(hInstance);
 		assert(inParent);
-		mHwnd.setup(CreateDialogParam(hInstance,
+		mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
 									MAKEINTRESOURCE(IDD_ROLL_LIGHT_CUST_OBJ),
 									inParent,
 									reinterpret_cast<DLGPROC>(panelProc),

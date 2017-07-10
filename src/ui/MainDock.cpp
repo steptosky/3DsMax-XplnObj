@@ -34,8 +34,7 @@
 #include "ui/LightAttr.h"
 #include "common/Config.h"
 #include "Resource/resource.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -184,7 +183,7 @@ namespace ui {
 	/**************************************************************************************************/
 
 	bool MainDock::create(HWND inParent) {
-		mDock.setup(CreateDialogParam(hInstance,
+		mDock.setup(CreateDialogParam(ResHelper::hInstance,
 									MAKEINTRESOURCE(IDD_DOCK),
 									inParent,
 									reinterpret_cast<DLGPROC>(MainDock::DialogProc),

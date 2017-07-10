@@ -28,12 +28,13 @@
 */
 
 #include "ConverterLight.h"
-#include "sts/geometry/DrConverters.h"
 #include "Common/String.h"
 #include "common/Logger.h"
 #include "models/MdLight.h"
 #include <xpln/obj/Transform.h>
 #include "ConverterUtils.h"
+#include "additional/math/Rad.h"
+#include "additional/math/Deg.h"
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
@@ -106,7 +107,7 @@ struct LightGetter : LightIO::ILightIO {
 				lobj->setDirection(xobj::Point3(targetPosition.x, targetPosition.y, targetPosition.z));
 				//Get cone
 				GenLight * light = dynamic_cast<GenLight*>(obj);
-				lobj->setSemiAngle(sts::toRadians(light->GetFallsize(currTime)));
+				lobj->setSemiAngle(stsff::math::degToRad(light->GetFallsize(currTime)));
 			}
 		}
 
@@ -274,7 +275,7 @@ INode * ConverterLight::toMaxLightSpillCust(const xobj::ObjLightSpillCust * inOb
 				Matrix3 nodeTm = pnode->GetObjectTM(currTime);
 				nodeTm.Translate(Point3(xpoint.x, xpoint.y, xpoint.z));
 				targetNode->SetNodeTM(currTime, nodeTm);
-				mLight->SetFallsize(currTime, sts::toDegrees(inObjLight->semiAngle()));
+				mLight->SetFallsize(currTime, stsff::math::radToDeg(inObjLight->semiAngle()));
 			}
 		}
 		return pnode;

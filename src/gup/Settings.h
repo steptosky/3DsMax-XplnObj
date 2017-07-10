@@ -29,9 +29,8 @@
 
 #pragma once
 
-#include <iostream> // Fix for "sts/settings/Settings.h"
-#include "sts/utilities/templates/Single.h"
-#include "sts/settings/Settings.h"
+#include "additional/utils/Settings.h"
+#include "additional/utils/SemVersion.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,18 +45,16 @@ public:
 
 	Settings() = default;
 
-	bool fromString(const std::string & str) {
-		std::stringstream stream(str);
-		return Settings::load(stream);
-	}
+	bool isSavedAsXplnScene() const;
+	void prepareDataForSave();
+	void setSceneVersion(const sts::SemVersion & version);
+	sts::SemVersion sceneVersion() const;
+	static sts::SemVersion currentVersion();
 
-	std::string toString() const {
-		std::stringstream stream;
-		if (!Settings::save(stream)) {
-			return "";
-		}
-		return stream.str();
-	}
+private:
+
+	static bool sceneContainsMainObj();
+
 };
 
 /**************************************************************************************************/

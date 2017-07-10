@@ -28,7 +28,7 @@
 */
 
 #include "CloneNodeChunk.h"
-#include "common/BaseLogger.h"
+#include "common/Logger.h"
 #include "models/MdObjAttr.h"
 #include "models/MdManip.h"
 #include "models/MdLight.h"

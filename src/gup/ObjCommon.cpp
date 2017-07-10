@@ -30,6 +30,9 @@
 #include "ObjCommon.h"
 #include "ui/toolFrame/ToolFrame.h"
 #include "common/Logger.h"
+#include "ui/Factory.h"
+#include "ui/main-menu/MainMenuActions.h"
+#include "resource/ResHelper.h"
 
 #ifndef IO_SAVE_CAST
 #	if MAX_VERSION_MAJOR > 14
@@ -38,34 +41,6 @@
 #		define IO_SAVE_CAST const void
 #	endif
 #endif
-
-/**************************************************************************************************/
-/////////////////////////////////////////* Static area *////////////////////////////////////////////
-/**************************************************************************************************/
-
-extern HINSTANCE hInstance;
-
-class ObjCommonClassDesc : public ClassDesc2 {
-public:
-
-	int IsPublic() override { return TRUE; }
-	void * Create(BOOL /*loading = FALSE*/) override { return reinterpret_cast<void *>(ObjCommon::instance()); }
-	HINSTANCE HInstance() override { return hInstance; }
-
-	SClass_ID SuperClassID() override { return GUP_CLASS_ID; }
-	Class_ID ClassID() override { return COMMON_CLASS_ID; }
-
-	const TCHAR * ClassName() override { return _T("X-Common"); }
-	const TCHAR * Category() override { return _T("X-Plane Obj coomon class"); }
-	const TCHAR * InternalName() override { return _T("xCommonObject"); }
-
-};
-
-static ObjCommonClassDesc ObjGupDesc;
-
-ClassDesc2 * GetObjCommonDesc() {
-	return &ObjGupDesc;
-}
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
@@ -127,18 +102,30 @@ void ObjCommon::updateCheckWinCallback(HWND hwnd, UINT /*uMsg*/, UINT_PTR idEven
 /**************************************************************************************************/
 
 DWORD ObjCommon::Start() {
+	//-- Mein Menu ---------------------------
+	mMainMenuView.reset(ui::Factory::cereateMainMenuView());
+	mMainMenuPresenter = std::make_unique<MainMenuPresenter>(mMainMenuView.get());
+	//----------------------------------------
+
 	mCloneNodeChunk = new CloneNodeChunk();
 	mToolFrame = ui::ToolFrame::instance();
 	mToolFrame->create();
 
 	mUpdateChecker.checkForUpdate();
 	SetTimer(GetCOREInterface()->GetMAXHWnd(), UINT_PTR(WM_MY_TIMER_ID),
-			UINT(WM_MY_TIMER_TIME), (TIMERPROC)&ObjCommon::updateCheckWinCallback);
+			UINT(WM_MY_TIMER_TIME), reinterpret_cast<TIMERPROC>(&ObjCommon::updateCheckWinCallback));
+
+	RegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
 
 	return GUPRESULT_KEEP;
 }
 
 void ObjCommon::Stop() {
+	//-- Mein Menu ---------------------------
+	mMainMenuPresenter.reset();
+	mMainMenuView.reset();
+	//----------------------------------------
+	UnRegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
 	mUpdateChecker.freeResources();
 	mToolFrame->free();
 	delete mCloneNodeChunk;
@@ -165,11 +152,11 @@ DWORD_PTR ObjCommon::Control(DWORD /*param*/) {
 
 // The case ID is not started from 0 because some previous versions of the plugin are used 0 and 1
 // but that data is not necessary anymore.
-
 IOResult ObjCommon::Save(ISave * isave) {
 	// TODO Save current plugin version with the scene
 	try {
 		ULONG temp = 0;
+		pSettings.prepareDataForSave();
 		std::string settings = pSettings.toString();
 		//------------------------------------
 		isave->BeginChunk(2);
@@ -225,6 +212,10 @@ IOResult ObjCommon::Load(ILoad * iload) {
 					std::string stdstr(str, size_t(strLength));
 					delete[] str;
 					pSettings.fromString(stdstr);
+					if (pSettings.isSavedAsXplnScene() && pSettings.currentVersion() < pSettings.sceneVersion()) {
+						ui::Factory::showVersionIncompatible();
+						return IO_ERROR;
+					}
 					break;
 				}
 				default: break;
@@ -241,6 +232,15 @@ IOResult ObjCommon::Load(ILoad * iload) {
 		return IO_ERROR;
 	}
 	return IO_OK;
+}
+
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+void ObjCommon::slotFileOpened(void * param, NotifyInfo *) {
+	ObjCommon * d = static_cast<ObjCommon*>(param);
+	d->mSceneUpdater.update(d->pSettings.sceneVersion(), d->pSettings.currentVersion());
 }
 
 /**************************************************************************************************/

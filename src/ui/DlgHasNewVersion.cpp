@@ -36,6 +36,7 @@
 #include "common/String.h"
 #include <sstream>
 #include "Resource/resource.h"
+#include "resource/ResHelper.h"
 
 namespace ui {
 
@@ -101,7 +102,7 @@ namespace ui {
 
 	bool DlgHasNewVersion::show() {
 		//mData = &inOutData;
-		INT_PTR res = DialogBoxParam(hInstance,
+		INT_PTR res = DialogBoxParam(ResHelper::hInstance,
 									MAKEINTRESOURCE(IDD_HAS_NEW_VERSION_DIALOG),
 									GetCOREInterface()->GetMAXHWnd(),
 									_BaseWindowProc, (LPARAM)this);

@@ -31,8 +31,6 @@
 
 #include "ui/controls/Base.h"
 
-extern HINSTANCE hInstance;
-
 namespace ui {
 
 	/**************************************************************************************************/

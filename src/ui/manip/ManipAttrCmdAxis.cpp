@@ -37,8 +37,8 @@
 #include <xpln/enums/ECursor.h>
 #include "resource/resource.h"
 #include "common/Logger.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
+#include "ui/Factory.h"
 
 namespace ui {
 
@@ -70,11 +70,11 @@ namespace ui {
 			case WM_COMMAND: {
 				switch (LOWORD(wParam)) {
 					case BTN_COMMAND2: {
-						MessageBoxA(GetActiveWindow(), "Is not supporting right now.", "Info", 0);
+						Factory::showNotImplemented();
 						break;
 					}
 					case BTN_COMMAND: {
-						MessageBoxA(GetActiveWindow(), "Is not supporting right now.", "Info", 0);
+						Factory::showNotImplemented();
 						break;
 					}
 					case CMB_CURSOR: {
@@ -153,9 +153,8 @@ namespace ui {
 	/**************************************************************************************************/
 
 	void ManipAttrCmdAxis::create(HWND inParent) {
-		assert(hInstance);
 		assert(inParent);
-		mHwnd.setup(CreateDialogParam(hInstance,
+		mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
 									MAKEINTRESOURCE(ROLL_MANIP_COMMAND_AXIS),
 									inParent,
 									reinterpret_cast<DLGPROC>(panelProc),

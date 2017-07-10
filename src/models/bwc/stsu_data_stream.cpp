@@ -36,16 +36,14 @@ namespace sts_bwc { // backward compatibility
 	/********************************************************************************************************/
 
 	DataStream::DataStream(std::iostream & inStream)
-		:
-		mStream(inStream),
+		: mStream(inStream),
 		mIsStreamOwn(false) {
 		DataStreamI::setStream(&mStream);
 		DataStreamO::setStream(&mStream);
 	}
 
 	DataStream::DataStream(std::stringbuf & inStreamBuf)
-		:
-		mStream(*new std::stringstream()),
+		: mStream(*new std::stringstream()),
 		mIsStreamOwn(true) {
 		mStream.rdbuf(&inStreamBuf);
 		DataStreamI::setStream(&mStream);
@@ -53,8 +51,7 @@ namespace sts_bwc { // backward compatibility
 	}
 
 	DataStream::DataStream()
-		:
-		mStream(*new std::stringstream()),
+		: mStream(*new std::stringstream()),
 		mIsStreamOwn(true),
 		DataStreamI(mStream),
 		DataStreamO(mStream) {
@@ -64,8 +61,7 @@ namespace sts_bwc { // backward compatibility
 
 	// Is not using
 	DataStream::DataStream(const DataStream & incOpy)
-		:
-		mStream(incOpy.mStream) {
+		: mStream(incOpy.mStream) {
 		DataStreamI::setStream(&mStream);
 		DataStreamO::setStream(&mStream);
 	}

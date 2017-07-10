@@ -38,10 +38,12 @@
 #pragma warning(pop)
 
 #include "CloneNodeChunk.h"
-#include "sts/utilities/templates/Single.h"
+#include "additional/utils/Single.h"
 #include "Common/Config.h"
 #include "update/UpdateChecker.h"
 #include "Settings.h"
+#include "presenters/MainMenuPresenter.h"
+#include "update-scene/SceneUpdater.h"
 
 #define COMMON_CLASS_ID	Class_ID(0xf5226b9, 0x5b131ef2)
 
@@ -53,8 +55,8 @@ namespace ui {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-// TODO make the correct singlton for this class, it should return nullptr if it is deleted
-class ObjCommon : public GUP, public sts_t::Single<ObjCommon> {
+// TODO make the correct singleton for this class, it should return nullptr if it is deleted
+class ObjCommon : public GUP, public sts::Single<ObjCommon> {
 public:
 
 	ObjCommon();
@@ -83,6 +85,10 @@ public:
 private:
 
 	//-------------------------------------------------------------------------
+
+	static void slotFileOpened(void * param, NotifyInfo *);
+
+	//-------------------------------------------------------------------------
 	// Thread safe check the result of the update checking
 
 	static void updateCheckWinCallback(HWND, UINT, UINT_PTR, DWORD);
@@ -95,6 +101,10 @@ private:
 	Config * mConfig;
 	CloneNodeChunk * mCloneNodeChunk;
 	UpdateChecker mUpdateChecker;
+	SceneUpdater mSceneUpdater;
+
+	std::unique_ptr<MainMenuPresenter::IView> mMainMenuView;
+	std::unique_ptr<MainMenuPresenter> mMainMenuPresenter;
 
 	//-------------------------------------------------------------------------
 

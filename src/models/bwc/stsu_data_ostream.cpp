@@ -36,13 +36,11 @@ namespace sts_bwc { // backward compatibility
 	/********************************************************************************************************/
 
 	DataStreamO::DataStreamO(std::ostream & inStream)
-		:
-		mStream(&inStream),
+		: mStream(&inStream),
 		mError(DataStreamO::eErrors::ok) {}
 
 	DataStreamO::DataStreamO()
-		:
-		mStream(nullptr),
+		: mStream(nullptr),
 		mError(DataStreamO::eErrors::ok) {}
 
 	DataStreamO::~DataStreamO() { }

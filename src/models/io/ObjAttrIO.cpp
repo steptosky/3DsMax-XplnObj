@@ -28,14 +28,15 @@
 */
 
 #include "ObjAttrIO.h "
-#include "sts/io/DataStream.h"
-#include "objects/MainObjectParams.h"
-#include "objects/LodObjParams.h"
+#include "additional/stsio/DataStream.h"
+#include "objects/main/MainObjectParams.h"
+#include "objects/lod/LodObjParams.h"
 #include "NodeIO.h"
 #include "models/eDataId.h"
 #include "common/String.h"
 #include "models/bwc/MdObjAttrIOOld.h"
 #include "common/Logger.h"
+#include "classes-desc/ClassesDescriptions.h"
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
@@ -44,7 +45,8 @@
 bool ObjAttrIO::canApply(INode * node) {
 	assert(node);
 	Class_ID id = node->GetObjectRef()->ClassID();
-	if (id == MAINOBJ_CLASS_ID || id == LODOBJ_CLASS_ID)
+	if (id == ClassesDescriptions::mainObj()->ClassID() || 
+		id == ClassesDescriptions::lodObj()->ClassID())
 		return false;
 	SClass_ID sid = node->GetObjectRef()->SuperClassID();
 	if (sid == GEOMOBJECT_CLASS_ID)

@@ -42,8 +42,6 @@
 #include "ui/controls/Base.h"
 #include "models/MdManip.h"
 
-extern HINSTANCE hInstance;
-
 namespace ui {
 
 	/********************************************************************************************************/

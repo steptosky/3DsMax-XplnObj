@@ -76,10 +76,7 @@ function(SETUP_MAX_TERGET)
 			add_definitions (-D_USRDLL)
 			add_definitions (-D_WIN64)
 			add_definitions (-D_CRT_SECURE_NO_DEPRECATE)
-			add_definitions (-D_CRT_NONSTDC_NO_DEPRECATE)
-			add_definitions (-D_SCL_SECURE_NO_DEPRECATE)
 			add_definitions (-DISOLATION_AWARE_ENABLED=1)
-			add_definitions (-DLOG_WIN_EOL)
 		else ()
 			message (FATAL_ERROR "<${PROJECT}> Unknown compiler")
 		endif ()
@@ -95,6 +92,7 @@ function(SETUP_MAX_TERGET)
 			"${CMAKE_SOURCE_DIR}/src/*.inl" 
 			"${CMAKE_SOURCE_DIR}/src/*.cpp"
 			"${CMAKE_SOURCE_DIR}/src/*.rc"
+			"${CMAKE_SOURCE_DIR}/src/*.txt"
 			"${CMAKE_SOURCE_DIR}/include/*.h" 
 			"${CMAKE_SOURCE_DIR}/include/*.inl" 
 			"${CMAKE_SOURCE_DIR}/include/*.cpp"

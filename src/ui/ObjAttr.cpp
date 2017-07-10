@@ -32,8 +32,8 @@
 #include "UiUtilities.h"
 #include "resource/resource.h"
 #include "common/Config.h"
-
-extern HINSTANCE hInstance;
+#include "resource/ResHelper.h"
+#include "Factory.h"
 
 namespace ui {
 
@@ -46,7 +46,7 @@ namespace ui {
 			case WM_COMMAND: {
 				switch (LOWORD(wParam)) {
 					case BTN_LIGHTLEVEL_DRF: {
-						MessageBoxA(GetActiveWindow(), "Is not supporting right now.", "Info", 0);
+						Factory::showNotImplemented();;
 						break;
 					}
 					case CMB_COCKPIT: {
@@ -177,7 +177,7 @@ namespace ui {
 	/**************************************************************************************************/
 
 	ObjAttr::ObjAttr()
-		: RollupBase(hInstance) {}
+		: RollupBase(ResHelper::hInstance) {}
 
 	ObjAttr::~ObjAttr() {
 		ObjAttr::destroy();
