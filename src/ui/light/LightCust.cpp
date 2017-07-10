@@ -36,6 +36,7 @@
 #include "resource/resource.h"
 #include "ui/UiUtilities.h"
 #include "resource/ResHelper.h"
+#include "ui/Factory.h"
 
 namespace ui {
 
@@ -67,7 +68,7 @@ namespace ui {
 			case WM_COMMAND: {
 				switch (LOWORD(wParam)) {
 					case IDC_BTN_DATAREF: {
-						MessageBoxA(GetActiveWindow(), "Is not supporting right now.", "Info", 0);
+						Factory::showNotImplemented();;
 						break;
 					}
 					default: break;

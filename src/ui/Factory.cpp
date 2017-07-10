@@ -44,7 +44,11 @@ namespace ui {
 
 	void Factory::showSettingsWindow() {
 		MessageBoxA(GetActiveWindow(),
-					"We have planned to add some settings but it hasn't been made yet.", "Info", 0);
+					"We have planned to add some settings but it hasn't been made yet.", "Info", MB_ICONINFORMATION);
+	}
+
+	void Factory::showNotImplemented() {
+		MessageBoxA(GetActiveWindow(), "It is not implemented yet", "Info", MB_ICONINFORMATION);
 	}
 
 	/**************************************************************************************************/

@@ -33,6 +33,7 @@
 #include "ui/UiUtilities.h"
 #include "ui/AnimCalc.h"
 #include "resource/ResHelper.h"
+#include "ui/Factory.h"
 
 namespace ui {
 
@@ -55,7 +56,7 @@ namespace ui {
 						break;
 					case CHK_LOOP: setLoopEnable();
 						break;
-					case BTN_DATAREF: MessageBoxA(GetActiveWindow(), "Is not supporting right now.", "Info", 0);
+					case BTN_DATAREF: Factory::showNotImplemented();;
 						break;
 					case BTN_REVERSE_VALUE: reverseValues();
 						break;

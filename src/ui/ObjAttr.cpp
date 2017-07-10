@@ -33,6 +33,7 @@
 #include "resource/resource.h"
 #include "common/Config.h"
 #include "resource/ResHelper.h"
+#include "Factory.h"
 
 namespace ui {
 
@@ -45,7 +46,7 @@ namespace ui {
 			case WM_COMMAND: {
 				switch (LOWORD(wParam)) {
 					case BTN_LIGHTLEVEL_DRF: {
-						MessageBoxA(GetActiveWindow(), "Is not supporting right now.", "Info", 0);
+						Factory::showNotImplemented();;
 						break;
 					}
 					case CMB_COCKPIT: {

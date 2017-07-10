@@ -54,6 +54,7 @@ namespace ui {
 
 		static void showAboutWindow();
 		static void showSettingsWindow();
+		static void showNotImplemented();
 
 		static MainMenuPresenter::IView * cereateMainMenuView();
 

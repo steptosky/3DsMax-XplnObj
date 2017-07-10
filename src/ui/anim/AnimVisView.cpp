@@ -33,6 +33,7 @@
 #include "ui/AnimCalc.h"
 #include "ui/UiUtilities.h"
 #include "resource/ResHelper.h"
+#include "ui/Factory.h"
 
 namespace ui {
 
@@ -61,7 +62,7 @@ namespace ui {
 						break;
 					case BTN_DELETE: deleteItem();
 						break;
-					case BTN_DATAREF: MessageBoxA(GetActiveWindow(), "Is not supporting right now.", "Info", 0);
+					case BTN_DATAREF: Factory::showNotImplemented();;
 						break;
 					default: break;
 				}
