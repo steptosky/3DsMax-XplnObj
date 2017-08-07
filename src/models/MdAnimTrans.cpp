@@ -69,12 +69,17 @@ MdAnimTrans::KeyTimeList MdAnimTrans::getKeyTimeList(INode * inNode) {
 	}
 
 	KeyTimeList keyTimeList;
-	Control * posControl = inNode->GetTMController()->GetPositionController();
-	keyTimeList.resize(static_cast<size_t>(posControl->NumKeys()));
-	int i = 0;
-	for (auto & curr : keyTimeList) {
-		curr = posControl->GetKeyTime(i);
-		++i;
+	Control * tmControl = inNode->GetTMController();
+	if (tmControl) {
+		Control * posControl = tmControl->GetPositionController();
+		if (posControl) {
+			keyTimeList.resize(static_cast<size_t>(posControl->NumKeys()));
+			int i = 0;
+			for (auto & curr : keyTimeList) {
+				curr = posControl->GetKeyTime(i);
+				++i;
+			}
+		}
 	}
 	return keyTimeList;
 }
