@@ -3,6 +3,7 @@ The 3DsMax X-Plane Obj Exporter change-log.
 ===============================================================================
 Next
 
+- Fixed: Opening update message for non x-plane scenes.
 - Fixed: Crash on some objects, for example 'Biped Object'.
 - Fixed: Vertical scroll bar on the export console.
 		 
