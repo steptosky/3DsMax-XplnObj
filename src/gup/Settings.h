@@ -51,10 +51,6 @@ public:
 	sts::SemVersion sceneVersion() const;
 	static sts::SemVersion currentVersion();
 
-private:
-
-	static bool sceneContainsMainObj();
-
 };
 
 /**************************************************************************************************/

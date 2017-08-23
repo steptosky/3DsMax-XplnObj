@@ -27,18 +27,9 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
-
 #include "Settings.h"
 #include "Info.h"
-#include "objects/main/MainObjParamsWrapper.h"
 #include "common/NodeVisitor.h"
-
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
@@ -50,7 +41,7 @@ bool Settings::isSavedAsXplnScene() const {
 
 void Settings::prepareDataForSave() {
 	setSceneVersion(currentVersion());
-	setValue("xpln_scene", sceneContainsMainObj());
+	setValue("xpln_scene", NodeVisitor::sceneContainsMainObj());
 }
 
 void Settings::setSceneVersion(const sts::SemVersion & version) {
@@ -67,15 +58,6 @@ sts::SemVersion Settings::sceneVersion() const {
 
 sts::SemVersion Settings::currentVersion() {
 	return sts::SemVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH);
-}
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Functions */////////////////////////////////////////////
-/**************************************************************************************************/
-
-bool Settings::sceneContainsMainObj() {
-	auto hasMainObj = [](INode * n) ->bool { return !MainObjParamsWrapper::isMainObj(n); };
-	return !NodeVisitor::visitChildrenOf(GetCOREInterface()->GetRootNode(), hasMainObj);
 }
 
 /**************************************************************************************************/
