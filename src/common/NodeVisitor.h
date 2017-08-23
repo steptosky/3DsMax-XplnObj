@@ -80,8 +80,9 @@ public:
 	// Predefined methods
 		
 	/*!
-	 * \details Check whether the current scene contains x-plane main object.
-	 *          It check only first children of the root node (search depth is 1).
+	 * \details Check whether the current scene contains at least one x-plane main object.
+	 *          It checks only children of the root node and 
+	 *          does not check children of children.
 	 * \return True if contains otherwise false.
 	 */
 	static bool sceneContainsMainObj();
