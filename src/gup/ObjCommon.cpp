@@ -212,7 +212,7 @@ IOResult ObjCommon::Load(ILoad * iload) {
 					std::string stdstr(str, size_t(strLength));
 					delete[] str;
 					pSettings.fromString(stdstr);
-					if (pSettings.isSavedAsXplnScene() && pSettings.currentVersion() < pSettings.sceneVersion()) {
+					if (pSettings.isSavedAsXplnScene() && pSettings.pluginVersion() < pSettings.sceneVersion()) {
 						ui::Factory::showVersionIncompatible();
 						return IO_ERROR;
 					}
@@ -245,7 +245,7 @@ void ObjCommon::slotFileOpened(void * param, NotifyInfo *) {
 	// This situation slows down loading non-x-plane scenes because it needs
 	// to check whether the scene contains main x-plane object.
 	if (d->pSettings.isSavedAsXplnScene() || NodeVisitor::sceneContainsMainObj()) {
-		d->mSceneUpdater.update(d->pSettings.sceneVersion(), d->pSettings.currentVersion());
+		d->mSceneUpdater.update(d->pSettings.sceneVersion(), d->pSettings.pluginVersion());
 	}
 }
 

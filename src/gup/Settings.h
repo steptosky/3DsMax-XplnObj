@@ -49,7 +49,7 @@ public:
 	void prepareDataForSave();
 	void setSceneVersion(const sts::SemVersion & version);
 	sts::SemVersion sceneVersion() const;
-	static sts::SemVersion currentVersion();
+	static sts::SemVersion pluginVersion();
 
 };
 

@@ -40,7 +40,7 @@ bool Settings::isSavedAsXplnScene() const {
 }
 
 void Settings::prepareDataForSave() {
-	setSceneVersion(currentVersion());
+	setSceneVersion(pluginVersion());
 	setValue("xpln_scene", NodeVisitor::sceneContainsMainObj());
 }
 
@@ -56,7 +56,7 @@ sts::SemVersion Settings::sceneVersion() const {
 							value("verPatch", uint32_t(0)));
 }
 
-sts::SemVersion Settings::currentVersion() {
+sts::SemVersion Settings::pluginVersion() {
 	return sts::SemVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH);
 }
 
