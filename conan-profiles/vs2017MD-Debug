@@ -1,0 +1,6 @@
+[settings]
+compiler=Visual Studio
+compiler.version=15
+compiler.runtime=MDd
+build_type=Debug
+arch=x86_64

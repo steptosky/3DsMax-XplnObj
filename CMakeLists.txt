@@ -52,21 +52,13 @@ project("3DsMax-XplnObj" LANGUAGES "CXX")
 include(StsProjectDesc)
 include(StsInfoFilesGenerator)
 genInfoFile(StsProjectDesc "${CMAKE_SOURCE_DIR}/src/Info.h")
-  
+
 #----------------------------------------------------------------------------------#
 #//////////////////////////////////////////////////////////////////////////////////#
 #----------------------------------------------------------------------------------#
 # conan.io
 
-option(USE_CONAN_CMAKE_MULTI "using conan cmake_multi" OFF)
-
-message(STATUS "==============================================")
-if(USE_CONAN_CMAKE_MULTI)
-	include(${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
-else()
-	include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-endif()
-conan_define_targets()
+include(StsConan)
 
 #----------------------------------------------------------------------------------#
 #//////////////////////////////////////////////////////////////////////////////////#
@@ -77,17 +69,22 @@ if (NOT CMAKE_BUILD_TYPE)
 	set (CMAKE_BUILD_TYPE Release)
 endif()
 
-if (NOT TESTS_REPORTS_DIR)
-	set(TESTS_REPORTS_DIR ${CMAKE_SOURCE_DIR}/reports/tests)
+if (NOT TEST_REPORT_DIR)
+	set(TEST_REPORT_DIR ${CMAKE_SOURCE_DIR}/reports/tests)
+endif()
+
+if (NOT BUILD_SHARED_LIBS)
+	set (BUILD_SHARED_LIBS OFF)
 endif()
 
 option(BUILD_TESTS "Build all of it's own tests." OFF) 
 
 message(STATUS "==============================================")
 message(STATUS "Build type = ${CMAKE_BUILD_TYPE}")
-#message(STATUS "Build tests = ${BUILD_TESTS}")
-message(STATUS "Using conan cmake multi = ${USE_CONAN_CMAKE_MULTI}")
-#message(STATUS "Test report dir = ${TESTS_REPORTS_DIR}")
+message(STATUS "Build tests = ${BUILD_TESTS}")
+message(STATUS "Shared lib = ${BUILD_SHARED_LIBS}")
+message(STATUS "Test report dir = ${TEST_REPORT_DIR}")
+message(STATUS "Installation prefix = ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "==============================================")
 
 #----------------------------------------------------------------------------------#

@@ -1,0 +1,6 @@
+[settings]
+compiler=Visual Studio
+compiler.version=14
+compiler.runtime=MT
+build_type=Release
+arch=x86_64
