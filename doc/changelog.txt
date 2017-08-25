@@ -1,17 +1,18 @@
 
-The 3DsMax X-Plane Obj Exporter change-log.
+The 3DsMax X-Plane Obj Exporter/Importer change-log.
 ===============================================================================
-Next
+2.2.1 (26.08.2017)
 
+- Fixed: Printing error if texture name contains illegal symbols.
 - Fixed: Opening update message for non x-plane scenes.
-- Fixed: Crash on some objects, for example 'Biped Object'.
-- Fixed: Vertical scroll bar on the export console.
+- Fixed: Crashing on some objects, for example 'Biped Object'.
+- Fixed: Vertical scroll bar in the export console.
 		 
 ===============================================================================
 2.2.0 (10.07.2017)
 
 - Modified: By default all the manipulators are disabled now! 
-            Previous behaviour was: the 'panel' manipulator was implicitly set 
+            Previous behavior was: the 'panel' manipulator was implicitly set 
             when you added any cockpit attribute like ATTR_cockpit.
 
 - Added: Panel-Click manipulator. This manipulator should be used for 
