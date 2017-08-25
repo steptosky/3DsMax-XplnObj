@@ -33,6 +33,8 @@
 #include <max.h>
 #pragma warning(pop)
 
+#include "objects/main/MainObjParamsWrapper.h"
+
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
@@ -62,6 +64,15 @@ bool NodeVisitor::visitAllOf(INode * root, const Function & fn) {
 
 bool NodeVisitor::visitAll(const Function & fn) {
 	return visitAllOf(GetCOREInterface()->GetRootNode(), fn);
+}
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+
+bool NodeVisitor::sceneContainsMainObj() {
+	auto hasMainObj = [](INode * n) ->bool { return !MainObjParamsWrapper::isMainObj(n); };
+	return !NodeVisitor::visitChildrenOf(GetCOREInterface()->GetRootNode(), hasMainObj);
 }
 
 /**************************************************************************************************/

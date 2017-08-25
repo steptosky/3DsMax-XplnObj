@@ -59,7 +59,7 @@ namespace ui {
 													ObjCommon::instance()->pSettings.sceneVersion().toString(false, false),
 													") ", XIO_PROJECT_SHORT_NAME,
 													" plugin version which is newer than you have installed (",
-													ObjCommon::instance()->pSettings.currentVersion().toString(false, false),
+													ObjCommon::instance()->pSettings.pluginVersion().toString(false, false),
 													")\r\n\r\nYou must update your ", XIO_PROJECT_SHORT_NAME,
 													" plugin before open this scene. Please use X-Plane menu to get the latest plugin version.");
 		MessageBoxA(GetActiveWindow(), msg.c_str(), "Incompatible Version", MB_ICONWARNING);

@@ -120,7 +120,7 @@ Read the help for more information about this issue.");
 		};
 		//-------------------------------
 		NodeVisitor::visitAll(fn);
-		LMessage << LOG_PREFIX << msg << " " << nodes.size() << " -> objects updated";
+		LMessage << LOG_PREFIX << msg << " " << nodes.size() << " objects updated";
 		ui::Factory::showUpdatedObjects(nodes);
 		//-------------------------------
 	}

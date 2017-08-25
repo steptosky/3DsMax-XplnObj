@@ -42,6 +42,8 @@ class INode;
 class NodeVisitor {
 public:
 
+	//-------------------------------------------------------------------------
+
 	/*!
 	 * \return false if you want to stop the process otherwise true.
 	 */
@@ -74,6 +76,18 @@ public:
 	 */
 	static bool visitChildrenOf(INode * root, const Function & fn);
 
+	//-------------------------------------------------------------------------
+	// Predefined methods
+		
+	/*!
+	 * \details Check whether the current scene contains at least one x-plane main object.
+	 *          It checks only children of the root node and 
+	 *          does not check children of children.
+	 * \return True if contains otherwise false.
+	 */
+	static bool sceneContainsMainObj();
+
+	//-------------------------------------------------------------------------
 };
 
 /**************************************************************************************************/

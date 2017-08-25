@@ -36,8 +36,8 @@ conan user ${CONAN_USER} -r ${CONAN_REMOTE} -p ${CONAN_PASS}
 - Build
 ```
 cd build
-conan install .. --build=outdated
-cmake -G "Visual Studio 14 Win64" ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../output -DUSE_CONAN_CMAKE_MULTI=OFF 
+conan install .. --profile ../conan-profiles/vs2015MD-Release --build=outdated
+cmake -G "Visual Studio 14 Win64" ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../output
 cmake --build . --target install --config Release
 ```
 - Use the [github-release](https://github.com/aktau/github-release)

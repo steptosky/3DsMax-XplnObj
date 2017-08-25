@@ -33,6 +33,7 @@
 #include "ui/Factory.h"
 #include "ui/main-menu/MainMenuActions.h"
 #include "resource/ResHelper.h"
+#include "common/NodeVisitor.h"
 
 #ifndef IO_SAVE_CAST
 #	if MAX_VERSION_MAJOR > 14
@@ -153,7 +154,6 @@ DWORD_PTR ObjCommon::Control(DWORD /*param*/) {
 // The case ID is not started from 0 because some previous versions of the plugin are used 0 and 1
 // but that data is not necessary anymore.
 IOResult ObjCommon::Save(ISave * isave) {
-	// TODO Save current plugin version with the scene
 	try {
 		ULONG temp = 0;
 		pSettings.prepareDataForSave();
@@ -212,7 +212,7 @@ IOResult ObjCommon::Load(ILoad * iload) {
 					std::string stdstr(str, size_t(strLength));
 					delete[] str;
 					pSettings.fromString(stdstr);
-					if (pSettings.isSavedAsXplnScene() && pSettings.currentVersion() < pSettings.sceneVersion()) {
+					if (pSettings.isSavedAsXplnScene() && pSettings.pluginVersion() < pSettings.sceneVersion()) {
 						ui::Factory::showVersionIncompatible();
 						return IO_ERROR;
 					}
@@ -240,7 +240,13 @@ IOResult ObjCommon::Load(ILoad * iload) {
 
 void ObjCommon::slotFileOpened(void * param, NotifyInfo *) {
 	ObjCommon * d = static_cast<ObjCommon*>(param);
-	d->mSceneUpdater.update(d->pSettings.sceneVersion(), d->pSettings.currentVersion());
+	// NodeVisitor::sceneContainsMainObj() - this is needed for the old scenes which 
+	// have not set the flag d->pSettings.isSavedAsXplnScene()
+	// This situation slows down loading non-x-plane scenes because it needs
+	// to check whether the scene contains main x-plane object.
+	if (d->pSettings.isSavedAsXplnScene() || NodeVisitor::sceneContainsMainObj()) {
+		d->mSceneUpdater.update(d->pSettings.sceneVersion(), d->pSettings.pluginVersion());
+	}
 }
 
 /**************************************************************************************************/

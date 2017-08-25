@@ -75,7 +75,7 @@ set(ProjectOrganizationWebLink "www.steptosky.com")
 
 set(ProjectName "3DsMax X-Plane Obj Exporter")
 set(ProjectShortName "3DsMax-XplnObj")
-set(ProjectDescription "This plugin is for the 3DsMax that allows you to import or export X-Plane's obj format.")
+set(ProjectDescription "This plugin is for the 3DsMax, it allows you to import or export X-Plane's obj format.")
 set(ProjectWebLink "www.steptosky.com")
 set(ProjectSourcesWebLink "https://github.com/steptosky/3DsMax-XplnObj")
 
@@ -84,7 +84,7 @@ set(ProjectSourcesWebLink "https://github.com/steptosky/3DsMax-XplnObj")
 
 set(ProjectVersionMajor 2)
 set(ProjectVersionMinor 2)
-set(ProjectVersionPatch 0)
+set(ProjectVersionPatch 1)
 set(ProjectVersion "${ProjectVersionMajor}.${ProjectVersionMinor}.${ProjectVersionPatch}")
 set(ProjectReleaseType "") # You can use any string you wish
 
