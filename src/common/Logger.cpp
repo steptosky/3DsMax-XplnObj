@@ -188,7 +188,7 @@ void Logger::createVersionStrings() {
 	mVersionShortString = strstream.str();
 
 	strstream << "+" << XIO_VCS_REVISION << " (" << XIO_VCS_BRANCH << ") " << XIO_COMPILE_DATE;
-#ifndef NDEBAG
+#ifndef NDEBUG
 	strstream << " (" << XIO_COMPILE_TIME << ") " << "DEBUG";
 #endif
 
