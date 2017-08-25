@@ -29,13 +29,13 @@ It also will turn off appropriate targets.
 3DsMaxSdk2010/last@steptosky/stable
 ```
 - Create the buld folder ```mkdir build``` and go in ```cd build```
-- Use ```conan install --build=outdated``` to get all necessary dependencies.
+- Use ```conan install .. --profile ../conan-profiles/vs2015MD-Release --build=outdated``` to get all necessary dependencies.  
+You can use predefined profiles as in this example or your ones.
 - Use ```cmake -G "Visual Studio 14 Win64" ../ -DCMAKE_INSTALL_PREFIX=../output```
 for generation the visual studio 2015 project.
 - Use ```cmake --build . --target install --config Release``` 
 for building the project with cmake or use visual studio.
 - You can make a *.bat* file and copy/paste and adjust the following script there.  
-You will need to define the profiles or replace it with your ones.
   
 ```
 ::==========================================================
