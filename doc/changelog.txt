@@ -1,6 +1,11 @@
 
 The 3DsMax X-Plane Obj Exporter/Importer change-log.
 ===============================================================================
+Next
+
+- Fixed: GUI for the light param.
+
+===============================================================================
 2.2.1 (26.08.2017)
 
 - Fixed: Printing error if texture name contains illegal symbols.
