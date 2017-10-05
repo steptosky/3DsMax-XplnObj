@@ -1,5 +1,5 @@
 [requires]
-XplnObj/0.4.1@steptosky/stable
+XplnObj/0.5.0@steptosky/stable
 3DsMaxSdk9/last@steptosky/stable
 3DsMaxSdk2008/last@steptosky/stable
 3DsMaxSdk2009/last@steptosky/stable
