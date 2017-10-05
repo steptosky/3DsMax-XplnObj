@@ -64,13 +64,12 @@ namespace ui {
 		void destroyWindow(HWND hWnd);
 
 		void toWindow();
-		void toData();
 
 		void enableControls();
 		void disableControls();
 
 		void setCustFieldEnable(bool status);
-		bool isUiCustom();
+		bool isUiCustom() const;
 
 		xobj::ObjLightParam * mData = nullptr;
 		win::Base mHwnd;

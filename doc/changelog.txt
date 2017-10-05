@@ -1,6 +1,15 @@
 
 The 3DsMax X-Plane Obj Exporter/Importer change-log.
 ===============================================================================
+2.3.0 (05.10.2017)
+
+- Added: Error if any LOD except the first one contains hard polygons.
+- Added: Auto-flip normals for objects with mirrored transformation.
+- Fixed: GUI for the light param.
+- Fixed: Creating two sided mesh.
+- Fixed: Printing custom name of the LIGHT_PARAM.
+
+===============================================================================
 2.2.1 (26.08.2017)
 
 - Fixed: Printing error if texture name contains illegal symbols.

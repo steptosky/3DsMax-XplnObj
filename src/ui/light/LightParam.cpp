@@ -71,7 +71,7 @@ namespace ui {
 						if (HIWORD(wParam) == CBN_SELCHANGE) {
 							if (theDlg->isUiCustom()) {
 								theDlg->setCustFieldEnable(true);
-								theDlg->mData->setLightId(xobj::ELightParams::fromUiString(sts::toMbString(UiUtilities::getText(theDlg->cEdtCustomName)).c_str()));
+								theDlg->mData->setLightId(xobj::ELightParams(xobj::ELightParams::light_params_custom));
 								theDlg->eventParamChanged(true);
 							}
 							else {
@@ -194,18 +194,6 @@ namespace ui {
 		}
 	}
 
-	void LightParam::toData() {
-		if (isUiCustom()) {
-			mData->setLightId(xobj::ELightParams(xobj::ELightParams::light_params_custom));
-			mData->setLightName(sts::toMbString(UiUtilities::getText(cEdtCustomName)));
-		}
-		else {
-			mData->setLightId(xobj::ELightParams(xobj::ELightParams::none));
-			mData->setLightName(sts::toMbString(cCmbName.currSelectedText()).c_str());
-		}
-		mData->setAdditionalParams(sts::toMbString(UiUtilities::getText(cEdtAdditional)));
-	}
-
 	/**************************************************************************************************/
 	///////////////////////////////////////////* Functions *////////////////////////////////////////////
 	/**************************************************************************************************/
@@ -231,8 +219,8 @@ namespace ui {
 		cStcCust.enable(status);
 	}
 
-	bool LightParam::isUiCustom() {
-		return cCmbName.currSelectedText() == sts::toString(xobj::ELightParams(xobj::ELightParams::light_params_custom).toString());
+	bool LightParam::isUiCustom() const {
+		return cCmbName.currSelectedText() == sts::toString(xobj::ELightParams(xobj::ELightParams::light_params_custom).toUiString());
 	}
 
 	/**************************************************************************************************/
