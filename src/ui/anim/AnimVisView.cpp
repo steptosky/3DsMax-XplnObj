@@ -201,14 +201,14 @@ namespace ui {
 		cBtnAddShow.setup(hWnd, BTN_ADD_SHOW);
 		cBtnAddHide.setup(hWnd, BTN_ADD_HIDE);
 		cBtnDelete.setup(hWnd, BTN_DELETE);
-		cSpnValue1 = SetupFloatSpinner(hWnd, SPN_VISIBILITY_V1, SPN_VISIBILITY_V1_EDIT, -10000.0f, 10000.0f, 0.0f, 0.01f);
-		cSpnValue2 = SetupFloatSpinner(hWnd, SPN_VISIBILITY_V2, SPN_VISIBILITY_V2_EDIT, -10000.0f, 10000.0f, 1.0f, 0.01f);
+		cSpnValue1 = SetupFloatSpinner(hWnd, SPN_VISIBILITY_V1, SPN_VISIBILITY_V1_EDIT, -1000000.0f, 1000000.0f, 0.0f, 0.01f);
+		cSpnValue2 = SetupFloatSpinner(hWnd, SPN_VISIBILITY_V2, SPN_VISIBILITY_V2_EDIT, -1000000.0f, 1000000.0f, 1.0f, 0.01f);
 		cStcValue1.setup(hWnd, STC_VALUE1);
 		cStcValue2.setup(hWnd, STC_VALUE2);
 
 		cChkEnable.setToolTip(sts::toString("Enable exporting the animation."));
-		cBtnAddShow.setToolTip(sts::toString("Add show animaion."));
-		cBtnAddHide.setToolTip(sts::toString("Add hide animaion."));
+		cBtnAddShow.setToolTip(sts::toString("Add show animation."));
+		cBtnAddHide.setToolTip(sts::toString("Add hide animation."));
 		cBtnDataRef.setToolTip(sts::toString("Is not supported yet."));
 		cBtnDelete.setToolTip(sts::toString("Delete selected animation."));
 	}
