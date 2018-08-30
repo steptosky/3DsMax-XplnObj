@@ -3,3 +3,4 @@ How to install the plugin.
 1. You have to install "Microsoft Visual C++ 2017 Redistributable x64" if you don't have it installed.
 2. Make sure all the previous versions are uninstalled/removed.
 3. Copy file *.dlu into plugins folder of the 3DsMax i.e. 3ds Max's root/Plugins
+4. We recommend you to create backup of your 3Ds max scenes/files before using the new plugin version.
