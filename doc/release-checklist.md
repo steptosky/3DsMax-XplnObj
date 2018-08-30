@@ -1,6 +1,6 @@
 ## Documentation
 - Check whether the [install.txt](install.txt) is correct.
-- Check whether the [changelog.txt](changelog.txt) is correct, copy necessary information from the XplnObj library.
+- Check whether the [changelog.txt](changelog.txt) is correct, copy necessary information from the XplnObj library. Make sure the date and version are correct as well.
 - Check whether the dependencies and their version are described correctly in the [readme.md](../readme.md) file. 
 - Check whether all the necessary plugins are adjusted to be uploaded in the file [StsUploadToGithub.cmake](../cmake/StsUploadToGithub.cmake). 
 
