@@ -44,6 +44,12 @@ Importing is still under developing and doesn't work properly!
   - Set the environment variable `GITHUB_TOKEN` - your access token from github account.
   - Run `ci/upload-to-github.bat` the release targets of the project must be built and installed for all supported 3DsMax versions.
 
+#### Cmake variables
+| Variables | Type | Description |
+|----------:|:----:|:------------|
+| **ADD_3DMAXS_EXEC** | _ON/OFF_  | If enabled then the default 3DsMaxs' path to `3dsmax.exe` will be added as the command for debugging. It is adjusted to be used with the `Visual Studio 2017`, it may not work with other ones. |
+
+
 ## Copyright
 Copyright (c) 2017, StepToSky team. All rights reserved.  
 [www.steptosky.com](http://www.steptosky.com/)

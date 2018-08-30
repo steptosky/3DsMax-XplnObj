@@ -18,7 +18,9 @@ if not exist %dir% mkdir %dir%
 cd %dir%
 ::==========================================================
 :: Generating Visual Studio project.
-call cmake -G "Visual Studio 15 Win64" ../ -DCMAKE_INSTALL_PREFIX=../output
+call cmake -G "Visual Studio 15 Win64" ../ ^
+        -DCMAKE_INSTALL_PREFIX=../output ^
+        -DADD_3DMAXS_EXEC=ON
 ::==========================================================
 :: Building
 :: Keep it commented if you want to generate VS project only

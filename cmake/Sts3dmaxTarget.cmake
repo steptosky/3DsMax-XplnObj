@@ -167,10 +167,12 @@ function(SETUP_MAX_TERGET)
         #//////////////////////////////////////////////////////////////////////////#
         #--------------------------------------------------------------------------#
         
-        include(StsDebugCommand)
-        set(3DSMAX_EXE_PATH ${SETUP_MAX_TERGET_3DMAX_${SETUP_MAX_TERGET_3DMAX_VERSION}_PATH})
-        if (3DSMAX_EXE_PATH)
-            add_3dmax_path(${PROJECT} "${3DSMAX_EXE_PATH}")
+        if (ADD_3DMAXS_EXEC)
+            include(StsDebugCommand)
+            set(3DSMAX_EXE_PATH ${SETUP_MAX_TERGET_3DMAX_${SETUP_MAX_TERGET_3DMAX_VERSION}_PATH})
+            if (3DSMAX_EXE_PATH)
+                add_3dmax_path(${PROJECT} "${3DSMAX_EXE_PATH}")
+            endif()
         endif()
         
         #--------------------------------------------------------------------------#
