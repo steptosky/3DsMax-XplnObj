@@ -242,7 +242,7 @@ namespace xpln_bwc {
                 // Certain manip data (version 1)
                 std::string str;
                 stream >> str;
-                mManip.setCommand(str);
+                mManip.setCmd(str);
                 //--------------------------------------------
                 // From parent class (ObjAbstractManip sts x-plane lib 0.1.0)
                 SerializationId id;
@@ -274,7 +274,7 @@ namespace xpln_bwc {
                 return false;
             }
             mManip.setCursor(xobj::ECursor::fromString(mValues[0].c_str()));
-            mManip.setCommand(mValues[1]);
+            mManip.setCmd(mValues[1]);
             mManip.setToolTip(mValues[2]);
             return true;
             //--------------------------------------------

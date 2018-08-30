@@ -141,8 +141,8 @@ void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipAxisKnob & in
     stream.setValue<float>(inManip.holdDelta());
     stream.setValue<float>(inManip.minimum());
     stream.setValue<float>(inManip.maximum());
-    stream.setValue<bool>(inManip.isWheelEnabled());
-    stream.setValue<float>(inManip.wheelDelta());
+    stream.setValue<bool>(inManip.wheel().isEnabled());
+    stream.setValue<float>(inManip.wheel().delta());
     stream.setValue<std::string>(inManip.dataref());
 }
 
@@ -158,8 +158,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisK
     outManip.setHoldDelta(stream.value<float>());
     outManip.setMinimum(stream.value<float>());
     outManip.setMaximum(stream.value<float>());
-    outManip.setWheelEnabled(stream.value<bool>());
-    outManip.setWheelDelta(stream.value<float>());
+    outManip.wheel().setEnabled(stream.value<bool>());
+    outManip.wheel().setDelta(stream.value<float>());
     outManip.setDataref(stream.value<std::string>());
     return true;
 }
@@ -174,8 +174,8 @@ void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipAxisSwitchLef
     stream.setValue<float>(inManip.holdDelta());
     stream.setValue<float>(inManip.minimum());
     stream.setValue<float>(inManip.maximum());
-    stream.setValue<bool>(inManip.isWheelEnabled());
-    stream.setValue<float>(inManip.wheelDelta());
+    stream.setValue<bool>(inManip.wheel().isEnabled());
+    stream.setValue<float>(inManip.wheel().delta());
     stream.setValue<std::string>(inManip.dataref());
 }
 
@@ -191,8 +191,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisS
     outManip.setHoldDelta(stream.value<float>());
     outManip.setMinimum(stream.value<float>());
     outManip.setMaximum(stream.value<float>());
-    outManip.setWheelEnabled(stream.value<bool>());
-    outManip.setWheelDelta(stream.value<float>());
+    outManip.wheel().setEnabled(stream.value<bool>());
+    outManip.wheel().setDelta(stream.value<float>());
     outManip.setDataref(stream.value<std::string>());
     return true;
 }
@@ -207,8 +207,8 @@ void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipAxisSwitchUpD
     stream.setValue<float>(inManip.holdDelta());
     stream.setValue<float>(inManip.minimum());
     stream.setValue<float>(inManip.maximum());
-    stream.setValue<bool>(inManip.isWheelEnabled());
-    stream.setValue<float>(inManip.wheelDelta());
+    stream.setValue<bool>(inManip.wheel().isEnabled());
+    stream.setValue<float>(inManip.wheel().delta());
     stream.setValue<std::string>(inManip.dataref());
 }
 
@@ -224,8 +224,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisS
     outManip.setHoldDelta(stream.value<float>());
     outManip.setMinimum(stream.value<float>());
     outManip.setMaximum(stream.value<float>());
-    outManip.setWheelEnabled(stream.value<bool>());
-    outManip.setWheelDelta(stream.value<float>());
+    outManip.wheel().setEnabled(stream.value<bool>());
+    outManip.wheel().setDelta(stream.value<float>());
     outManip.setDataref(stream.value<std::string>());
     return true;
 }
@@ -236,7 +236,7 @@ void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipCmd & inManip
     stream.setValue<uint8_t>(uint8_t(1)); // manip manip io version
     stream.setValue<int32_t>(inManip.cursor().id());
     stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<std::string>(inManip.command());
+    stream.setValue<std::string>(inManip.cmd());
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmd & outManip) {
@@ -247,7 +247,7 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmd &
     }
     outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
     outManip.setToolTip(stream.value<std::string>());
-    outManip.setCommand(stream.value<std::string>());
+    outManip.setCmd(stream.value<std::string>());
     return true;
 }
 
@@ -359,8 +359,8 @@ void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipDelta & inMan
     stream.setValue<float>(inManip.hold());
     stream.setValue<float>(inManip.minimum());
     stream.setValue<float>(inManip.maximum());
-    stream.setValue<bool>(inManip.isWheelEnabled());
-    stream.setValue<float>(inManip.wheelDelta());
+    stream.setValue<bool>(inManip.wheel().isEnabled());
+    stream.setValue<float>(inManip.wheel().delta());
     stream.setValue<std::string>(inManip.dataref());
 }
 
@@ -376,8 +376,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDelta
     outManip.setHold(stream.value<float>());
     outManip.setMinimum(stream.value<float>());
     outManip.setMaximum(stream.value<float>());
-    outManip.setWheelEnabled(stream.value<bool>());
-    outManip.setWheelDelta(stream.value<float>());
+    outManip.wheel().setEnabled(stream.value<bool>());
+    outManip.wheel().setDelta(stream.value<float>());
     outManip.setDataref(stream.value<std::string>());
     return true;
 }
@@ -393,8 +393,8 @@ void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipDragAxis & in
     stream.setValue<float>(inManip.z());
     stream.setValue<float>(inManip.val1());
     stream.setValue<float>(inManip.val2());
-    stream.setValue<bool>(inManip.isWheelEnabled());
-    stream.setValue<float>(inManip.wheelDelta());
+    stream.setValue<bool>(inManip.wheel().isEnabled());
+    stream.setValue<float>(inManip.wheel().delta());
     stream.setValue<std::string>(inManip.dataref());
 }
 
@@ -411,8 +411,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragA
     outManip.setZ(stream.value<float>());
     outManip.setVal1(stream.value<float>());
     outManip.setVal2(stream.value<float>());
-    outManip.setWheelEnabled(stream.value<bool>());
-    outManip.setWheelDelta(stream.value<float>());
+    outManip.wheel().setEnabled(stream.value<bool>());
+    outManip.wheel().setDelta(stream.value<float>());
     outManip.setDataref(stream.value<std::string>());
     return true;
 }
@@ -428,8 +428,8 @@ void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipDragAxisPix &
     stream.setValue<float>(inManip.exp());
     stream.setValue<float>(inManip.val1());
     stream.setValue<float>(inManip.val2());
-    stream.setValue<bool>(inManip.isWheelEnabled());
-    stream.setValue<float>(inManip.wheelDelta());
+    stream.setValue<bool>(inManip.wheel().isEnabled());
+    stream.setValue<float>(inManip.wheel().delta());
     stream.setValue<std::string>(inManip.dataref());
 }
 
@@ -446,8 +446,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragA
     outManip.setExp(stream.value<float>());
     outManip.setVal1(stream.value<float>());
     outManip.setVal2(stream.value<float>());
-    outManip.setWheelEnabled(stream.value<bool>());
-    outManip.setWheelDelta(stream.value<float>());
+    outManip.wheel().setEnabled(stream.value<bool>());
+    outManip.wheel().setDelta(stream.value<float>());
     outManip.setDataref(stream.value<std::string>());
     return true;
 }
@@ -525,8 +525,8 @@ void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipPush & inMani
     stream.setValue<std::string>(inManip.toolTip());
     stream.setValue<float>(inManip.down());
     stream.setValue<float>(inManip.up());
-    stream.setValue<bool>(inManip.isWheelEnabled());
-    stream.setValue<float>(inManip.wheelDelta());
+    stream.setValue<bool>(inManip.wheel().isEnabled());
+    stream.setValue<float>(inManip.wheel().delta());
     stream.setValue<std::string>(inManip.dataref());
 }
 
@@ -540,8 +540,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipPush 
     outManip.setToolTip(stream.value<std::string>());
     outManip.setDown(stream.value<float>());
     outManip.setUp(stream.value<float>());
-    outManip.setWheelEnabled(stream.value<bool>());
-    outManip.setWheelDelta(stream.value<float>());
+    outManip.wheel().setEnabled(stream.value<bool>());
+    outManip.wheel().setDelta(stream.value<float>());
     outManip.setDataref(stream.value<std::string>());
     return true;
 }
@@ -553,8 +553,8 @@ void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipRadio & inMan
     stream.setValue<int32_t>(inManip.cursor().id());
     stream.setValue<std::string>(inManip.toolTip());
     stream.setValue<float>(inManip.down());
-    stream.setValue<bool>(inManip.isWheelEnabled());
-    stream.setValue<float>(inManip.wheelDelta());
+    stream.setValue<bool>(inManip.wheel().isEnabled());
+    stream.setValue<float>(inManip.wheel().delta());
     stream.setValue<std::string>(inManip.dataref());
 }
 
@@ -567,8 +567,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipRadio
     outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
     outManip.setToolTip(stream.value<std::string>());
     outManip.setDown(stream.value<float>());
-    outManip.setWheelEnabled(stream.value<bool>());
-    outManip.setWheelDelta(stream.value<float>());
+    outManip.wheel().setEnabled(stream.value<bool>());
+    outManip.wheel().setDelta(stream.value<float>());
     outManip.setDataref(stream.value<std::string>());
     return true;
 }
@@ -581,8 +581,8 @@ void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipToggle & inMa
     stream.setValue<std::string>(inManip.toolTip());
     stream.setValue<float>(inManip.on());
     stream.setValue<float>(inManip.off());
-    stream.setValue<bool>(inManip.isWheelEnabled());
-    stream.setValue<float>(inManip.wheelDelta());
+    stream.setValue<bool>(inManip.wheel().isEnabled());
+    stream.setValue<float>(inManip.wheel().delta());
     stream.setValue<std::string>(inManip.dataref());
 }
 
@@ -596,8 +596,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipToggl
     outManip.setToolTip(stream.value<std::string>());
     outManip.setOn(stream.value<float>());
     outManip.setOff(stream.value<float>());
-    outManip.setWheelEnabled(stream.value<bool>());
-    outManip.setWheelDelta(stream.value<float>());
+    outManip.wheel().setEnabled(stream.value<bool>());
+    outManip.wheel().setDelta(stream.value<float>());
     outManip.setDataref(stream.value<std::string>());
     return true;
 }
@@ -612,8 +612,8 @@ void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipWrap & inMani
     stream.setValue<float>(inManip.hold());
     stream.setValue<float>(inManip.minimum());
     stream.setValue<float>(inManip.maximum());
-    stream.setValue<bool>(inManip.isWheelEnabled());
-    stream.setValue<float>(inManip.wheelDelta());
+    stream.setValue<bool>(inManip.wheel().isEnabled());
+    stream.setValue<float>(inManip.wheel().delta());
     stream.setValue<std::string>(inManip.dataref());
 }
 
@@ -629,8 +629,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipWrap 
     outManip.setHold(stream.value<float>());
     outManip.setMinimum(stream.value<float>());
     outManip.setMaximum(stream.value<float>());
-    outManip.setWheelEnabled(stream.value<bool>());
-    outManip.setWheelDelta(stream.value<float>());
+    outManip.wheel().setEnabled(stream.value<bool>());
+    outManip.wheel().setDelta(stream.value<float>());
     outManip.setDataref(stream.value<std::string>());
     return true;
 }
