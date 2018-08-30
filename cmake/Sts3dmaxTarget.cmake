@@ -138,7 +138,7 @@ function(SETUP_MAX_TERGET)
             PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/Yustdafx.h>     # pre-compile headers
             PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/FIstdafx.h>     # pre-compile headers
             PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/MP>
-            #PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/WX>             # warnings as error
+            PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/WX>             # warnings as error
             PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/W4>
             PRIVATE $<$<CXX_COMPILER_ID:MSVC>:-D_USRDLL>
             PRIVATE $<$<CXX_COMPILER_ID:MSVC>:-D_WIN64>
