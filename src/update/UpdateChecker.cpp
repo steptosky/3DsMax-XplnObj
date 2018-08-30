@@ -98,7 +98,8 @@ void UpdateChecker::checkUpdateTask(void * inUserData) {
     else {
         try {
             std::string ver = UpdateChecker::extractVersion(response.body);
-            if (!update.version.parse(ver)) {
+            update.version = sts::semver::SemVersion::parse(ver);
+            if (!update.version) {
                 update.error.emplace_back("Can't parse the version: ");
                 update.error.back().append(ver);
             }
