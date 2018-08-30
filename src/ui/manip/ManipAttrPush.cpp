@@ -201,7 +201,7 @@ void ManipAttrPush::setManip(const xobj::AttrManipBase & manip) {
         return;
     }
     mData = static_cast<const xobj::AttrManipPush &>(manip);
-    mWheel.setManip(mData);
+    mWheel.setManip(mData.wheel());
 }
 
 /**************************************************************************************************/
@@ -210,8 +210,7 @@ void ManipAttrPush::setManip(const xobj::AttrManipBase & manip) {
 
 void ManipAttrPush::initWindow(HWND hWnd) {
     std::function<void(const xobj::AttrManipWheel &)> callback = [this](const xobj::AttrManipWheel & wheel) mutable {
-        assert(dynamic_cast<xobj::AttrManipWheel*>(&mData));
-        static_cast<xobj::AttrManipWheel&>(mData) = wheel;
+        mData.setWheel(wheel);
         mModelData->saveToNode(mData);
     };
     mWheel.setCallBack(callback);

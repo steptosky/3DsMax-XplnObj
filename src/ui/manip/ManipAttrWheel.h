@@ -30,7 +30,7 @@
 #pragma once
 
 #include <functional>
-#include <xpln/obj/manipulators/AttrManipWheel.h>
+#include <xpln/obj/manipulators/embeddable/AttrManipWheel.h>
 #include "common/String.h"
 #include "ui/controls/Base.h"
 #include "ui/controls/CheckBox.h"

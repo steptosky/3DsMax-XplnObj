@@ -211,7 +211,7 @@ void ManipAttrAxisSwitchUd::setManip(const xobj::AttrManipBase & manip) {
         return;
     }
     mData = static_cast<const xobj::AttrManipAxisSwitchUpDown &>(manip);
-    mWheel.setManip(mData);
+    mWheel.setManip(mData.wheel());
 }
 
 /**************************************************************************************************/
@@ -223,8 +223,7 @@ void ManipAttrAxisSwitchUd::initWindow(HWND hWnd) {
     mLblName.setText("Axis switch up-down");
 
     std::function<void(const xobj::AttrManipWheel &)> callback = [this](const xobj::AttrManipWheel & wheel) mutable {
-        assert(dynamic_cast<xobj::AttrManipWheel*>(&mData));
-        static_cast<xobj::AttrManipWheel&>(mData) = wheel;
+        mData.setWheel(wheel);
         mModelData->saveToNode(mData);
     };
     mWheel.setCallBack(callback);
