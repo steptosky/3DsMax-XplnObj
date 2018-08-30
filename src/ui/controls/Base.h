@@ -30,7 +30,6 @@
 #pragma once
 
 #include <Windows.h>
-#include <WindowsX.h>
 #include <tchar.h>
 #include <string>
 #include <cassert>

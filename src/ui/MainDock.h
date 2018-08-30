@@ -40,7 +40,6 @@
 #include "ui/anim/AnimTransView.h"
 #include "ui/anim/AnimVisView.h"
 #include "ui/controls/Base.h"
-#include "models/MdManip.h"
 
 namespace ui {
 

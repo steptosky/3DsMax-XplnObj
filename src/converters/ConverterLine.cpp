@@ -33,8 +33,8 @@
 #include <splshape.h>
 #pragma warning(pop)
 
-#include "Common/String.h"
 #include <cassert>
+#include "Common/String.h"
 #include "ConverterUtils.h"
 
 /**************************************************************************************************/

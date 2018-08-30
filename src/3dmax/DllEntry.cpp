@@ -29,7 +29,6 @@
 
 #pragma warning(push, 0)
 #include <max.h>
-#include <iparamb2.h>
 #pragma warning(pop)
 
 #include "Info.h"

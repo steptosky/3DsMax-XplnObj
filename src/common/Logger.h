@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include <list>
+#include <vector>
 #include "additional/utils/Single.h"
 #include "additional/utils/BaseLogger.h"
 
@@ -158,7 +158,7 @@ private:
     static void printInformation();
     static void createVersionStrings();
 
-    static std::list<UserConsoleCallBack> mCallbacks;
+    static std::vector<UserConsoleCallBack> mCallbacks;
     static LogSys * mMaxLog;
     static std::string mVersionShortString;
     static std::string mVersionString;

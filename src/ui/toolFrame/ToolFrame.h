@@ -33,7 +33,6 @@
 #include <max.h>
 #pragma warning(pop)
 
-#include <Windows.h>
 #include "additional/utils/Single.h"
 
 namespace ui {

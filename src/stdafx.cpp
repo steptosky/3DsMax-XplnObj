@@ -1,5 +1,5 @@
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2018, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -27,52 +27,11 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
-
-#pragma warning(push, 0)
-#include <max.h>
-#include <iparamb2.h>
-#pragma warning(pop)
-
-#include <xpln/obj/ObjSmoke.h>
-
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-/*!
- * \details This class is for easy read and write x-plane and other data of 3d max object.
- */
-class SmokeObjParamsWrapper {
-public:
-
-    SmokeObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval);
-    ~SmokeObjParamsWrapper() = default;
-
-    //-------------------------------------------------------------------------
-
-    static bool isSmokeObj(INode * inNode);
-
-    //-------------------------------------------------------------------------
-
-    void setType(const xobj::ObjSmoke::eSmokeType val);
-    void setSize(const float val);
-
-    //-------------------------------------------------------------------------
-
-    xobj::ObjSmoke::eSmokeType type();
-    float size();
-
-    //-------------------------------------------------------------------------
-
-private:
-
-    Interval mInterval;
-    TimeValue mT = 0;
-    IParamBlock2 * mPb2 = nullptr;
-    INode * mNode = nullptr;
-
-};
+#include "stdafx.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

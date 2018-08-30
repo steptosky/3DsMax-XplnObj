@@ -29,10 +29,10 @@
 
 #pragma once
 
+#include <xpln/obj/manipulators/AttrManipPanel.h>
 #include "ManipInterface.h"
 #include "ui/controls/Base.h"
 #include "models/MdManip.h"
-#include <xpln/obj/manipulators/AttrManipPanel.h>
 
 namespace ui {
 

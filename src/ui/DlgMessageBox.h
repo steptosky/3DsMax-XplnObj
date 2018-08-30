@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "common/String.h"
 #include <Windows.h>
 
 namespace ui {

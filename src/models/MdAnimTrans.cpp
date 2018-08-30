@@ -28,7 +28,6 @@
 */
 
 #include "MdAnimTrans.h"
-#include "common/Logger.h"
 #include "models/io/NodeIO.h"
 #include "common/String.h"
 #include "models/io/AnimIO.h"
@@ -135,7 +134,7 @@ bool MdAnimTrans::loadFromNode(INode * node) {
             return AnimIO::loadTransFromNode(node, *this);
         }
         catch (std::exception & e) {
-            LCritical << "Can't load datafrom <" << sts::toMbString(node->GetName())
+            LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
                     << "> object. Reason: <" << e.what() << ">";
         }
     }

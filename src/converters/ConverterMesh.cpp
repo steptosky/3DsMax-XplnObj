@@ -27,10 +27,11 @@
 **  Contacts: www.steptosky.com
 */
 
+#include <cassert>
+
 #include "ConverterMesh.h"
 #include "MeshNormalSpec.h"
 #include "common/String.h"
-#include <cassert>
 #include "ConverterUtils.h"
 
 /**************************************************************************************************/

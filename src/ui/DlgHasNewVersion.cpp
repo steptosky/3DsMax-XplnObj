@@ -33,9 +33,9 @@
 #include <3dsmaxport.h>
 #pragma warning(pop)
 
-#include "common/String.h"
 #include <sstream>
-#include "Resource/resource.h"
+#include "common/String.h"
+#include "resource/resource.h"
 #include "resource/ResHelper.h"
 
 namespace ui {

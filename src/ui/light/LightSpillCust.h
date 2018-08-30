@@ -29,10 +29,10 @@
 
 #pragma once
 
+#include <xpln/obj/ObjLightSpillCust.h>
 #include "common/String.h"
 #include "AbstractLight.h"
 #include "ui/controls/Base.h"
-#include <xpln/obj/ObjLightSpillCust.h>
 
 namespace ui {
 

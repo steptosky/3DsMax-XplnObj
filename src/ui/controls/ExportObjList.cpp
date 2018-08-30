@@ -28,9 +28,11 @@
 */
 
 #include "ExportObjList.h"
+
 #pragma warning(push, 0)
 #include <max.h>
 #pragma warning(pop)
+
 #include <windows.h>
 #include <commctrl.h>
 #include <winuser.h>

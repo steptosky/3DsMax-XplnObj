@@ -40,6 +40,7 @@
 #include <sstream>
 #include <limits>
 #include <fstream>
+#include <iostream>
 
 #ifndef __STS_FUNC_NAME__
 #	ifdef _MSC_VER

@@ -29,7 +29,7 @@
 
 #include "AnimTransView.h"
 #include "common/Logger.h"
-#include "Resource/resource.h"
+#include "resource/resource.h"
 #include "ui/UiUtilities.h"
 #include "ui/AnimCalc.h"
 #include "resource/ResHelper.h"

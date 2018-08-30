@@ -27,14 +27,14 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "AnimCalc.h"
-#include "Resource/resource.h"
-#include "resource/ResHelper.h"
-
 #pragma warning(push, 0)
 #include <max.h>
 #include <3dsmaxport.h>
 #pragma warning(pop)
+
+#include "AnimCalc.h"
+#include "resource/resource.h"
+#include "resource/ResHelper.h"
 
 namespace ui {
 

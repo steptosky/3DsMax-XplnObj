@@ -29,7 +29,7 @@
 **  Contacts: www.steptosky.com
 */
 
-#include <assert.h>
+#include <cassert>
 #include <cstdint>
 #include <string>
 #include <list>

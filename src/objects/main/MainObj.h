@@ -35,9 +35,9 @@
 #include <iparamm2.h>
 #pragma warning(pop)
 
+#include <vector>
 #include "objects/MouseCallback.h"
 #include "models/bwc/stsu_data_stream.h"
-#include <vector>
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

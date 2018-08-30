@@ -29,9 +29,8 @@
 
 #pragma once
 
-#include "ui/controls/Base.h"
-#include "ui/IWindow.h"
 #include <xpln/obj/manipulators/AttrManipBase.h>
+#include "ui/IWindow.h"
 
 namespace ui {
 

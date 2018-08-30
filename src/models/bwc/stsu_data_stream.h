@@ -31,7 +31,6 @@
 
 #include "stsu_data_istream.h"
 #include "stsu_data_ostream.h"
-#include <sstream>
 
 namespace sts_bwc {
 // backward compatibility

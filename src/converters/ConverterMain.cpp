@@ -31,7 +31,6 @@
 
 #pragma warning(push, 0)
 #include <decomp.h>
-#include <iparamb2.h>
 #pragma warning(pop)
 
 #include "Common/String.h"

@@ -29,7 +29,8 @@
 
 #pragma once
 
-#include <iostream>
+#include <iosfwd>
+#include <string>
 #include <cstdint>
 
 namespace bcw {

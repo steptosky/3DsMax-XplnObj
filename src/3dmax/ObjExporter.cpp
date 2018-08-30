@@ -29,12 +29,7 @@
 
 #include "ObjExporter.h "
 #include "Info.h"
-#include "common/String.h"
 #include "resource/ResHelper.h"
-
-#pragma warning(push, 0)
-#include <iparamb2.h>
-#pragma warning(pop)
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////

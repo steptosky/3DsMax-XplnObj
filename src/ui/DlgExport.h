@@ -37,7 +37,6 @@
 #include "ui/controls/Edit.h"
 #include "Converters/Converterer.h"
 #include "common/Logger.h"
-#include "update/UpdateChecker.h"
 #include "controls/ExportObjList.h"
 
 namespace ui {

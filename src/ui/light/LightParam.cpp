@@ -33,9 +33,9 @@
 #include <3dsmaxport.h>
 #pragma warning(pop)
 
+#include <xpln/enums/ELightParams.h>
 #include "resource/resource.h"
 #include "ui/UiUtilities.h"
-#include <xpln/enums/ELightParams.h>
 #include "resource/ResHelper.h"
 
 namespace ui {

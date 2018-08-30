@@ -27,6 +27,7 @@
 **  Contacts: www.steptosky.com
 */
 
+#include <sstream> 
 #include "stsu_data_stream.h"
 
 namespace sts_bwc {

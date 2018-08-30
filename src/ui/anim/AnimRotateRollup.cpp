@@ -29,7 +29,7 @@
 
 #include "AnimRotateRollup.h"
 #include "common/Logger.h"
-#include "Resource/resource.h"
+#include "resource/resource.h"
 #include "resource/ResHelper.h"
 
 namespace ui {

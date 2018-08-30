@@ -29,12 +29,12 @@
 
 #pragma once
 
+#include <functional>
+#include <xpln/obj/manipulators/AttrManipWheel.h>
 #include "common/String.h"
 #include "ui/controls/Base.h"
 #include "ui/controls/CheckBox.h"
 #include "ui/IWindow.h"
-#include <xpln/obj/manipulators/AttrManipWheel.h>
-#include <functional>
 
 namespace ui {
 

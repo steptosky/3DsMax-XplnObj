@@ -35,7 +35,7 @@
 #include "light/LightNamed.h"
 #include "light/LightParam.h"
 #include "light/LightSpillCust.h"
-#include "Resource/resource.h"
+#include "resource/resource.h"
 #include "resource/ResHelper.h"
 
 #define UI_LIGHT_NONE "None"

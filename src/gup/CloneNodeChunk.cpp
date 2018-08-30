@@ -35,7 +35,6 @@
 #include "models/MdAnimVis.h"
 #include "models/MdAnimTrans.h"
 #include "models/MdAnimRot.h"
-#include "common/String.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////

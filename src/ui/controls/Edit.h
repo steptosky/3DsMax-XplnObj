@@ -34,6 +34,7 @@
 #endif
 
 #include "Base.h"
+#include <WindowsX.h>
 
 namespace win {
 

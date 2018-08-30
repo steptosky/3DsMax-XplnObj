@@ -30,16 +30,17 @@
 #include "MainObj.h "
 
 #include <Windows.h>
+#include <xpln/enums/ELayer.h>
+#include <xpln/obj/attributes/AttrBlend.h>
+#include <xpln/obj/attributes/AttrWetDry.h>
+
 #include "resource/resource.h"
 #include "MainObjectParams.h"
 #include "objects/ScaleDim.h"
 #include "objects/DirectDim.h"
 #include "common/Logger.h"
 #include "common/String.h"
-#include <xpln/enums/ELayer.h>
 #include "models/bwc/SerializationId.h"
-#include <xpln/obj/attributes/AttrBlend.h>
-#include <xpln/obj/attributes/AttrWetDry.h>
 #include "ui/DlgMessageBox.h"
 #include "MainObjParamsWrapper.h"
 #include "classes-desc/ClassesDescriptions.h"

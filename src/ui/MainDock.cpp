@@ -27,13 +27,13 @@
 **  Contacts: www.steptosky.com
 */
 
+#include <Windows.h>
 #include "MainDock.h"
-#include "Windows.h"
 #include "ui/ObjAttr.h"
 #include "ui/ManipAttr.h"
 #include "ui/LightAttr.h"
 #include "common/Config.h"
-#include "Resource/resource.h"
+#include "resource/resource.h"
 #include "resource/ResHelper.h"
 
 namespace ui {

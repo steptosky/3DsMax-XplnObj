@@ -33,8 +33,8 @@
 #include <max.h>
 #pragma warning(pop)
 
-#include "additional/utils/Single.h"
 #include <xpln/obj/Transform.h>
+#include "additional/utils/Single.h"
 #include "models/MdAnimRot.h"
 #include "xpln/common/EulerXyzHelper.h"
 

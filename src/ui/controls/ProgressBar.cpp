@@ -28,7 +28,7 @@
 */
 
 #include "ProgressBar.h "
-#include "commctrl.h"
+#include <commctrl.h>
 
 namespace win {
 

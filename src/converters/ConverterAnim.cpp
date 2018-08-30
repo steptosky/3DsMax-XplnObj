@@ -27,15 +27,16 @@
 **  Contacts: www.steptosky.com
 */
 
+#include <cassert>
+#include <memory>
+
 #include "ConverterAnim.h"
 #include "ConverterUtils.h"
 #include "Common/String.h"
 #include "common/Logger.h"
-#include <cassert>
 #include "models/MdAnimTrans.h"
 #include "models/MdAnimVis.h"
 #include "models/io/AnimIO.h"
-#include <memory>
 #include "additional/math/Compare.h"
 #include "additional/math/Rad.h"
 

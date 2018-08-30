@@ -33,8 +33,8 @@
 #include <3dsmaxport.h>
 #pragma warning(pop)
 
-#include "ui/UiUtilities.h"
 #include <xpln/enums/ECursor.h>
+#include "ui/UiUtilities.h"
 #include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"

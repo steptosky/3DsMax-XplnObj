@@ -28,6 +28,7 @@
 */
 
 #pragma once
+
 #include <map>
 #include "common/String.h"
 #include "ui/controls/Combo.h"

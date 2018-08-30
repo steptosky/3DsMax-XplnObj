@@ -52,7 +52,7 @@
 /**************************************************************************************************/
 
 //sts::BaseLogger * sts::BaseLogger::mInstance = nullptr;
-std::list<Logger::UserConsoleCallBack> Logger::mCallbacks;
+std::vector<Logger::UserConsoleCallBack> Logger::mCallbacks;
 LogSys * Logger::mMaxLog = nullptr;
 std::string Logger::mVersionString;
 std::string Logger::mVersionShortString;

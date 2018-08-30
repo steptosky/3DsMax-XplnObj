@@ -33,6 +33,9 @@
 #include <3dsmaxport.h>
 #pragma warning(pop)
 
+#include <windows.h>
+#include <commctrl.h>
+
 #include "common/String.h"
 #include "resource/resource.h"
 #include "Info.h"
@@ -40,8 +43,6 @@
 #include "objects/main/MainObjParamsWrapper.h"
 #include "converters/ConverterUtils.h"
 #include "gup/ObjCommon.h"
-#include <windows.h>
-#include <commctrl.h>
 #include "models/MdLinks.h"
 #include "Factory.h"
 #include "resource/ResHelper.h"

@@ -28,6 +28,7 @@
 */
 
 #include "List.h"
+#include <WindowsX.h>
 
 namespace win {
 

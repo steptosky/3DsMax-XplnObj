@@ -39,7 +39,7 @@
 
 #include "CloneNodeChunk.h"
 #include "additional/utils/Single.h"
-#include "Common/Config.h"
+#include "common/Config.h"
 #include "update/UpdateChecker.h"
 #include "Settings.h"
 #include "presenters/MainMenuPresenter.h"

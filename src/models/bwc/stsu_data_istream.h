@@ -29,9 +29,9 @@
 
 #pragma once
 
-#include <iostream>
-#include <stdint.h>
-#include <cstring>
+#include <iosfwd>
+#include <string>
+#include <cstdint>
 
 namespace sts_bwc {
 // backward compatibility

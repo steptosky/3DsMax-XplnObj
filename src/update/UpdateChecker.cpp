@@ -34,7 +34,7 @@
 #include <Windows.h>
 #include <Winhttp.h>
 #include "UpdateChecker.h"
-#include <thread>
+
 #include "common/Logger.h"
 #include "common/String.h"
 

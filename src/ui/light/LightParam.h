@@ -29,11 +29,11 @@
 
 #pragma once
 
+#include <xpln/obj/ObjLightParam.h>
 #include "common/String.h"
 #include "AbstractLight.h"
 #include "ui/controls/Base.h"
 #include "ui/controls/Combo.h"
-#include <xpln/obj/ObjLightParam.h>
 
 namespace ui {
 

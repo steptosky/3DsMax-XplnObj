@@ -127,12 +127,13 @@ function(SETUP_MAX_TERGET)
         # compile options
 
         # pre-compile headers
-        #set_source_files_properties(stdafx.cpp
-        #    PROPERTIES COMPILE_FLAGS $<$<CXX_COMPILER_ID:MSVC>:/Yc>
-        #)
+        set_source_files_properties(src/stdafx.cpp
+            PROPERTIES COMPILE_FLAGS $<$<CXX_COMPILER_ID:MSVC>:/Yc>
+        )
 
         target_compile_options(${PROJECT}
-            #PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/Yustdafx.h>     # pre-compile headers
+            PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/Yustdafx.h>     # pre-compile headers
+            PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/FIstdafx.h>     # pre-compile headers
             PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/MP>
             #PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/WX>             # warnings as error
             PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/W4>

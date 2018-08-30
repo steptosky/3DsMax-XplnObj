@@ -27,18 +27,17 @@
 **  Contacts: www.steptosky.com
 */
 
+#include <sstream>
+
 #include "MdObjAttrIOOld.h"
 #include "models/bwc/eClassesOld.h"
 #include "additional/stsio/DataStream.h"
-#include "objects/main/MainObjectParams.h"
-#include "objects/lod/LodObjParams.h"
 #include "models/io/NodeIO.h"
 #include "stsu_data_stream.h"
 #include "common/String.h"
 #include "SerializationId.h"
 #include "common/Logger.h"
 #include "ui/DlgMessageBox.h"
-#include <sstream>
 #include "classes-desc/ClassesDescriptions.h"
 
 namespace bcw {

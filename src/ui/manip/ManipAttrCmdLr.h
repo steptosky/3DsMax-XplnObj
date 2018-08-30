@@ -29,11 +29,11 @@
 
 #pragma once
 
+#include <xpln/obj/manipulators/AttrManipCmdSwitchLeftRight.h>
 #include "ManipInterface.h"
 #include "ui/controls/Combo.h"
 #include "ui/controls/Base.h"
 #include "models/MdManip.h"
-#include <xpln/obj/manipulators/AttrManipCmdSwitchLeftRight.h>
 
 namespace ui {
 

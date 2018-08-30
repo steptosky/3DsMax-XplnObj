@@ -27,6 +27,8 @@
 **  Contacts: www.steptosky.com
 */
 
+#include <cassert>
+
 #include "Converterer.h"
 #include "common/Logger.h"
 
@@ -39,10 +41,9 @@
 #include "ConverterAnim.h"
 #include "ConverterUtils.h"
 
-#include <cassert>
+#include <xpln/obj/ObjSmoke.h>
 #include "objects/lod/LodObjParamsWrapper.h"
 #include "common/String.h"
-#include <xpln/obj/ObjSmoke.h>
 #include "ConverterSmoke.h"
 
 /**************************************************************************************************/

@@ -27,11 +27,10 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "MainMenuPresenter.h"
 #include <cassert>
+#include "MainMenuPresenter.h"
 #include "models/MdLinks.h"
 #include "ui/Factory.h"
-#include "common/Logger.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////

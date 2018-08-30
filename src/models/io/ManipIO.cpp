@@ -27,14 +27,16 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "ManipIO.h"
 #include <sstream>
+#include <xpln/obj/ObjMesh.h>
+
+#include "ManipIO.h"
+
 #include "models/eDataId.h"
 #include "gup/ObjCommon.h"
 #include "common/String.h"
 #include "models/bwc/MdManipIOOld.h"
 #include "NodeIO.h"
-#include <xpln/obj/ObjMesh.h>
 
 /**************************************************************************************************/
 /////////////////////////////////////////* Static area *////////////////////////////////////////////

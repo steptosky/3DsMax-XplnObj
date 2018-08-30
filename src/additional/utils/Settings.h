@@ -34,7 +34,7 @@
 #include <cstdint>
 #include <vector>
 #include <stdexcept>
-#include <iostream>
+#include <iosfwd>
 #include "Export.h"
 
 #ifndef TOTEXT

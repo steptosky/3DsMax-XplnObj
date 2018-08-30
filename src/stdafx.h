@@ -1,5 +1,7 @@
+#pragma once
+
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2018, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -27,52 +29,64 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
-
-#pragma warning(push, 0)
-#include <max.h>
-#include <iparamb2.h>
-#pragma warning(pop)
-
-#include <xpln/obj/ObjSmoke.h>
-
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-/*!
- * \details This class is for easy read and write x-plane and other data of 3d max object.
- */
-class SmokeObjParamsWrapper {
-public:
+#ifdef _MSC_VER
+#   define ENABLE_PRECOMPILED_HEADERS
+#endif
 
-    SmokeObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval);
-    ~SmokeObjParamsWrapper() = default;
+#ifdef ENABLE_PRECOMPILED_HEADERS
 
-    //-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
-    static bool isSmokeObj(INode * inNode);
+#include <cassert>
 
-    //-------------------------------------------------------------------------
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
-    void setType(const xobj::ObjSmoke::eSmokeType val);
-    void setSize(const float val);
+#include <cstdint>
+#include <cstddef>
+#include <limits>
 
-    //-------------------------------------------------------------------------
+#include <thread>
+#include <mutex>
 
-    xobj::ObjSmoke::eSmokeType type();
-    float size();
+#include <vector>
+#include <map>
+#include <list>
 
-    //-------------------------------------------------------------------------
+#include <functional>
+#include <utility>
+#include <memory>
+#include <stdexcept>
+#include <algorithm>
+#include <tuple>
 
-private:
+//-------------------------------------------------------------------------
 
-    Interval mInterval;
-    TimeValue mT = 0;
-    IParamBlock2 * mPb2 = nullptr;
-    INode * mNode = nullptr;
+#include "common/Logger.h"
+#include "common/String.h"
 
-};
+//-------------------------------------------------------------------------
+
+// 3d max SDK produces too many warnings,
+// So It isn't possible to see the plugin's ones.
+#pragma warning(push, 0)
+#include <max.h>
+#include <3dsmaxport.h>
+
+#include <imenuman.h>
+#include <iparamb2.h>
+#include <notify.h>
+#pragma warning(pop)
+
+//-------------------------------------------------------------------------
+
+#endif
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
