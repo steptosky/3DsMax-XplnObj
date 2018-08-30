@@ -29,103 +29,104 @@
 
 #include "SerializationId.h"
 
-namespace bcw { // backward compatibility
+namespace bcw {
+// backward compatibility
 
-	/**************************************************************************************************/
-	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	SerializationId::SerializationId() {
-		mData[0] = 0;
-		mData[1] = 0;
-	}
+SerializationId::SerializationId() {
+    mData[0] = 0;
+    mData[1] = 0;
+}
 
-	SerializationId::SerializationId(std::istream & inStream) {
-		load(inStream);
-	}
+SerializationId::SerializationId(std::istream & inStream) {
+    load(inStream);
+}
 
-	SerializationId::SerializationId(const SerializationId & cid) {
-		mData[0] = cid.mData[0];
-		mData[1] = cid.mData[1];
-	}
+SerializationId::SerializationId(const SerializationId & cid) {
+    mData[0] = cid.mData[0];
+    mData[1] = cid.mData[1];
+}
 
-	SerializationId::SerializationId(uint32_t a, uint32_t b) {
-		mData[0] = a;
-		mData[1] = b;
-	}
+SerializationId::SerializationId(uint32_t a, uint32_t b) {
+    mData[0] = a;
+    mData[1] = b;
+}
 
-	SerializationId::~SerializationId() {}
+SerializationId::~SerializationId() {}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Operators *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Operators *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	bool SerializationId::operator==(const SerializationId & cid) const {
-		return (mData[0] == cid.mData[0] && mData[1] == cid.mData[1]);
-	}
+bool SerializationId::operator==(const SerializationId & cid) const {
+    return (mData[0] == cid.mData[0] && mData[1] == cid.mData[1]);
+}
 
-	bool SerializationId::operator!=(const SerializationId & cid) const {
-		return (mData[0] != cid.mData[0] || mData[1] != cid.mData[1]);
-	}
+bool SerializationId::operator!=(const SerializationId & cid) const {
+    return (mData[0] != cid.mData[0] || mData[1] != cid.mData[1]);
+}
 
-	SerializationId & SerializationId::operator=(const SerializationId & cid) {
-		mData[0] = cid.mData[0];
-		mData[1] = cid.mData[1];
-		return *this;
-	}
+SerializationId & SerializationId::operator=(const SerializationId & cid) {
+    mData[0] = cid.mData[0];
+    mData[1] = cid.mData[1];
+    return *this;
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	bool SerializationId::isValid() const {
-		return (mData[0] != 0 || mData[1] != 0);
-	}
+bool SerializationId::isValid() const {
+    return (mData[0] != 0 || mData[1] != 0);
+}
 
-	void SerializationId::setA(uint32_t a) {
-		mData[0] = a;
-	}
+void SerializationId::setA(uint32_t a) {
+    mData[0] = a;
+}
 
-	void SerializationId::setB(uint32_t b) {
-		mData[1] = b;
-	}
+void SerializationId::setB(uint32_t b) {
+    mData[1] = b;
+}
 
-	uint32_t SerializationId::a() const {
-		return mData[0];
-	}
+uint32_t SerializationId::a() const {
+    return mData[0];
+}
 
-	uint32_t SerializationId::b() const {
-		return mData[1];
-	}
+uint32_t SerializationId::b() const {
+    return mData[1];
+}
 
-	void SerializationId::save(std::ostream & ourStream) const {
-		ourStream.write("@", 1);
-		ourStream.write(reinterpret_cast<const char*>(mData), sizeof(mData));
-	}
+void SerializationId::save(std::ostream & ourStream) const {
+    ourStream.write("@", 1);
+    ourStream.write(reinterpret_cast<const char*>(mData), sizeof(mData));
+}
 
-	bool SerializationId::load(std::istream & inStream) {
-		char id;
-		inStream.read(&id, 1);
-		if (id != '@') {
-			*this = SerializationId();
-			return false;
-		}
-		inStream.read(reinterpret_cast<char*>(mData), sizeof(mData));
-		return true;
-	}
+bool SerializationId::load(std::istream & inStream) {
+    char id;
+    inStream.read(&id, 1);
+    if (id != '@') {
+        *this = SerializationId();
+        return false;
+    }
+    inStream.read(reinterpret_cast<char*>(mData), sizeof(mData));
+    return true;
+}
 
-	std::string SerializationId::toString() const {
-		char buffer[32];
-		size_t n = 0;
+std::string SerializationId::toString() const {
+    char buffer[32];
+    size_t n = 0;
 #ifdef _MSC_VER
-		n = sprintf_s(buffer, 32, "@ %x|%x", mData[0], mData[1]);
+    n = sprintf_s(buffer, 32, "@ %x|%x", mData[0], mData[1]);
 #else
 		n = sprintf(buffer, "@ %x|%x", mData[0], mData[1]);
 #endif
-		return std::string(buffer, n);
-	}
+    return std::string(buffer, n);
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 }

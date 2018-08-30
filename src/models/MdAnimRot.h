@@ -42,61 +42,61 @@
 
 struct MdAnimRot {
 
-	enum eAxis {
-		X = eAnimRotateIOID::ANIM_X_ROTATE,
-		Y = eAnimRotateIOID::ANIM_Y_ROTATE,
-		Z = eAnimRotateIOID::ANIM_Z_ROTATE
-	};
+    enum eAxis {
+        X = eAnimRotateIOID::ANIM_X_ROTATE,
+        Y = eAnimRotateIOID::ANIM_Y_ROTATE,
+        Z = eAnimRotateIOID::ANIM_Z_ROTATE
+    };
 
-	explicit MdAnimRot(eAxis inAxis);
+    explicit MdAnimRot(eAxis inAxis);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	typedef float KeyValue;
-	typedef std::vector<KeyValue> KeyValueList;
-	typedef std::vector<TimeValue> KeyTimeList;
+    typedef float KeyValue;
+    typedef std::vector<KeyValue> KeyValueList;
+    typedef std::vector<TimeValue> KeyTimeList;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	KeyTimeList getKeyTimeList() const { return getKeyTimeList(mNode, mAxis); }
-	void reset();
-	static void cloneData(INode * from, INode * to);
+    KeyTimeList getKeyTimeList() const { return getKeyTimeList(mNode, mAxis); }
+    void reset();
+    static void cloneData(INode * from, INode * to);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void saveToNode() const { saveToNode(mNode); }
-	bool loadFromNode() { return loadFromNode(mNode); }
-	//-------------------------------------------------------------------------
+    void saveToNode() const { saveToNode(mNode); }
+    bool loadFromNode() { return loadFromNode(mNode); }
+    //-------------------------------------------------------------------------
 
-	bool hasLink() const { return mNode != nullptr; }
-	void clearLink();
+    bool hasLink() const { return mNode != nullptr; }
+    void clearLink();
 
-	bool linkNode(INode * node, bool loadData = true);
-	const INode * linkedNode() const { return mNode; }
-	INode * linkedNode() { return mNode; }
+    bool linkNode(INode * node, bool loadData = true);
+    const INode * linkedNode() const { return mNode; }
+    INode * linkedNode() { return mNode; }
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	std::string mDataref;
-	float mLoopValue = 0.0f;
-	bool mEnable = false;
-	bool mReverse = false;
-	bool mLoopEnable = false;
-	KeyValueList mKeyList;
-	static const uint8_t mVersion = 1;
-	eAxis mAxis;
+    std::string mDataref;
+    float mLoopValue = 0.0f;
+    bool mEnable = false;
+    bool mReverse = false;
+    bool mLoopEnable = false;
+    KeyValueList mKeyList;
+    static const uint8_t mVersion = 1;
+    eAxis mAxis;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 private:
 
-	static KeyTimeList getKeyTimeList(INode * inNode, eAxis inAxis);
-	void saveToNode(INode * node) const;
-	bool loadFromNode(INode * node);
+    static KeyTimeList getKeyTimeList(INode * inNode, eAxis inAxis);
+    void saveToNode(INode * node) const;
+    bool loadFromNode(INode * node);
 
-	INode * mNode = nullptr;
+    INode * mNode = nullptr;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 };
 

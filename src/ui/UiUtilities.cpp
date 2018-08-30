@@ -31,44 +31,44 @@
 
 namespace ui {
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Static area *///////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Static area *///////////////////////////////////////////
+/**************************************************************************************************/
 
-	void UiUtilities::setText(ICustEdit * inCtr, const sts::Str & inText) {
-		MCHAR * txt = new MCHAR[inText.size() + 1];
+void UiUtilities::setText(ICustEdit * inCtr, const sts::Str & inText) {
+    MCHAR * txt = new MCHAR[inText.size() + 1];
 
 #ifdef UNICODE
-		wcscpy(txt, inText.c_str());
+    wcscpy(txt, inText.c_str());
 #else
 		strcpy(txt, inText.c_str());
 #endif // UNICODE
 
-		inCtr->SetText(txt);
-		delete[] txt;
-	}
+    inCtr->SetText(txt);
+    delete[] txt;
+}
 
-	void UiUtilities::getText(ICustEdit * inCtr, sts::Str & inText) {
-		MCHAR txt[256];
-		inCtr->GetText(txt, 256);
-		inText = sts::toString(txt);
-	}
+void UiUtilities::getText(ICustEdit * inCtr, sts::Str & inText) {
+    MCHAR txt[256];
+    inCtr->GetText(txt, 256);
+    inText = sts::toString(txt);
+}
 
-	void UiUtilities::getText(ICustEdit * inCtr, sts::Str & inText, int size) {
-		MCHAR * txt = new MCHAR[size];
-		inCtr->GetText(txt, size);
-		inText = sts::toString(*txt);
-		delete[] txt;
-	}
+void UiUtilities::getText(ICustEdit * inCtr, sts::Str & inText, int size) {
+    MCHAR * txt = new MCHAR[size];
+    inCtr->GetText(txt, size);
+    inText = sts::toString(*txt);
+    delete[] txt;
+}
 
-	sts::Str UiUtilities::getText(ICustEdit * inCtr) {
-		MCHAR txt[256];
-		inCtr->GetText(txt, 256);
-		return sts::toString(txt);
-	}
+sts::Str UiUtilities::getText(ICustEdit * inCtr) {
+    MCHAR txt[256];
+    inCtr->GetText(txt, 256);
+    return sts::toString(txt);
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
 }

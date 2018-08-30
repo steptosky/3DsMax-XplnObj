@@ -38,14 +38,14 @@
 /**************************************************************************************************/
 
 MainMenuPresenter::MainMenuPresenter(IView * view)
-	: mView(view) {
+    : mView(view) {
 
-	assert(mView);
-	mView->signalDonate = &MdLinks::openDonate;
-	mView->signalUpdate = &MdLinks::openPluginBinary;
-	mView->signalDoc = &MdLinks::openDocBinary;
-	mView->signalAbout = &ui::Factory::showAboutWindow;
-	mView->signalSettings = &ui::Factory::showSettingsWindow;
+    assert(mView);
+    mView->signalDonate = &MdLinks::openDonate;
+    mView->signalUpdate = &MdLinks::openPluginBinary;
+    mView->signalDoc = &MdLinks::openDocBinary;
+    mView->signalAbout = &ui::Factory::showAboutWindow;
+    mView->signalSettings = &ui::Factory::showSettingsWindow;
 }
 
 /**************************************************************************************************/

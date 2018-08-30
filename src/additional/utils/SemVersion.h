@@ -36,117 +36,117 @@
 
 namespace sts {
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	/*!
-	 * \details Represents Semantic Versioning
-	 * \details http://semver.org/
-	 */
-	class SemVersion {
-		typedef uint32_t uint;
-		auto versionsTuple() const { return std::make_tuple(major, minor, patch); }
-	public:
+/*!
+ * \details Represents Semantic Versioning
+ * \details http://semver.org/
+ */
+class SemVersion {
+    typedef uint32_t uint;
+    auto versionsTuple() const { return std::make_tuple(major, minor, patch); }
+public:
 
-		//---------------------------------------------------------------
-		// @{
+    //---------------------------------------------------------------
+    // @{
 
-		uint major;
-		uint minor;
-		uint patch;
-		std::string preRelease;
-		std::string build;
+    uint major;
+    uint minor;
+    uint patch;
+    std::string preRelease;
+    std::string build;
 
-		// @{
-		//---------------------------------------------------------------
-		// @{
+    // @{
+    //---------------------------------------------------------------
+    // @{
 
-		UtilsExp SemVersion();
-		UtilsExp SemVersion(const uint major, const uint minor, const uint patch);
-		UtilsExp SemVersion(const uint major, const uint minor, const uint patch,
-							const char * preRelease, const char * build);
-		UtilsExp SemVersion(const uint major, const uint minor, const uint patch,
-							const std::string & preRelease, const std::string & build);
+    UtilsExp SemVersion();
+    UtilsExp SemVersion(const uint major, const uint minor, const uint patch);
+    UtilsExp SemVersion(const uint major, const uint minor, const uint patch,
+                        const char * preRelease, const char * build);
+    UtilsExp SemVersion(const uint major, const uint minor, const uint patch,
+                        const std::string & preRelease, const std::string & build);
 
-		// @}
-		//---------------------------------------------------------------
-		// @{
+    // @}
+    //---------------------------------------------------------------
+    // @{
 
-		/*!
-		 * \param [in] other
-		 * \param [in] preRelease compare pre-release part.
-		 * \param [in] build compare build part.
-		 * \return True if the versions are equaled otherwise false.
-		 */
-		UtilsExp bool compare(const SemVersion & other, const bool preRelease = false, const bool build = false) const;
+    /*!
+     * \param [in] other
+     * \param [in] preRelease compare pre-release part.
+     * \param [in] build compare build part.
+     * \return True if the versions are equaled otherwise false.
+     */
+    UtilsExp bool compare(const SemVersion & other, const bool preRelease = false, const bool build = false) const;
 
-		/*!
-		 * \note It compares only major minor and patch parts.
-		 * \see \link SemVersion::compare \endlink 
-		 */
-		bool operator==(const SemVersion & other) const { return versionsTuple() == other.versionsTuple(); }
+    /*!
+     * \note It compares only major minor and patch parts.
+     * \see \link SemVersion::compare \endlink 
+     */
+    bool operator==(const SemVersion & other) const { return versionsTuple() == other.versionsTuple(); }
 
-		/*!
-		 * \note It compares only major minor and patch parts.
-		 * \see \link SemVersion::compare \endlink 
-		 */
-		bool operator!=(const SemVersion & other) const { return versionsTuple() != other.versionsTuple(); }
+    /*!
+     * \note It compares only major minor and patch parts.
+     * \see \link SemVersion::compare \endlink 
+     */
+    bool operator!=(const SemVersion & other) const { return versionsTuple() != other.versionsTuple(); }
 
-		/*!
-		 * \note It compares only major minor and patch parts.
-		 * \see \link SemVersion::compare \endlink 
-		 */
-		bool operator>(const SemVersion & other) const { return versionsTuple() > other.versionsTuple(); }
+    /*!
+     * \note It compares only major minor and patch parts.
+     * \see \link SemVersion::compare \endlink 
+     */
+    bool operator>(const SemVersion & other) const { return versionsTuple() > other.versionsTuple(); }
 
-		/*!
-		 * \note It compares only major minor and patch parts.
-		 * \see \link SemVersion::compare \endlink 
-		 */
-		bool operator<(const SemVersion & other) const { return versionsTuple() < other.versionsTuple(); }
+    /*!
+     * \note It compares only major minor and patch parts.
+     * \see \link SemVersion::compare \endlink 
+     */
+    bool operator<(const SemVersion & other) const { return versionsTuple() < other.versionsTuple(); }
 
-		/*!
-		 * \note It compares only major minor and patch parts.
-		 * \see \link SemVersion::compare \endlink 
-		 */
-		bool operator>=(const SemVersion & other) const { return versionsTuple() >= other.versionsTuple(); }
+    /*!
+     * \note It compares only major minor and patch parts.
+     * \see \link SemVersion::compare \endlink 
+     */
+    bool operator>=(const SemVersion & other) const { return versionsTuple() >= other.versionsTuple(); }
 
-		/*!
-		 * \note It compares only major minor and patch parts.
-		 * \see \link SemVersion::compare \endlink 
-		 */
-		bool operator<=(const SemVersion & other) const { return versionsTuple() <= other.versionsTuple(); }
+    /*!
+     * \note It compares only major minor and patch parts.
+     * \see \link SemVersion::compare \endlink 
+     */
+    bool operator<=(const SemVersion & other) const { return versionsTuple() <= other.versionsTuple(); }
 
-		// @}
-		//---------------------------------------------------------------
-		// @{
+    // @}
+    //---------------------------------------------------------------
+    // @{
 
-		UtilsExp void set(const uint major, const uint minor, const uint patch);
-		UtilsExp void set(const uint major, const uint minor, const uint patch,
-						const char * preRelease, const char * build);
-		UtilsExp void set(const uint major, const uint minor, const uint patch,
-						const std::string & preRelease, const std::string & build);
+    UtilsExp void set(const uint major, const uint minor, const uint patch);
+    UtilsExp void set(const uint major, const uint minor, const uint patch,
+                      const char * preRelease, const char * build);
+    UtilsExp void set(const uint major, const uint minor, const uint patch,
+                      const std::string & preRelease, const std::string & build);
 
-		// @}
-		//---------------------------------------------------------------
-		// @{
+    // @}
+    //---------------------------------------------------------------
+    // @{
 
-		UtilsExp bool parse(const char *);
-		UtilsExp bool parse(const std::string &);
+    UtilsExp bool parse(const char *);
+    UtilsExp bool parse(const std::string &);
 
-		// @}
-		//---------------------------------------------------------------
-		// @{
+    // @}
+    //---------------------------------------------------------------
+    // @{
 
-		UtilsExp std::string toString(const bool preRelease = true, const bool build = true) const;
-		UtilsExp void clear();
+    UtilsExp std::string toString(const bool preRelease = true, const bool build = true) const;
+    UtilsExp void clear();
 
-		// @}
-		//---------------------------------------------------------------
+    // @}
+    //---------------------------------------------------------------
 
-	};
+};
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 }

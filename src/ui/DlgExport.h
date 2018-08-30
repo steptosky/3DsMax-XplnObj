@@ -42,87 +42,87 @@
 
 namespace ui {
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class DlgExport {
-	public:
+class DlgExport {
+public:
 
-		DlgExport();
-		~DlgExport();
+    DlgExport();
+    ~DlgExport();
 
-		bool show(const TCHAR * inFileName, Interface * inIp, bool suppressPrompts, bool selectedOnly);
+    bool show(const TCHAR * inFileName, Interface * inIp, bool suppressPrompts, bool selectedOnly);
 
-	private:
-		typedef std::pair<INode *, int> NodeCollectionStruct;
-		typedef std::vector<NodeCollectionStruct> NodeCollection;
+private:
+    typedef std::pair<INode *, int> NodeCollectionStruct;
+    typedef std::vector<NodeCollectionStruct> NodeCollection;
 
-		HWND mHWnd = nullptr;;
-		void InitDlg(HWND hWnd);
-		void DestroyDlg(HWND hWnd);
+    HWND mHWnd = nullptr;;
+    void InitDlg(HWND hWnd);
+    void DestroyDlg(HWND hWnd);
 
-		win::Base mLblVersion;
+    win::Base mLblVersion;
 
-		win::Base mDlgMain;
-		win::Base mBtnCheckUpdate;
-		win::Base mBtnDonate;
-		win::Base mBtnSaveLog;
-		win::Base mBtnOk;
-		win::Base mBtnCancel;
-		win::Base mBtnAbout;;
-		win::Base mBtnSelAll;
-		win::Base mBtnUnSelAll;
-		win::Edit mEdtLog;
-		win::CheckBox mChkAutoExport;
-		win::ExportObjList mLstObjects;
+    win::Base mDlgMain;
+    win::Base mBtnCheckUpdate;
+    win::Base mBtnDonate;
+    win::Base mBtnSaveLog;
+    win::Base mBtnOk;
+    win::Base mBtnCancel;
+    win::Base mBtnAbout;;
+    win::Base mBtnSelAll;
+    win::Base mBtnUnSelAll;
+    win::Edit mEdtLog;
+    win::CheckBox mChkAutoExport;
+    win::ExportObjList mLstObjects;
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		uint32_t mErrorCount = 0;
-		uint32_t mWarningCount = 0;
+    uint32_t mErrorCount = 0;
+    uint32_t mWarningCount = 0;
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		static INT_PTR CALLBACK callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-		static void logCallback(sts::BaseLogger::eType type, const char * msg);
+    static INT_PTR CALLBACK callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    static void logCallback(sts::BaseLogger::eType type, const char * msg);
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		int startExport();
-		void collectMainNodes();
-		void collectMainNodes(INode * inRootNode, NodeCollection & outMains);
-		void printUpdateAvailability();
-		size_t selectedNodeCount();
-		void slotSelObjChanged(int idx);
+    int startExport();
+    void collectMainNodes();
+    void collectMainNodes(INode * inRootNode, NodeCollection & outMains);
+    void printUpdateAvailability();
+    size_t selectedNodeCount();
+    void slotSelObjChanged(int idx);
 
-		Converterer mConverterer;
-		TimeValue mTime = 0;
-		std::string mLogText;
+    Converterer mConverterer;
+    TimeValue mTime = 0;
+    std::string mLogText;
 
-		Interface * mIp = nullptr;
-		const TCHAR * mExpFileName = nullptr;
-		bool mSuppressPrompts = false;
-		bool mSelectedOnly = false;
-		bool mFinished = false;
+    Interface * mIp = nullptr;
+    const TCHAR * mExpFileName = nullptr;
+    bool mSuppressPrompts = false;
+    bool mSelectedOnly = false;
+    bool mFinished = false;
 
-		static DlgExport * gExportDlg;
+    static DlgExport * gExportDlg;
 
-		NodeCollection mMainNodesCollection;
+    NodeCollection mMainNodesCollection;
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		void saveConfigData();
-		void loadConfigData();
+    void saveConfigData();
+    void loadConfigData();
 
-		void saveLogRequest();
-		void exportFinished();
+    void saveLogRequest();
+    void exportFinished();
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	};
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

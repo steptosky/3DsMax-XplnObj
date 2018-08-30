@@ -32,58 +32,59 @@
 #include <iostream>
 #include <cstdint>
 
-namespace bcw { // backward compatibility
+namespace bcw {
+// backward compatibility
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	/*!
-	 * \details Class identification of serialization.
-	 */
-	class SerializationId {
-	public:
+/*!
+ * \details Class identification of serialization.
+ */
+class SerializationId {
+public:
 
-		SerializationId();
-		SerializationId(std::istream & inStream);
-		SerializationId(const SerializationId & incopy);
-		SerializationId(uint32_t a, uint32_t b);
-		~SerializationId();
+    SerializationId();
+    SerializationId(std::istream & inStream);
+    SerializationId(const SerializationId & incopy);
+    SerializationId(uint32_t a, uint32_t b);
+    ~SerializationId();
 
-		//-------------------------------------------------------
+    //-------------------------------------------------------
 
-		bool operator==(const SerializationId & cid) const;
-		bool operator!=(const SerializationId & cid) const;
-		SerializationId & operator=(const SerializationId & cid);
+    bool operator==(const SerializationId & cid) const;
+    bool operator!=(const SerializationId & cid) const;
+    SerializationId & operator=(const SerializationId & cid);
 
-		//-------------------------------------------------------
+    //-------------------------------------------------------
 
-		bool isValid() const;
+    bool isValid() const;
 
-		void setA(uint32_t a);
-		void setB(uint32_t b);
+    void setA(uint32_t a);
+    void setB(uint32_t b);
 
-		uint32_t a() const;
-		uint32_t b() const;
+    uint32_t a() const;
+    uint32_t b() const;
 
-		//-------------------------------------------------------
+    //-------------------------------------------------------
 
-		void save(std::ostream & ourStream) const;
-		bool load(std::istream & inStream);
+    void save(std::ostream & ourStream) const;
+    bool load(std::istream & inStream);
 
-		//-------------------------------------------------------
+    //-------------------------------------------------------
 
-		std::string toString() const;
+    std::string toString() const;
 
-		//-------------------------------------------------------
+    //-------------------------------------------------------
 
-	private:
+private:
 
-		uint32_t mData[2];
+    uint32_t mData[2];
 
-	};
+};
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 }

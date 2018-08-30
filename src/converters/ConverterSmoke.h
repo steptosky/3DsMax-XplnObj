@@ -39,12 +39,12 @@
 /**************************************************************************************************/
 
 class ConverterSmoke {
-	ConverterSmoke() = default;
-	~ConverterSmoke() = default;
+    ConverterSmoke() = default;
+    ~ConverterSmoke() = default;
 public:
 
-	static xobj::ObjSmoke * toXpln(INode * node);
-	static INode * toMax(const xobj::ObjAbstract * object);
+    static xobj::ObjSmoke * toXpln(INode * node);
+    static INode * toMax(const xobj::ObjAbstract * object);
 
 };
 

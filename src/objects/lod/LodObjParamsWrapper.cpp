@@ -38,14 +38,14 @@
 /**************************************************************************************************/
 
 LodObjParamsWrapper::LodObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval)
-	: mInterval(interval),
-	mT(t),
-	mNode(node) {
+    : mInterval(interval),
+      mT(t),
+      mNode(node) {
 
-	DbgAssert(node);
-	DbgAssert(isLodObj(node));
-	mPb2 = node->GetObjectRef()->GetParamBlockByID(LodObjParams);
-	DbgAssert(mPb2);
+    DbgAssert(node);
+    DbgAssert(isLodObj(node));
+    mPb2 = node->GetObjectRef()->GetParamBlockByID(LodObjParams);
+    DbgAssert(mPb2);
 }
 
 /**************************************************************************************************/
@@ -53,11 +53,11 @@ LodObjParamsWrapper::LodObjParamsWrapper(INode * node, const TimeValue t, const 
 /**************************************************************************************************/
 
 bool LodObjParamsWrapper::isLodObj(INode * inNode) {
-	Object * obj = inNode->GetObjectRef();
-	if (obj != nullptr) {
-		return (obj->ClassID() == ClassesDescriptions::lodObj()->ClassID()) == TRUE;
-	}
-	return false;
+    Object * obj = inNode->GetObjectRef();
+    if (obj != nullptr) {
+        return (obj->ClassID() == ClassesDescriptions::lodObj()->ClassID()) == TRUE;
+    }
+    return false;
 }
 
 /**************************************************************************************************/
@@ -65,25 +65,25 @@ bool LodObjParamsWrapper::isLodObj(INode * inNode) {
 /**************************************************************************************************/
 
 void LodObjParamsWrapper::setNearValue(float inVal) {
-	if (mPb2) {
-		if (!mPb2->SetValue(PLodObjNear, mT, inVal)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
+    if (mPb2) {
+        if (!mPb2->SetValue(PLodObjNear, mT, inVal)) {
+            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
+        }
+    }
+    else {
+        LError << "Pointer to IParamBlock2 is nullptr";
+    }
 }
 
 void LodObjParamsWrapper::setFarValue(float inVal) {
-	if (mPb2) {
-		if (!mPb2->SetValue(PLodObjFar, mT, inVal)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjFar);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
+    if (mPb2) {
+        if (!mPb2->SetValue(PLodObjFar, mT, inVal)) {
+            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjFar);
+        }
+    }
+    else {
+        LError << "Pointer to IParamBlock2 is nullptr";
+    }
 }
 
 /**************************************************************************************************/
@@ -91,29 +91,29 @@ void LodObjParamsWrapper::setFarValue(float inVal) {
 /**************************************************************************************************/
 
 float LodObjParamsWrapper::nearValue() {
-	float val = 0.0f;
-	if (mPb2) {
-		if (!mPb2->GetValue(PLodObjNear, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-	return val;
+    float val = 0.0f;
+    if (mPb2) {
+        if (!mPb2->GetValue(PLodObjNear, mT, val, mInterval)) {
+            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
+        }
+    }
+    else {
+        LError << "Pointer to IParamBlock2 is nullptr";
+    }
+    return val;
 }
 
 float LodObjParamsWrapper::farValue() {
-	float val = 0.0f;
-	if (mPb2) {
-		if (!mPb2->GetValue(PLodObjFar, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(PLodObjFar);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-	return val;
+    float val = 0.0f;
+    if (mPb2) {
+        if (!mPb2->GetValue(PLodObjFar, mT, val, mInterval)) {
+            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(PLodObjFar);
+        }
+    }
+    else {
+        LError << "Pointer to IParamBlock2 is nullptr";
+    }
+    return val;
 }
 
 /**************************************************************************************************/

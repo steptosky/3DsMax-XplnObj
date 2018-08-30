@@ -37,516 +37,516 @@
 
 namespace ui {
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	INT_PTR ObjAttr::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
-		switch (msg) {
-			case WM_COMMAND: {
-				switch (LOWORD(wParam)) {
-					case BTN_LIGHTLEVEL_DRF: {
-						Factory::showNotImplemented();;
-						break;
-					}
-					case CMB_COCKPIT: {
-						if (HIWORD(wParam) == CBN_SELCHANGE) {
-							dropFromUiCockpit();
-						}
-						break;
-					}
-					case CMB_HARD: {
-						if (HIWORD(wParam) == CBN_SELCHANGE) {
-							dropFromUiHard();
-						}
-						break;
-					}
-					case CMB_BLEND: {
-						if (HIWORD(wParam) == CBN_SELCHANGE) {
-							dropFromUiBlend();
-							enableBlend(true);
-						}
-						break;
-					}
-						//----------------------
-					case CHK_SUNLIGHT: {
-						dropFromUiBool();
-						enableBool(true);
-						break;
-					}
-					case CHK_TWO_SIDED: {
-						dropFromUiBool();
-						enableBool(true);
-						break;
-					}
-					case CHK_DRAPED: {
-						dropFromUiBool();
-						enableBool(true);
-						break;
-					}
-					case CHK_SHADOW: {
-						dropFromUiBool();
-						enableBool(true);
-						break;
-					}
-					case CHK_SOLIDCAMERA: {
-						dropFromUiBool();
-						enableBool(true);
-						break;
-					}
-					case CHK_DRAW: {
-						dropFromUiBool();
-						enableBool(true);
-						break;
-					}
-						//----------------------
-					case CHK_SHINY: {
-						dropFromUiShiny();
-						enableShiny(true);
-						break;
-					}
-					case CHK_COCKPIT: {
-						dropFromUiCockpit();
-						enableCockpit(true);
-						break;
-					}
-					case CHK_HARD: {
-						dropFromUiHard();
-						enableHard(true);
-						break;
-					}
-					case CHK_HARD_DECK: {
-						dropFromUiHard();
-						enableHard(true);
-						break;
-					}
-					case CHK_POLYOFFSET: {
-						dropFromUiPolyOffset();
-						enablePolyOffset(true);
-						break;
-					}
-					case CHK_LIGHTLEVEL: {
-						dropFromUiLightLevel();
-						enableLightLevel(true);
-						break;
-					}
-						//----------------------
-					default: break;
-				}
-				break;
-			}
-			case WM_CUSTEDIT_ENTER: {
-				if (LOWORD(wParam) == EDT_LIGHTLEVEL_DRF) {
-					dropFromUiLightLevel();
-				}
-				break;
-			}
-			case CC_SPINNER_CHANGE: {
-				switch (LOWORD(wParam)) {
-					case SPN_SHINY: {
-						dropFromUiShiny();
-						break;
-					}
-					case SPN_BLEND: {
-						dropFromUiBlend();
-						break;
-					}
-					case SPN_POLYOFFSET_DIST: {
-						dropFromUiPolyOffset();
-						break;
-					}
-					case SPN_LIGHTLEVEL_V1: {
-						dropFromUiLightLevel();
-						break;
-					}
-					case SPN_LIGHTLEVEL_V2: {
-						dropFromUiLightLevel();
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			default: break;
-		}
-		return FALSE;
-	}
+INT_PTR ObjAttr::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
+    switch (msg) {
+        case WM_COMMAND: {
+            switch (LOWORD(wParam)) {
+                case BTN_LIGHTLEVEL_DRF: {
+                    Factory::showNotImplemented();;
+                    break;
+                }
+                case CMB_COCKPIT: {
+                    if (HIWORD(wParam) == CBN_SELCHANGE) {
+                        dropFromUiCockpit();
+                    }
+                    break;
+                }
+                case CMB_HARD: {
+                    if (HIWORD(wParam) == CBN_SELCHANGE) {
+                        dropFromUiHard();
+                    }
+                    break;
+                }
+                case CMB_BLEND: {
+                    if (HIWORD(wParam) == CBN_SELCHANGE) {
+                        dropFromUiBlend();
+                        enableBlend(true);
+                    }
+                    break;
+                }
+                    //----------------------
+                case CHK_SUNLIGHT: {
+                    dropFromUiBool();
+                    enableBool(true);
+                    break;
+                }
+                case CHK_TWO_SIDED: {
+                    dropFromUiBool();
+                    enableBool(true);
+                    break;
+                }
+                case CHK_DRAPED: {
+                    dropFromUiBool();
+                    enableBool(true);
+                    break;
+                }
+                case CHK_SHADOW: {
+                    dropFromUiBool();
+                    enableBool(true);
+                    break;
+                }
+                case CHK_SOLIDCAMERA: {
+                    dropFromUiBool();
+                    enableBool(true);
+                    break;
+                }
+                case CHK_DRAW: {
+                    dropFromUiBool();
+                    enableBool(true);
+                    break;
+                }
+                    //----------------------
+                case CHK_SHINY: {
+                    dropFromUiShiny();
+                    enableShiny(true);
+                    break;
+                }
+                case CHK_COCKPIT: {
+                    dropFromUiCockpit();
+                    enableCockpit(true);
+                    break;
+                }
+                case CHK_HARD: {
+                    dropFromUiHard();
+                    enableHard(true);
+                    break;
+                }
+                case CHK_HARD_DECK: {
+                    dropFromUiHard();
+                    enableHard(true);
+                    break;
+                }
+                case CHK_POLYOFFSET: {
+                    dropFromUiPolyOffset();
+                    enablePolyOffset(true);
+                    break;
+                }
+                case CHK_LIGHTLEVEL: {
+                    dropFromUiLightLevel();
+                    enableLightLevel(true);
+                    break;
+                }
+                    //----------------------
+                default: break;
+            }
+            break;
+        }
+        case WM_CUSTEDIT_ENTER: {
+            if (LOWORD(wParam) == EDT_LIGHTLEVEL_DRF) {
+                dropFromUiLightLevel();
+            }
+            break;
+        }
+        case CC_SPINNER_CHANGE: {
+            switch (LOWORD(wParam)) {
+                case SPN_SHINY: {
+                    dropFromUiShiny();
+                    break;
+                }
+                case SPN_BLEND: {
+                    dropFromUiBlend();
+                    break;
+                }
+                case SPN_POLYOFFSET_DIST: {
+                    dropFromUiPolyOffset();
+                    break;
+                }
+                case SPN_LIGHTLEVEL_V1: {
+                    dropFromUiLightLevel();
+                    break;
+                }
+                case SPN_LIGHTLEVEL_V2: {
+                    dropFromUiLightLevel();
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        default: break;
+    }
+    return FALSE;
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	ObjAttr::ObjAttr()
-		: RollupBase(ResHelper::hInstance) {}
+ObjAttr::ObjAttr()
+    : RollupBase(ResHelper::hInstance) {}
 
-	ObjAttr::~ObjAttr() {
-		ObjAttr::destroy();
-	}
+ObjAttr::~ObjAttr() {
+    ObjAttr::destroy();
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ObjAttr::show(MdObjAttr * inOutData) {
-		mData.reset();
-		mMdData = inOutData;
-		if (mMdData) {
-			mMdData->loadFromNode(mData);
-		}
-		toWindow();
-	}
+void ObjAttr::show(MdObjAttr * inOutData) {
+    mData.reset();
+    mMdData = inOutData;
+    if (mMdData) {
+        mMdData->loadFromNode(mData);
+    }
+    toWindow();
+}
 
-	void ObjAttr::create(IRollupWindow * rollWin) {
-		mIp = rollWin;
-		create();
-	}
+void ObjAttr::create(IRollupWindow * rollWin) {
+    mIp = rollWin;
+    create();
+}
 
-	void ObjAttr::create() {
-		createRollup(IDD_ROLL_BASEATTR_OBJ, _T("X Base attributes"), this);
-		show(nullptr);
-	}
+void ObjAttr::create() {
+    createRollup(IDD_ROLL_BASEATTR_OBJ, _T("X Base attributes"), this);
+    show(nullptr);
+}
 
-	void ObjAttr::destroy() {
-		if (this->hwnd() != nullptr) {
-			deleteRollup();
-		}
-	}
+void ObjAttr::destroy() {
+    if (this->hwnd() != nullptr) {
+        deleteRollup();
+    }
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ObjAttr::initWindow(HWND hWnd) {
-		cChkSunLight.setup(hWnd, CHK_SUNLIGHT);
-		cChkTwoSided.setup(hWnd, CHK_TWO_SIDED);
-		cChkDraped.setup(hWnd, CHK_DRAPED);
-		cChkShadow.setup(hWnd, CHK_SHADOW);
-		cChkSolidCamera.setup(hWnd, CHK_SOLIDCAMERA);
-		cChkDraw.setup(hWnd, CHK_DRAW);
+void ObjAttr::initWindow(HWND hWnd) {
+    cChkSunLight.setup(hWnd, CHK_SUNLIGHT);
+    cChkTwoSided.setup(hWnd, CHK_TWO_SIDED);
+    cChkDraped.setup(hWnd, CHK_DRAPED);
+    cChkShadow.setup(hWnd, CHK_SHADOW);
+    cChkSolidCamera.setup(hWnd, CHK_SOLIDCAMERA);
+    cChkDraw.setup(hWnd, CHK_DRAW);
 
-		cChkShiny.setup(hWnd, CHK_SHINY);
-		cSpnShinyRatio = SetupFloatSpinner(hWnd, SPN_SHINY, SPN_SHINY_EDIT, 0.0f, 1.0f, 0.5f, 0.01f);
+    cChkShiny.setup(hWnd, CHK_SHINY);
+    cSpnShinyRatio = SetupFloatSpinner(hWnd, SPN_SHINY, SPN_SHINY_EDIT, 0.0f, 1.0f, 0.5f, 0.01f);
 
-		cChkCockpit.setup(hWnd, CHK_COCKPIT);
-		cCmbCockpit.setup(hWnd, CMB_COCKPIT);
+    cChkCockpit.setup(hWnd, CHK_COCKPIT);
+    cCmbCockpit.setup(hWnd, CMB_COCKPIT);
 
-		cChkHard.setup(hWnd, CHK_HARD);
-		cChkHardDeck.setup(hWnd, CHK_HARD_DECK);
-		cCmbHard.setup(hWnd, CMB_HARD);
+    cChkHard.setup(hWnd, CHK_HARD);
+    cChkHardDeck.setup(hWnd, CHK_HARD_DECK);
+    cCmbHard.setup(hWnd, CMB_HARD);
 
-		cCmbBlend.setup(hWnd, CMB_BLEND);
-		cSpnBlendRatio = SetupFloatSpinner(hWnd, SPN_BLEND, SPN_BLEND_EDIT, 0.0f, 1.0f, 0.5f, 0.01f);
+    cCmbBlend.setup(hWnd, CMB_BLEND);
+    cSpnBlendRatio = SetupFloatSpinner(hWnd, SPN_BLEND, SPN_BLEND_EDIT, 0.0f, 1.0f, 0.5f, 0.01f);
 
-		cChkPolyOffset.setup(hWnd, CHK_POLYOFFSET);
-		cSpnPolyOstDist = SetupFloatSpinner(hWnd, SPN_POLYOFFSET_DIST, SPN_POLYOFFSET_DIST_EDIT, 0.0f, 999999.9f, 0.0f, 0.5f);
+    cChkPolyOffset.setup(hWnd, CHK_POLYOFFSET);
+    cSpnPolyOstDist = SetupFloatSpinner(hWnd, SPN_POLYOFFSET_DIST, SPN_POLYOFFSET_DIST_EDIT, 0.0f, 999999.9f, 0.0f, 0.5f);
 
-		cChkLightLevel.setup(hWnd, CHK_LIGHTLEVEL);
-		cSpnLightLevelVal1 = SetupFloatSpinner(hWnd, SPN_LIGHTLEVEL_V1, SPN_LIGHTLEVEL_V1_EDIT, 0.0f, 999999.9f, 1.0f, 0.01f);
-		cSpnLightLevelVal2 = SetupFloatSpinner(hWnd, SPN_LIGHTLEVEL_V2, SPN_LIGHTLEVEL_V2_EDIT, 0.0f, 999999.9f, 1.0f, 0.01f);
-		cEdtLightLevelDrf = GetICustEdit(GetDlgItem(hWnd, EDT_LIGHTLEVEL_DRF));
-		cBtnLightLevelDrf.setup(hWnd, BTN_LIGHTLEVEL_DRF);
+    cChkLightLevel.setup(hWnd, CHK_LIGHTLEVEL);
+    cSpnLightLevelVal1 = SetupFloatSpinner(hWnd, SPN_LIGHTLEVEL_V1, SPN_LIGHTLEVEL_V1_EDIT, 0.0f, 999999.9f, 1.0f, 0.01f);
+    cSpnLightLevelVal2 = SetupFloatSpinner(hWnd, SPN_LIGHTLEVEL_V2, SPN_LIGHTLEVEL_V2_EDIT, 0.0f, 999999.9f, 1.0f, 0.01f);
+    cEdtLightLevelDrf = GetICustEdit(GetDlgItem(hWnd, EDT_LIGHTLEVEL_DRF));
+    cBtnLightLevelDrf.setup(hWnd, BTN_LIGHTLEVEL_DRF);
 
-		cCmbBlend.addItem(_T("Blend (default)"));
-		cCmbBlend.addItem(_T("No Blend"));
-		cCmbBlend.addItem(_T("Shadow Blend"));
-		cCmbBlend.setCurrSelected(0);
+    cCmbBlend.addItem(_T("Blend (default)"));
+    cCmbBlend.addItem(_T("No Blend"));
+    cCmbBlend.addItem(_T("Shadow Blend"));
+    cCmbBlend.setCurrSelected(0);
 
-		cCmbCockpit.addItem(_T("Cockpit"));
-		cCmbCockpit.addItem(_T("Region 1"));
-		cCmbCockpit.addItem(_T("Region 2"));
-		cCmbCockpit.addItem(_T("Region 3"));
-		cCmbCockpit.addItem(_T("Region 4"));
-		cCmbCockpit.setCurrSelected(0);
+    cCmbCockpit.addItem(_T("Cockpit"));
+    cCmbCockpit.addItem(_T("Region 1"));
+    cCmbCockpit.addItem(_T("Region 2"));
+    cCmbCockpit.addItem(_T("Region 3"));
+    cCmbCockpit.addItem(_T("Region 4"));
+    cCmbCockpit.setCurrSelected(0);
 
-		for (auto s : xobj::ESurface::list()) {
-			cCmbHard.addItem(sts::toString(s.toUiString()));
-		}
-	}
+    for (auto s : xobj::ESurface::list()) {
+        cCmbHard.addItem(sts::toString(s.toUiString()));
+    }
+}
 
-	void ObjAttr::destroyWindow(HWND /*hWnd*/) {
-		cChkSunLight.release();
-		cChkTwoSided.release();
-		cChkDraped.release();
-		cChkShadow.release();
-		cChkSolidCamera.release();
-		cChkDraw.release();
+void ObjAttr::destroyWindow(HWND /*hWnd*/) {
+    cChkSunLight.release();
+    cChkTwoSided.release();
+    cChkDraped.release();
+    cChkShadow.release();
+    cChkSolidCamera.release();
+    cChkDraw.release();
 
-		cChkShiny.release();
-		ReleaseISpinner(cSpnShinyRatio);
+    cChkShiny.release();
+    ReleaseISpinner(cSpnShinyRatio);
 
-		cChkCockpit.release();
-		cCmbCockpit.release();
+    cChkCockpit.release();
+    cCmbCockpit.release();
 
-		cChkHard.release();
-		cChkHardDeck.release();
-		cCmbHard.release();
+    cChkHard.release();
+    cChkHardDeck.release();
+    cCmbHard.release();
 
-		cCmbBlend.release();
-		ReleaseISpinner(cSpnBlendRatio);
+    cCmbBlend.release();
+    ReleaseISpinner(cSpnBlendRatio);
 
-		cChkPolyOffset.release();
-		ReleaseISpinner(cSpnPolyOstDist);
+    cChkPolyOffset.release();
+    ReleaseISpinner(cSpnPolyOstDist);
 
-		cChkLightLevel.release();
-		ReleaseISpinner(cSpnLightLevelVal1);
-		ReleaseISpinner(cSpnLightLevelVal2);
-		ReleaseICustEdit(cEdtLightLevelDrf);
-		cBtnLightLevelDrf.release();
-	}
+    cChkLightLevel.release();
+    ReleaseISpinner(cSpnLightLevelVal1);
+    ReleaseISpinner(cSpnLightLevelVal2);
+    ReleaseICustEdit(cEdtLightLevelDrf);
+    cBtnLightLevelDrf.release();
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ObjAttr::toWindow() {
-		if (mMdData) {
-			loadToUiBool();
-			loadToUiShiny();
-			loadToUiCockpit();
-			loadToUiHard();
-			loadToUiBlend();
-			loadToUiPolyOffset();
-			loadToUiLightLevel();
+void ObjAttr::toWindow() {
+    if (mMdData) {
+        loadToUiBool();
+        loadToUiShiny();
+        loadToUiCockpit();
+        loadToUiHard();
+        loadToUiBlend();
+        loadToUiPolyOffset();
+        loadToUiLightLevel();
 
-			enableBool(true);
-			enableShiny(true);
-			enableCockpit(true);
-			enableHard(true);
-			enableBlend(true);
-			enablePolyOffset(true);
-			enableLightLevel(true);
-		}
-		else {
-			enableBool(false);
-			enableShiny(false);
-			enableCockpit(false);
-			enableHard(false);
-			enableBlend(false);
-			enablePolyOffset(false);
-			enableLightLevel(false);
-		}
-	}
+        enableBool(true);
+        enableShiny(true);
+        enableCockpit(true);
+        enableHard(true);
+        enableBlend(true);
+        enablePolyOffset(true);
+        enableLightLevel(true);
+    }
+    else {
+        enableBool(false);
+        enableShiny(false);
+        enableCockpit(false);
+        enableHard(false);
+        enableBlend(false);
+        enablePolyOffset(false);
+        enableLightLevel(false);
+    }
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ObjAttr::enableBool(bool state) {
-		if (!state) {
-			cChkSunLight.disable();
-			cChkTwoSided.disable();
-			cChkDraped.disable();
-			cChkShadow.disable();
-			cChkSolidCamera.disable();
-			cChkDraw.disable();
-		}
-		else {
-			cChkSunLight.enable();
-			cChkTwoSided.enable();
-			cChkDraped.enable();
-			cChkShadow.enable();
-			cChkSolidCamera.enable();
-			cChkDraw.enable();
-		}
-	}
+void ObjAttr::enableBool(bool state) {
+    if (!state) {
+        cChkSunLight.disable();
+        cChkTwoSided.disable();
+        cChkDraped.disable();
+        cChkShadow.disable();
+        cChkSolidCamera.disable();
+        cChkDraw.disable();
+    }
+    else {
+        cChkSunLight.enable();
+        cChkTwoSided.enable();
+        cChkDraped.enable();
+        cChkShadow.enable();
+        cChkSolidCamera.enable();
+        cChkDraw.enable();
+    }
+}
 
-	void ObjAttr::dropFromUiBool() {
-		mData.setSunLight(cChkSunLight.isChecked());
-		mData.setTwoSided(cChkTwoSided.isChecked());
-		mData.setDraped(cChkDraped.isChecked());
-		mData.setCastShadow(cChkShadow.isChecked());
-		mData.setSolidForCamera(cChkSolidCamera.isChecked());
-		mData.setDraw(cChkDraw.isChecked());
-		mMdData->saveToNode(mData);
-	}
+void ObjAttr::dropFromUiBool() {
+    mData.setSunLight(cChkSunLight.isChecked());
+    mData.setTwoSided(cChkTwoSided.isChecked());
+    mData.setDraped(cChkDraped.isChecked());
+    mData.setCastShadow(cChkShadow.isChecked());
+    mData.setSolidForCamera(cChkSolidCamera.isChecked());
+    mData.setDraw(cChkDraw.isChecked());
+    mMdData->saveToNode(mData);
+}
 
-	void ObjAttr::loadToUiBool() {
-		cChkSunLight.setState(mData.isSunLight());
-		cChkTwoSided.setState(mData.isTwoSided());
-		cChkDraped.setState(mData.isDraped());
-		cChkShadow.setState(mData.isCastShadow());
-		cChkSolidCamera.setState(mData.isSolidForCamera());
-		cChkDraw.setState(mData.isDraw());
-	}
+void ObjAttr::loadToUiBool() {
+    cChkSunLight.setState(mData.isSunLight());
+    cChkTwoSided.setState(mData.isTwoSided());
+    cChkDraped.setState(mData.isDraped());
+    cChkShadow.setState(mData.isCastShadow());
+    cChkSolidCamera.setState(mData.isSolidForCamera());
+    cChkDraw.setState(mData.isDraw());
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ObjAttr::enableShiny(bool state) {
-		if (!state) {
-			cChkShiny.disable();
-			cSpnShinyRatio->Disable();
-		}
-		else {
-			cChkShiny.enable();
-			cSpnShinyRatio->Enable(mData.shiny());
-		}
-	}
+void ObjAttr::enableShiny(bool state) {
+    if (!state) {
+        cChkShiny.disable();
+        cSpnShinyRatio->Disable();
+    }
+    else {
+        cChkShiny.enable();
+        cSpnShinyRatio->Enable(mData.shiny());
+    }
+}
 
-	void ObjAttr::dropFromUiShiny() {
-		xobj::AttrShiny attr(cSpnShinyRatio->GetFVal());
-		attr.setEnabled(cChkShiny.isChecked());
-		mData.setShiny(attr);
-		mMdData->saveToNode(mData);
-	}
+void ObjAttr::dropFromUiShiny() {
+    xobj::AttrShiny attr(cSpnShinyRatio->GetFVal());
+    attr.setEnabled(cChkShiny.isChecked());
+    mData.setShiny(attr);
+    mMdData->saveToNode(mData);
+}
 
-	void ObjAttr::loadToUiShiny() {
-		cChkShiny.setState(mData.shiny());
-		cSpnShinyRatio->SetValue(mData.shiny().ratio(), FALSE);
-	}
+void ObjAttr::loadToUiShiny() {
+    cChkShiny.setState(mData.shiny());
+    cSpnShinyRatio->SetValue(mData.shiny().ratio(), FALSE);
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ObjAttr::enableCockpit(bool state) {
-		if (!state) {
-			cChkCockpit.disable();
-			cCmbCockpit.disable();
-		}
-		else {
-			cChkCockpit.enable();
-			cCmbCockpit.enable(mData.cockpit());
-		}
-	}
+void ObjAttr::enableCockpit(bool state) {
+    if (!state) {
+        cChkCockpit.disable();
+        cCmbCockpit.disable();
+    }
+    else {
+        cChkCockpit.enable();
+        cCmbCockpit.enable(mData.cockpit());
+    }
+}
 
-	void ObjAttr::dropFromUiCockpit() {
-		xobj::AttrCockpit attr(static_cast<xobj::AttrCockpit::eType>(cCmbCockpit.currSelected()));
-		attr.setEnabled(cChkCockpit.isChecked());
-		mData.setCockpit(attr);
-		mMdData->saveToNode(mData);
-	}
+void ObjAttr::dropFromUiCockpit() {
+    xobj::AttrCockpit attr(static_cast<xobj::AttrCockpit::eType>(cCmbCockpit.currSelected()));
+    attr.setEnabled(cChkCockpit.isChecked());
+    mData.setCockpit(attr);
+    mMdData->saveToNode(mData);
+}
 
-	void ObjAttr::loadToUiCockpit() {
-		cChkCockpit.setState(mData.cockpit());
-		cCmbCockpit.setCurrSelected(static_cast<int>(mData.cockpit().type()));
-	}
+void ObjAttr::loadToUiCockpit() {
+    cChkCockpit.setState(mData.cockpit());
+    cCmbCockpit.setCurrSelected(static_cast<int>(mData.cockpit().type()));
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ObjAttr::enableHard(bool state) {
-		if (!state) {
-			cChkHard.disable();
-			cChkHardDeck.disable();
-			cCmbHard.disable();
-		}
-		else {
-			cChkHard.enable();
-			cChkHardDeck.enable(mData.hard());
-			cCmbHard.enable(mData.hard());
-		}
-	}
+void ObjAttr::enableHard(bool state) {
+    if (!state) {
+        cChkHard.disable();
+        cChkHardDeck.disable();
+        cCmbHard.disable();
+    }
+    else {
+        cChkHard.enable();
+        cChkHardDeck.enable(mData.hard());
+        cCmbHard.enable(mData.hard());
+    }
+}
 
-	void ObjAttr::dropFromUiHard() {
-		xobj::AttrHard attr(xobj::ESurface::fromUiString(sts::toMbString(cCmbHard.currSelectedText()).c_str()), cChkHardDeck.isChecked());
-		attr.setEnabled(cChkHard.isChecked());
-		mData.setHard(attr);
-		mMdData->saveToNode(mData);
-	}
+void ObjAttr::dropFromUiHard() {
+    xobj::AttrHard attr(xobj::ESurface::fromUiString(sts::toMbString(cCmbHard.currSelectedText()).c_str()), cChkHardDeck.isChecked());
+    attr.setEnabled(cChkHard.isChecked());
+    mData.setHard(attr);
+    mMdData->saveToNode(mData);
+}
 
-	void ObjAttr::loadToUiHard() {
-		cChkHard.setState(mData.hard());
-		cChkHardDeck.setState(mData.hard().isDeck());
-		cCmbHard.setCurrSelected(static_cast<int>(mData.hard().surface().id()));
-	}
+void ObjAttr::loadToUiHard() {
+    cChkHard.setState(mData.hard());
+    cChkHardDeck.setState(mData.hard().isDeck());
+    cCmbHard.setCurrSelected(static_cast<int>(mData.hard().surface().id()));
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ObjAttr::enableBlend(bool state) {
-		if (!state) {
-			cCmbBlend.disable();
-			cSpnBlendRatio->Disable();
-		}
-		else {
-			cCmbBlend.enable();
-			cSpnBlendRatio->Enable(mData.blend());
-		}
-	}
+void ObjAttr::enableBlend(bool state) {
+    if (!state) {
+        cCmbBlend.disable();
+        cSpnBlendRatio->Disable();
+    }
+    else {
+        cCmbBlend.enable();
+        cSpnBlendRatio->Enable(mData.blend());
+    }
+}
 
-	void ObjAttr::dropFromUiBlend() {
-		int currSel = cCmbBlend.currSelected();
-		xobj::AttrBlend attr(static_cast<xobj::AttrBlend::eType>(currSel),
-							cSpnBlendRatio->GetFVal());
-		attr.setEnabled(currSel != 0);
-		mData.setBlend(attr);
-		mMdData->saveToNode(mData);
-	}
+void ObjAttr::dropFromUiBlend() {
+    int currSel = cCmbBlend.currSelected();
+    xobj::AttrBlend attr(static_cast<xobj::AttrBlend::eType>(currSel),
+                         cSpnBlendRatio->GetFVal());
+    attr.setEnabled(currSel != 0);
+    mData.setBlend(attr);
+    mMdData->saveToNode(mData);
+}
 
-	void ObjAttr::loadToUiBlend() {
-		cCmbBlend.setCurrSelected(static_cast<int>(mData.blend().type()));
-		cSpnBlendRatio->SetValue(mData.blend().ratio(), FALSE);
-	}
+void ObjAttr::loadToUiBlend() {
+    cCmbBlend.setCurrSelected(static_cast<int>(mData.blend().type()));
+    cSpnBlendRatio->SetValue(mData.blend().ratio(), FALSE);
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ObjAttr::enablePolyOffset(bool state) {
-		if (!state) {
-			cChkPolyOffset.disable();
-			cSpnPolyOstDist->Disable();
-		}
-		else {
-			cChkPolyOffset.enable();
-			cSpnPolyOstDist->Enable(mData.polyOffset());
-		}
-	}
+void ObjAttr::enablePolyOffset(bool state) {
+    if (!state) {
+        cChkPolyOffset.disable();
+        cSpnPolyOstDist->Disable();
+    }
+    else {
+        cChkPolyOffset.enable();
+        cSpnPolyOstDist->Enable(mData.polyOffset());
+    }
+}
 
-	void ObjAttr::dropFromUiPolyOffset() {
-		xobj::AttrPolyOffset attr(cSpnPolyOstDist->GetFVal());
-		attr.setEnabled(cChkPolyOffset.isChecked());
-		mData.setPolyOffset(attr);
-		mMdData->saveToNode(mData);
-	}
+void ObjAttr::dropFromUiPolyOffset() {
+    xobj::AttrPolyOffset attr(cSpnPolyOstDist->GetFVal());
+    attr.setEnabled(cChkPolyOffset.isChecked());
+    mData.setPolyOffset(attr);
+    mMdData->saveToNode(mData);
+}
 
-	void ObjAttr::loadToUiPolyOffset() {
-		cChkPolyOffset.setState(mData.polyOffset());
-		cSpnPolyOstDist->SetValue(mData.polyOffset().offset(), FALSE);
-	}
+void ObjAttr::loadToUiPolyOffset() {
+    cChkPolyOffset.setState(mData.polyOffset());
+    cSpnPolyOstDist->SetValue(mData.polyOffset().offset(), FALSE);
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ObjAttr::enableLightLevel(bool state) {
-		if (!state) {
-			cChkLightLevel.disable();
-			cSpnLightLevelVal1->Disable();
-			cSpnLightLevelVal2->Disable();
-			cEdtLightLevelDrf->Disable();
-			cBtnLightLevelDrf.disable();
-		}
-		else {
-			cChkLightLevel.enable();
-			cSpnLightLevelVal1->Enable(mData.lightLevel());
-			cSpnLightLevelVal2->Enable(mData.lightLevel());
-			cEdtLightLevelDrf->Enable(mData.lightLevel());
-			cBtnLightLevelDrf.enable(mData.lightLevel());
-		}
-	}
+void ObjAttr::enableLightLevel(bool state) {
+    if (!state) {
+        cChkLightLevel.disable();
+        cSpnLightLevelVal1->Disable();
+        cSpnLightLevelVal2->Disable();
+        cEdtLightLevelDrf->Disable();
+        cBtnLightLevelDrf.disable();
+    }
+    else {
+        cChkLightLevel.enable();
+        cSpnLightLevelVal1->Enable(mData.lightLevel());
+        cSpnLightLevelVal2->Enable(mData.lightLevel());
+        cEdtLightLevelDrf->Enable(mData.lightLevel());
+        cBtnLightLevelDrf.enable(mData.lightLevel());
+    }
+}
 
-	void ObjAttr::dropFromUiLightLevel() {
-		xobj::AttrLightLevel attr(cSpnLightLevelVal1->GetFVal(),
-								cSpnLightLevelVal2->GetFVal(),
-								sts::toMbString(UiUtilities::getText(cEdtLightLevelDrf)));
-		attr.setEnabled(cChkLightLevel.isChecked());
-		mData.setLightLevel(attr);
-		mMdData->saveToNode(mData);
-	}
+void ObjAttr::dropFromUiLightLevel() {
+    xobj::AttrLightLevel attr(cSpnLightLevelVal1->GetFVal(),
+                              cSpnLightLevelVal2->GetFVal(),
+                              sts::toMbString(UiUtilities::getText(cEdtLightLevelDrf)));
+    attr.setEnabled(cChkLightLevel.isChecked());
+    mData.setLightLevel(attr);
+    mMdData->saveToNode(mData);
+}
 
-	void ObjAttr::loadToUiLightLevel() {
-		cChkLightLevel.setState(mData.lightLevel());
-		UiUtilities::setText(cEdtLightLevelDrf, sts::toString(mData.lightLevel().dataref()));
-		cSpnLightLevelVal1->SetValue(mData.lightLevel().val1(), FALSE);
-		cSpnLightLevelVal2->SetValue(mData.lightLevel().val2(), FALSE);
-	}
+void ObjAttr::loadToUiLightLevel() {
+    cChkLightLevel.setState(mData.lightLevel());
+    UiUtilities::setText(cEdtLightLevelDrf, sts::toString(mData.lightLevel().dataref()));
+    cSpnLightLevelVal1->SetValue(mData.lightLevel().val1(), FALSE);
+    cSpnLightLevelVal2->SetValue(mData.lightLevel().val2(), FALSE);
+}
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

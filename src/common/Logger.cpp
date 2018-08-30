@@ -65,57 +65,57 @@ std::string Logger::mVersionShortString;
  * \note Example path to the log file "C:\Users\%username%\AppData\Local\Autodesk\3dsMax\2016 - 64bit\ENU\Network\Max.log"
  */
 void Logger::logCallBack(sts::BaseLogger::eType inType, const char * inMsg,
-						const char * inFile, int inLine, const char * inFunction, const char * inCategory) {
+                         const char * inFile, int inLine, const char * inFunction, const char * inCategory) {
 
-	if (inType > LOG_LEVEL) {
-		return;
-	}
+    if (inType > LOG_LEVEL) {
+        return;
+    }
 
-	DWORD msgType = SYSLOG_INFO;
-	BOOL dialog = NO_DIALOG;
-	if (inCategory) {
-		if (strcmp(inCategory, LOG_CATEGORY_DIALOG) == 0) {
-			dialog = DISPLAY_DIALOG;
-		}
-		else if (strcmp(inCategory, LOG_CATEGORY_CONSOLE) == 0 || strcmp(inCategory, LOG_CATEGORY_FOR_USER) == 0) {
-			for (auto c : mCallbacks) {
-				c(inType, inMsg);
-			}
-		}
-	}
-	if (inType == sts::BaseLogger::eType::Warning) {
-		msgType = SYSLOG_WARN;
-	}
-	else if (inType == sts::BaseLogger::eType::Error) {
-		msgType = SYSLOG_ERROR;
-	}
-	else if (inType == sts::BaseLogger::eType::Critical) {
-		msgType = SYSLOG_ERROR;
-	}
-	else if (inType == sts::BaseLogger::eType::Fatal) {
-		msgType = SYSLOG_ERROR;
-		dialog = DISPLAY_DIALOG;
-	}
-	else if (inType == sts::BaseLogger::eType::Debug) {
-		msgType = SYSLOG_DEBUG;
-	}
+    DWORD msgType = SYSLOG_INFO;
+    BOOL dialog = NO_DIALOG;
+    if (inCategory) {
+        if (strcmp(inCategory, LOG_CATEGORY_DIALOG) == 0) {
+            dialog = DISPLAY_DIALOG;
+        }
+        else if (strcmp(inCategory, LOG_CATEGORY_CONSOLE) == 0 || strcmp(inCategory, LOG_CATEGORY_FOR_USER) == 0) {
+            for (auto c : mCallbacks) {
+                c(inType, inMsg);
+            }
+        }
+    }
+    if (inType == sts::BaseLogger::eType::Warning) {
+        msgType = SYSLOG_WARN;
+    }
+    else if (inType == sts::BaseLogger::eType::Error) {
+        msgType = SYSLOG_ERROR;
+    }
+    else if (inType == sts::BaseLogger::eType::Critical) {
+        msgType = SYSLOG_ERROR;
+    }
+    else if (inType == sts::BaseLogger::eType::Fatal) {
+        msgType = SYSLOG_ERROR;
+        dialog = DISPLAY_DIALOG;
+    }
+    else if (inType == sts::BaseLogger::eType::Debug) {
+        msgType = SYSLOG_DEBUG;
+    }
 
-	if (msgType == SYSLOG_INFO) {
-		mMaxLog->LogEntry(msgType, dialog, _M(XIO_PROJECT_SHORT_NAME), inCategory ? _M("%s %s %s") : _M("%s%s %s"),
-						_M(LOG_PREFIX), inCategory ? sts::toString(inCategory).c_str() : _M(""), sts::toString(inMsg).c_str());
-		Debug(std::cout << sts::BaseLogger::typeAsString(inType) << ": "
-			<< (inCategory ? inCategory : "") << (inCategory ? " " : "") << (inMsg ? inMsg : "") << std::endl);
-	}
-	else {
-		mMaxLog->LogEntry(msgType, dialog, _M(XIO_PROJECT_SHORT_NAME), inCategory ? _M("%s %s %s") : _M("%s%s %s"),
-						_M(LOG_PREFIX), inCategory ? sts::toString(inCategory).c_str() : _M(""), sts::toString(inMsg).c_str());
-		mMaxLog->LogEntry(msgType, NO_DIALOG, _M(XIO_PROJECT_SHORT_NAME), _M("%s\t\t<%s -> %s(%d)>"),
-						_M(LOG_PREFIX), sts::toString(inFunction).c_str(), sts::toString(inFile).c_str(), inLine);
-		Debug(std::cout << sts::BaseLogger::typeAsString(inType) << ": "
-			<< (inCategory ? inCategory : "") << (inCategory ? " " : "") << (inMsg ? inMsg : "") << LEOL <<"\t<"
-			<< (inFunction ? inFunction : "") << " -> " << (inFile ? inFile : "")
-			<< "(" << inLine << ")>" << std::endl);
-	}
+    if (msgType == SYSLOG_INFO) {
+        mMaxLog->LogEntry(msgType, dialog, _M(XIO_PROJECT_SHORT_NAME), inCategory ? _M("%s %s %s") : _M("%s%s %s"),
+                          _M(LOG_PREFIX), inCategory ? sts::toString(inCategory).c_str() : _M(""), sts::toString(inMsg).c_str());
+        Debug(std::cout << sts::BaseLogger::typeAsString(inType) << ": "
+            << (inCategory ? inCategory : "") << (inCategory ? " " : "") << (inMsg ? inMsg : "") << std::endl);
+    }
+    else {
+        mMaxLog->LogEntry(msgType, dialog, _M(XIO_PROJECT_SHORT_NAME), inCategory ? _M("%s %s %s") : _M("%s%s %s"),
+                          _M(LOG_PREFIX), inCategory ? sts::toString(inCategory).c_str() : _M(""), sts::toString(inMsg).c_str());
+        mMaxLog->LogEntry(msgType, NO_DIALOG, _M(XIO_PROJECT_SHORT_NAME), _M("%s\t\t<%s -> %s(%d)>"),
+                          _M(LOG_PREFIX), sts::toString(inFunction).c_str(), sts::toString(inFile).c_str(), inLine);
+        Debug(std::cout << sts::BaseLogger::typeAsString(inType) << ": "
+            << (inCategory ? inCategory : "") << (inCategory ? " " : "") << (inMsg ? inMsg : "") << LEOL <<"\t<"
+            << (inFunction ? inFunction : "") << " -> " << (inFile ? inFile : "")
+            << "(" << inLine << ")>" << std::endl);
+    }
 }
 
 /**************************************************************************************************/
@@ -123,21 +123,21 @@ void Logger::logCallBack(sts::BaseLogger::eType inType, const char * inMsg,
 /**************************************************************************************************/
 
 void Logger::saveLog(const MSTR & where) const {
-	IPathConfigMgr * paths = IPathConfigMgr::GetPathConfigMgr();
-	MaxSDK::Util::Path p(mLogFile);
-	if (!paths->DoesFileExist(p)) {
-		MessageBoxA(GetActiveWindow(),
-					"The log file does not exist. For some reason the 3DsMax or the plug-in did not provide this file.\r\nCheck 3DsMax log settings.",
-					"Error", MB_ICONERROR);
-	}
-	else {
-		if (!CopyFile(p.GetCStr(), where.data(),FALSE)) {
-			DWORD err = GetLastError();
-			MessageBoxA(GetActiveWindow(),
-						sts::MbStrUtils::join("Can't save log file. code: ", err).c_str(),
-						"Error", MB_ICONERROR);
-		}
-	}
+    IPathConfigMgr * paths = IPathConfigMgr::GetPathConfigMgr();
+    MaxSDK::Util::Path p(mLogFile);
+    if (!paths->DoesFileExist(p)) {
+        MessageBoxA(GetActiveWindow(),
+                    "The log file does not exist. For some reason the 3DsMax or the plug-in did not provide this file.\r\nCheck 3DsMax log settings.",
+                    "Error", MB_ICONERROR);
+    }
+    else {
+        if (!CopyFile(p.GetCStr(), where.data(),FALSE)) {
+            DWORD err = GetLastError();
+            MessageBoxA(GetActiveWindow(),
+                        sts::MbStrUtils::join("Can't save log file. code: ", err).c_str(),
+                        "Error", MB_ICONERROR);
+        }
+    }
 }
 
 /**************************************************************************************************/
@@ -145,54 +145,54 @@ void Logger::saveLog(const MSTR & where) const {
 /**************************************************************************************************/
 
 Logger::Logger() {
-	if (!mMaxLog) {
-		mMaxLog = GetCOREInterface()->Log();
-	}
-	//--------------------------------
-	createVersionStrings();
-	//--------------------------------
-	IPathConfigMgr * paths = IPathConfigMgr::GetPathConfigMgr();
-	MaxSDK::Util::Path p(paths->GetDir(APP_MAXDATA_DIR));
-	p.AddTrailingBackslash();
-	p.Append(_T("Network"));
-	// 3d max 9 and maybe some later versions can't create 
-	// Max.log file because the folder "Network" does not exist.
-	// So I fixed it. (hello Autodesk :D)
-	if (!paths->DoesFileExist(p)) {
-		if (!paths->CreateDirectoryHierarchy(p)) {
-			MessageBox(GetActiveWindow(),
-						sts::StrUtils::joinStr(_T(" Can't create dir for the log file: "), p.GetCStr()).c_str(),
-						_T("Error"), MB_ICONERROR);
-		}
-	}
-	p.AddTrailingBackslash();
-	p.Append(_T("Max.log"));
-	mLogFile = p.GetString();
-	//--------------------------------
-	sts::BaseLogger & log = sts::BaseLogger::instance();
-	log.setCallBack(&Logger::logCallBack);
-	log.setLevel(sts::BaseLogger::eType::Debug);
-	printInformation();
-	log.setLevel(LOG_LEVEL);
-	//--------------------------------
+    if (!mMaxLog) {
+        mMaxLog = GetCOREInterface()->Log();
+    }
+    //--------------------------------
+    createVersionStrings();
+    //--------------------------------
+    IPathConfigMgr * paths = IPathConfigMgr::GetPathConfigMgr();
+    MaxSDK::Util::Path p(paths->GetDir(APP_MAXDATA_DIR));
+    p.AddTrailingBackslash();
+    p.Append(_T("Network"));
+    // 3d max 9 and maybe some later versions can't create 
+    // Max.log file because the folder "Network" does not exist.
+    // So I fixed it. (hello Autodesk :D)
+    if (!paths->DoesFileExist(p)) {
+        if (!paths->CreateDirectoryHierarchy(p)) {
+            MessageBox(GetActiveWindow(),
+                       sts::StrUtils::joinStr(_T(" Can't create dir for the log file: "), p.GetCStr()).c_str(),
+                       _T("Error"), MB_ICONERROR);
+        }
+    }
+    p.AddTrailingBackslash();
+    p.Append(_T("Max.log"));
+    mLogFile = p.GetString();
+    //--------------------------------
+    sts::BaseLogger & log = sts::BaseLogger::instance();
+    log.setCallBack(&Logger::logCallBack);
+    log.setLevel(sts::BaseLogger::eType::Debug);
+    printInformation();
+    log.setLevel(LOG_LEVEL);
+    //--------------------------------
 }
 
 Logger::~Logger() {}
 
 void Logger::createVersionStrings() {
-	std::stringstream strstream;
-	strstream << XIO_VERSION_STRING;
-	if (strlen(XIO_RELEASE_TYPE) > 0) {
-		strstream << "-" << XIO_RELEASE_TYPE;
-	}
-	mVersionShortString = strstream.str();
+    std::stringstream strstream;
+    strstream << XIO_VERSION_STRING;
+    if (strlen(XIO_RELEASE_TYPE) > 0) {
+        strstream << "-" << XIO_RELEASE_TYPE;
+    }
+    mVersionShortString = strstream.str();
 
-	strstream << "+" << XIO_VCS_REVISION << " (" << XIO_VCS_BRANCH << ") " << XIO_COMPILE_DATE;
+    strstream << "+" << XIO_VCS_REVISION << " (" << XIO_VCS_BRANCH << ") " << XIO_COMPILE_DATE;
 #ifndef NDEBUG
-	strstream << " (" << XIO_COMPILE_TIME << ") " << "DEBUG";
+    strstream << " (" << XIO_COMPILE_TIME << ") " << "DEBUG";
 #endif
 
-	mVersionString = strstream.str();
+    mVersionString = strstream.str();
 }
 
 /**************************************************************************************************/
@@ -200,91 +200,91 @@ void Logger::createVersionStrings() {
 /**************************************************************************************************/
 
 std::string Logger::aboutXLibInfo(bool inUseWinEol) {
-	return xobj::ExternalLog::about(inUseWinEol);
+    return xobj::ExternalLog::about(inUseWinEol);
 }
 
 std::string Logger::shortAboutXLibInfo(bool inUseWinEol) {
-	return xobj::ExternalLog::shortAbout(inUseWinEol);
+    return xobj::ExternalLog::shortAbout(inUseWinEol);
 }
 
 std::string Logger::aboutInfo(bool inUseWinEol) {
-	std::stringstream stream;
-	const char * eol = inUseWinEol ? "\r\n" : "\n";
-	//-------------------------------------------------------------------------
+    std::stringstream stream;
+    const char * eol = inUseWinEol ? "\r\n" : "\n";
+    //-------------------------------------------------------------------------
 
 #ifndef MAX_PRODUCT_YEAR_NUMBER
 	stream << "Project: " XIO_PROJECT_NAME << " " << MAX_VERSION_MAJOR << eol;
 #else
-	stream << "Project: " XIO_PROJECT_NAME << " " << MAX_PRODUCT_YEAR_NUMBER << " (" << MAX_VERSION_MAJOR << ")" << eol;
+    stream << "Project: " XIO_PROJECT_NAME << " " << MAX_PRODUCT_YEAR_NUMBER << " (" << MAX_VERSION_MAJOR << ")" << eol;
 #endif
 
-	stream << "Organization: " << XIO_ORGANIZATION_NAME << " (" << XIO_ORGANIZATION_WEBLINK << ")" << eol;
-	stream << "Desc: " << XIO_PROJECT_DESCRIPTION << eol;
-	stream << "Link: " << XIO_PROJECT_WEBLINK << eol;
+    stream << "Organization: " << XIO_ORGANIZATION_NAME << " (" << XIO_ORGANIZATION_WEBLINK << ")" << eol;
+    stream << "Desc: " << XIO_PROJECT_DESCRIPTION << eol;
+    stream << "Link: " << XIO_PROJECT_WEBLINK << eol;
 
-	stream << "Version: " << versionString() << eol;
+    stream << "Version: " << versionString() << eol;
 
-	stream << "Compiler: " << XIO_COMPILER_NAME << " " << XIO_COMPILER_VERSION << eol;
-	stream << XIO_COPYRIGHT << eol;
-	stream << "Contacts: " << XIO_ORGANIZATION_WEBLINK << eol;
-	stream << "License: " << XIO_LICENSE_TYPE << eol;
-	stream << "Sources: " << XIO_PROJECT_SOURCES_WEBLINK << eol;
+    stream << "Compiler: " << XIO_COMPILER_NAME << " " << XIO_COMPILER_VERSION << eol;
+    stream << XIO_COPYRIGHT << eol;
+    stream << "Contacts: " << XIO_ORGANIZATION_WEBLINK << eol;
+    stream << "License: " << XIO_LICENSE_TYPE << eol;
+    stream << "Sources: " << XIO_PROJECT_SOURCES_WEBLINK << eol;
 
-	stream << "Contributors: " << eol;
-	for (size_t i = 0; i < XIO_ARRAY_LENGTH(XIO_CONTRIBUTORS); ++i) {
-		stream << "    " << XIO_CONTRIBUTORS[i] << eol;
-	}
+    stream << "Contributors: " << eol;
+    for (size_t i = 0; i < XIO_ARRAY_LENGTH(XIO_CONTRIBUTORS); ++i) {
+        stream << "    " << XIO_CONTRIBUTORS[i] << eol;
+    }
 
-	stream << eol << "Open source libraries: " << eol;
-	for (size_t i = 0; i < XIO_ARRAY_LENGTH(XIO_LIBRARIES); ++i) {
-		if (XIO_LIBRARIES[i].libName) {
-			stream << "    " << XIO_LIBRARIES[i].libName;
-		}
-		if (XIO_LIBRARIES[i].license) {
-			stream << " (" << XIO_LIBRARIES[i].license << ") ";
-		}
-		if (XIO_LIBRARIES[i].copyright) {
-			stream << " " << XIO_LIBRARIES[i].copyright;
-		}
-		stream << eol;
-	}
+    stream << eol << "Open source libraries: " << eol;
+    for (size_t i = 0; i < XIO_ARRAY_LENGTH(XIO_LIBRARIES); ++i) {
+        if (XIO_LIBRARIES[i].libName) {
+            stream << "    " << XIO_LIBRARIES[i].libName;
+        }
+        if (XIO_LIBRARIES[i].license) {
+            stream << " (" << XIO_LIBRARIES[i].license << ") ";
+        }
+        if (XIO_LIBRARIES[i].copyright) {
+            stream << " " << XIO_LIBRARIES[i].copyright;
+        }
+        stream << eol;
+    }
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	return stream.str();
+    return stream.str();
 }
 
 std::string Logger::shortAboutInfo(bool inUseWinEol) {
-	std::stringstream stream;
-	const char * eol = inUseWinEol ? "\r\n" : "\n";
-	//-------------------------------------------------------------------------
+    std::stringstream stream;
+    const char * eol = inUseWinEol ? "\r\n" : "\n";
+    //-------------------------------------------------------------------------
 
 #ifndef MAX_PRODUCT_YEAR_NUMBER
 	stream << "Project: " XIO_PROJECT_NAME << " " << MAX_VERSION_MAJOR << eol;
 #else
-	stream << "Project: " XIO_PROJECT_NAME << " " << MAX_PRODUCT_YEAR_NUMBER << " (" << MAX_VERSION_MAJOR << ")" << eol;
+    stream << "Project: " XIO_PROJECT_NAME << " " << MAX_PRODUCT_YEAR_NUMBER << " (" << MAX_VERSION_MAJOR << ")" << eol;
 #endif
-	stream << "Version: " << versionString() << eol;
+    stream << "Version: " << versionString() << eol;
 
-	stream << "Compiler: " << XIO_COMPILER_NAME << " " << XIO_COMPILER_VERSION << eol;
+    stream << "Compiler: " << XIO_COMPILER_NAME << " " << XIO_COMPILER_VERSION << eol;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	return stream.str();
+    return stream.str();
 }
 
 void Logger::printInformation() {
-	auto msg1 = sts::MbStrUtils::splitToList(shortAboutInfo(false), "\n");
-	auto msg2 = sts::MbStrUtils::splitToList(shortAboutXLibInfo(false), "\n");
-	LMessage << "************************************************************";
-	for (auto s : msg1) {
-		LMessage << s;
-	}
-	LMessage << "************************************************************";
-	for (auto s : msg2) {
-		LMessage << s;
-	}
-	LMessage << "************************************************************";
+    auto msg1 = sts::MbStrUtils::splitToList(shortAboutInfo(false), "\n");
+    auto msg2 = sts::MbStrUtils::splitToList(shortAboutXLibInfo(false), "\n");
+    LMessage << "************************************************************";
+    for (auto s : msg1) {
+        LMessage << s;
+    }
+    LMessage << "************************************************************";
+    for (auto s : msg2) {
+        LMessage << s;
+    }
+    LMessage << "************************************************************";
 }
 
 /**************************************************************************************************/
@@ -292,16 +292,16 @@ void Logger::printInformation() {
 /**************************************************************************************************/
 
 void Logger::registerUserConsoleCallback(UserConsoleCallBack callback) {
-	mCallbacks.emplace_back(callback);
+    mCallbacks.emplace_back(callback);
 }
 
 void Logger::unregisterUserConsoleCallback(UserConsoleCallBack callback) {
-	for (auto it = mCallbacks.begin(); it != mCallbacks.end(); ++it) {
-		if (*it == callback) {
-			mCallbacks.erase(it);
-			return;
-		}
-	}
+    for (auto it = mCallbacks.begin(); it != mCallbacks.end(); ++it) {
+        if (*it == callback) {
+            mCallbacks.erase(it);
+            return;
+        }
+    }
 }
 
 /**************************************************************************************************/

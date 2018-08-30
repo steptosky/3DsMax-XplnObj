@@ -37,8 +37,8 @@
 /**************************************************************************************************/
 
 MdAnimRot::MdAnimRot(eAxis inAxis)
-	: mAxis(inAxis) {
-	reset();
+    : mAxis(inAxis) {
+    reset();
 }
 
 /**************************************************************************************************/
@@ -46,16 +46,16 @@ MdAnimRot::MdAnimRot(eAxis inAxis)
 /**************************************************************************************************/
 
 void MdAnimRot::reset() {
-	mDataref = "none";
-	mLoopValue = 0.0;
-	mEnable = false;
-	mReverse = false;
-	mLoopEnable = false;
-	mKeyList.clear();
+    mDataref = "none";
+    mLoopValue = 0.0;
+    mEnable = false;
+    mReverse = false;
+    mLoopEnable = false;
+    mKeyList.clear();
 }
 
 void MdAnimRot::cloneData(INode * from, INode * to) {
-	AnimIO::cloneRotateData(from, to);
+    AnimIO::cloneRotateData(from, to);
 }
 
 /**************************************************************************************************/
@@ -63,57 +63,57 @@ void MdAnimRot::cloneData(INode * from, INode * to) {
 /**************************************************************************************************/
 
 MdAnimRot::KeyTimeList MdAnimRot::getKeyTimeList(INode * inNode, eAxis inAxis) {
-	if (!inNode) {
-		LError << "Node is nullptr";
-		return KeyTimeList();
-	}
+    if (!inNode) {
+        LError << "Node is nullptr";
+        return KeyTimeList();
+    }
 
-	KeyTimeList keyTimeList;
-	Control * rotateConrol = nullptr;
-	switch (inAxis) {
-		case X: {
-			Control * tmctrl = inNode->GetTMController();
-			if (tmctrl) {
-				Control * rotctrl = tmctrl->GetRotationController();
-				if (rotctrl) {
-					rotateConrol = rotctrl->GetXController();
-				}
-			}
-			break;
-		}
-		case Y: {
-			Control * tmctrl = inNode->GetTMController();
-			if (tmctrl) {
-				Control * rotctrl = tmctrl->GetRotationController();
-				if (rotctrl) {
-					rotateConrol = rotctrl->GetYController();
-				}
-			}
-			break;
-		}
-		case Z: {
-			Control * tmctrl = inNode->GetTMController();
-			if (tmctrl) {
-				Control * rotctrl = tmctrl->GetRotationController();
-				if (rotctrl) {
-					rotateConrol = rotctrl->GetZController();
-				}
-			}
-			break;
-		}
-		default: break;
-	}
-	if (rotateConrol == nullptr) {
-		keyTimeList.clear();
-		return keyTimeList;
-	}
-	keyTimeList.resize(static_cast<size_t>(rotateConrol->NumKeys()));
-	int i = 0;
-	for (auto & curr : keyTimeList) {
-		curr = rotateConrol->GetKeyTime(i);
-		++i;
-	}
-	return keyTimeList;
+    KeyTimeList keyTimeList;
+    Control * rotateConrol = nullptr;
+    switch (inAxis) {
+        case X: {
+            Control * tmctrl = inNode->GetTMController();
+            if (tmctrl) {
+                Control * rotctrl = tmctrl->GetRotationController();
+                if (rotctrl) {
+                    rotateConrol = rotctrl->GetXController();
+                }
+            }
+            break;
+        }
+        case Y: {
+            Control * tmctrl = inNode->GetTMController();
+            if (tmctrl) {
+                Control * rotctrl = tmctrl->GetRotationController();
+                if (rotctrl) {
+                    rotateConrol = rotctrl->GetYController();
+                }
+            }
+            break;
+        }
+        case Z: {
+            Control * tmctrl = inNode->GetTMController();
+            if (tmctrl) {
+                Control * rotctrl = tmctrl->GetRotationController();
+                if (rotctrl) {
+                    rotateConrol = rotctrl->GetZController();
+                }
+            }
+            break;
+        }
+        default: break;
+    }
+    if (rotateConrol == nullptr) {
+        keyTimeList.clear();
+        return keyTimeList;
+    }
+    keyTimeList.resize(static_cast<size_t>(rotateConrol->NumKeys()));
+    int i = 0;
+    for (auto & curr : keyTimeList) {
+        curr = rotateConrol->GetKeyTime(i);
+        ++i;
+    }
+    return keyTimeList;
 }
 
 /**************************************************************************************************/
@@ -121,28 +121,28 @@ MdAnimRot::KeyTimeList MdAnimRot::getKeyTimeList(INode * inNode, eAxis inAxis) {
 /**************************************************************************************************/
 
 void MdAnimRot::clearLink() {
-	mNode = nullptr;
-	reset();
+    mNode = nullptr;
+    reset();
 }
 
 bool MdAnimRot::linkNode(INode * node, bool loadData) {
-	clearLink();
-	if (node == nullptr) {
-		return false;
-	}
+    clearLink();
+    if (node == nullptr) {
+        return false;
+    }
 
-	if (!AnimIO::canApply(node)) {
-		return false;
-	}
+    if (!AnimIO::canApply(node)) {
+        return false;
+    }
 
-	mNode = node;
-	if (loadData) {
-		if (!loadFromNode()) {
-			clearLink();
-			return false;
-		}
-	}
-	return true;
+    mNode = node;
+    if (loadData) {
+        if (!loadFromNode()) {
+            clearLink();
+            return false;
+        }
+    }
+    return true;
 }
 
 /**************************************************************************************************/
@@ -150,28 +150,28 @@ bool MdAnimRot::linkNode(INode * node, bool loadData) {
 /**************************************************************************************************/
 
 void MdAnimRot::saveToNode(INode * node) const {
-	if (node) {
-		try {
-			AnimIO::saveRotateToNode(node, *this, static_cast<eAnimRotateIOID>(mAxis));
-		}
-		catch (std::exception & e) {
-			LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
-					<< "> object. Reason: <" << e.what() << ">";
-		}
-	}
+    if (node) {
+        try {
+            AnimIO::saveRotateToNode(node, *this, static_cast<eAnimRotateIOID>(mAxis));
+        }
+        catch (std::exception & e) {
+            LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
+                    << "> object. Reason: <" << e.what() << ">";
+        }
+    }
 }
 
 bool MdAnimRot::loadFromNode(INode * node) {
-	if (node) {
-		try {
-			return AnimIO::loadRotateFromNode(node, *this, static_cast<eAnimRotateIOID>(mAxis));
-		}
-		catch (std::exception & e) {
-			LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
-					<< "> object. Reason: <" << e.what() << ">";
-		}
-	}
-	return false;
+    if (node) {
+        try {
+            return AnimIO::loadRotateFromNode(node, *this, static_cast<eAnimRotateIOID>(mAxis));
+        }
+        catch (std::exception & e) {
+            LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
+                    << "> object. Reason: <" << e.what() << ">";
+        }
+    }
+    return false;
 }
 
 /**************************************************************************************************/

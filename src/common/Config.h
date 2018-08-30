@@ -43,37 +43,37 @@
 class Config : public sts::Settings, public sts::Single<Config> {
 public:
 
-	bool load() {
-		try {
-			loadFile(mConfigFile);
-			return true;
-		}
-		catch (const std::exception & e) {
-			LError << e.what();
-			return false;
-		}
-	}
+    bool load() {
+        try {
+            loadFile(mConfigFile);
+            return true;
+        }
+        catch (const std::exception & e) {
+            LError << e.what();
+            return false;
+        }
+    }
 
-	bool save() const {
-		try {
-			saveFile(mConfigFile);
-			return true;
-		}
-		catch (const std::exception & e) {
-			LError << e.what();
-			return false;
-		}
-	}
+    bool save() const {
+        try {
+            saveFile(mConfigFile);
+            return true;
+        }
+        catch (const std::exception & e) {
+            LError << e.what();
+            return false;
+        }
+    }
 
-	Config();
+    Config();
 
-	virtual ~Config() {
-		save();
-	}
+    virtual ~Config() {
+        save();
+    }
 
 private:
 
-	std::string mConfigFile;
+    std::string mConfigFile;
 
 };
 

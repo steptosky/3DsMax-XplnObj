@@ -33,53 +33,53 @@
 
 namespace win {
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	class ExportObjList : public Base {
-	public:
+class ExportObjList : public Base {
+public:
 
-		ExportObjList();
-		virtual ~ExportObjList();
+    ExportObjList();
+    virtual ~ExportObjList();
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		bool setup(HWND inParent, int inControlID) override;
-		void setup(HWND inHWnd) override;
+    bool setup(HWND inParent, int inControlID) override;
+    void setup(HWND inHWnd) override;
 
-		void checkAll(bool state);
-		void checkItem(int idx, bool state);
-		int addItem(const String & inName);
-		bool isChecked(int idx);
+    void checkAll(bool state);
+    void checkItem(int idx, bool state);
+    int addItem(const String & inName);
+    bool isChecked(int idx);
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		// It applies the 3dmax's theme
-		LRESULT draw(LPARAM lParam);
+    // It applies the 3dmax's theme
+    LRESULT draw(LPARAM lParam);
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	private:
+private:
 
-		void setup();
-		static LRESULT subClassProc(HWND hWnd,UINT uMsg, WPARAM wParam, LPARAM lParam,
-									UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
-		static LRESULT drawItems(LPARAM lParam, ExportObjList * data);
+    void setup();
+    static LRESULT subClassProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam,
+                                UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
+    static LRESULT drawItems(LPARAM lParam, ExportObjList * data);
 
-		int mHeaderId = 0;
-		unsigned mLastFreeId = 0;
-		HWND mHeader = nullptr;
+    int mHeaderId = 0;
+    unsigned mLastFreeId = 0;
+    HWND mHeader = nullptr;
 
-		COLORREF mWinColor;
-		COLORREF mWinTextColor;
-		HBRUSH mWinBrush = nullptr;
+    COLORREF mWinColor;
+    COLORREF mWinTextColor;
+    HBRUSH mWinBrush = nullptr;
 
-		TCHAR *mHeadersText[2]={_T("V"), _T("X-Objects")};
-	};
+    TCHAR * mHeadersText[2] = {_T("V"), _T("X-Objects")};
+};
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
 };

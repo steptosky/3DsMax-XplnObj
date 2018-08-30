@@ -36,21 +36,21 @@
 /**************************************************************************************************/
 
 void MdLinks::openDonate() {
-	ShellExecute(nullptr, _T("open"),
-				_T("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8AGCSV2WMXTES"),
-				nullptr, nullptr, SW_SHOWNORMAL);
+    ShellExecute(nullptr, _T("open"),
+                 _T("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8AGCSV2WMXTES"),
+                 nullptr, nullptr, SW_SHOWNORMAL);
 }
 
 void MdLinks::openPluginBinary() {
-	ShellExecute(nullptr, _T("open"),
-				_T("https://github.com/steptosky/3DsMax-XplnObj/releases"),
-				nullptr, nullptr, SW_SHOWNORMAL);
+    ShellExecute(nullptr, _T("open"),
+                 _T("https://github.com/steptosky/3DsMax-XplnObj/releases"),
+                 nullptr, nullptr, SW_SHOWNORMAL);
 }
 
 void MdLinks::openDocBinary() {
-	ShellExecute(nullptr, _T("open"),
-				_T("https://github.com/steptosky/3DsMax-XplnObj-Doc/releases"),
-				nullptr, nullptr, SW_SHOWNORMAL);
+    ShellExecute(nullptr, _T("open"),
+                 _T("https://github.com/steptosky/3DsMax-XplnObj-Doc/releases"),
+                 nullptr, nullptr, SW_SHOWNORMAL);
 }
 
 /**************************************************************************************************/

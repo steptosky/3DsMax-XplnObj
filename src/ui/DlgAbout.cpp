@@ -40,96 +40,96 @@
 
 namespace ui {
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Static area *///////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Static area *///////////////////////////////////////////
+/**************************************************************************************************/
 
-	INT_PTR CALLBACK DlgAbout::callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-		DlgAbout * theDlg;
-		if (message == WM_INITDIALOG) {
-			theDlg = reinterpret_cast<DlgAbout*>(lParam);
-			theDlg->mDlgMain.setup(hWnd);
-			DLSetWindowLongPtr(hWnd, lParam);
-		}
-		else {
-			if ((theDlg = DLGetWindowLongPtr<DlgAbout *>(hWnd)) == nullptr) {
-				return FALSE;
-			}
-			if (message == WM_DESTROY) {
-				theDlg->mDlgMain.release();
-			}
-		}
+INT_PTR CALLBACK DlgAbout::callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+    DlgAbout * theDlg;
+    if (message == WM_INITDIALOG) {
+        theDlg = reinterpret_cast<DlgAbout*>(lParam);
+        theDlg->mDlgMain.setup(hWnd);
+        DLSetWindowLongPtr(hWnd, lParam);
+    }
+    else {
+        if ((theDlg = DLGetWindowLongPtr<DlgAbout *>(hWnd)) == nullptr) {
+            return FALSE;
+        }
+        if (message == WM_DESTROY) {
+            theDlg->mDlgMain.release();
+        }
+    }
 
-		//------------------------------------------------------
+    //------------------------------------------------------
 
-		switch (message) {
-			case WM_INITDIALOG: {
-				theDlg->InitDlg(hWnd);
-				break;
-			}
-			case WM_COMMAND: {
-				switch (LOWORD(wParam)) {
-					case BTN_OK:
-						EndDialog(hWnd, 1);
-						break;
-					default: break;
-				}
-				break;
-			}
-			case WM_DESTROY: {
-				theDlg->DestroyDlg(hWnd);
-				break;
-			}
-			case WM_CLOSE: {
-				EndDialog(hWnd, 0);
-				break;
-			}
-			default: break;
-		}
-		return FALSE;
-	}
+    switch (message) {
+        case WM_INITDIALOG: {
+            theDlg->InitDlg(hWnd);
+            break;
+        }
+        case WM_COMMAND: {
+            switch (LOWORD(wParam)) {
+                case BTN_OK:
+                    EndDialog(hWnd, 1);
+                    break;
+                default: break;
+            }
+            break;
+        }
+        case WM_DESTROY: {
+            theDlg->DestroyDlg(hWnd);
+            break;
+        }
+        case WM_CLOSE: {
+            EndDialog(hWnd, 0);
+            break;
+        }
+        default: break;
+    }
+    return FALSE;
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	DlgAbout::DlgAbout() {}
+DlgAbout::DlgAbout() {}
 
-	DlgAbout::~DlgAbout() {}
+DlgAbout::~DlgAbout() {}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void DlgAbout::open() {
-		DialogBoxParam(ResHelper::hInstance, MAKEINTRESOURCE(DLG_ABOUT), GetCOREInterface()->GetMAXHWnd(),
-						callBack, reinterpret_cast<LPARAM>(this));
-	}
+void DlgAbout::open() {
+    DialogBoxParam(ResHelper::hInstance, MAKEINTRESOURCE(DLG_ABOUT), GetCOREInterface()->GetMAXHWnd(),
+                   callBack, reinterpret_cast<LPARAM>(this));
+}
 
-	void DlgAbout::show() {
-		DlgAbout dlg;
-		dlg.open();
-	}
+void DlgAbout::show() {
+    DlgAbout dlg;
+    dlg.open();
+}
 
-	void DlgAbout::InitDlg(HWND hWnd) {
-		CenterWindow(mDlgMain.hwnd(), mDlgMain.parent());
-		mHWnd = hWnd;
+void DlgAbout::InitDlg(HWND hWnd) {
+    CenterWindow(mDlgMain.hwnd(), mDlgMain.parent());
+    mHWnd = hWnd;
 
-		mLblThisAbout.setup(hWnd, LBL_TEXT);
-		mLblLibAbout.setup(hWnd, LBL_TEXT2);
-		mBtnOk.setup(hWnd, BTN_OK);
-		mLblThisAbout.setText(Logger::aboutInfo(true));
-		mLblLibAbout.setText(Logger::aboutXLibInfo(true));
-		mDlgMain.show();
-	}
+    mLblThisAbout.setup(hWnd, LBL_TEXT);
+    mLblLibAbout.setup(hWnd, LBL_TEXT2);
+    mBtnOk.setup(hWnd, BTN_OK);
+    mLblThisAbout.setText(Logger::aboutInfo(true));
+    mLblLibAbout.setText(Logger::aboutXLibInfo(true));
+    mDlgMain.show();
+}
 
-	void DlgAbout::DestroyDlg(HWND /*hWnd*/) {
-		mLblThisAbout.release();
-		mLblLibAbout.release();
-		mBtnOk.release();
-	}
+void DlgAbout::DestroyDlg(HWND /*hWnd*/) {
+    mLblThisAbout.release();
+    mLblLibAbout.release();
+    mBtnOk.release();
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 }

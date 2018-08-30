@@ -34,59 +34,59 @@
 
 namespace ui {
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	class DlgMessageBox {
+class DlgMessageBox {
 
-		DlgMessageBox(const DlgMessageBox &) = delete;
-		DlgMessageBox & operator =(const DlgMessageBox &) = delete;
-		DlgMessageBox() = default;
+    DlgMessageBox(const DlgMessageBox &) = delete;
+    DlgMessageBox & operator =(const DlgMessageBox &) = delete;
+    DlgMessageBox() = default;
 
-	public:
+public:
 
-		virtual ~DlgMessageBox() = default;
-		static void warning(HWND inParent, const std::string & inCaption, const std::string & inText);
-		static void critical(HWND inParent, const std::string & inCaption, const std::string & inText);
-		static void warning(HWND inParent, const std::wstring & inCaption, const std::wstring & inText);
-		static void critical(HWND inParent, const std::wstring & inCaption, const std::wstring & inText);
+    virtual ~DlgMessageBox() = default;
+    static void warning(HWND inParent, const std::string & inCaption, const std::string & inText);
+    static void critical(HWND inParent, const std::string & inCaption, const std::string & inText);
+    static void warning(HWND inParent, const std::wstring & inCaption, const std::wstring & inText);
+    static void critical(HWND inParent, const std::wstring & inCaption, const std::wstring & inText);
 
-	};
+};
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	inline void DlgMessageBox::warning(HWND inParent, const std::string & inCaption, const std::string & inText) {
-		if (inParent == nullptr) {
-			inParent = GetActiveWindow();
-		}
-		MessageBoxA(inParent, inText.c_str(), inCaption.c_str(), MB_OK | MB_ICONWARNING);
-	}
+inline void DlgMessageBox::warning(HWND inParent, const std::string & inCaption, const std::string & inText) {
+    if (inParent == nullptr) {
+        inParent = GetActiveWindow();
+    }
+    MessageBoxA(inParent, inText.c_str(), inCaption.c_str(), MB_OK | MB_ICONWARNING);
+}
 
-	inline void DlgMessageBox::critical(HWND inParent, const std::string & inCaption, const std::string & inText) {
-		if (inParent == nullptr) {
-			inParent = GetActiveWindow();
-		}
-		MessageBoxA(inParent, inText.c_str(), inCaption.c_str(), MB_OK | MB_ICONERROR);
-	}
+inline void DlgMessageBox::critical(HWND inParent, const std::string & inCaption, const std::string & inText) {
+    if (inParent == nullptr) {
+        inParent = GetActiveWindow();
+    }
+    MessageBoxA(inParent, inText.c_str(), inCaption.c_str(), MB_OK | MB_ICONERROR);
+}
 
-	inline void DlgMessageBox::warning(HWND inParent, const std::wstring & inCaption, const std::wstring & inText) {
-		if (inParent == nullptr) {
-			inParent = GetActiveWindow();
-		}
-		MessageBoxW(inParent, inText.c_str(), inCaption.c_str(), MB_OK | MB_ICONWARNING);
-	}
+inline void DlgMessageBox::warning(HWND inParent, const std::wstring & inCaption, const std::wstring & inText) {
+    if (inParent == nullptr) {
+        inParent = GetActiveWindow();
+    }
+    MessageBoxW(inParent, inText.c_str(), inCaption.c_str(), MB_OK | MB_ICONWARNING);
+}
 
-	inline void DlgMessageBox::critical(HWND inParent, const std::wstring & inCaption, const std::wstring & inText) {
-		if (inParent == nullptr) {
-			inParent = GetActiveWindow();
-		}
-		MessageBoxW(inParent, inText.c_str(), inCaption.c_str(), MB_OK | MB_ICONERROR);
-	}
+inline void DlgMessageBox::critical(HWND inParent, const std::wstring & inCaption, const std::wstring & inText) {
+    if (inParent == nullptr) {
+        inParent = GetActiveWindow();
+    }
+    MessageBoxW(inParent, inText.c_str(), inCaption.c_str(), MB_OK | MB_ICONERROR);
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 }

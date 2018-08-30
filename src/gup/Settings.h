@@ -43,13 +43,13 @@
 class Settings : public sts::Settings {
 public:
 
-	Settings() = default;
+    Settings() = default;
 
-	bool isSavedAsXplnScene() const;
-	void prepareDataForSave();
-	void setSceneVersion(const sts::SemVersion & version);
-	sts::SemVersion sceneVersion() const;
-	static sts::SemVersion pluginVersion();
+    bool isSavedAsXplnScene() const;
+    void prepareDataForSave();
+    void setSceneVersion(const sts::SemVersion & version);
+    sts::SemVersion sceneVersion() const;
+    static sts::SemVersion pluginVersion();
 
 };
 

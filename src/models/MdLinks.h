@@ -38,15 +38,14 @@
  */
 class MdLinks {
 
-	MdLinks() = default;
-	~MdLinks() = default;
-	
+    MdLinks() = default;
+    ~MdLinks() = default;
+
 public:
 
-
-	static void openDonate();
-	static void openPluginBinary();
-	static void openDocBinary();
+    static void openDonate();
+    static void openPluginBinary();
+    static void openDocBinary();
 
 };
 

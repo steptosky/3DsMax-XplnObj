@@ -43,26 +43,26 @@
 class ObjImporter : public SceneImport {
 public:
 
-	ObjImporter();
-	~ObjImporter();
+    ObjImporter();
+    ~ObjImporter();
 
-	int ExtCount() override; // Number of extensions supported
-	const TCHAR * Ext(int n) override; // Extension #n (i.e. "3DS")
-	const TCHAR * LongDesc() override; // Long ASCII description (i.e. "Autodesk 3D Studio File")
-	const TCHAR * ShortDesc() override; // Short ASCII description (i.e. "3D Studio")
-	const TCHAR * AuthorName() override; // ASCII Author name
-	const TCHAR * CopyrightMessage() override; // ASCII Copyright message
-	const TCHAR * OtherMessage1() override; // Other message #1
-	const TCHAR * OtherMessage2() override; // Other message #2
-	unsigned int Version() override; // Version number * 100 (i.e. v3.01 = 301)
-	void ShowAbout(HWND hWnd) override; // Show DLL's "About..." box
+    int ExtCount() override;                   // Number of extensions supported
+    const TCHAR * Ext(int n) override;         // Extension #n (i.e. "3DS")
+    const TCHAR * LongDesc() override;         // Long ASCII description (i.e. "Autodesk 3D Studio File")
+    const TCHAR * ShortDesc() override;        // Short ASCII description (i.e. "3D Studio")
+    const TCHAR * AuthorName() override;       // ASCII Author name
+    const TCHAR * CopyrightMessage() override; // ASCII Copyright message
+    const TCHAR * OtherMessage1() override;    // Other message #1
+    const TCHAR * OtherMessage2() override;    // Other message #2
+    unsigned int Version() override;           // Version number * 100 (i.e. v3.01 = 301)
+    void ShowAbout(HWND hWnd) override;        // Show DLL's "About..." box
 
-	BOOL SupportsOptions(int ext, DWORD options);
-	int DoImport(const TCHAR * name, ImpInterface * iFace, Interface * gi, BOOL suppressPrompts = FALSE) override;
+    BOOL SupportsOptions(int ext, DWORD options);
+    int DoImport(const TCHAR * name, ImpInterface * iFace, Interface * gi, BOOL suppressPrompts = FALSE) override;
 
 private:
 
-	ui::DlgImport * mDlgMain = nullptr;
+    ui::DlgImport * mDlgMain = nullptr;
 
 };
 

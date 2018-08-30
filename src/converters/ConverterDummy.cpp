@@ -37,35 +37,35 @@
 /**************************************************************************************************/
 
 INode * ConverterDummy::toMax(const xobj::ObjAbstract * inXObj) {
-	if (inXObj->objType() != xobj::OBJ_DUMMY) {
-		return nullptr;
-	}
-	Interface * ip = GetCOREInterface();
-	HelperObject * pobj = reinterpret_cast<HelperObject*>(ip->CreateInstance(HELPER_CLASS_ID, Class_ID(POINTHELP_CLASS_ID, 0)));
-	if (pobj == nullptr) {
-		LError << "Object couldn't be created.";
-		return nullptr;
-	}
+    if (inXObj->objType() != xobj::OBJ_DUMMY) {
+        return nullptr;
+    }
+    Interface * ip = GetCOREInterface();
+    HelperObject * pobj = reinterpret_cast<HelperObject*>(ip->CreateInstance(HELPER_CLASS_ID, Class_ID(POINTHELP_CLASS_ID, 0)));
+    if (pobj == nullptr) {
+        LError << "Object couldn't be created.";
+        return nullptr;
+    }
 
-	INode * pnode = ip->CreateObjectNode(pobj);
-	if (pnode == nullptr) {
-		LError << "Node couldn't be created.";
-		return nullptr;
-	}
+    INode * pnode = ip->CreateObjectNode(pobj);
+    if (pnode == nullptr) {
+        LError << "Node couldn't be created.";
+        return nullptr;
+    }
 
-	pnode->SetName(toTSTR(inXObj->objectName().c_str()));
-	return pnode;
+    pnode->SetName(toTSTR(inXObj->objectName().c_str()));
+    return pnode;
 }
 
 xobj::ObjDummy * ConverterDummy::toXpln(INode * inNode) {
-	assert(inNode);
-	const ObjectState & obsState = inNode->EvalWorldState(GetCOREInterface()->GetTime());
-	if (obsState.obj->SuperClassID() != SClass_ID(HELPER_CLASS_ID)) {
-		return nullptr;
-	}
-	xobj::ObjDummy * xObj = new xobj::ObjDummy;
-	xObj->setObjectName(sts::toMbString(inNode->GetName()));
-	return xObj;
+    assert(inNode);
+    const ObjectState & obsState = inNode->EvalWorldState(GetCOREInterface()->GetTime());
+    if (obsState.obj->SuperClassID() != SClass_ID(HELPER_CLASS_ID)) {
+        return nullptr;
+    }
+    xobj::ObjDummy * xObj = new xobj::ObjDummy;
+    xObj->setObjectName(sts::toMbString(inNode->GetName()));
+    return xObj;
 }
 
 /**************************************************************************************************/

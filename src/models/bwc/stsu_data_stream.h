@@ -33,65 +33,66 @@
 #include "stsu_data_ostream.h"
 #include <sstream>
 
-namespace sts_bwc { // backward compatibility
+namespace sts_bwc {
+// backward compatibility
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	/*!
-	\details Data Stream class provide a stream operation with data which interpreted like bytes (not characters, e.t.c.).
-	         Used std::iostream like internal byte buffer.
-	*/
-	class DataStream : public DataStreamI, public DataStreamO {
-	public:
+/*!
+\details Data Stream class provide a stream operation with data which interpreted like bytes (not characters, e.t.c.).
+         Used std::iostream like internal byte buffer.
+*/
+class DataStream : public DataStreamI, public DataStreamO {
+public:
 
-		//-------------------------------------------------------------------------
-		/*! 
-        \details Constructor
-		\param [in] inStream reference to a std::iostream.
-		\note std::iostream object deletion is your responsibility.
-		*/
-		explicit DataStream(std::iostream & inStream);
+    //-------------------------------------------------------------------------
+    /*! 
+    \details Constructor
+    \param [in] inStream reference to a std::iostream.
+    \note std::iostream object deletion is your responsibility.
+    */
+    explicit DataStream(std::iostream & inStream);
 
-		/*! 
-        \details Constructor
-		\param [in] inStreamBuf reference to a std::stringbuf. Will be created std::stringstream with this buffer for internal using.
-		\note std::stringbuf object deletion is NOT your responsibility.
-		*/
-		explicit DataStream(std::stringbuf & inStreamBuf);
+    /*! 
+    \details Constructor
+    \param [in] inStreamBuf reference to a std::stringbuf. Will be created std::stringstream with this buffer for internal using.
+    \note std::stringbuf object deletion is NOT your responsibility.
+    */
+    explicit DataStream(std::stringbuf & inStreamBuf);
 
-		/*
-        \details Default Constructor
-		\remark std::stringstream will be created for internal using.
-		*/
-		DataStream();
+    /*
+    \details Default Constructor
+    \remark std::stringstream will be created for internal using.
+    */
+    DataStream();
 
-		/*! \details Destructor */
-		virtual ~DataStream();
+    /*! \details Destructor */
+    virtual ~DataStream();
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		/*! \details Gives reference to internal byte buffer. */
-		std::iostream & getStdStream() { return mStream; }
+    /*! \details Gives reference to internal byte buffer. */
+    std::iostream & getStdStream() { return mStream; }
 
-		/*! \details Gives const reference to internal byte buffer. */
-		const std::iostream & getStdStream() const { return mStream; }
+    /*! \details Gives const reference to internal byte buffer. */
+    const std::iostream & getStdStream() const { return mStream; }
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	private:
+private:
 
-		DataStream(const DataStream & incOpy);
-		DataStream & operator =(const DataStream &) { return *this; }
+    DataStream(const DataStream & incOpy);
+    DataStream & operator =(const DataStream &) { return *this; }
 
-		std::iostream & mStream;
-		bool mIsStreamOwn;
+    std::iostream & mStream;
+    bool mIsStreamOwn;
 
-	};
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-}// namespace sts
+} // namespace sts

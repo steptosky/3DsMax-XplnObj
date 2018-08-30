@@ -48,17 +48,17 @@
 /**************************************************************************************************/
 
 ObjCommon::ObjCommon() {
-	mToolFrame = nullptr;
-	mConfig = Config::instance();
-	mCloneNodeChunk = nullptr;
+    mToolFrame = nullptr;
+    mConfig = Config::instance();
+    mCloneNodeChunk = nullptr;
 }
 
 ObjCommon::~ObjCommon() {
-	mConfig->free();
+    mConfig->free();
 }
 
 void ObjCommon::DeleteThis() {
-	this->free();
+    this->free();
 }
 
 /**************************************************************************************************/
@@ -81,21 +81,21 @@ void ObjCommon::DeleteThis() {
 #define WM_MY_TIMER_TIME 5000
 
 void ObjCommon::updateCheckWinCallback(HWND hwnd, UINT /*uMsg*/, UINT_PTR idEvent, DWORD /*dwTime*/) {
-	HWND maxHWND = GetCOREInterface()->GetMAXHWnd();
-	if (maxHWND == hwnd && idEvent == WM_MY_TIMER_ID) {
-		UpdateChecker::Update upd = ObjCommon::instance()->updateInfo();
-		if (upd.valid) {
-			KillTimer(maxHWND, WM_MY_TIMER_ID);
-			if (!upd.error.empty()) {
-				for (auto & e : upd.error) {
-					LError << "[version] " << e;
-				}
-			}
-			else {
-				LMessage << "[version] Got from the remote: " << upd.version.toString();
-			}
-		}
-	}
+    HWND maxHWND = GetCOREInterface()->GetMAXHWnd();
+    if (maxHWND == hwnd && idEvent == WM_MY_TIMER_ID) {
+        UpdateChecker::Update upd = ObjCommon::instance()->updateInfo();
+        if (upd.valid) {
+            KillTimer(maxHWND, WM_MY_TIMER_ID);
+            if (!upd.error.empty()) {
+                for (auto & e : upd.error) {
+                    LError << "[version] " << e;
+                }
+            }
+            else {
+                LMessage << "[version] Got from the remote: " << upd.version.toString();
+            }
+        }
+    }
 }
 
 /**************************************************************************************************/
@@ -103,33 +103,33 @@ void ObjCommon::updateCheckWinCallback(HWND hwnd, UINT /*uMsg*/, UINT_PTR idEven
 /**************************************************************************************************/
 
 DWORD ObjCommon::Start() {
-	//-- Mein Menu ---------------------------
-	mMainMenuView.reset(ui::Factory::cereateMainMenuView());
-	mMainMenuPresenter = std::make_unique<MainMenuPresenter>(mMainMenuView.get());
-	//----------------------------------------
+    //-- Mein Menu ---------------------------
+    mMainMenuView.reset(ui::Factory::cereateMainMenuView());
+    mMainMenuPresenter = std::make_unique<MainMenuPresenter>(mMainMenuView.get());
+    //----------------------------------------
 
-	mCloneNodeChunk = new CloneNodeChunk();
-	mToolFrame = ui::ToolFrame::instance();
-	mToolFrame->create();
+    mCloneNodeChunk = new CloneNodeChunk();
+    mToolFrame = ui::ToolFrame::instance();
+    mToolFrame->create();
 
-	mUpdateChecker.checkForUpdate();
-	SetTimer(GetCOREInterface()->GetMAXHWnd(), UINT_PTR(WM_MY_TIMER_ID),
-			UINT(WM_MY_TIMER_TIME), reinterpret_cast<TIMERPROC>(&ObjCommon::updateCheckWinCallback));
+    mUpdateChecker.checkForUpdate();
+    SetTimer(GetCOREInterface()->GetMAXHWnd(), UINT_PTR(WM_MY_TIMER_ID),
+             UINT(WM_MY_TIMER_TIME), reinterpret_cast<TIMERPROC>(&ObjCommon::updateCheckWinCallback));
 
-	RegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
+    RegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
 
-	return GUPRESULT_KEEP;
+    return GUPRESULT_KEEP;
 }
 
 void ObjCommon::Stop() {
-	//-- Mein Menu ---------------------------
-	mMainMenuPresenter.reset();
-	mMainMenuView.reset();
-	//----------------------------------------
-	UnRegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
-	mUpdateChecker.freeResources();
-	mToolFrame->free();
-	delete mCloneNodeChunk;
+    //-- Mein Menu ---------------------------
+    mMainMenuPresenter.reset();
+    mMainMenuView.reset();
+    //----------------------------------------
+    UnRegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
+    mUpdateChecker.freeResources();
+    mToolFrame->free();
+    delete mCloneNodeChunk;
 }
 
 /**************************************************************************************************/
@@ -137,7 +137,7 @@ void ObjCommon::Stop() {
 /**************************************************************************************************/
 
 DWORD_PTR ObjCommon::Control(DWORD /*param*/) {
-	return 0;
+    return 0;
 }
 
 /**************************************************************************************************/
@@ -154,84 +154,84 @@ DWORD_PTR ObjCommon::Control(DWORD /*param*/) {
 // The case ID is not started from 0 because some previous versions of the plugin are used 0 and 1
 // but that data is not necessary anymore.
 IOResult ObjCommon::Save(ISave * isave) {
-	try {
-		ULONG temp = 0;
-		pSettings.prepareDataForSave();
-		std::string settings = pSettings.toString();
-		//------------------------------------
-		isave->BeginChunk(2);
-		isave->Write(reinterpret_cast<const myByte *>(&mIoVersion), sizeof(mIoVersion), &temp);
-		isave->EndChunk();
-		DbgAssert(sizeof(mIoVersion) == temp);
-		//------------------------------------
-		uint32_t strLength = uint32_t(settings.length());
-		isave->BeginChunk(3);
-		isave->Write(reinterpret_cast<const myByte *>(&strLength), sizeof(strLength), &temp);
-		isave->EndChunk();
-		DbgAssert(sizeof(strLength) == temp);
-		//------------------------------------
-		isave->BeginChunk(4);
-		isave->Write(reinterpret_cast<const myByte *>(settings.c_str()), strLength, &temp);
-		isave->EndChunk();
-		DbgAssert(strLength == temp);
-		//------------------------------------
-	}
-	catch (std::exception & e) {
-		LError << "Can't save " << TOTEXT(ObjCommon) << " Reason: " << e.what();
-		return IO_ERROR;
-	}
-	return IO_OK;
+    try {
+        ULONG temp = 0;
+        pSettings.prepareDataForSave();
+        std::string settings = pSettings.toString();
+        //------------------------------------
+        isave->BeginChunk(2);
+        isave->Write(reinterpret_cast<const myByte *>(&mIoVersion), sizeof(mIoVersion), &temp);
+        isave->EndChunk();
+        DbgAssert(sizeof(mIoVersion) == temp);
+        //------------------------------------
+        uint32_t strLength = uint32_t(settings.length());
+        isave->BeginChunk(3);
+        isave->Write(reinterpret_cast<const myByte *>(&strLength), sizeof(strLength), &temp);
+        isave->EndChunk();
+        DbgAssert(sizeof(strLength) == temp);
+        //------------------------------------
+        isave->BeginChunk(4);
+        isave->Write(reinterpret_cast<const myByte *>(settings.c_str()), strLength, &temp);
+        isave->EndChunk();
+        DbgAssert(strLength == temp);
+        //------------------------------------
+    }
+    catch (std::exception & e) {
+        LError << "Can't save " << TOTEXT(ObjCommon) << " Reason: " << e.what();
+        return IO_ERROR;
+    }
+    return IO_OK;
 }
 
 IOResult ObjCommon::Load(ILoad * iload) {
-	try {
-		ULONG temp;
-		uint32_t version = 0;
-		uint32_t strLength = 0;
-		IOResult res;
-		while ((res = iload->OpenChunk()) == IO_OK) {
-			switch (iload->CurChunkID()) {
-				case 2: {
-					iload->Read(reinterpret_cast<myByte *>(&version), sizeof(version), &temp);
-					DbgAssert(sizeof(mIoVersion) == temp);
-					if (version != mIoVersion) {
-						LError << "Got incorrect version " << version << "/" << mIoVersion;
-						return IO_ERROR;
-					}
-					break;
-				}
-				case 3: {
-					iload->Read(reinterpret_cast<myByte *>(&strLength), sizeof(strLength), &temp);
-					DbgAssert(sizeof(strLength) == temp);
-					break;
-				}
-				case 4: {
-					char * str = new char[strLength];
-					iload->Read(reinterpret_cast<myByte *>(str), strLength, &temp);
-					DbgAssert(strLength == temp);
-					std::string stdstr(str, size_t(strLength));
-					delete[] str;
-					pSettings.fromString(stdstr);
-					if (pSettings.isSavedAsXplnScene() && pSettings.pluginVersion() < pSettings.sceneVersion()) {
-						ui::Factory::showVersionIncompatible();
-						return IO_ERROR;
-					}
-					break;
-				}
-				default: break;
-			}
-			iload->CloseChunk();
-			if (res != IO_OK) {
-				return res;
-			}
-		}
-		//------------------------------------
-	}
-	catch (std::exception & e) {
-		LError << "Can't load " << TOTEXT(ObjCommon) << " Reason: " << e.what();
-		return IO_ERROR;
-	}
-	return IO_OK;
+    try {
+        ULONG temp;
+        uint32_t version = 0;
+        uint32_t strLength = 0;
+        IOResult res;
+        while ((res = iload->OpenChunk()) == IO_OK) {
+            switch (iload->CurChunkID()) {
+                case 2: {
+                    iload->Read(reinterpret_cast<myByte *>(&version), sizeof(version), &temp);
+                    DbgAssert(sizeof(mIoVersion) == temp);
+                    if (version != mIoVersion) {
+                        LError << "Got incorrect version " << version << "/" << mIoVersion;
+                        return IO_ERROR;
+                    }
+                    break;
+                }
+                case 3: {
+                    iload->Read(reinterpret_cast<myByte *>(&strLength), sizeof(strLength), &temp);
+                    DbgAssert(sizeof(strLength) == temp);
+                    break;
+                }
+                case 4: {
+                    char * str = new char[strLength];
+                    iload->Read(reinterpret_cast<myByte *>(str), strLength, &temp);
+                    DbgAssert(strLength == temp);
+                    std::string stdstr(str, size_t(strLength));
+                    delete[] str;
+                    pSettings.fromString(stdstr);
+                    if (pSettings.isSavedAsXplnScene() && pSettings.pluginVersion() < pSettings.sceneVersion()) {
+                        ui::Factory::showVersionIncompatible();
+                        return IO_ERROR;
+                    }
+                    break;
+                }
+                default: break;
+            }
+            iload->CloseChunk();
+            if (res != IO_OK) {
+                return res;
+            }
+        }
+        //------------------------------------
+    }
+    catch (std::exception & e) {
+        LError << "Can't load " << TOTEXT(ObjCommon) << " Reason: " << e.what();
+        return IO_ERROR;
+    }
+    return IO_OK;
 }
 
 /**************************************************************************************************/
@@ -239,14 +239,14 @@ IOResult ObjCommon::Load(ILoad * iload) {
 /**************************************************************************************************/
 
 void ObjCommon::slotFileOpened(void * param, NotifyInfo *) {
-	ObjCommon * d = static_cast<ObjCommon*>(param);
-	// NodeVisitor::sceneContainsMainObj() - this is needed for the old scenes which 
-	// have not set the flag d->pSettings.isSavedAsXplnScene()
-	// This situation slows down loading non-x-plane scenes because it needs
-	// to check whether the scene contains main x-plane object.
-	if (d->pSettings.isSavedAsXplnScene() || NodeVisitor::sceneContainsMainObj()) {
-		d->mSceneUpdater.update(d->pSettings.sceneVersion(), d->pSettings.pluginVersion());
-	}
+    ObjCommon * d = static_cast<ObjCommon*>(param);
+    // NodeVisitor::sceneContainsMainObj() - this is needed for the old scenes which 
+    // have not set the flag d->pSettings.isSavedAsXplnScene()
+    // This situation slows down loading non-x-plane scenes because it needs
+    // to check whether the scene contains main x-plane object.
+    if (d->pSettings.isSavedAsXplnScene() || NodeVisitor::sceneContainsMainObj()) {
+        d->mSceneUpdater.update(d->pSettings.sceneVersion(), d->pSettings.pluginVersion());
+    }
 }
 
 /**************************************************************************************************/

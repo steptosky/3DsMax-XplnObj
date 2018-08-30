@@ -31,32 +31,32 @@
 
 namespace win {
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void Picture::setPicture(const String & inFileName) {
-		HBITMAP hbm = (HBITMAP)::LoadImage(NULL, inFileName.c_str(), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-		hbm = (HBITMAP)SendDlgItemMessage(parent(), controlId(), STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hbm);
-		if (hbm != NULL)
-			DeleteObject(hbm);
-	}
+void Picture::setPicture(const String & inFileName) {
+    HBITMAP hbm = (HBITMAP)::LoadImage(NULL, inFileName.c_str(), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+    hbm = (HBITMAP)SendDlgItemMessage(parent(), controlId(), STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hbm);
+    if (hbm != NULL)
+        DeleteObject(hbm);
+}
 
-	void Picture::setPicture(HBITMAP inBitmap) {
-		inBitmap = (HBITMAP)SendDlgItemMessage(parent(), controlId(), STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)inBitmap);
-		if (inBitmap != NULL)
-			DeleteObject(inBitmap);
-	}
+void Picture::setPicture(HBITMAP inBitmap) {
+    inBitmap = (HBITMAP)SendDlgItemMessage(parent(), controlId(), STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)inBitmap);
+    if (inBitmap != NULL)
+        DeleteObject(inBitmap);
+}
 
-	void Picture::setPicture(HINSTANCE hInstance, int inResuorce) {
-		HBITMAP hbm = (HBITMAP)::LoadImage(hInstance, MAKEINTRESOURCE(inResuorce), IMAGE_BITMAP, 0, 0, NULL);
-		hbm = (HBITMAP)SendDlgItemMessage(parent(), controlId(), STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hbm);
-		if (hbm != NULL)
-			DeleteObject(hbm);
-	}
+void Picture::setPicture(HINSTANCE hInstance, int inResuorce) {
+    HBITMAP hbm = (HBITMAP)::LoadImage(hInstance, MAKEINTRESOURCE(inResuorce), IMAGE_BITMAP, 0, 0, NULL);
+    hbm = (HBITMAP)SendDlgItemMessage(parent(), controlId(), STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hbm);
+    if (hbm != NULL)
+        DeleteObject(hbm);
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
 }

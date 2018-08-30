@@ -37,7 +37,7 @@
 /**************************************************************************************************/
 
 MdAnimVis::MdAnimVis() {
-	reset();
+    reset();
 }
 
 /**************************************************************************************************/
@@ -45,12 +45,12 @@ MdAnimVis::MdAnimVis() {
 /**************************************************************************************************/
 
 void MdAnimVis::reset() {
-	mEnable = false;
-	mKeyList.clear();
+    mEnable = false;
+    mKeyList.clear();
 }
 
 void MdAnimVis::cloneData(INode * from, INode * to) {
-	AnimIO::cloneVisibilityData(from, to);
+    AnimIO::cloneVisibilityData(from, to);
 }
 
 /**************************************************************************************************/
@@ -58,28 +58,28 @@ void MdAnimVis::cloneData(INode * from, INode * to) {
 /**************************************************************************************************/
 
 void MdAnimVis::clearLink() {
-	mNode = nullptr;
-	reset();
+    mNode = nullptr;
+    reset();
 }
 
 bool MdAnimVis::linkNode(INode * node, bool loadData) {
-	clearLink();
-	if (node == nullptr) {
-		return false;
-	}
+    clearLink();
+    if (node == nullptr) {
+        return false;
+    }
 
-	if (!AnimIO::canApply(node)) {
-		return false;
-	}
+    if (!AnimIO::canApply(node)) {
+        return false;
+    }
 
-	mNode = node;
-	if (loadData) {
-		if (!loadFromNode()) {
-			clearLink();
-			return false;
-		}
-	}
-	return true;
+    mNode = node;
+    if (loadData) {
+        if (!loadFromNode()) {
+            clearLink();
+            return false;
+        }
+    }
+    return true;
 }
 
 /**************************************************************************************************/
@@ -87,28 +87,28 @@ bool MdAnimVis::linkNode(INode * node, bool loadData) {
 /**************************************************************************************************/
 
 void MdAnimVis::saveToNode(INode * node) const {
-	if (node) {
-		try {
-			AnimIO::saveVisibilityToNode(node, *this);
-		}
-		catch (std::exception & e) {
-			LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
-					<< "> object. Reason: <" << e.what() << ">";
-		}
-	}
+    if (node) {
+        try {
+            AnimIO::saveVisibilityToNode(node, *this);
+        }
+        catch (std::exception & e) {
+            LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
+                    << "> object. Reason: <" << e.what() << ">";
+        }
+    }
 }
 
 bool MdAnimVis::loadFromNode(INode * node) {
-	if (node) {
-		try {
-			return AnimIO::loadVisibilityFromNode(node, *this);
-		}
-		catch (std::exception & e) {
-			LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
-					<< "> object. Reason: <" << e.what() << ">";
-		}
-	}
-	return false;
+    if (node) {
+        try {
+            return AnimIO::loadVisibilityFromNode(node, *this);
+        }
+        catch (std::exception & e) {
+            LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
+                    << "> object. Reason: <" << e.what() << ">";
+        }
+    }
+    return false;
 }
 
 /**************************************************************************************************/

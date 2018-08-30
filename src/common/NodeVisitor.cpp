@@ -40,30 +40,30 @@
 /**************************************************************************************************/
 
 bool NodeVisitor::visitChildrenOf(INode * root, const Function & fn) {
-	DbgAssert(fn);
-	int numChildren = root->NumberOfChildren();
-	for (int idx = 0; idx < numChildren; ++idx) {
-		if (!fn(root->GetChildNode(idx))) {
-			return false;
-		}
-	}
-	return true;
+    DbgAssert(fn);
+    int numChildren = root->NumberOfChildren();
+    for (int idx = 0; idx < numChildren; ++idx) {
+        if (!fn(root->GetChildNode(idx))) {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool NodeVisitor::visitAllOf(INode * root, const Function & fn) {
-	DbgAssert(fn);
-	int numChildren = root->NumberOfChildren();
-	for (int idx = 0; idx < numChildren; ++idx) {
-		INode * currNode = root->GetChildNode(idx);
-		if (!fn(currNode) || !visitAllOf(currNode, fn)) {
-			return false;
-		}
-	}
-	return true;
+    DbgAssert(fn);
+    int numChildren = root->NumberOfChildren();
+    for (int idx = 0; idx < numChildren; ++idx) {
+        INode * currNode = root->GetChildNode(idx);
+        if (!fn(currNode) || !visitAllOf(currNode, fn)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool NodeVisitor::visitAll(const Function & fn) {
-	return visitAllOf(GetCOREInterface()->GetRootNode(), fn);
+    return visitAllOf(GetCOREInterface()->GetRootNode(), fn);
 }
 
 /**************************************************************************************************/
@@ -71,8 +71,8 @@ bool NodeVisitor::visitAll(const Function & fn) {
 /**************************************************************************************************/
 
 bool NodeVisitor::sceneContainsMainObj() {
-	auto hasMainObj = [](INode * n) ->bool { return !MainObjParamsWrapper::isMainObj(n); };
-	return !NodeVisitor::visitChildrenOf(GetCOREInterface()->GetRootNode(), hasMainObj);
+    auto hasMainObj = [](INode * n) ->bool { return !MainObjParamsWrapper::isMainObj(n); };
+    return !NodeVisitor::visitChildrenOf(GetCOREInterface()->GetRootNode(), hasMainObj);
 }
 
 /**************************************************************************************************/

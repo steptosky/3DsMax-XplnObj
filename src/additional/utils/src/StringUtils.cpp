@@ -40,22 +40,22 @@
 
 namespace sts {
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	// todo check the possible problem with the string length, maybe there is the problem
-	wchar_t * toWchar(const char * ascii, size_t inCount) {
-		assert(ascii);
-		inCount += 1;
+// todo check the possible problem with the string length, maybe there is the problem
+wchar_t * toWchar(const char * ascii, size_t inCount) {
+    assert(ascii);
+    inCount += 1;
 
 #ifdef _MSC_VER
-		wchar_t * buffer = new wchar_t[inCount];
-		buffer[0] = '\0';
-		size_t res = 0;
-		if (mbstowcs_s(&res, buffer, inCount, ascii, inCount - 1) == 0)
-			buffer[inCount - 1] = '\0';
-		return buffer;
+    wchar_t * buffer = new wchar_t[inCount];
+    buffer[0] = '\0';
+    size_t res = 0;
+    if (mbstowcs_s(&res, buffer, inCount, ascii, inCount - 1) == 0)
+        buffer[inCount - 1] = '\0';
+    return buffer;
 #else
 		wchar_t *buffer = new wchar_t[inCount];
 		buffer[0] = '\0';
@@ -63,20 +63,20 @@ namespace sts {
 			buffer[inCount - 1] = '\0';
 		return buffer;
 #endif
-	}
+}
 
-	// todo check the posible problem with the string length, maybe there is the problem
-	char * toMbChar(const wchar_t * wide, size_t inCount) {
-		assert(wide);
-		inCount += 1;
+// todo check the posible problem with the string length, maybe there is the problem
+char * toMbChar(const wchar_t * wide, size_t inCount) {
+    assert(wide);
+    inCount += 1;
 
 #ifdef _MSC_VER
-		char * buffer = new char[inCount];
-		buffer[0] = '\0';
-		size_t res = 0;
-		if (wcstombs_s(&res, buffer, inCount, wide, inCount - 1) == 0)
-			buffer[inCount - 1] = '\0';
-		return buffer;
+    char * buffer = new char[inCount];
+    buffer[0] = '\0';
+    size_t res = 0;
+    if (wcstombs_s(&res, buffer, inCount, wide, inCount - 1) == 0)
+        buffer[inCount - 1] = '\0';
+    return buffer;
 #else
 		char *buffer = new char[inCount];
 		buffer[0] = '\0';
@@ -84,119 +84,119 @@ namespace sts {
 			buffer[inCount - 1] = '\0';
 		return buffer;
 #endif
-	}
+}
 
-	/****************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	/****************************************************************************************************/
+/****************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+/****************************************************************************************************/
 
-	std::string toMbString(const std::wstring & str) {
-		char * c = toMbChar(str.data(), str.length());
-		std::string out(c);
-		delete[]c;
-		return out;
-	}
+std::string toMbString(const std::wstring & str) {
+    char * c = toMbChar(str.data(), str.length());
+    std::string out(c);
+    delete[]c;
+    return out;
+}
 
-	std::string toMbString(const wchar_t * str) {
-		assert(str);
-		char * c = toMbChar(str, wcslen(str));
-		std::string out(c);
-		delete[]c;
-		return out;
-	}
+std::string toMbString(const wchar_t * str) {
+    assert(str);
+    char * c = toMbChar(str, wcslen(str));
+    std::string out(c);
+    delete[]c;
+    return out;
+}
 
-	std::string toMbString(const long double v, uint8_t precision) {
-		char buff[64];
-		std::string prec = ("%.");
-		prec.append(toMbString(precision));
-		prec.append("Lf");
+std::string toMbString(const long double v, uint8_t precision) {
+    char buff[64];
+    std::string prec = ("%.");
+    prec.append(toMbString(precision));
+    prec.append("Lf");
 #ifdef _MSC_VER
-		return (sprintf_s(buff, 64, prec.data(), v) < 0) ? std::string() : std::string(buff);
+    return (sprintf_s(buff, 64, prec.data(), v) < 0) ? std::string() : std::string(buff);
 #else
 		return (sprintf(buff, prec.data(), v) < 0) ? std::string() : std::string(buff);
 #endif
-	}
+}
 
-	std::string toMbString(const double v, uint8_t precision) {
-		char buff[64];
-		std::string prec = ("%.");
-		prec.append(toMbString(precision));
-		prec.append("f");
+std::string toMbString(const double v, uint8_t precision) {
+    char buff[64];
+    std::string prec = ("%.");
+    prec.append(toMbString(precision));
+    prec.append("f");
 #ifdef _MSC_VER
-		return (sprintf_s(buff, 64, prec.data(), v) < 0) ? std::string() : std::string(buff);
+    return (sprintf_s(buff, 64, prec.data(), v) < 0) ? std::string() : std::string(buff);
 #else
 		return (sprintf(buff, prec.data(), v) < 0) ? std::string() : std::string(buff);
 #endif
-	}
+}
 
-	std::string toMbString(const float v, uint8_t precision) {
-		char buff[64];
-		std::string prec = ("%.");
-		prec.append(toMbString(precision));
-		prec.append("f");
+std::string toMbString(const float v, uint8_t precision) {
+    char buff[64];
+    std::string prec = ("%.");
+    prec.append(toMbString(precision));
+    prec.append("f");
 #ifdef _MSC_VER
-		return (sprintf_s(buff, 64, prec.data(), v) < 0) ? std::string() : std::string(buff);
+    return (sprintf_s(buff, 64, prec.data(), v) < 0) ? std::string() : std::string(buff);
 #else
 		return (sprintf(buff, prec.data(), v) < 0) ? std::string() : std::string(buff);
 #endif
-	}
+}
 
-	/****************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	/****************************************************************************************************/
+/****************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+/****************************************************************************************************/
 
-	std::wstring toWString(const std::string & str) {
-		wchar_t * c = toWchar(str.c_str(), str.length());
-		std::wstring out(c);
-		delete[]c;
-		return out;
-	}
+std::wstring toWString(const std::string & str) {
+    wchar_t * c = toWchar(str.c_str(), str.length());
+    std::wstring out(c);
+    delete[]c;
+    return out;
+}
 
-	std::wstring toWString(const char * str) {
-		assert(str);
-		wchar_t * c = toWchar(str, strlen(str));
-		std::wstring out(c);
-		delete[]c;
-		return out;
-	}
+std::wstring toWString(const char * str) {
+    assert(str);
+    wchar_t * c = toWchar(str, strlen(str));
+    std::wstring out(c);
+    delete[]c;
+    return out;
+}
 
-	std::wstring toWString(const long double v, uint8_t precision) {
-		wchar_t buff[64];
-		std::wstring prec = (L"%.");
-		prec.append(toWString(precision));
-		prec.append(L"Lf");
+std::wstring toWString(const long double v, uint8_t precision) {
+    wchar_t buff[64];
+    std::wstring prec = (L"%.");
+    prec.append(toWString(precision));
+    prec.append(L"Lf");
 #ifdef _MSC_VER
-		return (swprintf_s(buff, 64, prec.data(), v) < 0) ? std::wstring() : std::wstring(buff);
+    return (swprintf_s(buff, 64, prec.data(), v) < 0) ? std::wstring() : std::wstring(buff);
 #else
 		return (swprintf(buff, 64, prec.data(), v) < 0) ? std::wstring() : std::wstring(buff);
 #endif // _MSC_VER
-	}
+}
 
-	std::wstring toWString(const double v, uint8_t precision) {
-		wchar_t buff[64];
-		std::wstring prec = (L"%.");
-		prec.append(toWString(precision));
-		prec.append(L"f");
+std::wstring toWString(const double v, uint8_t precision) {
+    wchar_t buff[64];
+    std::wstring prec = (L"%.");
+    prec.append(toWString(precision));
+    prec.append(L"f");
 #ifdef _MSC_VER
-		return (swprintf_s(buff, 64, prec.data(), v) < 0) ? std::wstring() : std::wstring(buff);
+    return (swprintf_s(buff, 64, prec.data(), v) < 0) ? std::wstring() : std::wstring(buff);
 #else
 		return (swprintf(buff, 64, prec.data(), v) < 0) ? std::wstring() : std::wstring(buff);
 #endif // _MSC_VER
-	}
+}
 
-	std::wstring toWString(const float v, uint8_t precision) {
-		wchar_t buff[64];
-		std::wstring prec = (L"%.");
-		prec.append(toWString(precision));
-		prec.append(L"f");
+std::wstring toWString(const float v, uint8_t precision) {
+    wchar_t buff[64];
+    std::wstring prec = (L"%.");
+    prec.append(toWString(precision));
+    prec.append(L"f");
 #ifdef _MSC_VER
-		return (swprintf_s(buff, 64, prec.data(), v) < 0) ? std::wstring() : std::wstring(buff);
+    return (swprintf_s(buff, 64, prec.data(), v) < 0) ? std::wstring() : std::wstring(buff);
 #else
 		return (swprintf(buff, 64, prec.data(), v) < 0) ? std::wstring() : std::wstring(buff);
 #endif // _MSC_VER	
-	}
+}
 
-	/****************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	/****************************************************************************************************/
+/****************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+/****************************************************************************************************/
 }

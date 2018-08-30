@@ -41,28 +41,28 @@
 class MainMenuPresenter {
 public:
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	class IView {
-	public:
-		virtual ~IView() = default;
-		std::function<void()> signalDonate;
-		std::function<void()> signalUpdate;
-		std::function<void()> signalDoc;
-		std::function<void()> signalAbout;
-		std::function<void()> signalSettings;
-	};
+    class IView {
+    public:
+        virtual ~IView() = default;
+        std::function<void()> signalDonate;
+        std::function<void()> signalUpdate;
+        std::function<void()> signalDoc;
+        std::function<void()> signalAbout;
+        std::function<void()> signalSettings;
+    };
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	explicit MainMenuPresenter(IView * view);
-	virtual ~MainMenuPresenter() = default;
+    explicit MainMenuPresenter(IView * view);
+    virtual ~MainMenuPresenter() = default;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 private:
 
-	IView * mView;
+    IView * mView;
 
 };
 

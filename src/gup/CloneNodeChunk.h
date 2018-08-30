@@ -45,14 +45,14 @@
 class CloneNodeChunk {
 public:
 
-	CloneNodeChunk();
-	~CloneNodeChunk();
+    CloneNodeChunk();
+    ~CloneNodeChunk();
 
 private:
 
-	static void slotPostNodesClone(void * param, NotifyInfo *);
-	static void cloneData(INode * origin, INode * clone);
-	static int sortFunction(const void * item1, const void * item2);
+    static void slotPostNodesClone(void * param, NotifyInfo *);
+    static void cloneData(INode * origin, INode * clone);
+    static int sortFunction(const void * item1, const void * item2);
 
 };
 

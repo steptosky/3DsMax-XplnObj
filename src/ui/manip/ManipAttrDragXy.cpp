@@ -42,244 +42,244 @@
 
 namespace ui {
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Static area *///////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Static area *///////////////////////////////////////////
+/**************************************************************************************************/
 
-	INT_PTR ManipAttrDragXy::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		ManipAttrDragXy * theDlg;
-		if (msg == WM_INITDIALOG) {
-			theDlg = reinterpret_cast<ManipAttrDragXy*>(lParam);
-			DLSetWindowLongPtr(hWnd, lParam);
-			theDlg->initWindow(hWnd);
-		}
-		else if (msg == WM_DESTROY) {
-			theDlg = DLGetWindowLongPtr<ManipAttrDragXy*>(hWnd);
-			theDlg->destroyWindow(hWnd);
-		}
-		else {
-			theDlg = DLGetWindowLongPtr<ManipAttrDragXy *>(hWnd);
-			if (!theDlg) {
-				return FALSE;
-			}
-		}
+INT_PTR ManipAttrDragXy::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    ManipAttrDragXy * theDlg;
+    if (msg == WM_INITDIALOG) {
+        theDlg = reinterpret_cast<ManipAttrDragXy*>(lParam);
+        DLSetWindowLongPtr(hWnd, lParam);
+        theDlg->initWindow(hWnd);
+    }
+    else if (msg == WM_DESTROY) {
+        theDlg = DLGetWindowLongPtr<ManipAttrDragXy*>(hWnd);
+        theDlg->destroyWindow(hWnd);
+    }
+    else {
+        theDlg = DLGetWindowLongPtr<ManipAttrDragXy *>(hWnd);
+        if (!theDlg) {
+            return FALSE;
+        }
+    }
 
-		//--------------------------------------
+    //--------------------------------------
 
-		switch (msg) {
-			case WM_COMMAND: {
-				switch (LOWORD(wParam)) {
-					case BTN_X_DATAREF: {
-						Factory::showNotImplemented();
-						break;
-					}
-					case BTN_Y_DATAREF: {
-						Factory::showNotImplemented();
-						break;
-					}
-					case CMB_CURSOR: {
-						if (HIWORD(wParam) == CBN_SELCHANGE) {
-							theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
-							theDlg->save();
-						}
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			case WM_CUSTEDIT_ENTER: {
-				switch (LOWORD(wParam)) {
-					case EDIT_X_DATAREF: {
-						theDlg->mData.setXDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtXDataRef)));
-						theDlg->save();
-						break;
-					}
-					case EDIT_Y_DATAREF: {
-						theDlg->mData.setYDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtYDataRef)));
-						theDlg->save();
-						break;
-					}
-					case EDIT_TOOLTIP: {
-						theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
-						theDlg->save();
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			case CC_SPINNER_CHANGE: {
-				switch (LOWORD(wParam)) {
-					case SPN_X: {
-						theDlg->mData.setX(theDlg->mSpnX->GetFVal());
-						theDlg->save();
-						break;
-					}
-					case SPN_MIN: {
-						theDlg->mData.setXMin(theDlg->mSpnXMin->GetFVal());
-						theDlg->save();
-						break;
-					}
-					case SPN_MAX: {
-						theDlg->mData.setXMax(theDlg->mSpnXMax->GetFVal());
-						theDlg->save();
-						break;
-					}
-					case SPN_Y: {
-						theDlg->mData.setY(theDlg->mSpnY->GetFVal());
-						theDlg->save();
-						break;
-					}
-					case SPN_MIN2: {
-						theDlg->mData.setYMin(theDlg->mSpnYMin->GetFVal());
-						theDlg->save();
-						break;
-					}
-					case SPN_MAX2: {
-						theDlg->mData.setYMax(theDlg->mSpnYMax->GetFVal());
-						theDlg->save();
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			default: break;
-		}
-		return 0;
-	}
+    switch (msg) {
+        case WM_COMMAND: {
+            switch (LOWORD(wParam)) {
+                case BTN_X_DATAREF: {
+                    Factory::showNotImplemented();
+                    break;
+                }
+                case BTN_Y_DATAREF: {
+                    Factory::showNotImplemented();
+                    break;
+                }
+                case CMB_CURSOR: {
+                    if (HIWORD(wParam) == CBN_SELCHANGE) {
+                        theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
+                        theDlg->save();
+                    }
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        case WM_CUSTEDIT_ENTER: {
+            switch (LOWORD(wParam)) {
+                case EDIT_X_DATAREF: {
+                    theDlg->mData.setXDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtXDataRef)));
+                    theDlg->save();
+                    break;
+                }
+                case EDIT_Y_DATAREF: {
+                    theDlg->mData.setYDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtYDataRef)));
+                    theDlg->save();
+                    break;
+                }
+                case EDIT_TOOLTIP: {
+                    theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
+                    theDlg->save();
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        case CC_SPINNER_CHANGE: {
+            switch (LOWORD(wParam)) {
+                case SPN_X: {
+                    theDlg->mData.setX(theDlg->mSpnX->GetFVal());
+                    theDlg->save();
+                    break;
+                }
+                case SPN_MIN: {
+                    theDlg->mData.setXMin(theDlg->mSpnXMin->GetFVal());
+                    theDlg->save();
+                    break;
+                }
+                case SPN_MAX: {
+                    theDlg->mData.setXMax(theDlg->mSpnXMax->GetFVal());
+                    theDlg->save();
+                    break;
+                }
+                case SPN_Y: {
+                    theDlg->mData.setY(theDlg->mSpnY->GetFVal());
+                    theDlg->save();
+                    break;
+                }
+                case SPN_MIN2: {
+                    theDlg->mData.setYMin(theDlg->mSpnYMin->GetFVal());
+                    theDlg->save();
+                    break;
+                }
+                case SPN_MAX2: {
+                    theDlg->mData.setYMax(theDlg->mSpnYMax->GetFVal());
+                    theDlg->save();
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        default: break;
+    }
+    return 0;
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	ManipAttrDragXy::ManipAttrDragXy(MdManip * modelData)
-		: mModelData(modelData) {
-		assert(mModelData);
-	}
+ManipAttrDragXy::ManipAttrDragXy(MdManip * modelData)
+    : mModelData(modelData) {
+    assert(mModelData);
+}
 
-	ManipAttrDragXy::~ManipAttrDragXy() {
-		ManipAttrDragXy::destroy();
-	}
+ManipAttrDragXy::~ManipAttrDragXy() {
+    ManipAttrDragXy::destroy();
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrDragXy::create(HWND inParent) {
-		assert(inParent);
-		mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
-									MAKEINTRESOURCE(ROLL_MANIP_DRAGXY),
-									inParent,
-									reinterpret_cast<DLGPROC>(panelProc),
-									reinterpret_cast<LPARAM>(this)));
-		assert(mHwnd);
-		if (mHwnd) {
-			toWindow();
-			mHwnd.show(true);
-		}
-		else {
-			LError << WinCode(GetLastError());
-		}
-	}
+void ManipAttrDragXy::create(HWND inParent) {
+    assert(inParent);
+    mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
+                                  MAKEINTRESOURCE(ROLL_MANIP_DRAGXY),
+                                  inParent,
+                                  reinterpret_cast<DLGPROC>(panelProc),
+                                  reinterpret_cast<LPARAM>(this)));
+    assert(mHwnd);
+    if (mHwnd) {
+        toWindow();
+        mHwnd.show(true);
+    }
+    else {
+        LError << WinCode(GetLastError());
+    }
+}
 
-	void ManipAttrDragXy::destroy() {
-		if (mHwnd) {
-			BOOL res = DestroyWindow(mHwnd.hwnd());
-			if (!res) {
-				LError << WinCode(GetLastError());
-			}
-			mHwnd.release();
-		}
-	}
+void ManipAttrDragXy::destroy() {
+    if (mHwnd) {
+        BOOL res = DestroyWindow(mHwnd.hwnd());
+        if (!res) {
+            LError << WinCode(GetLastError());
+        }
+        mHwnd.release();
+    }
+}
 
-	RECT ManipAttrDragXy::rect() const {
-		RECT r{0,0,0,0};
-		if (mHwnd) {
-			r = mHwnd.rect();
-		}
-		return r;
-	}
+RECT ManipAttrDragXy::rect() const {
+    RECT r{0, 0, 0, 0};
+    if (mHwnd) {
+        r = mHwnd.rect();
+    }
+    return r;
+}
 
-	void ManipAttrDragXy::move(const POINT & point) {
-		if (mHwnd) {
-			mHwnd.move(point);
-		}
-	}
+void ManipAttrDragXy::move(const POINT & point) {
+    if (mHwnd) {
+        mHwnd.move(point);
+    }
+}
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Functions */////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrDragXy::setManip(const xobj::AttrManipBase & manip) {
-		if (manip.type() != mData.type()) {
-			LError << "Incorrect manipulator: " << manip.type().toString();
-			return;
-		}
-		mData = static_cast<const xobj::AttrManipDragXy &>(manip);
-	}
+void ManipAttrDragXy::setManip(const xobj::AttrManipBase & manip) {
+    if (manip.type() != mData.type()) {
+        LError << "Incorrect manipulator: " << manip.type().toString();
+        return;
+    }
+    mData = static_cast<const xobj::AttrManipDragXy &>(manip);
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrDragXy::initWindow(HWND hWnd) {
-		mSpnX = SetupFloatSpinner(hWnd, SPN_X, SPN_X_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
-		mSpnXMin = SetupFloatSpinner(hWnd, SPN_MIN, SPN_MIN_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
-		mSpnXMax = SetupFloatSpinner(hWnd, SPN_MAX, SPN_MAX_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
-		cBtnXDataRef.setup(hWnd, BTN_X_DATAREF);
-		cEdtXDataRef = GetICustEdit(GetDlgItem(hWnd, EDIT_X_DATAREF));
+void ManipAttrDragXy::initWindow(HWND hWnd) {
+    mSpnX = SetupFloatSpinner(hWnd, SPN_X, SPN_X_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+    mSpnXMin = SetupFloatSpinner(hWnd, SPN_MIN, SPN_MIN_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+    mSpnXMax = SetupFloatSpinner(hWnd, SPN_MAX, SPN_MAX_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+    cBtnXDataRef.setup(hWnd, BTN_X_DATAREF);
+    cEdtXDataRef = GetICustEdit(GetDlgItem(hWnd, EDIT_X_DATAREF));
 
-		mSpnY = SetupFloatSpinner(hWnd, SPN_Y, SPN_Y_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
-		mSpnYMin = SetupFloatSpinner(hWnd, SPN_MIN2, SPN_MIN_EDIT2, -10000.0f, 10000.0f, 0.0f, 0.1f);
-		mSpnYMax = SetupFloatSpinner(hWnd, SPN_MAX2, SPN_MAX_EDIT2, -10000.0f, 10000.0f, 0.0f, 0.1f);
-		cBtnYDataRef.setup(hWnd, BTN_Y_DATAREF);
-		cEdtYDataRef = GetICustEdit(GetDlgItem(hWnd, EDIT_Y_DATAREF));
+    mSpnY = SetupFloatSpinner(hWnd, SPN_Y, SPN_Y_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+    mSpnYMin = SetupFloatSpinner(hWnd, SPN_MIN2, SPN_MIN_EDIT2, -10000.0f, 10000.0f, 0.0f, 0.1f);
+    mSpnYMax = SetupFloatSpinner(hWnd, SPN_MAX2, SPN_MAX_EDIT2, -10000.0f, 10000.0f, 0.0f, 0.1f);
+    cBtnYDataRef.setup(hWnd, BTN_Y_DATAREF);
+    cEdtYDataRef = GetICustEdit(GetDlgItem(hWnd, EDIT_Y_DATAREF));
 
-		cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
-		cCmbCursor.setup(hWnd, CMB_CURSOR);
+    cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
+    cCmbCursor.setup(hWnd, CMB_CURSOR);
 
-		for (auto & curr : xobj::ECursor::list()) {
-			cCmbCursor.addItem(sts::toString(curr.toUiString()));
-		}
-		cCmbCursor.setCurrSelected(0);
-	}
+    for (auto & curr : xobj::ECursor::list()) {
+        cCmbCursor.addItem(sts::toString(curr.toUiString()));
+    }
+    cCmbCursor.setCurrSelected(0);
+}
 
-	void ManipAttrDragXy::destroyWindow(HWND /*hWnd*/) {
-		ReleaseISpinner(mSpnX);
-		ReleaseISpinner(mSpnXMin);
-		ReleaseISpinner(mSpnXMax);
-		cBtnXDataRef.release();
-		ReleaseICustEdit(cEdtXDataRef);
+void ManipAttrDragXy::destroyWindow(HWND /*hWnd*/) {
+    ReleaseISpinner(mSpnX);
+    ReleaseISpinner(mSpnXMin);
+    ReleaseISpinner(mSpnXMax);
+    cBtnXDataRef.release();
+    ReleaseICustEdit(cEdtXDataRef);
 
-		ReleaseISpinner(mSpnY);
-		ReleaseISpinner(mSpnYMin);
-		ReleaseISpinner(mSpnYMax);
-		cBtnYDataRef.release();
-		ReleaseICustEdit(cEdtYDataRef);
+    ReleaseISpinner(mSpnY);
+    ReleaseISpinner(mSpnYMin);
+    ReleaseISpinner(mSpnYMax);
+    cBtnYDataRef.release();
+    ReleaseICustEdit(cEdtYDataRef);
 
-		ReleaseICustEdit(cEdtToolType);
-		cCmbCursor.release();
-	}
+    ReleaseICustEdit(cEdtToolType);
+    cCmbCursor.release();
+}
 
-	void ManipAttrDragXy::toWindow() {
-		mSpnX->SetValue(mData.x(), FALSE);
-		mSpnXMin->SetValue(mData.xMin(), FALSE);
-		mSpnXMax->SetValue(mData.xMax(), FALSE);
-		UiUtilities::setText(cEdtXDataRef, sts::toString(mData.xDataref()));
+void ManipAttrDragXy::toWindow() {
+    mSpnX->SetValue(mData.x(), FALSE);
+    mSpnXMin->SetValue(mData.xMin(), FALSE);
+    mSpnXMax->SetValue(mData.xMax(), FALSE);
+    UiUtilities::setText(cEdtXDataRef, sts::toString(mData.xDataref()));
 
-		mSpnY->SetValue(mData.y(), FALSE);
-		mSpnYMin->SetValue(mData.yMin(), FALSE);
-		mSpnYMax->SetValue(mData.yMax(), FALSE);
-		UiUtilities::setText(cEdtYDataRef, sts::toString(mData.yDataref()));
+    mSpnY->SetValue(mData.y(), FALSE);
+    mSpnYMin->SetValue(mData.yMin(), FALSE);
+    mSpnYMax->SetValue(mData.yMax(), FALSE);
+    UiUtilities::setText(cEdtYDataRef, sts::toString(mData.yDataref()));
 
-		UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
-		cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
-	}
+    UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
+    cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
+}
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
 }

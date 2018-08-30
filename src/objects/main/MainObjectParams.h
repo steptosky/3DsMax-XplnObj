@@ -42,125 +42,170 @@
  * \details Parameter blocks of the X-Obj object
  */
 enum eMainObjParamsBlocks : BlockID {
-	MainObjAttrParams, //<! Attribute params
-	MainObjExpParams, //<! Export params
-	MainObjDisplay, //!< For internal using
+    MainObjAttrParams,
+    //<! Attribute params
+    MainObjExpParams,
+    //<! Export params
+    MainObjDisplay,
+    //!< For internal using
 };
 
 /*!
  * \warning 3ds max 9 does not support the value more than 512
  */
 enum eMainObjAttrParams : ParamID {
-	//-------------------------------------
-	// string
+    //-------------------------------------
+    // string
 
-	MainObjAttr_Texture = 0,
-	MainObjAttr_TextureLit,
-	MainObjAttr_TextureNormal,
-	MainObjAttr_PathPrefix,
+    MainObjAttr_Texture = 0,
+    MainObjAttr_TextureLit,
+    MainObjAttr_TextureNormal,
+    MainObjAttr_PathPrefix,
 
-	//-------------------------------------
-	// bool
+    //-------------------------------------
+    // bool
 
-	MainObjAttr_NoShadow = 10,
-	MainObjAttr_Tilted,
-	MainObjAttr_CockpitLit,
-	MainObjAttr_NormalMetalness,
-	MainObjAttr_BlendGlass,
+    MainObjAttr_NoShadow = 10,
+    MainObjAttr_Tilted,
+    MainObjAttr_CockpitLit,
+    MainObjAttr_NormalMetalness,
+    MainObjAttr_BlendGlass,
 
-	//-------------------------------------
-	// multi-states
+    //-------------------------------------
+    // multi-states
 
-	MainObjAttr_DryWet = 20, //<! int 
+    MainObjAttr_DryWet = 20,
+    //<! int 
 
-	//-------------------------------------
-	// multi-values
+    //-------------------------------------
+    // multi-values
 
-	MainObjAttr_BlendingType = 25, //<! int 
-	MainObjAttr_BlendingRatio, //<! float 
+    MainObjAttr_BlendingType = 25,
+    //<! int 
+    MainObjAttr_BlendingRatio,
+    //<! float 
 
-	MainObjAttr_LayerGroupLayer = 30, //<! string 
-	MainObjAttr_LayerGroupOffset, //<! int 
+    MainObjAttr_LayerGroupLayer = 30,
+    //<! string 
+    MainObjAttr_LayerGroupOffset,
+    //<! int 
 
-	MainObjAttr_LayerGroupDrapedLayer = 35, //<! string 
-	MainObjAttr_LayerGroupDrapedOffset, //<! int 
+    MainObjAttr_LayerGroupDrapedLayer = 35,
+    //<! string 
+    MainObjAttr_LayerGroupDrapedOffset,
+    //<! int 
 
-	MainObjAttr_LodDrapEnable = 40, //<! bool 
-	MainObjAttr_LodDrapDistance, //<! float 
+    MainObjAttr_LodDrapEnable = 40,
+    //<! bool 
+    MainObjAttr_LodDrapDistance,
+    //<! float 
 
-	MainObjAttr_SlungLoadWeightEnable = 45, //<! bool 
-	MainObjAttr_SlungLoadWeight, //<! float 
+    MainObjAttr_SlungLoadWeightEnable = 45,
+    //<! bool 
+    MainObjAttr_SlungLoadWeight,
+    //<! float 
 
-	MainObjAttr_SpecularEnable = 50, //<! bool 
-	MainObjAttr_SpecularRatio, //<! float 
+    MainObjAttr_SpecularEnable = 50,
+    //<! bool 
+    MainObjAttr_SpecularRatio,
+    //<! float 
 
-	MainObjAttr_TintEnable = 55, //<! bool 
-	MainObjAttr_TintAlbedo, //<! float 
-	MainObjAttr_TintEmissive, //<! float 
+    MainObjAttr_TintEnable = 55,
+    //<! bool 
+    MainObjAttr_TintAlbedo,
+    //<! float 
+    MainObjAttr_TintEmissive,
+    //<! float 
 
-	MainObjAttr_SlopeLimitEnable = 60, //<! bool 
-	MainObjAttr_SlopeLimitMinPitch, //<! float 
-	MainObjAttr_SlopeLimitMaxPitch, //<! float 
-	MainObjAttr_SlopeLimitMinRoll, //<! float 
-	MainObjAttr_SlopeLimitMaxRoll, //<! float 
+    MainObjAttr_SlopeLimitEnable = 60,
+    //<! bool 
+    MainObjAttr_SlopeLimitMinPitch,
+    //<! float 
+    MainObjAttr_SlopeLimitMaxPitch,
+    //<! float 
+    MainObjAttr_SlopeLimitMinRoll,
+    //<! float 
+    MainObjAttr_SlopeLimitMaxRoll,
+    //<! float 
 
-	//-------------------------------------
+    //-------------------------------------
 
-	MainObjAttr_CockpitRegion_1 = 70, //<! bool 
-	MainObjAttr_CockpitRegion_1_L, //<! int 
-	MainObjAttr_CockpitRegion_1_B, //<! int 
-	MainObjAttr_CockpitRegion_1_R, //<! int 
-	MainObjAttr_CockpitRegion_1_T, //<! int 
+    MainObjAttr_CockpitRegion_1 = 70,
+    //<! bool 
+    MainObjAttr_CockpitRegion_1_L,
+    //<! int 
+    MainObjAttr_CockpitRegion_1_B,
+    //<! int 
+    MainObjAttr_CockpitRegion_1_R,
+    //<! int 
+    MainObjAttr_CockpitRegion_1_T,
+    //<! int 
 
-	MainObjAttr_CockpitRegion_2 = 80, //<! bool 
-	MainObjAttr_CockpitRegion_2_L, //<! int 
-	MainObjAttr_CockpitRegion_2_B, //<! int 
-	MainObjAttr_CockpitRegion_2_R, //<! int 
-	MainObjAttr_CockpitRegion_2_T, //<! int 
+    MainObjAttr_CockpitRegion_2 = 80,
+    //<! bool 
+    MainObjAttr_CockpitRegion_2_L,
+    //<! int 
+    MainObjAttr_CockpitRegion_2_B,
+    //<! int 
+    MainObjAttr_CockpitRegion_2_R,
+    //<! int 
+    MainObjAttr_CockpitRegion_2_T,
+    //<! int 
 
-	MainObjAttr_CockpitRegion_3 = 90, //<! bool 
-	MainObjAttr_CockpitRegion_3_L, //<! int 
-	MainObjAttr_CockpitRegion_3_B, //<! int 
-	MainObjAttr_CockpitRegion_3_R, //<! int 
-	MainObjAttr_CockpitRegion_3_T, //<! int 
+    MainObjAttr_CockpitRegion_3 = 90,
+    //<! bool 
+    MainObjAttr_CockpitRegion_3_L,
+    //<! int 
+    MainObjAttr_CockpitRegion_3_B,
+    //<! int 
+    MainObjAttr_CockpitRegion_3_R,
+    //<! int 
+    MainObjAttr_CockpitRegion_3_T,
+    //<! int 
 
-	MainObjAttr_CockpitRegion_4 = 100, //<! bool 
-	MainObjAttr_CockpitRegion_4_L, //<! int 
-	MainObjAttr_CockpitRegion_4_B, //<! int 
-	MainObjAttr_CockpitRegion_4_R, //<! int 
-	MainObjAttr_CockpitRegion_4_T, //<! int 
+    MainObjAttr_CockpitRegion_4 = 100,
+    //<! bool 
+    MainObjAttr_CockpitRegion_4_L,
+    //<! int 
+    MainObjAttr_CockpitRegion_4_B,
+    //<! int 
+    MainObjAttr_CockpitRegion_4_R,
+    //<! int 
+    MainObjAttr_CockpitRegion_4_T,
+    //<! int 
 
-	//-------------------------------------
+    //-------------------------------------
 };
 
 enum eMainObjExpParams : ParamID {
-	//-------------------------------------
-	// bool
+    //-------------------------------------
+    // bool
 
-	MainObjExp_Meshes = 0,
-	MainObjExp_Lines,
-	MainObjExp_Lights,
-	MainObjExp_Animation,
-	MainObjExp_Instancing,
-	MainObjExp_Debug,
-	MainObjExp_Optimisation,
+    MainObjExp_Meshes = 0,
+    MainObjExp_Lines,
+    MainObjExp_Lights,
+    MainObjExp_Animation,
+    MainObjExp_Instancing,
+    MainObjExp_Debug,
+    MainObjExp_Optimisation,
 
-	//-------------------------------------
+    //-------------------------------------
 
-	MainObj_ScaleEnabled = 15, //!< bool
-	MainObj_ScaleValue,
+    MainObj_ScaleEnabled = 15,
+    //!< bool
+    MainObj_ScaleValue,
 
-	//-------------------------------------
-	// bool
-	MainObjExp_NameMeshes = 30,
-	MainObjExp_NameLines,
-	MainObjExp_NameLights,
-	MainObjExp_NameDummies,
-	MainObjExp_TreeHierarchy,
+    //-------------------------------------
+    // bool
+    MainObjExp_NameMeshes = 30,
+    MainObjExp_NameLines,
+    MainObjExp_NameLights,
+    MainObjExp_NameDummies,
+    MainObjExp_TreeHierarchy,
 
-	MainObjAttr_ExportEnable = 50,
+    MainObjAttr_ExportEnable = 50,
 
-	//-------------------------------------
+    //-------------------------------------
 };
 
 /**************************************************************************************************/

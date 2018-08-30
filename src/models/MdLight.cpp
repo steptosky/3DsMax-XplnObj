@@ -36,11 +36,11 @@
 /**************************************************************************************************/
 
 MdLight::MdLight() {
-	reset();
+    reset();
 }
 
 MdLight::~MdLight() {
-	clearLink();
+    clearLink();
 }
 
 /**************************************************************************************************/
@@ -50,7 +50,7 @@ MdLight::~MdLight() {
 void MdLight::reset() {}
 
 void MdLight::cloneData(INode * from, INode * to) {
-	LightIO::cloneData(from, to);
+    LightIO::cloneData(from, to);
 }
 
 /**************************************************************************************************/
@@ -58,22 +58,22 @@ void MdLight::cloneData(INode * from, INode * to) {
 /**************************************************************************************************/
 
 void MdLight::clearLink() {
-	mNode = nullptr;
-	reset();
+    mNode = nullptr;
+    reset();
 }
 
 bool MdLight::linkNode(INode * node) {
-	clearLink();
-	mNode = node;
+    clearLink();
+    mNode = node;
 
-	if (mNode == nullptr) {
-		return false;
-	}
+    if (mNode == nullptr) {
+        return false;
+    }
 
-	if (!LightIO::canApply(mNode)) {
-		return false;
-	}
-	return true;
+    if (!LightIO::canApply(mNode)) {
+        return false;
+    }
+    return true;
 }
 
 /**************************************************************************************************/
@@ -81,28 +81,28 @@ bool MdLight::linkNode(INode * node) {
 /**************************************************************************************************/
 
 void MdLight::saveToNode(INode * node, const xobj::ObjAbstract & inObj) const {
-	if (node) {
-		try {
-			LightIO::saveToNode(node, &inObj);
-		}
-		catch (std::exception & e) {
-			LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
-					<< "> object. Reason: <" << e.what() << ">";
-		}
-	}
+    if (node) {
+        try {
+            LightIO::saveToNode(node, &inObj);
+        }
+        catch (std::exception & e) {
+            LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
+                    << "> object. Reason: <" << e.what() << ">";
+        }
+    }
 }
 
 bool MdLight::loadFromNode(INode * node, LightIO::ILightIO * callBack) {
-	if (node) {
-		try {
-			return LightIO::loadFromNode(node, callBack);
-		}
-		catch (std::exception & e) {
-			LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
-					<< "> object. Reason: <" << e.what() << ">";
-		}
-	}
-	return false;
+    if (node) {
+        try {
+            return LightIO::loadFromNode(node, callBack);
+        }
+        catch (std::exception & e) {
+            LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
+                    << "> object. Reason: <" << e.what() << ">";
+        }
+    }
+    return false;
 }
 
 /**************************************************************************************************/

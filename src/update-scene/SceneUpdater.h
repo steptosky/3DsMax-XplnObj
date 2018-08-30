@@ -38,29 +38,29 @@
 class SceneUpdater {
 public:
 
-	static void update(const sts::SemVersion & versionFrom, const sts::SemVersion & versionTo);
+    static void update(const sts::SemVersion & versionFrom, const sts::SemVersion & versionTo);
 
 private:
 
-	/*!
-	 * \details In the 0.4.0 XplnObj library was fixed manipulator logic 
-	 *          and added new manipulator 'panel'. This method checks 
-	 *          each INode in the scene and if it has cockpit attribute 
-	 *          the method applies the panel manipulator to the INode.
-	 *          This behavior is needed for the backward compatibility.
-	 *          
-	 *          It should not break the scene but it is good if the user
-	 *          manually checks each cockpit object to make sure all 
-	 *          things are correct with the manipulators after this method
-	 *          and disables manipulators if they are not needed.
-	 *          
-	 *          Although it should not break the scene the behavior
-	 *          can be changed it is not possible to avoid this situation
-	 *          because the previous behavior was based on the bug 
-	 *          and had undefined logic behavior in some cases, 
-	 *          it is too difficult to recognize and fix it programmatically.
-	 */
-	static void panelManipulators(const sts::SemVersion & versionFrom);
+    /*!
+     * \details In the 0.4.0 XplnObj library was fixed manipulator logic 
+     *          and added new manipulator 'panel'. This method checks 
+     *          each INode in the scene and if it has cockpit attribute 
+     *          the method applies the panel manipulator to the INode.
+     *          This behavior is needed for the backward compatibility.
+     *          
+     *          It should not break the scene but it is good if the user
+     *          manually checks each cockpit object to make sure all 
+     *          things are correct with the manipulators after this method
+     *          and disables manipulators if they are not needed.
+     *          
+     *          Although it should not break the scene the behavior
+     *          can be changed it is not possible to avoid this situation
+     *          because the previous behavior was based on the bug 
+     *          and had undefined logic behavior in some cases, 
+     *          it is too difficult to recognize and fix it programmatically.
+     */
+    static void panelManipulators(const sts::SemVersion & versionFrom);
 
 };
 

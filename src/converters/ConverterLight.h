@@ -43,24 +43,24 @@
 /**************************************************************************************************/
 
 class ConverterLight {
-	ConverterLight() = default;
-	~ConverterLight() = default;
+    ConverterLight() = default;
+    ~ConverterLight() = default;
 public:
 
-	static xobj::ObjAbstractLight * toXpln(INode * node);
-	static INode * toMax(const xobj::ObjAbstract * object);
+    static xobj::ObjAbstractLight * toXpln(INode * node);
+    static INode * toMax(const xobj::ObjAbstract * object);
 
 private:
 
-	// to MAX
-	static INode * toMaxLightNamed(const xobj::ObjLightNamed * inObjLight);
-	static INode * toMaxLightParam(const xobj::ObjLightParam * inObjLight);
-	static INode * toMaxLightCustom(const xobj::ObjLightCustom * inObjLight);
-	static INode * toMaxLightSpillCust(const xobj::ObjLightSpillCust * inObjLight);
-	static INode * toMaxLightPoint(const xobj::ObjLightPoint * inObjLight);
+    // to MAX
+    static INode * toMaxLightNamed(const xobj::ObjLightNamed * inObjLight);
+    static INode * toMaxLightParam(const xobj::ObjLightParam * inObjLight);
+    static INode * toMaxLightCustom(const xobj::ObjLightCustom * inObjLight);
+    static INode * toMaxLightSpillCust(const xobj::ObjLightSpillCust * inObjLight);
+    static INode * toMaxLightPoint(const xobj::ObjLightPoint * inObjLight);
 
-	static void setPosition(TimeValue t, INode * mode,
-							const xobj::TMatrix & targetTm, const xobj::Point3 & pos);
+    static void setPosition(TimeValue t, INode * mode,
+                            const xobj::TMatrix & targetTm, const xobj::Point3 & pos);
 
 };
 

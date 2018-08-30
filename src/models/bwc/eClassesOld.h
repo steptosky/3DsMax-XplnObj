@@ -28,45 +28,46 @@
 */
 
 #pragma once
-namespace bwc { // backward compatibility
+namespace bwc {
+// backward compatibility
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	enum eClassesOld {
-		BASE_ATTR_DATA_ID = 50,
-		GLOBAL_ATTR_DATA_ID,
-		LOD_OBJ_DATA_ID,
-		MAIN_OBJ_DATA_ID,
-		EXPORT_DATA_ID,
+enum eClassesOld {
+    BASE_ATTR_DATA_ID = 50,
+    GLOBAL_ATTR_DATA_ID,
+    LOD_OBJ_DATA_ID,
+    MAIN_OBJ_DATA_ID,
+    EXPORT_DATA_ID,
 
-		MANIP_DATA_ID = 100,
-		MANIP_DATA_DRAG_XY_ID,
-		MANIP_DATA_DRAG_XYZ_ID,
-		MANIP_DATA_DRAG_XYZ_PIX_ID,
-		MANIP_DATA_CMD_ID,
-		MANIP_DATA_CMD_AXIS_ID,
-		MANIP_DATA_PUSH_ID,
-		MANIP_DATA_RADIO_ID,
-		MANIP_DATA_TOGGLE_ID,
-		MANIP_DATA_DELTA_ID,
-		MANIP_DATA_WRAP_ID,
+    MANIP_DATA_ID = 100,
+    MANIP_DATA_DRAG_XY_ID,
+    MANIP_DATA_DRAG_XYZ_ID,
+    MANIP_DATA_DRAG_XYZ_PIX_ID,
+    MANIP_DATA_CMD_ID,
+    MANIP_DATA_CMD_AXIS_ID,
+    MANIP_DATA_PUSH_ID,
+    MANIP_DATA_RADIO_ID,
+    MANIP_DATA_TOGGLE_ID,
+    MANIP_DATA_DELTA_ID,
+    MANIP_DATA_WRAP_ID,
 
-		LIGHT_DATA_ID = 150,
-		LIGHT_DATA_NAMED_ID,
-		LIGHT_DATA_PARAM_ID,
-		LIGHT_DATA_CUSTOM_ID,
-		LIGHT_DATA_SPILL_ID,
+    LIGHT_DATA_ID = 150,
+    LIGHT_DATA_NAMED_ID,
+    LIGHT_DATA_PARAM_ID,
+    LIGHT_DATA_CUSTOM_ID,
+    LIGHT_DATA_SPILL_ID,
 
-		ANIM_DATA_ID = 200,
-		ANIM_DATA_TRANS_ID,
-		ANIM_DATA_ROTATE_ID,
-		ANIM_DATA_VIS_ID,
+    ANIM_DATA_ID = 200,
+    ANIM_DATA_TRANS_ID,
+    ANIM_DATA_ROTATE_ID,
+    ANIM_DATA_VIS_ID,
 
-	};
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

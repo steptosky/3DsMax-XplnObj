@@ -61,116 +61,116 @@
 
 class ManipIO {
 
-	ManipIO() = default;
-	~ManipIO() = default;
+    ManipIO() = default;
+    ~ManipIO() = default;
 
 public:
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	class IManipIo {
-	public:
-		virtual ~IManipIo() = default;
-		virtual void gotAttrManip(const xobj::AttrManipAxisKnob & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipAxisSwitchLeftRight & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipAxisSwitchUpDown & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipCmd & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipCmdAxis & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipCmdKnob & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipCmdSwitchLeftRight & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipCmdSwitchUpDown & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipDelta & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipDragAxis & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipDragAxisPix & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipDragXy & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipNoop & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipPanel & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipPush & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipRadio & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipToggle & inManip) = 0;
-		virtual void gotAttrManip(const xobj::AttrManipWrap & inManip) = 0;
-		virtual void gotNoManip() = 0;
-	};
+    class IManipIo {
+    public:
+        virtual ~IManipIo() = default;
+        virtual void gotAttrManip(const xobj::AttrManipAxisKnob & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipAxisSwitchLeftRight & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipAxisSwitchUpDown & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipCmd & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipCmdAxis & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipCmdKnob & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipCmdSwitchLeftRight & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipCmdSwitchUpDown & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipDelta & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipDragAxis & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipDragAxisPix & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipDragXy & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipNoop & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipPanel & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipPush & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipRadio & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipToggle & inManip) = 0;
+        virtual void gotAttrManip(const xobj::AttrManipWrap & inManip) = 0;
+        virtual void gotNoManip() = 0;
+    };
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static bool canApply(INode * node);
-	static bool cloneData(INode * from, INode * to);
+    static bool canApply(INode * node);
+    static bool cloneData(INode * from, INode * to);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static bool loadFromNode(INode * inNode, IManipIo * inCallback);
-	static void removeFromNode(INode * node);
-	static void saveToNode(INode * outNode, const xobj::AttrManipBase * inManip);
+    static bool loadFromNode(INode * inNode, IManipIo * inCallback);
+    static void removeFromNode(INode * node);
+    static void saveToNode(INode * outNode, const xobj::AttrManipBase * inManip);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 private:
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	template<typename T>
-	static void saveToNodeInternal(INode * outNode, const T & inManip) {
-		if (!outNode) {
-			LError << "INode is nullptr";
-			return;
-		}
+    template<typename T>
+    static void saveToNodeInternal(INode * outNode, const T & inManip) {
+        if (!outNode) {
+            LError << "INode is nullptr";
+            return;
+        }
 
-		std::stringstream buf;
-		sts::DataStream stream(&buf);
-		stream.writeFormatVersion();
-		stream.setValue<uint8_t>(uint8_t(1)); // node io version
-		xobj::EManipulator type = inManip.type();
-		stream.setValue<std::string>(type.toString());
-		save(stream, inManip);
-		saveDataToNode(outNode, buf);
-	}
+        std::stringstream buf;
+        sts::DataStream stream(&buf);
+        stream.writeFormatVersion();
+        stream.setValue<uint8_t>(uint8_t(1)); // node io version
+        xobj::EManipulator type = inManip.type();
+        stream.setValue<std::string>(type.toString());
+        save(stream, inManip);
+        saveDataToNode(outNode, buf);
+    }
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipAxisKnob & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipAxisSwitchLeftRight & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipAxisSwitchUpDown & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipCmd & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdAxis & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdKnob & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdSwitchLeftRight & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdSwitchUpDown & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipDelta & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipDragAxis & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipDragAxisPix & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipDragXy & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipNoop & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipPanel & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipPush & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipRadio & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipToggle & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::AttrManipWrap & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipAxisKnob & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipAxisSwitchLeftRight & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipAxisSwitchUpDown & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmd & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdAxis & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdKnob & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdSwitchLeftRight & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdSwitchUpDown & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipDelta & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipDragAxis & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipDragAxisPix & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipDragXy & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipNoop & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipPanel & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipPush & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipRadio & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipToggle & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipWrap & inManip);
 
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisKnob & outManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisSwitchLeftRight & outManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisSwitchUpDown & outManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmd & outManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdAxis & outManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdKnob & inManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdSwitchLeftRight & inManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdSwitchUpDown & inManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDelta & outManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragAxis & outManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragAxisPix & outManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragXy & outManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipNoop & outManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipPanel & outManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipPush & outManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipRadio & outManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipToggle & outManip);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipWrap & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisKnob & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisSwitchLeftRight & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisSwitchUpDown & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmd & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdAxis & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdKnob & inManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdSwitchLeftRight & inManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdSwitchUpDown & inManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDelta & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragAxis & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragAxisPix & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragXy & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipNoop & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipPanel & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipPush & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipRadio & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipToggle & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipWrap & outManip);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static void saveDataToNode(INode * outNode, const std::stringstream & indata);
+    static void saveDataToNode(INode * outNode, const std::stringstream & indata);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 };
 

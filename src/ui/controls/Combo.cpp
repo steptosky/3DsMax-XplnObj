@@ -32,81 +32,81 @@
 
 namespace win {
 
-	/**************************************************************************************************/
-	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	Combo::Combo() { }
+Combo::Combo() { }
 
-	Combo::~Combo() { }
+Combo::~Combo() { }
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void Combo::addItem(const String & inItem, bool inSelected) {
-		int pos = ComboBox_AddString(hwnd(), inItem.c_str());
-		if (pos == CB_ERR)
-			return;
-		if (inSelected)
-		ComboBox_SetCurSel(hwnd(), pos);
-	}
+void Combo::addItem(const String & inItem, bool inSelected) {
+    int pos = ComboBox_AddString(hwnd(), inItem.c_str());
+    if (pos == CB_ERR)
+        return;
+    if (inSelected)
+        ComboBox_SetCurSel(hwnd(), pos);
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void Combo::removeItem(const String & inItem) {
-		int pos = ComboBox_FindStringExact(hwnd(), 0, inItem.c_str());
-		if (pos == CB_ERR)
-			return;
-		ComboBox_DeleteString(hwnd(), pos);
-		int count = this->count();
-		if (count == CB_ERR)
-			return;
-		setCurrSelected(count - 1);
-	}
+void Combo::removeItem(const String & inItem) {
+    int pos = ComboBox_FindStringExact(hwnd(), 0, inItem.c_str());
+    if (pos == CB_ERR)
+        return;
+    ComboBox_DeleteString(hwnd(), pos);
+    int count = this->count();
+    if (count == CB_ERR)
+        return;
+    setCurrSelected(count - 1);
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void Combo::setCurrSelected(int inIndex) {
-		int numElements = ComboBox_GetCount(hwnd());
-		if (inIndex > (numElements - 1))
-			inIndex = numElements;
-		ComboBox_SetCurSel(hwnd(), inIndex);
-	}
+void Combo::setCurrSelected(int inIndex) {
+    int numElements = ComboBox_GetCount(hwnd());
+    if (inIndex > (numElements - 1))
+        inIndex = numElements;
+    ComboBox_SetCurSel(hwnd(), inIndex);
+}
 
-	bool Combo::setCurrSelected(const String & text) {
-		return (ComboBox_SelectString(hwnd(), -1, text.c_str()) != CB_ERR);
-	}
+bool Combo::setCurrSelected(const String & text) {
+    return (ComboBox_SelectString(hwnd(), -1, text.c_str()) != CB_ERR);
+}
 
-	int Combo::currSelected() const {
-		return ComboBox_GetCurSel(hwnd());
-	}
+int Combo::currSelected() const {
+    return ComboBox_GetCurSel(hwnd());
+}
 
-	Base::String Combo::currSelectedText() const {
-		int count = this->count();
-		if (!count) {
-			return _T("");
-		}
-		int strLenght = ComboBox_GetLBTextLen(hwnd(), currSelected());
-		if (strLenght == -1) {
-			return _T("");
-		}
-		TCHAR * temp = new TCHAR[strLenght + 1];
-		ComboBox_GetLBText(hwnd(), currSelected(), temp);
-		String ret(temp);
-		delete[] temp;
-		return ret;
-	}
+Base::String Combo::currSelectedText() const {
+    int count = this->count();
+    if (!count) {
+        return _T("");
+    }
+    int strLenght = ComboBox_GetLBTextLen(hwnd(), currSelected());
+    if (strLenght == -1) {
+        return _T("");
+    }
+    TCHAR * temp = new TCHAR[strLenght + 1];
+    ComboBox_GetLBText(hwnd(), currSelected(), temp);
+    String ret(temp);
+    delete[] temp;
+    return ret;
+}
 
-	int Combo::count() const {
-		return ComboBox_GetCount(hwnd());
-	}
+int Combo::count() const {
+    return ComboBox_GetCount(hwnd());
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 };

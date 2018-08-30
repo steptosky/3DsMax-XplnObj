@@ -36,58 +36,58 @@
 
 namespace ui {
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class LightCust : public AbstractLight {
-	public:
+class LightCust : public AbstractLight {
+public:
 
-		win::Base & getCBase() override {
-			return mHwnd;
-		}
+    win::Base & getCBase() override {
+        return mHwnd;
+    }
 
-		void create(HWND inParent) override;
-		void show(xobj::ObjLightCustom * inData);
-		void hide();
-		void destroy() override;
+    void create(HWND inParent) override;
+    void show(xobj::ObjLightCustom * inData);
+    void hide();
+    void destroy() override;
 
-		LightCust();
-		virtual ~LightCust();
+    LightCust();
+    virtual ~LightCust();
 
-	private:
+private:
 
-		static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-		void initWindow(HWND hWnd);
-		void destroyWindow(HWND hWnd);
+    void initWindow(HWND hWnd);
+    void destroyWindow(HWND hWnd);
 
-		void toWindow();
-		void toData();
+    void toWindow();
+    void toData();
 
-		void enableControls();
-		void disableControls();
+    void enableControls();
+    void disableControls();
 
-		xobj::ObjLightCustom * mData = nullptr;
-		win::Base mHwnd;
+    xobj::ObjLightCustom * mData = nullptr;
+    win::Base mHwnd;
 
-		ISpinnerControl * mSpnR = nullptr;
-		ISpinnerControl * mSpnG = nullptr;
-		ISpinnerControl * mSpnB = nullptr;
-		ISpinnerControl * mSpnA = nullptr;
+    ISpinnerControl * mSpnR = nullptr;
+    ISpinnerControl * mSpnG = nullptr;
+    ISpinnerControl * mSpnB = nullptr;
+    ISpinnerControl * mSpnA = nullptr;
 
-		ISpinnerControl * mSpnSize = nullptr;
+    ISpinnerControl * mSpnSize = nullptr;
 
-		ISpinnerControl * mSpnS1 = nullptr;
-		ISpinnerControl * mSpnT1 = nullptr;
-		ISpinnerControl * mSpnS2 = nullptr;
-		ISpinnerControl * mSpnT2 = nullptr;
+    ISpinnerControl * mSpnS1 = nullptr;
+    ISpinnerControl * mSpnT1 = nullptr;
+    ISpinnerControl * mSpnS2 = nullptr;
+    ISpinnerControl * mSpnT2 = nullptr;
 
-		win::Base cBtnDataRef;
-		ICustEdit * cEdtDataRef = nullptr;
-	};
+    win::Base cBtnDataRef;
+    ICustEdit * cEdtDataRef = nullptr;
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

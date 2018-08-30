@@ -38,14 +38,14 @@
 /**************************************************************************************************/
 
 SmokeObjParamsWrapper::SmokeObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval)
-	: mInterval(interval),
-	mT(t),
-	mNode(node) {
+    : mInterval(interval),
+      mT(t),
+      mNode(node) {
 
-	DbgAssert(node);
-	DbgAssert(isSmokeObj(node));
-	mPb2 = node->GetObjectRef()->GetParamBlockByID(SmokeObjParams);
-	DbgAssert(mPb2);
+    DbgAssert(node);
+    DbgAssert(isSmokeObj(node));
+    mPb2 = node->GetObjectRef()->GetParamBlockByID(SmokeObjParams);
+    DbgAssert(mPb2);
 }
 
 /**************************************************************************************************/
@@ -53,11 +53,11 @@ SmokeObjParamsWrapper::SmokeObjParamsWrapper(INode * node, const TimeValue t, co
 /**************************************************************************************************/
 
 bool SmokeObjParamsWrapper::isSmokeObj(INode * inNode) {
-	Object * obj = inNode->GetObjectRef();
-	if (obj != nullptr) {
-		return (obj->ClassID() == ClassesDescriptions::smokeObj()->ClassID()) == TRUE;
-	}
-	return false;
+    Object * obj = inNode->GetObjectRef();
+    if (obj != nullptr) {
+        return (obj->ClassID() == ClassesDescriptions::smokeObj()->ClassID()) == TRUE;
+    }
+    return false;
 }
 
 /**************************************************************************************************/
@@ -65,25 +65,25 @@ bool SmokeObjParamsWrapper::isSmokeObj(INode * inNode) {
 /**************************************************************************************************/
 
 void SmokeObjParamsWrapper::setType(const xobj::ObjSmoke::eSmokeType val) {
-	if (mPb2) {
-		if (!mPb2->SetValue(PSmokeObjAttr_SmokeType, int(mT), val)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PSmokeObjAttr_SmokeType);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
+    if (mPb2) {
+        if (!mPb2->SetValue(PSmokeObjAttr_SmokeType, int(mT), val)) {
+            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PSmokeObjAttr_SmokeType);
+        }
+    }
+    else {
+        LError << "Pointer to IParamBlock2 is nullptr";
+    }
 }
 
 void SmokeObjParamsWrapper::setSize(const float val) {
-	if (mPb2) {
-		if (!mPb2->SetValue(PSmokeObjAttr_Size, mT, val)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PSmokeObjAttr_Size);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
+    if (mPb2) {
+        if (!mPb2->SetValue(PSmokeObjAttr_Size, mT, val)) {
+            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PSmokeObjAttr_Size);
+        }
+    }
+    else {
+        LError << "Pointer to IParamBlock2 is nullptr";
+    }
 }
 
 /**************************************************************************************************/
@@ -91,29 +91,29 @@ void SmokeObjParamsWrapper::setSize(const float val) {
 /**************************************************************************************************/
 
 xobj::ObjSmoke::eSmokeType SmokeObjParamsWrapper::type() {
-	int val = 0;
-	if (mPb2) {
-		if (!mPb2->GetValue(PSmokeObjAttr_SmokeType, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PSmokeObjAttr_SmokeType);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-	return xobj::ObjSmoke::eSmokeType(val);
+    int val = 0;
+    if (mPb2) {
+        if (!mPb2->GetValue(PSmokeObjAttr_SmokeType, mT, val, mInterval)) {
+            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PSmokeObjAttr_SmokeType);
+        }
+    }
+    else {
+        LError << "Pointer to IParamBlock2 is nullptr";
+    }
+    return xobj::ObjSmoke::eSmokeType(val);
 }
 
 float SmokeObjParamsWrapper::size() {
-	float val = 0.0f;
-	if (mPb2) {
-		if (!mPb2->GetValue(PSmokeObjAttr_Size, mT, val, mInterval)) {
-			LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(PSmokeObjAttr_Size);
-		}
-	}
-	else {
-		LError << "Pointer to IParamBlock2 is nullptr";
-	}
-	return val;
+    float val = 0.0f;
+    if (mPb2) {
+        if (!mPb2->GetValue(PSmokeObjAttr_Size, mT, val, mInterval)) {
+            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(PSmokeObjAttr_Size);
+        }
+    }
+    else {
+        LError << "Pointer to IParamBlock2 is nullptr";
+    }
+    return val;
 }
 
 /**************************************************************************************************/

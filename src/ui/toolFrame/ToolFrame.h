@@ -38,59 +38,59 @@
 
 namespace ui {
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	class MainDock;
+class MainDock;
 
-	class ToolFrame : public CUIFrameMsgHandler, public CUIPosData, public sts::Single<ToolFrame> {
+class ToolFrame : public CUIFrameMsgHandler, public CUIPosData, public sts::Single<ToolFrame> {
 
-		ToolFrame(const ToolFrame &) {}
+    ToolFrame(const ToolFrame &) {}
 
-		ToolFrame & operator =(const ToolFrame &) {
-			return *this;
-		}
+    ToolFrame & operator =(const ToolFrame &) {
+        return *this;
+    }
 
-	public:
+public:
 
-		ToolFrame();
-		virtual ~ToolFrame();
+    ToolFrame();
+    virtual ~ToolFrame();
 
-		void create();
+    void create();
 
-	private:
+private:
 
-		int GetWidth(int sizeType, int orient) override;
-		int GetHeight(int sizeType, int orient) override;
+    int GetWidth(int sizeType, int orient) override;
+    int GetHeight(int sizeType, int orient) override;
 
-		int ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) override;
+    int ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) override;
 
-		//--------------------------------------
+    //--------------------------------------
 
-		CUIPosData * getSize();
+    CUIPosData * getSize();
 
-		//--------------------------------------
+    //--------------------------------------
 
-		void saveConfig();
-		void loadConfig();
+    void saveConfig();
+    void loadConfig();
 
-		//--------------------------------------
+    //--------------------------------------
 
-		HWND mFrameHandle = nullptr;
-		Interface * mIp = nullptr;
-		MainDock * mMainDockUI = nullptr;
-		bool mResizing;
-		int mBorderPx;
-		int mClientWidth;
-		int mClientHeight;
+    HWND mFrameHandle = nullptr;
+    Interface * mIp = nullptr;
+    MainDock * mMainDockUI = nullptr;
+    bool mResizing;
+    int mBorderPx;
+    int mClientWidth;
+    int mClientHeight;
 
-		DWORD mCurrFramePos;
-		bool mIsHidden;
+    DWORD mCurrFramePos;
+    bool mIsHidden;
 
-	};
+};
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 }

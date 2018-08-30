@@ -33,47 +33,47 @@
 
 namespace ui {
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class AnimCalc {
-	public:
+class AnimCalc {
+public:
 
-		struct Key {
-			TimeValue keyTime;
-			float datarefValue;
-		};
+    struct Key {
+        TimeValue keyTime;
+        float datarefValue;
+    };
 
-		typedef std::vector<AnimCalc::Key> KeyList;
+    typedef std::vector<AnimCalc::Key> KeyList;
 
-		bool calculate(KeyList & inOutData, HWND inParent);
+    bool calculate(KeyList & inOutData, HWND inParent);
 
-		AnimCalc();
-		virtual ~AnimCalc();
+    AnimCalc();
+    virtual ~AnimCalc();
 
-	private:
+private:
 
-		void destroy();
+    void destroy();
 
-		static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-		void initWindow(HWND hWnd);
-		void destroyWindow(HWND hWnd);
+    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    void initWindow(HWND hWnd);
+    void destroyWindow(HWND hWnd);
 
-		void calculateValues();
+    void calculateValues();
 
-		ISpinnerControl * cSpnVal1 = nullptr;
-		ISpinnerControl * cSpnVal2 = nullptr;
+    ISpinnerControl * cSpnVal1 = nullptr;
+    ISpinnerControl * cSpnVal2 = nullptr;
 
-		win::Base cBtnOk;
-		win::Base cBtnCancel;
-		win::Base mMainWin;
-		KeyList * mData = nullptr;
-		HWND mParent;
+    win::Base cBtnOk;
+    win::Base cBtnCancel;
+    win::Base mMainWin;
+    KeyList * mData = nullptr;
+    HWND mParent;
 
-	};
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

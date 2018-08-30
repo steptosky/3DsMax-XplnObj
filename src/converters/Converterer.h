@@ -53,36 +53,36 @@ class ConverterAnim;
 class Converterer {
 public:
 
-	bool toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMain);
-	static bool toMax(xobj::ObjMain & xObjMain);
+    bool toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMain);
+    static bool toMax(xobj::ObjMain & xObjMain);
 
-	Converterer();
-	~Converterer();
+    Converterer();
+    ~Converterer();
 private:
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static bool processXTransformHierarchy(INode * parent, xobj::Transform * xTransform);
-	static void processXTransformObjects(INode * parent, xobj::Transform * xTransform);
-	static INode * processXObjects(const xobj::ObjAbstract & xObj);
+    static bool processXTransformHierarchy(INode * parent, xobj::Transform * xTransform);
+    static void processXTransformObjects(INode * parent, xobj::Transform * xTransform);
+    static INode * processXObjects(const xobj::ObjAbstract & xObj);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	bool processNode(INode * node, xobj::Transform * xTransform) const;
+    bool processNode(INode * node, xobj::Transform * xTransform) const;
 
-	typedef std::vector<xobj::ObjAbstract*> ObjAbstractList;
-	void toXpln(INode * inxNode, const Matrix3 & baseTm, ObjAbstractList & outList) const;
+    typedef std::vector<xobj::ObjAbstract*> ObjAbstractList;
+    void toXpln(INode * inxNode, const Matrix3 & baseTm, ObjAbstractList & outList) const;
 
-	static bool collectLods(INode * ownerNode, INode * currNode, std::vector<INode*> & outLods);
+    static bool collectLods(INode * ownerNode, INode * currNode, std::vector<INode*> & outLods);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	MainObjParamsWrapper * mMainObj;
-	xobj::ObjMain * mXObjMain;
-	Interface * mIp;
-	std::vector<INode *> mLods;
+    MainObjParamsWrapper * mMainObj;
+    xobj::ObjMain * mXObjMain;
+    Interface * mIp;
+    std::vector<INode *> mLods;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 };
 

@@ -41,13 +41,13 @@
 
 class ConverterAttr {
 
-	ConverterAttr() = default;
-	~ConverterAttr() = default;
+    ConverterAttr() = default;
+    ~ConverterAttr() = default;
 
 public:
 
-	static void toXpln(xobj::ObjAbstract & outXObj, INode * inNode);
-	static void toMax(INode * inNode, const xobj::ObjAbstract & inXObj);
+    static void toXpln(xobj::ObjAbstract & outXObj, INode * inNode);
+    static void toMax(INode * inNode, const xobj::ObjAbstract & inXObj);
 
 };
 

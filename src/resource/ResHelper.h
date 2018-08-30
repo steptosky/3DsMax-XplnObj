@@ -42,27 +42,27 @@
 class ResHelper {
 public:
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static HINSTANCE hInstance;
+    static HINSTANCE hInstance;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	/*!
-	 * \details Gets the string by its resource identifier using 256 bytes buffer.
-	 * \param id string resource identifier.
-	 * \return null terminated string.
-	 */
-	static const TCHAR * string256(int id);
+    /*!
+     * \details Gets the string by its resource identifier using 256 bytes buffer.
+     * \param id string resource identifier.
+     * \return null terminated string.
+     */
+    static const TCHAR * string256(int id);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	/*!
-	 * \details It must be used once when the library is initializing.
-	 */
-	static void setHInstance(HINSTANCE inHInstance) { hInstance = inHInstance; }
+    /*!
+     * \details It must be used once when the library is initializing.
+     */
+    static void setHInstance(HINSTANCE inHInstance) { hInstance = inHInstance; }
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 };
 

@@ -46,12 +46,12 @@
 class ClassesDescriptions {
 public:
 
-	static ClassDesc2 * exporter();
-	static ClassDesc2 * importer();
-	static ClassDesc2 * mainObj();
-	static ClassDesc2 * lodObj();
-	static ClassDesc2 * smokeObj();
-	static ClassDesc2 * commonClass();
+    static ClassDesc2 * exporter();
+    static ClassDesc2 * importer();
+    static ClassDesc2 * mainObj();
+    static ClassDesc2 * lodObj();
+    static ClassDesc2 * smokeObj();
+    static ClassDesc2 * commonClass();
 
 };
 

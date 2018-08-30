@@ -38,60 +38,60 @@
 
 namespace ui {
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class ManipAttrWheel : public IWindow {
-	public:
+class ManipAttrWheel : public IWindow {
+public:
 
-		ManipAttrWheel();
-		virtual ~ManipAttrWheel();
+    ManipAttrWheel();
+    virtual ~ManipAttrWheel();
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		void create(HWND inParent) override;
-		void destroy() override;
+    void create(HWND inParent) override;
+    void destroy() override;
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		RECT rect() const override;
-		void move(const POINT & point) override;
+    RECT rect() const override;
+    void move(const POINT & point) override;
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		void setManip(const xobj::AttrManipWheel & manip) {
-			mData = manip;
-			toWindow();
-		}
+    void setManip(const xobj::AttrManipWheel & manip) {
+        mData = manip;
+        toWindow();
+    }
 
-		void setCallBack(std::function<void(const xobj::AttrManipWheel &)> & inFn) {
-			mCallback = inFn;
-		}
+    void setCallBack(std::function<void(const xobj::AttrManipWheel &)> & inFn) {
+        mCallback = inFn;
+    }
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	private:
+private:
 
-		static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-		void initWindow(HWND hWnd);
-		void destroyWindow(HWND hWnd);
+    void initWindow(HWND hWnd);
+    void destroyWindow(HWND hWnd);
 
-		void toWindow();
-		void enablingControls();
-		void dataChanged();
+    void toWindow();
+    void enablingControls();
+    void dataChanged();
 
-		std::function<void(const xobj::AttrManipWheel &)> mCallback;
-		xobj::AttrManipWheel mData;
-		win::Base mHwnd;
-		win::CheckBox mChkEnable;
-		ISpinnerControl * mSpnDelta = nullptr;
+    std::function<void(const xobj::AttrManipWheel &)> mCallback;
+    xobj::AttrManipWheel mData;
+    win::Base mHwnd;
+    win::CheckBox mChkEnable;
+    ISpinnerControl * mSpnDelta = nullptr;
 
-	};
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
 }

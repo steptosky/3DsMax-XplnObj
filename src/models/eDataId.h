@@ -36,29 +36,29 @@
 /********************************************************************************************************/
 
 enum class eManipIOID : uint32_t {
-	MANIPULATOR = 1000,
+    MANIPULATOR = 1000,
 };
 
 enum class eAnimRotateIOID : uint32_t {
-	ANIM_X_ROTATE = 1100,
-	ANIM_Y_ROTATE = 1101,
-	ANIM_Z_ROTATE = 1102,
+    ANIM_X_ROTATE = 1100,
+    ANIM_Y_ROTATE = 1101,
+    ANIM_Z_ROTATE = 1102,
 };
 
 enum class eAnimTransIOID : uint32_t {
-	ANIM_TRANS = 1200,
+    ANIM_TRANS = 1200,
 };
 
 enum class eAnimVisIOID : uint32_t {
-	ANIM_VISIBILITY = 1300,
+    ANIM_VISIBILITY = 1300,
 };
 
 enum class eLightIOID : uint32_t {
-	LIGHT = 1400,
+    LIGHT = 1400,
 };
 
 enum class eAttribuesIOID : uint32_t {
-	OBJ_ATTRIBUTES = 1500,
+    OBJ_ATTRIBUTES = 1500,
 };
 
 /********************************************************************************************************/

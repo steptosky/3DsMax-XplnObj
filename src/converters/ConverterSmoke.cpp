@@ -41,20 +41,20 @@
 /**************************************************************************************************/
 
 xobj::ObjSmoke * ConverterSmoke::toXpln(INode * inNode) {
-	if (!SmokeObjParamsWrapper::isSmokeObj(inNode)) {
-		return nullptr;
-	}
+    if (!SmokeObjParamsWrapper::isSmokeObj(inNode)) {
+        return nullptr;
+    }
 
-	SmokeObjParamsWrapper params(inNode, GetCOREInterface()->GetTime(), FOREVER);
+    SmokeObjParamsWrapper params(inNode, GetCOREInterface()->GetTime(), FOREVER);
 
-	std::unique_ptr<xobj::ObjSmoke> smoke = std::make_unique<xobj::ObjSmoke>();
-	smoke->setSmokeType(params.type());
-	smoke->setSize(params.size());
-	smoke->setObjectName(sts::toMbString(inNode->GetName()));
+    std::unique_ptr<xobj::ObjSmoke> smoke = std::make_unique<xobj::ObjSmoke>();
+    smoke->setSmokeType(params.type());
+    smoke->setSize(params.size());
+    smoke->setObjectName(sts::toMbString(inNode->GetName()));
 
-	Matrix3 mOffsetTm = ConverterUtils::offsetMatrix(inNode);
-	smoke->applyTransform(ConverterUtils::toXTMatrix(mOffsetTm));
-	return smoke.release();
+    Matrix3 mOffsetTm = ConverterUtils::offsetMatrix(inNode);
+    smoke->applyTransform(ConverterUtils::toXTMatrix(mOffsetTm));
+    return smoke.release();
 }
 
 /**************************************************************************************************/
@@ -62,34 +62,34 @@ xobj::ObjSmoke * ConverterSmoke::toXpln(INode * inNode) {
 /**************************************************************************************************/
 
 INode * ConverterSmoke::toMax(const xobj::ObjAbstract * object) {
-	if (object->objType() != xobj::OBJ_SMOKE) {
-		return nullptr;
-	}
+    if (object->objType() != xobj::OBJ_SMOKE) {
+        return nullptr;
+    }
 
-	const xobj::ObjSmoke * smoke = static_cast<const xobj::ObjSmoke*>(object);
+    const xobj::ObjSmoke * smoke = static_cast<const xobj::ObjSmoke*>(object);
 
-	Interface * ip = GetCOREInterface();
-	HelperObject * pobj = reinterpret_cast<SmokeObject*>(ip->CreateInstance(HELPER_CLASS_ID,
-																			ClassesDescriptions::smokeObj()->ClassID()));
-	if (pobj == nullptr) {
-		LCritical << "Lod object <" << object->objectName() << "> couldn't be created.";
-		return nullptr;
-	}
+    Interface * ip = GetCOREInterface();
+    HelperObject * pobj = reinterpret_cast<SmokeObject*>(ip->CreateInstance(HELPER_CLASS_ID,
+                                                                            ClassesDescriptions::smokeObj()->ClassID()));
+    if (pobj == nullptr) {
+        LCritical << "Lod object <" << object->objectName() << "> couldn't be created.";
+        return nullptr;
+    }
 
-	INode * pnode = ip->CreateObjectNode(pobj);
-	if (pnode == nullptr) {
-		LCritical << "Max node for the object <" << object->objectName() << "> couldn't be created.";
-		return nullptr;
-	}
+    INode * pnode = ip->CreateObjectNode(pobj);
+    if (pnode == nullptr) {
+        LCritical << "Max node for the object <" << object->objectName() << "> couldn't be created.";
+        return nullptr;
+    }
 
-	SmokeObjParamsWrapper values(pnode, GetCOREInterface()->GetTime(), FOREVER);
-	values.setType(smoke->smokeType());
-	values.setSize(smoke->size());
-	if (!smoke->objectName().empty()) {
-		pnode->SetName(toTSTR(smoke->objectName().c_str()));
-	}
-	// todo set the position XYZ
-	return pnode;
+    SmokeObjParamsWrapper values(pnode, GetCOREInterface()->GetTime(), FOREVER);
+    values.setType(smoke->smokeType());
+    values.setSize(smoke->size());
+    if (!smoke->objectName().empty()) {
+        pnode->SetName(toTSTR(smoke->objectName().c_str()));
+    }
+    // todo set the position XYZ
+    return pnode;
 }
 
 /**************************************************************************************************/

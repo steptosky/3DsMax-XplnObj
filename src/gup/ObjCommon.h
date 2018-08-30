@@ -48,7 +48,7 @@
 #define COMMON_CLASS_ID	Class_ID(0xf5226b9, 0x5b131ef2)
 
 namespace ui {
-	class ToolFrame;
+class ToolFrame;
 }
 
 /**************************************************************************************************/
@@ -59,56 +59,56 @@ namespace ui {
 class ObjCommon : public GUP, public sts::Single<ObjCommon> {
 public:
 
-	ObjCommon();
-	~ObjCommon();
+    ObjCommon();
+    ~ObjCommon();
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	DWORD Start() override;
-	void Stop() override;
+    DWORD Start() override;
+    void Stop() override;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	DWORD_PTR Control(DWORD param) override;
+    DWORD_PTR Control(DWORD param) override;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	IOResult Save(ISave * isave) override;
-	IOResult Load(ILoad * iload) override;
+    IOResult Save(ISave * isave) override;
+    IOResult Load(ILoad * iload) override;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	UpdateChecker::Update updateInfo() const { return mUpdateChecker.updateInfo(); }
+    UpdateChecker::Update updateInfo() const { return mUpdateChecker.updateInfo(); }
 
-	Settings pSettings;
+    Settings pSettings;
 
 private:
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static void slotFileOpened(void * param, NotifyInfo *);
+    static void slotFileOpened(void * param, NotifyInfo *);
 
-	//-------------------------------------------------------------------------
-	// Thread safe check the result of the update checking
+    //-------------------------------------------------------------------------
+    // Thread safe check the result of the update checking
 
-	static void updateCheckWinCallback(HWND, UINT, UINT_PTR, DWORD);
+    static void updateCheckWinCallback(HWND, UINT, UINT_PTR, DWORD);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void DeleteThis() override;
+    void DeleteThis() override;
 
-	ui::ToolFrame * mToolFrame;
-	Config * mConfig;
-	CloneNodeChunk * mCloneNodeChunk;
-	UpdateChecker mUpdateChecker;
-	SceneUpdater mSceneUpdater;
+    ui::ToolFrame * mToolFrame;
+    Config * mConfig;
+    CloneNodeChunk * mCloneNodeChunk;
+    UpdateChecker mUpdateChecker;
+    SceneUpdater mSceneUpdater;
 
-	std::unique_ptr<MainMenuPresenter::IView> mMainMenuView;
-	std::unique_ptr<MainMenuPresenter> mMainMenuPresenter;
+    std::unique_ptr<MainMenuPresenter::IView> mMainMenuView;
+    std::unique_ptr<MainMenuPresenter> mMainMenuPresenter;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static const uint32_t mIoVersion = 1;
+    static const uint32_t mIoVersion = 1;
 
 };
 

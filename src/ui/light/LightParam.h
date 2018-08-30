@@ -37,51 +37,51 @@
 
 namespace ui {
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class LightParam : public AbstractLight {
-	public:
+class LightParam : public AbstractLight {
+public:
 
-		win::Base & getCBase() override {
-			return mHwnd;
-		}
+    win::Base & getCBase() override {
+        return mHwnd;
+    }
 
-		void create(HWND inParent) override;
-		void show(xobj::ObjLightParam * inData);
-		void hide();
-		void destroy() override;
+    void create(HWND inParent) override;
+    void show(xobj::ObjLightParam * inData);
+    void hide();
+    void destroy() override;
 
-		LightParam();
-		virtual ~LightParam();
+    LightParam();
+    virtual ~LightParam();
 
-	private:
+private:
 
-		static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-		void initWindow(HWND hWnd);
-		void destroyWindow(HWND hWnd);
+    void initWindow(HWND hWnd);
+    void destroyWindow(HWND hWnd);
 
-		void toWindow();
+    void toWindow();
 
-		void enableControls();
-		void disableControls();
+    void enableControls();
+    void disableControls();
 
-		void setCustFieldEnable(bool status);
-		bool isUiCustom() const;
+    void setCustFieldEnable(bool status);
+    bool isUiCustom() const;
 
-		xobj::ObjLightParam * mData = nullptr;
-		win::Base mHwnd;
+    xobj::ObjLightParam * mData = nullptr;
+    win::Base mHwnd;
 
-		win::Combo cCmbName;
-		win::Base cStcCust;
-		ICustEdit * cEdtCustomName = nullptr;
-		ICustEdit * cEdtAdditional = nullptr;
+    win::Combo cCmbName;
+    win::Base cStcCust;
+    ICustEdit * cEdtCustomName = nullptr;
+    ICustEdit * cEdtAdditional = nullptr;
 
-	};
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

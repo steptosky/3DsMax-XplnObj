@@ -36,11 +36,11 @@
 /**************************************************************************************************/
 
 MdManip::MdManip() {
-	reset();
+    reset();
 }
 
 MdManip::~MdManip() {
-	clearLink();
+    clearLink();
 }
 
 /**************************************************************************************************/
@@ -50,7 +50,7 @@ MdManip::~MdManip() {
 void MdManip::reset() {}
 
 void MdManip::cloneData(INode * from, INode * to) {
-	ManipIO::cloneData(from, to);
+    ManipIO::cloneData(from, to);
 }
 
 /**************************************************************************************************/
@@ -58,22 +58,22 @@ void MdManip::cloneData(INode * from, INode * to) {
 /**************************************************************************************************/
 
 void MdManip::clearLink() {
-	mNode = nullptr;
-	reset();
+    mNode = nullptr;
+    reset();
 }
 
 bool MdManip::linkNode(INode * node) {
-	clearLink();
-	if (node == nullptr) {
-		return false;
-	}
+    clearLink();
+    if (node == nullptr) {
+        return false;
+    }
 
-	if (!ManipIO::canApply(node)) {
-		return false;
-	}
+    if (!ManipIO::canApply(node)) {
+        return false;
+    }
 
-	mNode = node;
-	return true;
+    mNode = node;
+    return true;
 }
 
 /**************************************************************************************************/
@@ -81,28 +81,28 @@ bool MdManip::linkNode(INode * node) {
 /**************************************************************************************************/
 
 void MdManip::saveToNode(INode * node, const xobj::AttrManipBase & inManip) const {
-	if (node) {
-		try {
-			ManipIO::saveToNode(node, &inManip);
-		}
-		catch (std::exception & e) {
-			LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
-					<< "> object. Reason: <" << e.what() << ">";
-		}
-	}
+    if (node) {
+        try {
+            ManipIO::saveToNode(node, &inManip);
+        }
+        catch (std::exception & e) {
+            LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
+                    << "> object. Reason: <" << e.what() << ">";
+        }
+    }
 }
 
 bool MdManip::loadFromNode(INode * node, ManipIO::IManipIo * callBack) {
-	if (node) {
-		try {
-			return ManipIO::loadFromNode(node, callBack);
-		}
-		catch (std::exception & e) {
-			LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
-					<< "> object. Reason: <" << e.what() << ">";
-		}
-	}
-	return false;
+    if (node) {
+        try {
+            return ManipIO::loadFromNode(node, callBack);
+        }
+        catch (std::exception & e) {
+            LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
+                    << "> object. Reason: <" << e.what() << ">";
+        }
+    }
+    return false;
 }
 
 /**************************************************************************************************/

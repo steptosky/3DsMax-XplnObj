@@ -42,43 +42,43 @@
 
 class ObjAttrIO {
 
-	ObjAttrIO() = default;
-	~ObjAttrIO() = default;
+    ObjAttrIO() = default;
+    ~ObjAttrIO() = default;
 
 public:
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static bool canApply(INode * node);
-	static bool cloneData(INode * from, INode * to);
+    static bool canApply(INode * node);
+    static bool cloneData(INode * from, INode * to);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static bool loadFromNode(INode * inNode, xobj::AttrSet & outAttrSet);
-	static void saveToNode(INode * outNode, const xobj::AttrSet & inAttrSet);
-	static void removeFromNode(INode * node);
+    static bool loadFromNode(INode * inNode, xobj::AttrSet & outAttrSet);
+    static void saveToNode(INode * outNode, const xobj::AttrSet & inAttrSet);
+    static void removeFromNode(INode * node);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 private:
 
-	static void save(sts::DataStreamO & stream, const xobj::AttrSet & inAttr);
-	static void save(sts::DataStreamO & stream, const xobj::AttrPolyOffset & inAttr);
-	static void save(sts::DataStreamO & stream, const xobj::AttrHard & inAttr);
-	static void save(sts::DataStreamO & stream, const xobj::AttrShiny & inAttr);
-	static void save(sts::DataStreamO & stream, const xobj::AttrBlend & inAttr);
-	static void save(sts::DataStreamO & stream, const xobj::AttrLightLevel & inAttr);
-	static void save(sts::DataStreamO & stream, const xobj::AttrCockpit & inAttr);
+    static void save(sts::DataStreamO & stream, const xobj::AttrSet & inAttr);
+    static void save(sts::DataStreamO & stream, const xobj::AttrPolyOffset & inAttr);
+    static void save(sts::DataStreamO & stream, const xobj::AttrHard & inAttr);
+    static void save(sts::DataStreamO & stream, const xobj::AttrShiny & inAttr);
+    static void save(sts::DataStreamO & stream, const xobj::AttrBlend & inAttr);
+    static void save(sts::DataStreamO & stream, const xobj::AttrLightLevel & inAttr);
+    static void save(sts::DataStreamO & stream, const xobj::AttrCockpit & inAttr);
 
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
-	static bool loadPolyOffset(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
-	static bool loadHard(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
-	static bool loadShiny(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
-	static bool loadBlend(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
-	static bool loadLightLevel(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
-	static bool loadCockpit(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
+    static bool loadPolyOffset(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
+    static bool loadHard(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
+    static bool loadShiny(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
+    static bool loadBlend(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
+    static bool loadLightLevel(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
+    static bool loadCockpit(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 };
 
 /********************************************************************************************************/

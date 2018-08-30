@@ -43,23 +43,23 @@ class SplineShape;
 
 class ConverterLine {
 
-	ConverterLine() = default;
-	~ConverterLine() = default;
+    ConverterLine() = default;
+    ~ConverterLine() = default;
 
 public:
 
-	typedef std::vector<xobj::ObjAbstract*> ObjLineList;
+    typedef std::vector<xobj::ObjAbstract*> ObjLineList;
 
-	static ObjLineList toXpln(INode * inXNode, const Matrix3 & inTargetTm);
+    static ObjLineList toXpln(INode * inXNode, const Matrix3 & inTargetTm);
 
-	static INode * toMax(const xobj::ObjAbstract * /*object*/) {
-		// TODO Implementation
-		return nullptr;
-	}
+    static INode * toMax(const xobj::ObjAbstract * /*object*/) {
+        // TODO Implementation
+        return nullptr;
+    }
 
 private:
 
-	static SplineShape * getShape(INode * inNode);
+    static SplineShape * getShape(INode * inNode);
 
 };
 

@@ -43,122 +43,122 @@
 
 namespace ui {
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class ManipAttr : public maxwin::RollupBase, ManipIO::IManipIo, public sts::HasSlots {
-	public:
+class ManipAttr : public maxwin::RollupBase, ManipIO::IManipIo, public sts::HasSlots {
+public:
 
-		ManipAttr();
-		virtual ~ManipAttr();
+    ManipAttr();
+    virtual ~ManipAttr();
 
-		void create(IRollupWindow * rollWin);
-		void destroy() override;
+    void create(IRollupWindow * rollWin);
+    void destroy() override;
 
-	private:
+private:
 
-		void create() override;
-		void createSubWindow();
-		void destroyAllSubWindows();
-		void recalculateSize();
+    void create() override;
+    void createSubWindow();
+    void destroyAllSubWindows();
+    void recalculateSize();
 
-		IRollupWindow * getInterface() override {
-			return mIRollup;
-		}
+    IRollupWindow * getInterface() override {
+        return mIRollup;
+    }
 
-		INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
-		void initWindow(HWND hWnd) override;
-		void destroyWindow(HWND hWnd) override;
+    INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+    void initWindow(HWND hWnd) override;
+    void destroyWindow(HWND hWnd) override;
 
-		win::Combo cCmbManipType;
+    win::Combo cCmbManipType;
 
-		void enableControls();
-		void disableControls();
+    void enableControls();
+    void disableControls();
 
-		MdManip mData;
-		IRollupWindow * mIRollup = nullptr;
-		SIZE mOriginRollupSize;
-		ManipInterface * currSubWin = nullptr;
-		Interface * mIp = nullptr;
+    MdManip mData;
+    IRollupWindow * mIRollup = nullptr;
+    SIZE mOriginRollupSize;
+    ManipInterface * currSubWin = nullptr;
+    Interface * mIp = nullptr;
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		void setCurrManip(xobj::AttrManipBase * inManip) {
-			delete mCurrManip;
-			mCurrManip = inManip;
-		}
+    void setCurrManip(xobj::AttrManipBase * inManip) {
+        delete mCurrManip;
+        mCurrManip = inManip;
+    }
 
-		template<typename T>
-		T * currentManip() {
-			return dynamic_cast<T*>(mCurrManip);
-		}
+    template<typename T>
+    T * currentManip() {
+        return dynamic_cast<T*>(mCurrManip);
+    }
 
-		xobj::AttrManipBase * mCurrManip = nullptr;
+    xobj::AttrManipBase * mCurrManip = nullptr;
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		std::map<const sts::Str, ManipInterface *> mChildren;
+    std::map<const sts::Str, ManipInterface *> mChildren;
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		void registerCallbacks();
-		void unRegisterCallbacks();
+    void registerCallbacks();
+    void unRegisterCallbacks();
 
-		static void slotSelectionChange(void * param, NotifyInfo *);
-		static void slotObjectsDeleted(void * param, NotifyInfo * info);
-		static void slotNodesClone(void * param, NotifyInfo *);
+    static void slotSelectionChange(void * param, NotifyInfo *);
+    static void slotObjectsDeleted(void * param, NotifyInfo * info);
+    static void slotNodesClone(void * param, NotifyInfo *);
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		void setNoSelected();
-		void setNodeSelected(INode * node);
+    void setNoSelected();
+    void setNodeSelected(INode * node);
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		void gotAttrManip(const xobj::AttrManipAxisKnob & inManip) override;
-		void gotAttrManip(const xobj::AttrManipAxisSwitchLeftRight & inManip) override;
-		void gotAttrManip(const xobj::AttrManipAxisSwitchUpDown & inManip) override;
-		void gotAttrManip(const xobj::AttrManipCmd & inManip) override;
-		void gotAttrManip(const xobj::AttrManipCmdAxis & inManip) override;
-		void gotAttrManip(const xobj::AttrManipCmdKnob & inManip) override;
-		void gotAttrManip(const xobj::AttrManipCmdSwitchLeftRight & inManip) override;
-		void gotAttrManip(const xobj::AttrManipCmdSwitchUpDown & inManip) override;
-		void gotAttrManip(const xobj::AttrManipDelta & inManip) override;
-		void gotAttrManip(const xobj::AttrManipDragAxis & inManip) override;
-		void gotAttrManip(const xobj::AttrManipDragAxisPix & inManip) override;
-		void gotAttrManip(const xobj::AttrManipDragXy & inManip) override;
-		void gotAttrManip(const xobj::AttrManipNoop & inManip) override;
-		void gotAttrManip(const xobj::AttrManipPanel & inManip) override;
-		void gotAttrManip(const xobj::AttrManipPush & inManip) override;
-		void gotAttrManip(const xobj::AttrManipRadio & inManip) override;
-		void gotAttrManip(const xobj::AttrManipToggle & inManip) override;
-		void gotAttrManip(const xobj::AttrManipWrap & inManip) override;
-		void gotNoManip() override;
+    void gotAttrManip(const xobj::AttrManipAxisKnob & inManip) override;
+    void gotAttrManip(const xobj::AttrManipAxisSwitchLeftRight & inManip) override;
+    void gotAttrManip(const xobj::AttrManipAxisSwitchUpDown & inManip) override;
+    void gotAttrManip(const xobj::AttrManipCmd & inManip) override;
+    void gotAttrManip(const xobj::AttrManipCmdAxis & inManip) override;
+    void gotAttrManip(const xobj::AttrManipCmdKnob & inManip) override;
+    void gotAttrManip(const xobj::AttrManipCmdSwitchLeftRight & inManip) override;
+    void gotAttrManip(const xobj::AttrManipCmdSwitchUpDown & inManip) override;
+    void gotAttrManip(const xobj::AttrManipDelta & inManip) override;
+    void gotAttrManip(const xobj::AttrManipDragAxis & inManip) override;
+    void gotAttrManip(const xobj::AttrManipDragAxisPix & inManip) override;
+    void gotAttrManip(const xobj::AttrManipDragXy & inManip) override;
+    void gotAttrManip(const xobj::AttrManipNoop & inManip) override;
+    void gotAttrManip(const xobj::AttrManipPanel & inManip) override;
+    void gotAttrManip(const xobj::AttrManipPush & inManip) override;
+    void gotAttrManip(const xobj::AttrManipRadio & inManip) override;
+    void gotAttrManip(const xobj::AttrManipToggle & inManip) override;
+    void gotAttrManip(const xobj::AttrManipWrap & inManip) override;
+    void gotNoManip() override;
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		template<typename T, typename W>
-		void createSubWin(const T & inManip) {
-			auto item = mChildren.find(sts::toString(inManip.type().toUiString()));
-			assert(item != mChildren.end());
-			setCurrManip(inManip.clone());
-			W * ui = new W(&mData);
-			delete item->second;
-			item->second = ui;
-			currSubWin = ui;
-			ui->setManip(inManip);
-			ui->create(hwnd());
-			cCmbManipType.setCurrSelected(sts::toString(inManip.type().toUiString()));
-			recalculateSize();
-		}
+    template<typename T, typename W>
+    void createSubWin(const T & inManip) {
+        auto item = mChildren.find(sts::toString(inManip.type().toUiString()));
+        assert(item != mChildren.end());
+        setCurrManip(inManip.clone());
+        W * ui = new W(&mData);
+        delete item->second;
+        item->second = ui;
+        currSubWin = ui;
+        ui->setManip(inManip);
+        ui->create(hwnd());
+        cCmbManipType.setCurrSelected(sts::toString(inManip.type().toUiString()));
+        recalculateSize();
+    }
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	};
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
 }

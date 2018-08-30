@@ -37,319 +37,319 @@
 
 namespace ui {
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	INT_PTR AnimVisView::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
-		switch (msg) {
-			case WM_COMMAND: {
-				switch (LOWORD(wParam)) {
-					case CHK_ENABLE: {
-						mData.mEnable = cChkEnable.isChecked();
-						mData.saveToNode();
-						break;
-					}
-					case LIST_VALUES: {
-						if (HIWORD(wParam) == LBN_SELCHANGE) {
-							selectionChanged();
-						}
-						break;
-					}
-					case BTN_ADD_SHOW: addShowItem();
-						break;
-					case BTN_ADD_HIDE: addHideItem();
-						break;
-					case BTN_DELETE: deleteItem();
-						break;
-					case BTN_DATAREF: Factory::showNotImplemented();;
-						break;
-					default: break;
-				}
-				break;
-			}
-			case WM_CUSTEDIT_ENTER: {
-				switch (LOWORD(wParam)) {
-					case EDIT_DATAREF: selectedDataChanged();
-						break;
-					default: break;
-				}
-				break;
-			}
-			case CC_SPINNER_CHANGE: {
-				switch (LOWORD(wParam)) {
-					case SPN_VISIBILITY_V1: selectedDataChanged();
-						break;
-					case SPN_VISIBILITY_V2: selectedDataChanged();
-						break;
-					default: break;
-				}
-				break;
-			}
-			default: break;
-		}
-		return FALSE;
-	}
+INT_PTR AnimVisView::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
+    switch (msg) {
+        case WM_COMMAND: {
+            switch (LOWORD(wParam)) {
+                case CHK_ENABLE: {
+                    mData.mEnable = cChkEnable.isChecked();
+                    mData.saveToNode();
+                    break;
+                }
+                case LIST_VALUES: {
+                    if (HIWORD(wParam) == LBN_SELCHANGE) {
+                        selectionChanged();
+                    }
+                    break;
+                }
+                case BTN_ADD_SHOW: addShowItem();
+                    break;
+                case BTN_ADD_HIDE: addHideItem();
+                    break;
+                case BTN_DELETE: deleteItem();
+                    break;
+                case BTN_DATAREF: Factory::showNotImplemented();;
+                    break;
+                default: break;
+            }
+            break;
+        }
+        case WM_CUSTEDIT_ENTER: {
+            switch (LOWORD(wParam)) {
+                case EDIT_DATAREF: selectedDataChanged();
+                    break;
+                default: break;
+            }
+            break;
+        }
+        case CC_SPINNER_CHANGE: {
+            switch (LOWORD(wParam)) {
+                case SPN_VISIBILITY_V1: selectedDataChanged();
+                    break;
+                case SPN_VISIBILITY_V2: selectedDataChanged();
+                    break;
+                default: break;
+            }
+            break;
+        }
+        default: break;
+    }
+    return FALSE;
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	AnimVisView::AnimVisView()
-		: RollupBase(ResHelper::hInstance),
-		mIp(GetCOREInterface()) {}
+AnimVisView::AnimVisView()
+    : RollupBase(ResHelper::hInstance),
+      mIp(GetCOREInterface()) {}
 
-	AnimVisView::~AnimVisView() {
-		AnimVisView::destroy();
-	}
+AnimVisView::~AnimVisView() {
+    AnimVisView::destroy();
+}
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Functions */////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void AnimVisView::registerCallbacks() {
-		RegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
-		RegisterNotification(slotObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
-	}
+void AnimVisView::registerCallbacks() {
+    RegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
+    RegisterNotification(slotObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
+}
 
-	void AnimVisView::unRegisterCallbacks() {
-		UnRegisterNotification(slotObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
-		UnRegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
-	}
+void AnimVisView::unRegisterCallbacks() {
+    UnRegisterNotification(slotObjectsDeleted, this, NOTIFY_SEL_NODES_PRE_DELETE);
+    UnRegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
+}
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Functions */////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void AnimVisView::slotObjectsDeleted(void * param, NotifyInfo * info) {
-		AnimVisView * view = reinterpret_cast<AnimVisView*>(param);
-		Tab<INode*> * nodeTab = reinterpret_cast<Tab<INode*>*>(info->callParam);
+void AnimVisView::slotObjectsDeleted(void * param, NotifyInfo * info) {
+    AnimVisView * view = reinterpret_cast<AnimVisView*>(param);
+    Tab<INode*> * nodeTab = reinterpret_cast<Tab<INode*>*>(info->callParam);
 
-		if (view->mData.linkedNode()) {
-			int count = nodeTab->Count();
-			for (int i = 0; i < count; ++i) {
-				if (view->mData.linkedNode() == *nodeTab->Addr(i)) {
-					view->mData.clearLink();
-				}
-			}
-		}
-	}
+    if (view->mData.linkedNode()) {
+        int count = nodeTab->Count();
+        for (int i = 0; i < count; ++i) {
+            if (view->mData.linkedNode() == *nodeTab->Addr(i)) {
+                view->mData.clearLink();
+            }
+        }
+    }
+}
 
-	void AnimVisView::slotSelectionChange(void * param, NotifyInfo *) {
-		AnimVisView * view = reinterpret_cast<AnimVisView*>(param);
-		int selectedCount = view->mIp->GetSelNodeCount();
-		if (selectedCount == 0) {
-			view->clearValues();
-			view->mData.clearLink();
-		}
-		else if (selectedCount == 1) {
-			view->cSpnValue1->SetValue(0.0f, FALSE);
-			view->cSpnValue2->SetValue(1.0f, FALSE);
-			view->mData.linkNode(view->mIp->GetSelNode(0));
-		}
-		else {
-			view->clearValues();
-			view->mData.clearLink();
-		}
-		view->toWindow();
-	}
+void AnimVisView::slotSelectionChange(void * param, NotifyInfo *) {
+    AnimVisView * view = reinterpret_cast<AnimVisView*>(param);
+    int selectedCount = view->mIp->GetSelNodeCount();
+    if (selectedCount == 0) {
+        view->clearValues();
+        view->mData.clearLink();
+    }
+    else if (selectedCount == 1) {
+        view->cSpnValue1->SetValue(0.0f, FALSE);
+        view->cSpnValue2->SetValue(1.0f, FALSE);
+        view->mData.linkNode(view->mIp->GetSelNode(0));
+    }
+    else {
+        view->clearValues();
+        view->mData.clearLink();
+    }
+    view->toWindow();
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void AnimVisView::create(IRollupWindow * rollWin) {
-		mRollupIp = rollWin;
-		create();
-	}
+void AnimVisView::create(IRollupWindow * rollWin) {
+    mRollupIp = rollWin;
+    create();
+}
 
-	void AnimVisView::create() {
-		createRollup(DLG_ANIM_VIS, _T("Animation Visibility"), this);
-		registerCallbacks();
-		toWindow();
-	}
+void AnimVisView::create() {
+    createRollup(DLG_ANIM_VIS, _T("Animation Visibility"), this);
+    registerCallbacks();
+    toWindow();
+}
 
-	void AnimVisView::destroy() {
-		unRegisterCallbacks();
-		if (this->hwnd() != nullptr) {
-			deleteRollup();
-		}
-	}
+void AnimVisView::destroy() {
+    unRegisterCallbacks();
+    if (this->hwnd() != nullptr) {
+        deleteRollup();
+    }
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void AnimVisView::clearValues() {
-		cListKeys.clear();
-		UiUtilities::setText(cEditDataRef, sts::toString("none"));
-		cSpnValue1->SetValue(0.0f, FALSE);
-		cSpnValue2->SetValue(1.0f, FALSE);
-	}
+void AnimVisView::clearValues() {
+    cListKeys.clear();
+    UiUtilities::setText(cEditDataRef, sts::toString("none"));
+    cSpnValue1->SetValue(0.0f, FALSE);
+    cSpnValue2->SetValue(1.0f, FALSE);
+}
 
-	void AnimVisView::setDataRefValueAsToolType() {
+void AnimVisView::setDataRefValueAsToolType() {
 #if MAX_VERSION_MAJOR > 11
-		cEditDataRef->SetTooltip(true, UiUtilities::getText(cEditDataRef).c_str());
+    cEditDataRef->SetTooltip(true, UiUtilities::getText(cEditDataRef).c_str());
 #endif
-	}
+}
 
-	void AnimVisView::initWindow(HWND hWnd) {
-		cChkEnable.setup(hWnd, CHK_ENABLE);
-		cListKeys.setup(hWnd, LIST_VALUES);
-		cEditDataRef = GetICustEdit(GetDlgItem(hWnd, EDIT_DATAREF));
-		cBtnDataRef.setup(hWnd, BTN_DATAREF);
-		cBtnAddShow.setup(hWnd, BTN_ADD_SHOW);
-		cBtnAddHide.setup(hWnd, BTN_ADD_HIDE);
-		cBtnDelete.setup(hWnd, BTN_DELETE);
-		cSpnValue1 = SetupFloatSpinner(hWnd, SPN_VISIBILITY_V1, SPN_VISIBILITY_V1_EDIT, -1000000.0f, 1000000.0f, 0.0f, 0.01f);
-		cSpnValue2 = SetupFloatSpinner(hWnd, SPN_VISIBILITY_V2, SPN_VISIBILITY_V2_EDIT, -1000000.0f, 1000000.0f, 1.0f, 0.01f);
-		cStcValue1.setup(hWnd, STC_VALUE1);
-		cStcValue2.setup(hWnd, STC_VALUE2);
+void AnimVisView::initWindow(HWND hWnd) {
+    cChkEnable.setup(hWnd, CHK_ENABLE);
+    cListKeys.setup(hWnd, LIST_VALUES);
+    cEditDataRef = GetICustEdit(GetDlgItem(hWnd, EDIT_DATAREF));
+    cBtnDataRef.setup(hWnd, BTN_DATAREF);
+    cBtnAddShow.setup(hWnd, BTN_ADD_SHOW);
+    cBtnAddHide.setup(hWnd, BTN_ADD_HIDE);
+    cBtnDelete.setup(hWnd, BTN_DELETE);
+    cSpnValue1 = SetupFloatSpinner(hWnd, SPN_VISIBILITY_V1, SPN_VISIBILITY_V1_EDIT, -1000000.0f, 1000000.0f, 0.0f, 0.01f);
+    cSpnValue2 = SetupFloatSpinner(hWnd, SPN_VISIBILITY_V2, SPN_VISIBILITY_V2_EDIT, -1000000.0f, 1000000.0f, 1.0f, 0.01f);
+    cStcValue1.setup(hWnd, STC_VALUE1);
+    cStcValue2.setup(hWnd, STC_VALUE2);
 
-		cChkEnable.setToolTip(sts::toString("Enable exporting the animation."));
-		cBtnAddShow.setToolTip(sts::toString("Add show animation."));
-		cBtnAddHide.setToolTip(sts::toString("Add hide animation."));
-		cBtnDataRef.setToolTip(sts::toString("Is not supported yet."));
-		cBtnDelete.setToolTip(sts::toString("Delete selected animation."));
-	}
+    cChkEnable.setToolTip(sts::toString("Enable exporting the animation."));
+    cBtnAddShow.setToolTip(sts::toString("Add show animation."));
+    cBtnAddHide.setToolTip(sts::toString("Add hide animation."));
+    cBtnDataRef.setToolTip(sts::toString("Is not supported yet."));
+    cBtnDelete.setToolTip(sts::toString("Delete selected animation."));
+}
 
-	void AnimVisView::destroyWindow(HWND /*hWnd*/) {
-		cChkEnable.release();
-		cListKeys.release();
-		ReleaseICustEdit(cEditDataRef);
-		cBtnDataRef.release();
-		cBtnAddShow.release();
-		cBtnAddHide.release();
-		cBtnDelete.release();
-		ReleaseISpinner(cSpnValue1);
-		ReleaseISpinner(cSpnValue2);
-		cStcValue1.release();
-		cStcValue2.release();
-	}
+void AnimVisView::destroyWindow(HWND /*hWnd*/) {
+    cChkEnable.release();
+    cListKeys.release();
+    ReleaseICustEdit(cEditDataRef);
+    cBtnDataRef.release();
+    cBtnAddShow.release();
+    cBtnAddHide.release();
+    cBtnDelete.release();
+    ReleaseISpinner(cSpnValue1);
+    ReleaseISpinner(cSpnValue2);
+    cStcValue1.release();
+    cStcValue2.release();
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void AnimVisView::toWindow() {
-		mCurrSelected = -1;
-		if (mData.hasLink()) {
-			cChkEnable.setState(mData.mEnable);
-			makeUiList();
-			enableControls();
-		}
-		else {
-			disableControls();
-		}
-	}
+void AnimVisView::toWindow() {
+    mCurrSelected = -1;
+    if (mData.hasLink()) {
+        cChkEnable.setState(mData.mEnable);
+        makeUiList();
+        enableControls();
+    }
+    else {
+        disableControls();
+    }
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void AnimVisView::enableControls() {
-		cChkEnable.enable();
-		cListKeys.enable();
-		cEditDataRef->Enable();
-		cBtnDataRef.enable();
-		cBtnAddShow.enable();
-		cBtnAddHide.enable();
-		cBtnDelete.enable();
-		cSpnValue1->Enable();
-		cSpnValue2->Enable();
-		cStcValue1.enable();
-		cStcValue2.enable();
-	}
+void AnimVisView::enableControls() {
+    cChkEnable.enable();
+    cListKeys.enable();
+    cEditDataRef->Enable();
+    cBtnDataRef.enable();
+    cBtnAddShow.enable();
+    cBtnAddHide.enable();
+    cBtnDelete.enable();
+    cSpnValue1->Enable();
+    cSpnValue2->Enable();
+    cStcValue1.enable();
+    cStcValue2.enable();
+}
 
-	void AnimVisView::disableControls() {
-		cChkEnable.disable();
-		cListKeys.disable();
-		cEditDataRef->Disable();
-		cBtnDataRef.disable();
-		cBtnAddShow.disable();
-		cBtnAddHide.disable();
-		cBtnDelete.disable();
-		cSpnValue1->Disable();
-		cSpnValue2->Disable();
-		cStcValue1.disable();
-		cStcValue2.disable();
-	}
+void AnimVisView::disableControls() {
+    cChkEnable.disable();
+    cListKeys.disable();
+    cEditDataRef->Disable();
+    cBtnDataRef.disable();
+    cBtnAddShow.disable();
+    cBtnAddHide.disable();
+    cBtnDelete.disable();
+    cSpnValue1->Disable();
+    cSpnValue2->Disable();
+    cStcValue1.disable();
+    cStcValue2.disable();
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void AnimVisView::addItem(MdAnimVis::Key::eType type) {
-		mData.mKeyList.push_back(MdAnimVis::Key(type,
-												cSpnValue1->GetFVal(),
-												cSpnValue2->GetFVal(),
-												sts::toMbString(UiUtilities::getText(cEditDataRef))));
-		cListKeys.addItem(toText(mData.mKeyList.back()));
-		mData.saveToNode();
-	}
+void AnimVisView::addItem(MdAnimVis::Key::eType type) {
+    mData.mKeyList.push_back(MdAnimVis::Key(type,
+                                            cSpnValue1->GetFVal(),
+                                            cSpnValue2->GetFVal(),
+                                            sts::toMbString(UiUtilities::getText(cEditDataRef))));
+    cListKeys.addItem(toText(mData.mKeyList.back()));
+    mData.saveToNode();
+}
 
-	void AnimVisView::deleteItem() {
-		int index = cListKeys.currSelected();
-		if (index == -1)
-			return;
-		cListKeys.removeCurr();
-		mData.mKeyList.erase(mData.mKeyList.begin() + static_cast<size_t>(index));
-		mData.saveToNode();
-	}
+void AnimVisView::deleteItem() {
+    int index = cListKeys.currSelected();
+    if (index == -1)
+        return;
+    cListKeys.removeCurr();
+    mData.mKeyList.erase(mData.mKeyList.begin() + static_cast<size_t>(index));
+    mData.saveToNode();
+}
 
-	void AnimVisView::makeUiList() {
-		int sCurrSelected = cListKeys.currSelected();
-		cListKeys.clear();
-		for (auto & curr : mData.mKeyList) {
-			cListKeys.addItem(toText(curr));
-		}
-		mData.saveToNode();
-		cListKeys.setCurrSelected(sCurrSelected);
-	}
+void AnimVisView::makeUiList() {
+    int sCurrSelected = cListKeys.currSelected();
+    cListKeys.clear();
+    for (auto & curr : mData.mKeyList) {
+        cListKeys.addItem(toText(curr));
+    }
+    mData.saveToNode();
+    cListKeys.setCurrSelected(sCurrSelected);
+}
 
-	sts::Str AnimVisView::toText(MdAnimVis::Key & inKey) {
-		sts::Str strTmp;
-		strTmp.append(1, inKey.pType);
-		strTmp.append(_T(" = ")).append(sts::toString(inKey.pValue1, 4)).append(_T(" "));
-		strTmp.append(sts::toString(inKey.pValue2, 4));
-		sts::Str strTmp2 = sts::toString(inKey.pDrf);
-		strTmp.append(_T(" ")).append(strTmp2.empty() ? _T("none") : strTmp2);
-		return strTmp;
-	}
+sts::Str AnimVisView::toText(MdAnimVis::Key & inKey) {
+    sts::Str strTmp;
+    strTmp.append(1, inKey.pType);
+    strTmp.append(_T(" = ")).append(sts::toString(inKey.pValue1, 4)).append(_T(" "));
+    strTmp.append(sts::toString(inKey.pValue2, 4));
+    sts::Str strTmp2 = sts::toString(inKey.pDrf);
+    strTmp.append(_T(" ")).append(strTmp2.empty() ? _T("none") : strTmp2);
+    return strTmp;
+}
 
-	void AnimVisView::selectedDataChanged() {
-		if (mCurrSelected == -1) {
-			return;
-		}
-		if (mCurrSelected < mData.mKeyList.size()) {
-			MdAnimVis::Key & key = mData.mKeyList[static_cast<size_t>(mCurrSelected)];
-			key.pValue1 = cSpnValue1->GetFVal();
-			key.pValue2 = cSpnValue2->GetFVal();
-			key.pDrf = sts::toMbString(UiUtilities::getText(cEditDataRef));
-		}
-		makeUiList();
-	}
+void AnimVisView::selectedDataChanged() {
+    if (mCurrSelected == -1) {
+        return;
+    }
+    if (mCurrSelected < mData.mKeyList.size()) {
+        MdAnimVis::Key & key = mData.mKeyList[static_cast<size_t>(mCurrSelected)];
+        key.pValue1 = cSpnValue1->GetFVal();
+        key.pValue2 = cSpnValue2->GetFVal();
+        key.pDrf = sts::toMbString(UiUtilities::getText(cEditDataRef));
+    }
+    makeUiList();
+}
 
-	void AnimVisView::selectionChanged() {
-		mCurrSelected = cListKeys.currSelected();
-		auto list1 = sts::StrUtils::split<sts::StrUtils::Vector>(sts::toString(cListKeys.currSelectedText()), _T("="));
-		if (list1.size() != 2) {
-			LError << "Internal error 1.";
-			return;
-		}
-		sts::StrUtils::trim(list1[1]);
-		auto list2 = sts::StrUtils::split<sts::StrUtils::Vector>(list1[1], _T(" "));
-		if (list2.size() != 3) {
-			LError << "Internal error 2.";
-			return;
-		}
-		cSpnValue1->SetValue(sts::toFloat(list2[0]), FALSE);
-		cSpnValue2->SetValue(sts::toFloat(list2[1]), FALSE);
-		UiUtilities::setText(cEditDataRef, sts::toString(list2[2]));
-		setDataRefValueAsToolType();
-	}
+void AnimVisView::selectionChanged() {
+    mCurrSelected = cListKeys.currSelected();
+    auto list1 = sts::StrUtils::split<sts::StrUtils::Vector>(sts::toString(cListKeys.currSelectedText()), _T("="));
+    if (list1.size() != 2) {
+        LError << "Internal error 1.";
+        return;
+    }
+    sts::StrUtils::trim(list1[1]);
+    auto list2 = sts::StrUtils::split<sts::StrUtils::Vector>(list1[1], _T(" "));
+    if (list2.size() != 3) {
+        LError << "Internal error 2.";
+        return;
+    }
+    cSpnValue1->SetValue(sts::toFloat(list2[0]), FALSE);
+    cSpnValue2->SetValue(sts::toFloat(list2[1]), FALSE);
+    UiUtilities::setText(cEditDataRef, sts::toString(list2[2]));
+    setDataRefValueAsToolType();
+}
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

@@ -46,13 +46,13 @@
 class Mesh2Cpp {
 public:
 
-	static void saveSelected(const std::string & name, const std::string & folderPath);
-	static void save(const Mesh & mesh, const std::string & name, const std::string & folderPath);
+    static void saveSelected(const std::string & name, const std::string & folderPath);
+    static void save(const Mesh & mesh, const std::string & name, const std::string & folderPath);
 
 private:
 
-	static void writeHeader(const std::string & name, const std::string & filePath);
-	static void writeCpp(const Mesh & mesh, const std::string & name, const std::string & filePath);
+    static void writeHeader(const std::string & name, const std::string & filePath);
+    static void writeCpp(const Mesh & mesh, const std::string & name, const std::string & filePath);
 
 };
 

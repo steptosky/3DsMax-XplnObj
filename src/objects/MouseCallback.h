@@ -39,14 +39,14 @@
 
 class MouseCallback : public CreateMouseCallBack {
 
-	IPoint2 mSp0; //First point in screen coordinates
-	Point3 mP0; //First point in world coordinates
+    IPoint2 mSp0; //First point in screen coordinates
+    Point3 mP0;   //First point in world coordinates
 
 public:
 
-	virtual ~MouseCallback() = default;
+    virtual ~MouseCallback() = default;
 
-	int proc(ViewExp * vpt, int msg, int point, int flags, IPoint2 m, Matrix3 & mat) override;
+    int proc(ViewExp * vpt, int msg, int point, int flags, IPoint2 m, Matrix3 & mat) override;
 
 };
 

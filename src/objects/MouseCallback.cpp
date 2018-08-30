@@ -34,26 +34,26 @@
 /**************************************************************************************************/
 
 int MouseCallback::proc(ViewExp * vpt, int msg, int point, int /*flags*/, IPoint2 m, Matrix3 & mat) {
-	if (msg == MOUSE_FREEMOVE) {
-		vpt->SnapPreview(m, m, nullptr, SNAP_IN_PLANE);
-	}
-	else {
-		if (msg == MOUSE_POINT || msg == MOUSE_MOVE) {
-			switch (point) {
-				case 0:
-					mat.NoRot();
-					mP0 = vpt->SnapPoint(m, m, nullptr, SNAP_IN_PLANE);
-					mat.SetTrans(mP0);
-					return CREATE_STOP;
-				default: break;
-			}
-		}
-		else {
-			if (msg == MOUSE_ABORT)
-				return CREATE_ABORT;
-		}
-	}
-	return TRUE;
+    if (msg == MOUSE_FREEMOVE) {
+        vpt->SnapPreview(m, m, nullptr, SNAP_IN_PLANE);
+    }
+    else {
+        if (msg == MOUSE_POINT || msg == MOUSE_MOVE) {
+            switch (point) {
+                case 0:
+                    mat.NoRot();
+                    mP0 = vpt->SnapPoint(m, m, nullptr, SNAP_IN_PLANE);
+                    mat.SetTrans(mP0);
+                    return CREATE_STOP;
+                default: break;
+            }
+        }
+        else {
+            if (msg == MOUSE_ABORT)
+                return CREATE_ABORT;
+        }
+    }
+    return TRUE;
 }
 
 /**************************************************************************************************/

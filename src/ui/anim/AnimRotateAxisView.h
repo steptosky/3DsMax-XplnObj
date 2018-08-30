@@ -39,76 +39,76 @@
 
 namespace ui {
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class AnimRotateAxisView : public maxwin::BaseProc {
-	public:
+class AnimRotateAxisView : public maxwin::BaseProc {
+public:
 
-		explicit AnimRotateAxisView(MdAnimRot::eAxis axis);
-		virtual ~AnimRotateAxisView();
+    explicit AnimRotateAxisView(MdAnimRot::eAxis axis);
+    virtual ~AnimRotateAxisView();
 
-		bool create(HWND parent);
-		void destroy();
+    bool create(HWND parent);
+    void destroy();
 
-		void setWindowPos(const RECT & size);
-		RECT clientRect() const;
+    void setWindowPos(const RECT & size);
+    RECT clientRect() const;
 
-	private:
+private:
 
-		INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
-		void initWindow(HWND hWnd) override;
-		void destroyWindow(HWND hWnd) override;
-		//----------------------------------------------------
+    INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+    void initWindow(HWND hWnd) override;
+    void destroyWindow(HWND hWnd) override;
+    //----------------------------------------------------
 
-		MdAnimRot mData;
-		void toWindow();
-		void enableControls();
-		void disableControls();
-		void clearValues();
-		void makeUiList();
-		void setEnable();
-		void setReverseEnable();
-		void setLoopEnable();
-		void setDrft();
-		void loopSpnChanged();
-		void valueSpnChanged();
-		void selectionChanged();
-		void reverseValues();
-		void calculateValues();
-		void setDataRefValueAsToolType();
+    MdAnimRot mData;
+    void toWindow();
+    void enableControls();
+    void disableControls();
+    void clearValues();
+    void makeUiList();
+    void setEnable();
+    void setReverseEnable();
+    void setLoopEnable();
+    void setDrft();
+    void loopSpnChanged();
+    void valueSpnChanged();
+    void selectionChanged();
+    void reverseValues();
+    void calculateValues();
+    void setDataRefValueAsToolType();
 
-		int mCurrSelected = 0;
-		win::Base cStcName;
-		win::Base cBtnDataRef;
-		win::Base cBtnReverseValue;
-		win::Base cBtnCalculateValue;
-		win::Base cBtnUpdate;
-		win::Base cStcValue1;
-		win::Base cStcValue2;
-		win::List cListKeys;
-		win::CheckBox cChkEnable;
-		win::CheckBox cChkReverse;
-		win::CheckBox cChkLoop;
-		ICustEdit * cEditDataRef = nullptr;
-		ISpinnerControl * cSpnValue = nullptr;
-		ISpinnerControl * cSpnLoopValue = nullptr;
+    int mCurrSelected = 0;
+    win::Base cStcName;
+    win::Base cBtnDataRef;
+    win::Base cBtnReverseValue;
+    win::Base cBtnCalculateValue;
+    win::Base cBtnUpdate;
+    win::Base cStcValue1;
+    win::Base cStcValue2;
+    win::List cListKeys;
+    win::CheckBox cChkEnable;
+    win::CheckBox cChkReverse;
+    win::CheckBox cChkLoop;
+    ICustEdit * cEditDataRef = nullptr;
+    ISpinnerControl * cSpnValue = nullptr;
+    ISpinnerControl * cSpnLoopValue = nullptr;
 
-		Interface * mIp = nullptr;
-		//-------------------------------------------------------------------------
+    Interface * mIp = nullptr;
+    //-------------------------------------------------------------------------
 
-		void registerCallbacks();
-		void unRegisterCallbacks();
+    void registerCallbacks();
+    void unRegisterCallbacks();
 
-		static void slotSelectionChange(void * param, NotifyInfo *);
-		static void slotObjectsDeleted(void * param, NotifyInfo * info);
-		static void slotAnimationModeOff(void * param, NotifyInfo *);
-		//-------------------------------------------------------------------------
+    static void slotSelectionChange(void * param, NotifyInfo *);
+    static void slotObjectsDeleted(void * param, NotifyInfo * info);
+    static void slotAnimationModeOff(void * param, NotifyInfo *);
+    //-------------------------------------------------------------------------
 
-	};
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

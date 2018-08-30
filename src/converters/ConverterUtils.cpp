@@ -35,33 +35,33 @@
 /**************************************************************************************************/
 
 const Matrix3 ConverterUtils::TOOGL_MTX =
-Matrix3(Point3(1, 0, 0), Point3(0, 0, -1), Point3(0, 1, 0), Point3(0, 0, 0));
+        Matrix3(Point3(1, 0, 0), Point3(0, 0, -1), Point3(0, 1, 0), Point3(0, 0, 0));
 
 const Matrix3 ConverterUtils::FROMOGL_MTX =
-Matrix3(Point3(1, 0, 0), Point3(0, 0, 1), Point3(0, -1, 0), Point3(0, 0, 0));
+        Matrix3(Point3(1, 0, 0), Point3(0, 0, 1), Point3(0, -1, 0), Point3(0, 0, 0));
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
 void ConverterUtils::toXTMatrix(const Matrix3 & inTm, xobj::TMatrix & outMtx) {
-	outMtx.set(inTm[0].x, inTm[0].y, inTm[0].z,
-				inTm[1].x, inTm[1].y, inTm[1].z,
-				inTm[2].x, inTm[2].y, inTm[2].z,
-				inTm[3].x, inTm[3].y, inTm[3].z);
+    outMtx.set(inTm[0].x, inTm[0].y, inTm[0].z,
+               inTm[1].x, inTm[1].y, inTm[1].z,
+               inTm[2].x, inTm[2].y, inTm[2].z,
+               inTm[3].x, inTm[3].y, inTm[3].z);
 
 }
 
 void ConverterUtils::toMaxTransform(const xobj::Transform & inTransform, INode * outNode) {
-	xobj::Point3 row1 = inTransform.pMatrix.row(0);
-	xobj::Point3 row2 = inTransform.pMatrix.row(1);
-	xobj::Point3 row3 = inTransform.pMatrix.row(2);
-	xobj::Point3 row4 = inTransform.pMatrix.row(3);
-	Matrix3 mtx(Point3(row1.x, row1.y, row1.z),
-				Point3(row2.x, row2.y, row2.z),
-				Point3(row3.x, row3.y, row3.z),
-				Point3(row4.x, row4.y, row4.z));
-	outNode->SetNodeTM(GetCOREInterface()->GetTime(), mtx);
+    xobj::Point3 row1 = inTransform.pMatrix.row(0);
+    xobj::Point3 row2 = inTransform.pMatrix.row(1);
+    xobj::Point3 row3 = inTransform.pMatrix.row(2);
+    xobj::Point3 row4 = inTransform.pMatrix.row(3);
+    Matrix3 mtx(Point3(row1.x, row1.y, row1.z),
+                Point3(row2.x, row2.y, row2.z),
+                Point3(row3.x, row3.y, row3.z),
+                Point3(row4.x, row4.y, row4.z));
+    outNode->SetNodeTM(GetCOREInterface()->GetTime(), mtx);
 }
 
 /**************************************************************************************************/

@@ -42,49 +42,49 @@
 class ConverterUtils {
 public:
 
-	static const Matrix3 TOOGL_MTX;
-	static const Matrix3 FROMOGL_MTX;
+    static const Matrix3 TOOGL_MTX;
+    static const Matrix3 FROMOGL_MTX;
 
-	static Point3 toOgl(const Point3 & inPoint) {
-		return inPoint * TOOGL_MTX;
-	}
+    static Point3 toOgl(const Point3 & inPoint) {
+        return inPoint * TOOGL_MTX;
+    }
 
-	static Matrix3 toOgl(const Matrix3 & inMatrix3) {
-		return inMatrix3 * TOOGL_MTX;
-	}
+    static Matrix3 toOgl(const Matrix3 & inMatrix3) {
+        return inMatrix3 * TOOGL_MTX;
+    }
 
-	static Point3 toMax(const Point3 & inPoint) {
-		return inPoint * FROMOGL_MTX;
-	}
+    static Point3 toMax(const Point3 & inPoint) {
+        return inPoint * FROMOGL_MTX;
+    }
 
-	static Matrix3 toMax(const Matrix3 & inMatrix3) {
-		return inMatrix3 * FROMOGL_MTX;
-	}
+    static Matrix3 toMax(const Matrix3 & inMatrix3) {
+        return inMatrix3 * FROMOGL_MTX;
+    }
 
-	static void toXTransform(INode * inXNode, xobj::Transform & outTransform) {
-		assert(inXNode);
-		toXTransform(inXNode->GetNodeTM(GetCOREInterface()->GetTime()), outTransform);
-	}
+    static void toXTransform(INode * inXNode, xobj::Transform & outTransform) {
+        assert(inXNode);
+        toXTransform(inXNode->GetNodeTM(GetCOREInterface()->GetTime()), outTransform);
+    }
 
-	static void toXTransform(const Matrix3 & inTm, xobj::Transform & outTransform) {
-		toXTMatrix(inTm, outTransform.pMatrix);
+    static void toXTransform(const Matrix3 & inTm, xobj::Transform & outTransform) {
+        toXTMatrix(inTm, outTransform.pMatrix);
 
-	}
+    }
 
-	static void toXTMatrix(const Matrix3 & inTm, xobj::TMatrix & outMtx);
+    static void toXTMatrix(const Matrix3 & inTm, xobj::TMatrix & outMtx);
 
-	static xobj::TMatrix toXTMatrix(const Matrix3 & inTm) {
-		xobj::TMatrix outTm;
-		toXTMatrix(inTm, outTm);
-		return outTm;
-	}
+    static xobj::TMatrix toXTMatrix(const Matrix3 & inTm) {
+        xobj::TMatrix outTm;
+        toXTMatrix(inTm, outTm);
+        return outTm;
+    }
 
-	static Matrix3 offsetMatrix(INode * node) {
-		TimeValue t = GetCOREInterface()->GetTime();
-		return node->GetObjectTM(t) * Inverse(node->GetNodeTM(t));
-	}
+    static Matrix3 offsetMatrix(INode * node) {
+        TimeValue t = GetCOREInterface()->GetTime();
+        return node->GetObjectTM(t) * Inverse(node->GetNodeTM(t));
+    }
 
-	static void toMaxTransform(const xobj::Transform & inTransform, INode * outNode);
+    static void toMaxTransform(const xobj::Transform & inTransform, INode * outNode);
 
 };
 

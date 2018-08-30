@@ -38,7 +38,7 @@
 /**************************************************************************************************/
 
 MdAnimTrans::MdAnimTrans() {
-	reset();
+    reset();
 }
 
 /**************************************************************************************************/
@@ -46,16 +46,16 @@ MdAnimTrans::MdAnimTrans() {
 /**************************************************************************************************/
 
 void MdAnimTrans::reset() {
-	mDataref = "none";
-	mLoopValue = 0.0;
-	mEnable = false;
-	mReverse = false;
-	mLoopEnable = false;
-	mKeyList.clear();
+    mDataref = "none";
+    mLoopValue = 0.0;
+    mEnable = false;
+    mReverse = false;
+    mLoopEnable = false;
+    mKeyList.clear();
 }
 
 void MdAnimTrans::cloneData(INode * from, INode * to) {
-	AnimIO::cloneTransData(from, to);
+    AnimIO::cloneTransData(from, to);
 }
 
 /**************************************************************************************************/
@@ -63,25 +63,25 @@ void MdAnimTrans::cloneData(INode * from, INode * to) {
 /**************************************************************************************************/
 
 MdAnimTrans::KeyTimeList MdAnimTrans::getKeyTimeList(INode * inNode) {
-	if (!inNode) {
-		LError << "Node is nullptr";
-		return KeyTimeList();
-	}
+    if (!inNode) {
+        LError << "Node is nullptr";
+        return KeyTimeList();
+    }
 
-	KeyTimeList keyTimeList;
-	Control * tmControl = inNode->GetTMController();
-	if (tmControl) {
-		Control * posControl = tmControl->GetPositionController();
-		if (posControl) {
-			keyTimeList.resize(static_cast<size_t>(posControl->NumKeys()));
-			int i = 0;
-			for (auto & curr : keyTimeList) {
-				curr = posControl->GetKeyTime(i);
-				++i;
-			}
-		}
-	}
-	return keyTimeList;
+    KeyTimeList keyTimeList;
+    Control * tmControl = inNode->GetTMController();
+    if (tmControl) {
+        Control * posControl = tmControl->GetPositionController();
+        if (posControl) {
+            keyTimeList.resize(static_cast<size_t>(posControl->NumKeys()));
+            int i = 0;
+            for (auto & curr : keyTimeList) {
+                curr = posControl->GetKeyTime(i);
+                ++i;
+            }
+        }
+    }
+    return keyTimeList;
 }
 
 /**************************************************************************************************/
@@ -89,28 +89,28 @@ MdAnimTrans::KeyTimeList MdAnimTrans::getKeyTimeList(INode * inNode) {
 /**************************************************************************************************/
 
 void MdAnimTrans::clearLink() {
-	mNode = nullptr;
-	reset();
+    mNode = nullptr;
+    reset();
 }
 
 bool MdAnimTrans::linkNode(INode * node, bool loadData) {
-	clearLink();
-	if (node == nullptr) {
-		return false;
-	}
+    clearLink();
+    if (node == nullptr) {
+        return false;
+    }
 
-	if (!AnimIO::canApply(node)) {
-		return false;
-	}
+    if (!AnimIO::canApply(node)) {
+        return false;
+    }
 
-	mNode = node;
-	if (loadData) {
-		if (!loadFromNode()) {
-			clearLink();
-			return false;
-		}
-	}
-	return true;
+    mNode = node;
+    if (loadData) {
+        if (!loadFromNode()) {
+            clearLink();
+            return false;
+        }
+    }
+    return true;
 }
 
 /**************************************************************************************************/
@@ -118,28 +118,28 @@ bool MdAnimTrans::linkNode(INode * node, bool loadData) {
 /**************************************************************************************************/
 
 void MdAnimTrans::saveToNode(INode * node) const {
-	if (node) {
-		try {
-			AnimIO::saveTransToNode(node, *this);
-		}
-		catch (std::exception & e) {
-			LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
-					<< "> object. Reason: <" << e.what() << ">";
-		}
-	}
+    if (node) {
+        try {
+            AnimIO::saveTransToNode(node, *this);
+        }
+        catch (std::exception & e) {
+            LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
+                    << "> object. Reason: <" << e.what() << ">";
+        }
+    }
 }
 
 bool MdAnimTrans::loadFromNode(INode * node) {
-	if (node) {
-		try {
-			return AnimIO::loadTransFromNode(node, *this);
-		}
-		catch (std::exception & e) {
-			LCritical << "Can't load datafrom <" << sts::toMbString(node->GetName())
-					<< "> object. Reason: <" << e.what() << ">";
-		}
-	}
-	return false;
+    if (node) {
+        try {
+            return AnimIO::loadTransFromNode(node, *this);
+        }
+        catch (std::exception & e) {
+            LCritical << "Can't load datafrom <" << sts::toMbString(node->GetName())
+                    << "> object. Reason: <" << e.what() << ">";
+        }
+    }
+    return false;
 }
 
 /**************************************************************************************************/

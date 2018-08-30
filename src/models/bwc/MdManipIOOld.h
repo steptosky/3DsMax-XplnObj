@@ -35,28 +35,29 @@
 
 #include "models/io/ManipIO.h"
 
-namespace bcw { // backward compatibility
+namespace bcw {
+// backward compatibility
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	/*!
-	 * \details This class is for backward compatibility.
-	 *          It loads the manipulators data from the previous version.
-	 */
-	class MdManipIoOld {
-		MdManipIoOld() = default;
-		~MdManipIoOld() = default;
-	public:
+/*!
+ * \details This class is for backward compatibility.
+ *          It loads the manipulators data from the previous version.
+ */
+class MdManipIoOld {
+    MdManipIoOld() = default;
+    ~MdManipIoOld() = default;
+public:
 
-		static bool loadFromNode(INode * node, AppDataChunk * data, ManipIO::IManipIo * inCallback);
-		static AppDataChunk * data(INode * node);
-		static void removeDataFromNode(INode * node);
+    static bool loadFromNode(INode * node, AppDataChunk * data, ManipIO::IManipIo * inCallback);
+    static AppDataChunk * data(INode * node);
+    static void removeDataFromNode(INode * node);
 
-	};
+};
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 }

@@ -1,4 +1,3 @@
-
 #ifndef UtilsExp_H
 #define UtilsExp_H
 
@@ -11,7 +10,7 @@
         /* We are building this library */
 #      define UtilsExp 
 #    else
-        /* We are using this library */
+/* We are using this library */
 #      define UtilsExp 
 #    endif
 #  endif

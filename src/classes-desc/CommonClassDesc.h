@@ -45,23 +45,23 @@
 class CommonClassDesc : public ClassDesc2 {
 public:
 
-	int IsPublic() override;
-	void * Create(BOOL /*loading = FALSE*/) override;
-	HINSTANCE HInstance() override;
+    int IsPublic() override;
+    void * Create(BOOL /*loading = FALSE*/) override;
+    HINSTANCE HInstance() override;
 
-	SClass_ID SuperClassID() override;
-	Class_ID ClassID() override;
+    SClass_ID SuperClassID() override;
+    Class_ID ClassID() override;
 
-	const TCHAR * ClassName() override;
-	const TCHAR * Category() override;
-	const TCHAR * InternalName() override;
+    const TCHAR * ClassName() override;
+    const TCHAR * Category() override;
+    const TCHAR * InternalName() override;
 
-	int NumActionTables() override;
-	ActionTable * GetActionTable(int idx) override;
+    int NumActionTables() override;
+    ActionTable * GetActionTable(int idx) override;
 
 private:
 
-	ActionTable * mActionTable = nullptr;
+    ActionTable * mActionTable = nullptr;
 
 };
 

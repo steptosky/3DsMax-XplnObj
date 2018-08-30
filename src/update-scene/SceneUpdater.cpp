@@ -50,10 +50,10 @@
 /**************************************************************************************************/
 
 void SceneUpdater::update(const sts::SemVersion & versionFrom, const sts::SemVersion & versionTo) {
-	if (versionFrom < versionTo) {
-		LMessage << LOG_PREFIX << "from " << versionFrom.toString(false, false) << " to " << versionTo.toString(false, false);
-		panelManipulators(versionFrom);
-	}
+    if (versionFrom < versionTo) {
+        LMessage << LOG_PREFIX << "from " << versionFrom.toString(false, false) << " to " << versionTo.toString(false, false);
+        panelManipulators(versionFrom);
+    }
 }
 
 /**************************************************************************************************/
@@ -61,69 +61,69 @@ void SceneUpdater::update(const sts::SemVersion & versionFrom, const sts::SemVer
 /**************************************************************************************************/
 
 void SceneUpdater::panelManipulators(const sts::SemVersion & versionFrom) {
-	const char * msg = "-> add panel manipulator";
-	const TCHAR * msgStartUpdate = _T("The cockpit and manipulator objects need to be updated.\n\r\
+    const char * msg = "-> add panel manipulator";
+    const TCHAR * msgStartUpdate = _T("The cockpit and manipulator objects need to be updated.\n\r\
 Although the scene will be updated automatically you still need to check the result manually!\n\r\
 After this update you will see the objects that were affected, so you can save the list and then check the scene using that list.\n\r\
 Read the help for more information about this issue.");
-	//-------------------------------
-	struct ManipGetter : ManipIO::IManipIo {
-		void gotAttrManip(const xobj::AttrManipAxisKnob &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipAxisSwitchLeftRight &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipAxisSwitchUpDown &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipCmd &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipCmdAxis &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipCmdKnob &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipCmdSwitchLeftRight &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipCmdSwitchUpDown &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipDelta &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipDragAxis &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipDragAxisPix &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipDragXy &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipNoop &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipPanel &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipPush &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipRadio &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipToggle &) override { mHasManip = true; }
-		void gotAttrManip(const xobj::AttrManipWrap &) override { mHasManip = true; }
-		void gotNoManip() override { mHasManip = false; }
-		bool mHasManip = false;
-	};
-	//-------------------------------
-	if (versionFrom < sts::SemVersion(2, 2, 0)) {
-		LMessage << LOG_PREFIX << msg;
-		std::vector<INode*> nodes;
-		ui::Factory::sceneUpdateInfo(msgStartUpdate);
-		//-------------------------------
-		auto fn = [&nodes](INode * node) ->bool {
-			xobj::AttrSet attrSet;
-			MdObjAttr mdBaseAttr;
-			if (!mdBaseAttr.linkNode(node)) {
-				return true;
-			}
-			mdBaseAttr.loadFromNode(attrSet);
-			if (attrSet.cockpit()) {
-				MdManip mdManip;
-				if (mdManip.linkNode(node)) {
-					ManipGetter mg;
-					mdManip.loadFromNode(&mg);
-					if (mg.mHasManip) {
-						return true;
-					}
-					xobj::AttrManipPanel panelManip;
-					panelManip.setCockpit(attrSet.cockpit());
-					mdManip.saveToNode(panelManip);
-					nodes.emplace_back(node);
-				}
-			}
-			return true;
-		};
-		//-------------------------------
-		NodeVisitor::visitAll(fn);
-		LMessage << LOG_PREFIX << msg << " " << nodes.size() << " objects updated";
-		ui::Factory::showUpdatedObjects(nodes);
-		//-------------------------------
-	}
+    //-------------------------------
+    struct ManipGetter : ManipIO::IManipIo {
+        void gotAttrManip(const xobj::AttrManipAxisKnob &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipAxisSwitchLeftRight &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipAxisSwitchUpDown &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipCmd &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipCmdAxis &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipCmdKnob &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipCmdSwitchLeftRight &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipCmdSwitchUpDown &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipDelta &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipDragAxis &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipDragAxisPix &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipDragXy &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipNoop &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipPanel &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipPush &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipRadio &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipToggle &) override { mHasManip = true; }
+        void gotAttrManip(const xobj::AttrManipWrap &) override { mHasManip = true; }
+        void gotNoManip() override { mHasManip = false; }
+        bool mHasManip = false;
+    };
+    //-------------------------------
+    if (versionFrom < sts::SemVersion(2, 2, 0)) {
+        LMessage << LOG_PREFIX << msg;
+        std::vector<INode*> nodes;
+        ui::Factory::sceneUpdateInfo(msgStartUpdate);
+        //-------------------------------
+        auto fn = [&nodes](INode * node) ->bool {
+            xobj::AttrSet attrSet;
+            MdObjAttr mdBaseAttr;
+            if (!mdBaseAttr.linkNode(node)) {
+                return true;
+            }
+            mdBaseAttr.loadFromNode(attrSet);
+            if (attrSet.cockpit()) {
+                MdManip mdManip;
+                if (mdManip.linkNode(node)) {
+                    ManipGetter mg;
+                    mdManip.loadFromNode(&mg);
+                    if (mg.mHasManip) {
+                        return true;
+                    }
+                    xobj::AttrManipPanel panelManip;
+                    panelManip.setCockpit(attrSet.cockpit());
+                    mdManip.saveToNode(panelManip);
+                    nodes.emplace_back(node);
+                }
+            }
+            return true;
+        };
+        //-------------------------------
+        NodeVisitor::visitAll(fn);
+        LMessage << LOG_PREFIX << msg << " " << nodes.size() << " objects updated";
+        ui::Factory::showUpdatedObjects(nodes);
+        //-------------------------------
+    }
 }
 
 /**************************************************************************************************/
