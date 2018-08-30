@@ -422,8 +422,10 @@ int DlgExport::startExport() {
             break;
         }
 
-        std::string signature = sts::MbStrUtils::joinStr(XIO_ORGANIZATION_NAME, " ", XIO_PROJECT_NAME, ": ",
-                                                         XIO_VERSION_STRING, "-", XIO_RELEASE_TYPE, "+[", XIO_COMPILE_DATE, "]");
+        sts::semver::SemVersion pluginVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH,
+                                              XIO_RELEASE_TYPE, sts::MbStrUtils::joinStr("[", XIO_COMPILE_DATE, "]"));
+        const std::string signature = sts::MbStrUtils::joinStr(XIO_ORGANIZATION_NAME, " ", XIO_PROJECT_NAME, ": ",
+                                                               pluginVersion.toString(true, true));
         xMain.pExportOptions.setSignature(signature);
 
         if (!xMain.exportToFile(exportFilePath)) {
