@@ -257,9 +257,9 @@ void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipCmdAxis & inM
     stream.setValue<uint8_t>(uint8_t(1)); // manip io version
     stream.setValue<int32_t>(inManip.cursor().id());
     stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<float>(inManip.x());
-    stream.setValue<float>(inManip.y());
-    stream.setValue<float>(inManip.z());
+    stream.setValue<float>(inManip.directionX());
+    stream.setValue<float>(inManip.directionY());
+    stream.setValue<float>(inManip.directionZ());
     stream.setValue<std::string>(inManip.cmdPositive());
     stream.setValue<std::string>(inManip.cmdNegative());
 }
@@ -272,9 +272,9 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdAx
     }
     outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
     outManip.setToolTip(stream.value<std::string>());
-    outManip.setX(stream.value<float>());
-    outManip.setY(stream.value<float>());
-    outManip.setZ(stream.value<float>());
+    outManip.setDirectionX(stream.value<float>());
+    outManip.setDirectionY(stream.value<float>());
+    outManip.setDirectionZ(stream.value<float>());
     outManip.setCmdPositive(stream.value<std::string>());
     outManip.setCmdNegative(stream.value<std::string>());
     return true;
@@ -388,9 +388,9 @@ void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipDragAxis & in
     stream.setValue<uint8_t>(uint8_t(1)); // manip io version
     stream.setValue<int32_t>(inManip.cursor().id());
     stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<float>(inManip.x());
-    stream.setValue<float>(inManip.y());
-    stream.setValue<float>(inManip.z());
+    stream.setValue<float>(inManip.directionX());
+    stream.setValue<float>(inManip.directionY());
+    stream.setValue<float>(inManip.directionZ());
     stream.setValue<float>(inManip.val1());
     stream.setValue<float>(inManip.val2());
     stream.setValue<bool>(inManip.wheel().isEnabled());
@@ -406,9 +406,9 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragA
     }
     outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
     outManip.setToolTip(stream.value<std::string>());
-    outManip.setX(stream.value<float>());
-    outManip.setY(stream.value<float>());
-    outManip.setZ(stream.value<float>());
+    outManip.setDirectionX(stream.value<float>());
+    outManip.setDirectionY(stream.value<float>());
+    outManip.setDirectionZ(stream.value<float>());
     outManip.setVal1(stream.value<float>());
     outManip.setVal2(stream.value<float>());
     outManip.wheel().setEnabled(stream.value<bool>());

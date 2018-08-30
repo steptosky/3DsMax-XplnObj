@@ -70,7 +70,7 @@
 #define CHK_SHADOW                      1017
 #define CHK_NORMAL_METALNESS            1017
 #define CHK_BLEND_GLASS                 1018
-#define CHK_SUNLIGHT                    1024
+#define CHK_TREE                        1024
 #define CHK_TWO_SIDED                   1025
 #define CHK_SOLIDCAMERA                 1026
 #define CHK_ENABLE_MESH                 1029

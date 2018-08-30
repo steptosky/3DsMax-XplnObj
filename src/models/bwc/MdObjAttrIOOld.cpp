@@ -216,7 +216,7 @@ bool MdObjAttrIOOld::loadFromNode(INode * node, AppDataChunk * data, xobj::AttrS
     outAttrSet.setCastShadow(!d.mChkNoShadow);
     outAttrSet.setSolidForCamera(d.mChkSolidCamera);
     outAttrSet.setDraw(!d.mChkDrawDisable);
-    outAttrSet.setSunLight(!d.mChkNoSunLight);
+    outAttrSet.setTree(d.mChkNoSunLight);
     return true;
 }
 

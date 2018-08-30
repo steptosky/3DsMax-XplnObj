@@ -318,11 +318,11 @@ namespace xpln_bwc {
                 // Certain manip data (version 1)
                 float val = 0.0f;
                 stream >> val;
-                mManip.setX(val);
+                mManip.setDirectionX(val);
                 stream >> val;
-                mManip.setY(val);
+                mManip.setDirectionY(val);
                 stream >> val;
-                mManip.setZ(val);
+                mManip.setDirectionZ(val);
 
                 std::string str;
                 stream >> str;
@@ -361,9 +361,9 @@ namespace xpln_bwc {
                 return false;
             }
             mManip.setCursor(xobj::ECursor::fromString(mValues[0].c_str()));
-            mManip.setX(sts::toFloat(mValues[1]));
-            mManip.setY(sts::toFloat(mValues[2]));
-            mManip.setZ(sts::toFloat(mValues[3]));
+            mManip.setDirectionX(sts::toFloat(mValues[1]));
+            mManip.setDirectionY(sts::toFloat(mValues[2]));
+            mManip.setDirectionZ(sts::toFloat(mValues[3]));
             mManip.setCmdNegative(mValues[5]);
             mManip.setCmdPositive(mValues[4]);
             mManip.setToolTip(mValues[6]);
@@ -499,11 +499,11 @@ namespace xpln_bwc {
                 // Certain manip data (version 1)
                 float val = 0.0f;
                 stream >> val;
-                mManip.setX(val);
+                mManip.setDirectionX(val);
                 stream >> val;
-                mManip.setY(val);
+                mManip.setDirectionY(val);
                 stream >> val;
-                mManip.setZ(val);
+                mManip.setDirectionZ(val);
                 stream >> val;
                 mManip.setVal1(val);
                 stream >> val;
@@ -543,9 +543,9 @@ namespace xpln_bwc {
                 return false;
             }
             mManip.setCursor(xobj::ECursor::fromString(mValues[0].c_str()));
-            mManip.setX(sts::toFloat(mValues[1]));
-            mManip.setY(sts::toFloat(mValues[2]));
-            mManip.setZ(sts::toFloat(mValues[3]));
+            mManip.setDirectionX(sts::toFloat(mValues[1]));
+            mManip.setDirectionY(sts::toFloat(mValues[2]));
+            mManip.setDirectionZ(sts::toFloat(mValues[3]));
             mManip.setVal1(sts::toFloat(mValues[4]));
             mManip.setVal2(sts::toFloat(mValues[5]));
             mManip.setDataref(mValues[6]);

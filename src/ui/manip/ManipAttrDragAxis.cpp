@@ -113,17 +113,17 @@ INT_PTR ManipAttrDragAxis::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                     break;
                 }
                 case SPN_X: {
-                    theDlg->mData.setX(theDlg->mSpnX->GetFVal());
+                    theDlg->mData.setDirectionX(theDlg->mSpnX->GetFVal());
                     theDlg->save();
                     break;
                 }
                 case SPN_Y: {
-                    theDlg->mData.setY(theDlg->mSpnY->GetFVal());
+                    theDlg->mData.setDirectionY(theDlg->mSpnY->GetFVal());
                     theDlg->save();
                     break;
                 }
                 case SPN_Z: {
-                    theDlg->mData.setZ(theDlg->mSpnZ->GetFVal());
+                    theDlg->mData.setDirectionZ(theDlg->mSpnZ->GetFVal());
                     theDlg->save();
                     break;
                 }
@@ -265,9 +265,9 @@ void ManipAttrDragAxis::toWindow() {
     mSpnVal1->SetValue(mData.val1(), FALSE);
     mSpnVal2->SetValue(mData.val2(), FALSE);
 
-    mSpnX->SetValue(mData.x(), FALSE);
-    mSpnY->SetValue(mData.y(), FALSE);
-    mSpnZ->SetValue(mData.z(), FALSE);
+    mSpnX->SetValue(mData.directionX(), FALSE);
+    mSpnY->SetValue(mData.directionY(), FALSE);
+    mSpnZ->SetValue(mData.directionZ(), FALSE);
 
     UiUtilities::setText(cEdtDataRef, sts::toString(mData.dataref()));
 

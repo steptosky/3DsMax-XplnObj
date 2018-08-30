@@ -67,7 +67,7 @@ INT_PTR ManipAttrWheel::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
         case WM_COMMAND: {
             switch (LOWORD(wParam)) {
                 case CHK_ENABLE: {
-                    theDlg->mData.setWheelEnabled(theDlg->mChkEnable.isChecked());
+                    theDlg->mData.setEnabled(theDlg->mChkEnable.isChecked());
                     theDlg->dataChanged();
                     break;
                 }
@@ -78,7 +78,7 @@ INT_PTR ManipAttrWheel::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
         case CC_SPINNER_CHANGE: {
             switch (LOWORD(wParam)) {
                 case SPN_DELTA: {
-                    theDlg->mData.setWheelDelta(theDlg->mSpnDelta->GetFVal());
+                    theDlg->mData.setDelta(theDlg->mSpnDelta->GetFVal());
                     theDlg->dataChanged();
                     break;
                 }
@@ -162,8 +162,8 @@ void ManipAttrWheel::destroyWindow(HWND /*hWnd*/) {
 
 void ManipAttrWheel::toWindow() {
     if (mHwnd) {
-        mSpnDelta->SetValue(mData.wheelDelta(), FALSE);
-        mChkEnable.setState(mData.isWheelEnabled());
+        mSpnDelta->SetValue(mData.delta(), FALSE);
+        mChkEnable.setState(mData.isEnabled());
         enablingControls();
     }
 }
@@ -174,7 +174,7 @@ void ManipAttrWheel::toWindow() {
 
 void ManipAttrWheel::enablingControls() {
     if (mHwnd) {
-        mData.isWheelEnabled() ? mSpnDelta->Enable() : mSpnDelta->Disable();
+        mData.isEnabled() ? mSpnDelta->Enable() : mSpnDelta->Disable();
     }
 }
 

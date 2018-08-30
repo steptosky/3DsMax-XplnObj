@@ -63,7 +63,10 @@ bool ObjAttrIO::canApply(INode * node) {
 
 void ObjAttrIO::save(sts::DataStreamO & stream, const xobj::AttrSet & inAttr) {
     stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<bool>(inAttr.isSunLight());
+
+    // the method was changed from isSunLight() to isTree(), that is why it is inverted.
+    stream.setValue<bool>(!inAttr.isTree());
+
     stream.setValue<bool>(inAttr.isTwoSided());
     stream.setValue<bool>(inAttr.isDraw());
     stream.setValue<bool>(inAttr.isDraped());
@@ -77,7 +80,10 @@ bool ObjAttrIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrSet & ou
         log_unexpected_version(node, version);
         return false;
     }
-    outAttr.setSunLight(stream.value<bool>());
+
+    // the method was changed from setSunLight() to setTree(), that is why it is inverted.
+    outAttr.setTree(!stream.value<bool>());
+
     outAttr.setTwoSided(stream.value<bool>());
     outAttr.setDraw(stream.value<bool>());
     outAttr.setDraped(stream.value<bool>());

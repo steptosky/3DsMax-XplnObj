@@ -69,7 +69,7 @@ INT_PTR ObjAttr::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lPar
                     break;
                 }
                     //----------------------
-                case CHK_SUNLIGHT: {
+                case CHK_TREE: {
                     dropFromUiBool();
                     enableBool(true);
                     break;
@@ -217,7 +217,7 @@ void ObjAttr::destroy() {
 /**************************************************************************************************/
 
 void ObjAttr::initWindow(HWND hWnd) {
-    cChkSunLight.setup(hWnd, CHK_SUNLIGHT);
+    cChkSunLight.setup(hWnd, CHK_TREE);
     cChkTwoSided.setup(hWnd, CHK_TWO_SIDED);
     cChkDraped.setup(hWnd, CHK_DRAPED);
     cChkShadow.setup(hWnd, CHK_SHADOW);
@@ -351,7 +351,7 @@ void ObjAttr::enableBool(bool state) {
 }
 
 void ObjAttr::dropFromUiBool() {
-    mData.setSunLight(cChkSunLight.isChecked());
+    mData.setTree(cChkSunLight.isChecked());
     mData.setTwoSided(cChkTwoSided.isChecked());
     mData.setDraped(cChkDraped.isChecked());
     mData.setCastShadow(cChkShadow.isChecked());
@@ -361,7 +361,7 @@ void ObjAttr::dropFromUiBool() {
 }
 
 void ObjAttr::loadToUiBool() {
-    cChkSunLight.setState(mData.isSunLight());
+    cChkSunLight.setState(mData.isTree());
     cChkTwoSided.setState(mData.isTwoSided());
     cChkDraped.setState(mData.isDraped());
     cChkShadow.setState(mData.isCastShadow());

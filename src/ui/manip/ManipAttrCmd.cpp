@@ -87,7 +87,7 @@ INT_PTR ManipAttrCmd::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
         case WM_CUSTEDIT_ENTER: {
             switch (LOWORD(wParam)) {
                 case EDIT_COMMAND: {
-                    theDlg->mData.setCommand(sts::toMbString(UiUtilities::getText(theDlg->cEdtCommand)));
+                    theDlg->mData.setCmd(sts::toMbString(UiUtilities::getText(theDlg->cEdtCommand)));
                     theDlg->save();
                     break;
                 }
@@ -199,7 +199,7 @@ void ManipAttrCmd::destroyWindow(HWND /*hWnd*/) {
 }
 
 void ManipAttrCmd::toWindow() {
-    UiUtilities::setText(cEdtCommand, sts::toString(mData.command()));
+    UiUtilities::setText(cEdtCommand, sts::toString(mData.cmd()));
     UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
     cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
 }

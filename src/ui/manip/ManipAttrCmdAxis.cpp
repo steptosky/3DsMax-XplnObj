@@ -112,17 +112,17 @@ INT_PTR ManipAttrCmdAxis::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
         case CC_SPINNER_CHANGE: {
             switch (LOWORD(wParam)) {
                 case SPN_X: {
-                    theDlg->mData.setX(theDlg->mSpnX->GetFVal());
+                    theDlg->mData.setDirectionX(theDlg->mSpnX->GetFVal());
                     theDlg->save();
                     break;
                 }
                 case SPN_Y: {
-                    theDlg->mData.setY(theDlg->mSpnY->GetFVal());
+                    theDlg->mData.setDirectionY(theDlg->mSpnY->GetFVal());
                     theDlg->save();
                     break;
                 }
                 case SPN_Z: {
-                    theDlg->mData.setZ(theDlg->mSpnZ->GetFVal());
+                    theDlg->mData.setDirectionZ(theDlg->mSpnZ->GetFVal());
                     theDlg->save();
                     break;
                 }
@@ -241,9 +241,9 @@ void ManipAttrCmdAxis::destroyWindow(HWND /*hWnd*/) {
 }
 
 void ManipAttrCmdAxis::toWindow() {
-    mSpnX->SetValue(mData.x(), FALSE);
-    mSpnY->SetValue(mData.y(), FALSE);
-    mSpnZ->SetValue(mData.z(), FALSE);
+    mSpnX->SetValue(mData.directionX(), FALSE);
+    mSpnY->SetValue(mData.directionY(), FALSE);
+    mSpnZ->SetValue(mData.directionZ(), FALSE);
     UiUtilities::setText(cEdtCmdNeg, sts::toString(mData.cmdNegative()));
     UiUtilities::setText(cEdtCmdPos, sts::toString(mData.cmdPositive()));
     UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
