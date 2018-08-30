@@ -37,6 +37,7 @@
 # Version 1.3.0 (30.08.2018)
 #   - Reading GIT_COMMIT and GIT_BRANCH environment variables
 #     if data isn't retrieved from the git directly.
+#   - Fixed full name printing.
 # Version 1.2.2 (01.06.2017)
 #   - Generates hidden from doxygen file 
 # Version 1.2.1 (16.05.2017)
@@ -106,7 +107,8 @@ function(genInfoFile descriptionFile destinationFile)
 
     set(CONTENT "${CONTENT}/* Project info */\n")
     set(CONTENT "${CONTENT}#define ${__prfix__}PROJECT_NAME \"${ProjectName}\"\n")
-    set(CONTENT "${CONTENT}#define ${__prfix__}PROJECT_SHORT_NAME \"${ProjectShortName}\"\n")
+    set(CONTENT "${CONTENT}#define ${__prfix__}PROJECT_SHORT_NAME \"deprecated\"\n")
+    set(CONTENT "${CONTENT}#define ${__prfix__}PROJECT_FULL_NAME \"${ProjectFullName}\"\n")
     set(CONTENT "${CONTENT}#define ${__prfix__}PROJECT_DESCRIPTION \"${ProjectDescription}\"\n")
     set(CONTENT "${CONTENT}#define ${__prfix__}PROJECT_WEBLINK \"${ProjectWebLink}\"\n")
     set(CONTENT "${CONTENT}#define ${__prfix__}PROJECT_SOURCES_WEBLINK \"${ProjectSourcesWebLink}\"\n\n")
