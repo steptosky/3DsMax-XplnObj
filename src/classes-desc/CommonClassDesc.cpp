@@ -63,8 +63,7 @@ const TCHAR * CommonClassDesc::InternalName() { return _T("xCommonObject"); }
 
 int CommonClassDesc::NumActionTables() { return 1; }
 
-ActionTable * CommonClassDesc::GetActionTable(int idx) {
-    DbgAssert(idx == 0);
+ActionTable * CommonClassDesc::GetActionTable(int) {
     if (mActionTable == nullptr) {
         mActionTable = new ui::MainMenuActions();
     }
