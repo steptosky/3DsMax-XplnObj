@@ -32,7 +32,7 @@
 #include <vector>
 #include <thread>
 #include <mutex>
-#include <additional/utils/SemVersion.h>
+#include <sts/semver/SemVersion.h>
 
 /********************************************************************************************************/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@ public:
     struct Update {
         bool valid = false;
         std::vector<std::string> error;
-        sts::SemVersion version;
+        sts::semver::SemVersion version;
     };
 
     //-------------------------------------------------------------------------

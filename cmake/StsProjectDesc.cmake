@@ -119,6 +119,8 @@ list(APPEND ProjectContributors "StepToSky <info@steptosky.com>")
 # example, the urls are empty: "XplnObj||Copyright (c) 2017 StepToSky||BSD|"
 
 set(ProjectLibraries "")
+list(APPEND ProjectLibraries "sts-signals|https://github.com/steptosky/sts-signals|Copyright StepToSky 2018|https://www.steptosky.com|BSD 3-Clause|https://github.com/steptosky/sts-signals/blob/master/license.txt")
+list(APPEND ProjectLibraries "sts-semver|https://github.com/steptosky/sts-semver|Copyright StepToSky 2018|https://www.steptosky.com|BSD 3-Clause|https://github.com/steptosky/sts-semver/blob/master/license.txt")
 list(APPEND ProjectLibraries "JSON for Modern C++|https://github.com/nlohmann/json|Copyright 2013-2017 Niels Lohmann|http://nlohmann.me|MIT|")
 
 #----------------------------------------------------------------------------------#

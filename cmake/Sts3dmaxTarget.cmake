@@ -115,6 +115,9 @@ function(SETUP_MAX_TERGET)
             
         target_link_libraries(${PROJECT} CONAN_PKG::${SETUP_MAX_TERGET_SDK_TARGET})
         target_link_libraries(${PROJECT} CONAN_PKG::XplnObj)
+        target_link_libraries(${PROJECT} CONAN_PKG::sts-signals)
+        target_link_libraries(${PROJECT} CONAN_PKG::sts-semver)
+        target_link_libraries(${PROJECT} CONAN_PKG::jsonformoderncpp)
         target_link_libraries(${PROJECT} Winhttp)
         
         #--------------------------------------------------------------------------#

@@ -30,7 +30,7 @@
 #include "UpdateChecker.h"
 
 #pragma warning(push, 0)
-#include "3rdParties/json/json.hpp"
+#include <nlohmann/json.hpp>
 #pragma warning(pop)
 
 using namespace nlohmann;

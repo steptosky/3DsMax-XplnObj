@@ -30,7 +30,7 @@
 #pragma once
 
 #include "additional/utils/Settings.h"
-#include "additional/utils/SemVersion.h"
+#include <sts/semver/SemVersion.h>
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,9 +47,9 @@ public:
 
     bool isSavedAsXplnScene() const;
     void prepareDataForSave();
-    void setSceneVersion(const sts::SemVersion & version);
-    sts::SemVersion sceneVersion() const;
-    static sts::SemVersion pluginVersion();
+    void setSceneVersion(const sts::semver::SemVersion & version);
+    sts::semver::SemVersion sceneVersion() const;
+    static sts::semver::SemVersion pluginVersion();
 
 };
 

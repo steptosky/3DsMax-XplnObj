@@ -30,12 +30,13 @@
 #pragma once
 
 #include <map>
+#include <sts/signals/Signal.h>
+
 #include "common/String.h"
 #include "ui/controls/Combo.h"
 #include "models/MdLight.h"
 #include "light/AbstractLight.h"
 #include "ui/controls/RollupBase.h"
-#include "additional/utils/Signal.h"
 
 namespace ui {
 
@@ -43,7 +44,7 @@ namespace ui {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /********************************************************************************************************/
 
-class LightAttr : public maxwin::RollupBase, LightIO::ILightIO, public sts::HasSlots {
+class LightAttr : public maxwin::RollupBase, LightIO::ILightIO, public sts::signals::AutoDisconnect {
 public:
 
     void create(IRollupWindow * rollWin);

@@ -451,7 +451,7 @@ void DlgExport::printUpdateAvailability() {
             CLError << "Error during check update the plugin. The log contains more information. Please, inform the developers.";
         }
         else {
-            if (upd.version > sts::SemVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH)) {
+            if (upd.version > sts::semver::SemVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH)) {
                 mBtnCheckUpdate.setText("Get update");
                 CLWarning << "New version '" << upd.version.toString()
                         << "' is available. Please, press the '"

@@ -29,7 +29,7 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "additional/utils/SemVersion.h"
+#include <sts/semver/SemVersion.h>
 
 /********************************************************************************************************/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@
 class SceneUpdater {
 public:
 
-    static void update(const sts::SemVersion & versionFrom, const sts::SemVersion & versionTo);
+    static void update(const sts::semver::SemVersion & versionFrom, const sts::semver::SemVersion & versionTo);
 
 private:
 
@@ -60,7 +60,7 @@ private:
      *          and had undefined logic behavior in some cases, 
      *          it is too difficult to recognize and fix it programmatically.
      */
-    static void panelManipulators(const sts::SemVersion & versionFrom);
+    static void panelManipulators(const sts::semver::SemVersion & versionFrom);
 
 };
 

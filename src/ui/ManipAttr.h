@@ -30,12 +30,12 @@
 #pragma once
 
 #include <map>
+#include <sts/signals/Signal.h>
 #include "common/String.h"
 #include "ui/controls/RollupBase.h"
 #include "ui/controls/Combo.h"
 #include "models/MdManip.h"
 #include "ui/manip/ManipInterface.h"
-#include "additional/utils/Signal.h"
 
 #pragma warning(push, 0)
 #include <notify.h>
@@ -47,7 +47,7 @@ namespace ui {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /********************************************************************************************************/
 
-class ManipAttr : public maxwin::RollupBase, ManipIO::IManipIo, public sts::HasSlots {
+class ManipAttr : public maxwin::RollupBase, ManipIO::IManipIo, public sts::signals::AutoDisconnect {
 public:
 
     ManipAttr();

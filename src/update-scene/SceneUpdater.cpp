@@ -49,7 +49,7 @@
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void SceneUpdater::update(const sts::SemVersion & versionFrom, const sts::SemVersion & versionTo) {
+void SceneUpdater::update(const sts::semver::SemVersion & versionFrom, const sts::semver::SemVersion & versionTo) {
     if (versionFrom < versionTo) {
         LMessage << LOG_PREFIX << "from " << versionFrom.toString(false, false) << " to " << versionTo.toString(false, false);
         panelManipulators(versionFrom);
@@ -60,7 +60,7 @@ void SceneUpdater::update(const sts::SemVersion & versionFrom, const sts::SemVer
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void SceneUpdater::panelManipulators(const sts::SemVersion & versionFrom) {
+void SceneUpdater::panelManipulators(const sts::semver::SemVersion & versionFrom) {
     const char * msg = "-> add panel manipulator";
     const TCHAR * msgStartUpdate = _T("The cockpit and manipulator objects need to be updated.\n\r\
 Although the scene will be updated automatically you still need to check the result manually!\n\r\
@@ -90,7 +90,7 @@ Read the help for more information about this issue.");
         bool mHasManip = false;
     };
     //-------------------------------
-    if (versionFrom < sts::SemVersion(2, 2, 0)) {
+    if (versionFrom < sts::semver::SemVersion(2, 2, 0)) {
         LMessage << LOG_PREFIX << msg;
         std::vector<INode*> nodes;
         ui::Factory::sceneUpdateInfo(msgStartUpdate);
