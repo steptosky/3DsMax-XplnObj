@@ -35,8 +35,7 @@
 # StepToSky project description.
 #
 # Version 1.2.0 (21.04.2017) 
-#	- List of open source libraries
-#
+#   - List of open source libraries
 # Version 1.1.0 (19.03.2017)
 # Version 1.0.0
 #
@@ -45,17 +44,17 @@
 # This file describes the project.
 # Use StsInfoFilesGenerator module for generation c++ .h file.
 #
-#	Usage example:
+#   Usage example:
 #
-#		# specify the folder where this module is.
-#		list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-#		
-# 		# include the modules
-#		include(StsProjectDesk)
-#		include(StsInfoFilesGenerator)
+#       # specify the folder where this module is.
+#       list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 #
-#		# generate file
-#		genInfoFile(StsProjectDesk "${CMAKE_SOURCE_DIR}/include/Info.h")
+#       # include the modules
+#       include(StsProjectDesk)
+#       include(StsInfoFilesGenerator)
+#
+#       # generate file
+#       genInfoFile(StsProjectDesk "${CMAKE_SOURCE_DIR}/include/Info.h")
 #
 #----------------------------------------------------------------------------------#
 #//////////////////////////////////////////////////////////////////////////////////#
@@ -65,7 +64,7 @@
 string(TIMESTAMP _curr_y_ "%Y" UTC)
 
 #----------------------------------------------------------------------------------#
-# Organization Info	
+# Organization Info
 
 set(ProjectOrganizationName "StepToSky")
 set(ProjectOrganizationWebLink "www.steptosky.com")
@@ -73,23 +72,31 @@ set(ProjectOrganizationWebLink "www.steptosky.com")
 #----------------------------------------------------------------------------------#
 # Project info
 
-set(ProjectName "3DsMax X-Plane Obj Exporter")
-set(ProjectShortName "3DsMax-XplnObj")
-set(ProjectDescription "This plugin is for the 3DsMax, it allows you to import or export X-Plane's obj format.")
+set(ProjectName "3DsMax-XplnObj")
+set(ProjectFullName "3DsMax X-Plane Obj Exporter")
+set(ProjectDescription "This plugin is for the 3DsMax. It allows you to import or export X-Plane's obj format.")
 set(ProjectWebLink "www.steptosky.com")
 set(ProjectSourcesWebLink "https://github.com/steptosky/3DsMax-XplnObj")
+
+set(ProjectGroupId "steptosky")
+set(ProjectId ${ProjectName})
 
 #----------------------------------------------------------------------------------#
 # Version / Dependency's system
 
+# Set it to ON if you are in unstable branch otherwise set it to OFF
+set(ProjectVersionSnapshot OFF)
 set(ProjectVersionMajor 2)
 set(ProjectVersionMinor 3)
 set(ProjectVersionPatch 0)
 set(ProjectVersion "${ProjectVersionMajor}.${ProjectVersionMinor}.${ProjectVersionPatch}")
-set(ProjectReleaseType "") # You can use any string you wish
 
-set(ProjectGroupId "steptosky")
-set(ProjectId ${ProjectShortName})
+# You can use any string you wish, 
+# but i will be changed to snapshot if it is enabled. 
+set(ProjectReleaseType "")
+if (ProjectVersionSnapshot)
+    set(ProjectReleaseType "snapshot")
+endif()
 
 #----------------------------------------------------------------------------------#
 # License
@@ -113,7 +120,7 @@ list(APPEND ProjectContributors "StepToSky <info@steptosky.com>")
 
 set(ProjectLibraries "")
 list(APPEND ProjectLibraries "JSON for Modern C++|https://github.com/nlohmann/json|Copyright 2013-2017 Niels Lohmann|http://nlohmann.me|MIT|")
-                                                                                  
+
 #----------------------------------------------------------------------------------#
 # Other
 
@@ -121,13 +128,13 @@ list(APPEND ProjectLibraries "JSON for Modern C++|https://github.com/nlohmann/js
 set(ProjectVcsType "git") 
 
 # Prefix for the defines.
-set(ProjectDefPrefix "XIO_") 
+set(ProjectDefinePrefix "XIO_") 
 
 #----------------------------------------------------------------------------------#
 # Checking
 
 if(NOT ProjectId)
-	message(FATAL_ERROR "ProjectId is not specified")
+    message(FATAL_ERROR "ProjectId is not specified")
 endif()
 
 #----------------------------------------------------------------------------------#

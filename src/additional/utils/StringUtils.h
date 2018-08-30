@@ -701,10 +701,10 @@ namespace sts {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	/****************************************************************************************************/
 
-	inline void toLower(std::wstring & str) { transform(str.begin(), str.end(), str.begin(), tolower); }
-	inline void toLower(std::string & str) { transform(str.begin(), str.end(), str.begin(), tolower); }
-	inline void toUpper(std::wstring & str) { transform(str.begin(), str.end(), str.begin(), toupper); }
-	inline void toUpper(std::string & str) { transform(str.begin(), str.end(), str.begin(), toupper); }
+	//inline void toLower(std::wstring & str) { transform(str.begin(), str.end(), str.begin(), tolower); }
+	//inline void toLower(std::string & str) { transform(str.begin(), str.end(), str.begin(), tolower); }
+	//inline void toUpper(std::wstring & str) { transform(str.begin(), str.end(), str.begin(), toupper); }
+	//inline void toUpper(std::string & str) { transform(str.begin(), str.end(), str.begin(), toupper); }
 
 	/****************************************************************************************************/
 	//////////////////////////////////////////////////////////////////////////////////////////////////////

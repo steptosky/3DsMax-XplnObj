@@ -2,7 +2,7 @@
 #//////////////////////////////////////////////////////////////////////////////////#
 #----------------------------------------------------------------------------------#
 #
-#  Copyright (C) 2017, StepToSky
+#  Copyright (C) 2018, StepToSky
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -38,115 +38,135 @@
 #
 #----------------------------------------------------------------------------------#
 #
-#	Usage example:
+#   Usage example:
 #
-#		# specify the folder where this module is.
-#		list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-#		
-#		include(Sts3dmaxTarget)
-#		SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2008" 3DMAX_VERSION "2008")
-#		SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2009" 3DMAX_VERSION "2009")
-#		SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2010" 3DMAX_VERSION "2010")
+#       # specify the folder where this module is.
+#       list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+#       
+#       include(Sts3dmaxTarget)
+#       SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2008" 3DMAX_VERSION "2008")
+#       SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2009" 3DMAX_VERSION "2009")
+#       SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2010" 3DMAX_VERSION "2010")
 #
 #----------------------------------------------------------------------------------#
 #//////////////////////////////////////////////////////////////////////////////////#
 #----------------------------------------------------------------------------------#
 
+cmake_minimum_required (VERSION 3.7.0)
 include(CMakeParseArguments)
 
 function(SETUP_MAX_TERGET)
 
-	#set(options OPTIONAL FAST)
-	#set(multiValueArgs TARGETS CONFIGURATIONS)
-	set(oneValueArgs SDK_TARGET 3DMAX_VERSION)
-	cmake_parse_arguments(SETUP_MAX_TERGET "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    set(oneValueArgs SDK_TARGET 3DMAX_VERSION)
+    cmake_parse_arguments(SETUP_MAX_TERGET "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
-	if(TARGET CONAN_PKG::${SETUP_MAX_TERGET_SDK_TARGET})
-		message(STATUS "3DsMax + ${SETUP_MAX_TERGET_3DMAX_VERSION}")
-		set (PROJECT "3DsMax-${SETUP_MAX_TERGET_3DMAX_VERSION}")
-		set (OUTPUT_NAME "3DsMax${SETUP_MAX_TERGET_3DMAX_VERSION}-XplnObj")
-		
-		#--------------------------------------------------------------------------#
-		#//////////////////////////////////////////////////////////////////////////#
-		#--------------------------------------------------------------------------#
-		# compiler 
+    if(TARGET CONAN_PKG::${SETUP_MAX_TERGET_SDK_TARGET})
+        message(STATUS "3DsMax + ${SETUP_MAX_TERGET_3DMAX_VERSION}")
+        set (PROJECT "3DsMax-${SETUP_MAX_TERGET_3DMAX_VERSION}")
+        set (OUTPUT_NAME "3DsMax${SETUP_MAX_TERGET_3DMAX_VERSION}-XplnObj")
+        
+        #--------------------------------------------------------------------------#
+        #//////////////////////////////////////////////////////////////////////////#
+        #--------------------------------------------------------------------------#
+        # compiler 
 
-		if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-			add_definitions (/W4)
-			add_definitions (-D_USRDLL)
-			add_definitions (-D_WIN64)
-			add_definitions (-D_CRT_SECURE_NO_DEPRECATE)
-			add_definitions (-DISOLATION_AWARE_ENABLED=1)
-		else ()
-			message (FATAL_ERROR "<${PROJECT}> Unknown compiler")
-		endif ()
+        if (NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+            message (FATAL_ERROR "<${PROJECT}> Unsupported compiler")
+        endif ()
 
-		#--------------------------------------------------------------------------#
-		#//////////////////////////////////////////////////////////////////////////#
-		#--------------------------------------------------------------------------#
-		# project files
+        #--------------------------------------------------------------------------#
+        #//////////////////////////////////////////////////////////////////////////#
+        #--------------------------------------------------------------------------#
+        # project files
 
-		file(GLOB_RECURSE CM_FILES 
-			"${CMAKE_SOURCE_DIR}/src/*.h"
-			"${CMAKE_SOURCE_DIR}/src/*.hpp" 
-			"${CMAKE_SOURCE_DIR}/src/*.inl" 
-			"${CMAKE_SOURCE_DIR}/src/*.cpp"
-			"${CMAKE_SOURCE_DIR}/src/*.rc"
-			"${CMAKE_SOURCE_DIR}/src/*.txt"
-			"${CMAKE_SOURCE_DIR}/include/*.h" 
-			"${CMAKE_SOURCE_DIR}/include/*.inl" 
-			"${CMAKE_SOURCE_DIR}/include/*.cpp"
-			
-			"${CMAKE_SOURCE_DIR}/doc/*"
-		)
+        file(GLOB_RECURSE CM_FILES 
+            "${CMAKE_SOURCE_DIR}/src/*.h"
+            "${CMAKE_SOURCE_DIR}/src/*.hpp" 
+            "${CMAKE_SOURCE_DIR}/src/*.inl" 
+            "${CMAKE_SOURCE_DIR}/src/*.cpp"
+            "${CMAKE_SOURCE_DIR}/src/*.rc"
+            "${CMAKE_SOURCE_DIR}/src/*.txt"
+            "${CMAKE_SOURCE_DIR}/include/*.h" 
+            "${CMAKE_SOURCE_DIR}/include/*.inl" 
+            "${CMAKE_SOURCE_DIR}/include/*.cpp"
 
-		include(StsGroupFiles)
-		groupFiles("${CM_FILES}")
+            "${CMAKE_SOURCE_DIR}/doc/*"
+        )
 
-		list(APPEND CM_FILES "${CMAKE_SOURCE_DIR}/readme.md")
-		source_group("doc" FILES "${CMAKE_SOURCE_DIR}/readme.md")
+        include(StsGroupFiles)
+        groupFiles("${CM_FILES}")
 
-		#--------------------------------------------------------------------------#
-		#//////////////////////////////////////////////////////////////////////////#
-		#--------------------------------------------------------------------------#
-		# include/link directories
+        list(APPEND CM_FILES "${CMAKE_SOURCE_DIR}/readme.md")
+        source_group("doc" FILES "${CMAKE_SOURCE_DIR}/readme.md")
 
-		include_directories (${CMAKE_SOURCE_DIR}/include)
-		include_directories (${CMAKE_SOURCE_DIR}/src)
+        #--------------------------------------------------------------------------#
+        #//////////////////////////////////////////////////////////////////////////#
+        #--------------------------------------------------------------------------#
+        # include/link directories
 
-		#--------------------------------------------------------------------------#
-		#//////////////////////////////////////////////////////////////////////////#
-		#--------------------------------------------------------------------------#
-		
-		add_library(${PROJECT} SHARED ${CM_FILES})
-		target_link_libraries(${PROJECT} CONAN_PKG::${SETUP_MAX_TERGET_SDK_TARGET})
-		target_link_libraries(${PROJECT} CONAN_PKG::XplnObj)
-		target_link_libraries(${PROJECT} optimized Winhttp debug Winhttp)
+        include_directories (${CMAKE_SOURCE_DIR}/include)
+        include_directories (${CMAKE_SOURCE_DIR}/src)
 
-		#--------------------------------------------------------------------------#
-		#//////////////////////////////////////////////////////////////////////////#
-		#--------------------------------------------------------------------------#
-				
-		set_target_properties(${PROJECT} PROPERTIES DEBUG_OUTPUT_NAME  ${OUTPUT_NAME})
-		set_target_properties(${PROJECT} PROPERTIES RELEASE_OUTPUT_NAME  ${OUTPUT_NAME})
-		set_target_properties(${PROJECT} PROPERTIES SUFFIX  ".dlu")
-		set_target_properties(${PROJECT} PROPERTIES DEBUG_POSTFIX "-x64")
-		set_target_properties(${PROJECT} PROPERTIES RELEASE_POSTFIX "-x64")
-		
-		#--------------------------------------------------------------------------#
-		#//////////////////////////////////////////////////////////////////////////#
-		#--------------------------------------------------------------------------#
+        #--------------------------------------------------------------------------#
+        #//////////////////////////////////////////////////////////////////////////#
+        #--------------------------------------------------------------------------#
 
-		install(TARGETS ${PROJECT} RUNTIME DESTINATION "$<CONFIG>" CONFIGURATIONS "Release")
+        add_library(${PROJECT} SHARED ${CM_FILES})
+            
+        target_link_libraries(${PROJECT} CONAN_PKG::${SETUP_MAX_TERGET_SDK_TARGET})
+        target_link_libraries(${PROJECT} CONAN_PKG::XplnObj)
+        target_link_libraries(${PROJECT} Winhttp)
+        
+        #--------------------------------------------------------------------------#
+        # cxx standard 
 
-		#--------------------------------------------------------------------------#
-		#//////////////////////////////////////////////////////////////////////////#
-		#--------------------------------------------------------------------------#
-		
-	else()
-		message(STATUS "3DsMax - ${SETUP_MAX_TERGET_3DMAX_VERSION}")
-	endif()
-	
+        set_target_properties(${PROJECT} PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQUIRED YES)
+        target_compile_features(${PROJECT} PUBLIC cxx_std_14)
+
+        #--------------------------------------------------------------------------#
+        # compile options
+
+        # pre-compile headers
+        #set_source_files_properties(stdafx.cpp
+        #    PROPERTIES COMPILE_FLAGS $<$<CXX_COMPILER_ID:MSVC>:/Yc>
+        #)
+
+        target_compile_options(${PROJECT}
+            #PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/Yustdafx.h>     # pre-compile headers
+            PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/MP>
+            #PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/WX>             # warnings as error
+            PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/W4>
+            PRIVATE $<$<CXX_COMPILER_ID:MSVC>:-D_USRDLL>
+            PRIVATE $<$<CXX_COMPILER_ID:MSVC>:-D_WIN64>
+            PRIVATE $<$<CXX_COMPILER_ID:MSVC>:-D_CRT_SECURE_NO_DEPRECATE>
+            PRIVATE $<$<CXX_COMPILER_ID:MSVC>:-DISOLATION_AWARE_ENABLED=1>
+        )
+
+        #--------------------------------------------------------------------------#
+        #//////////////////////////////////////////////////////////////////////////#
+        #--------------------------------------------------------------------------#
+
+        set_target_properties(${PROJECT} PROPERTIES DEBUG_OUTPUT_NAME  ${OUTPUT_NAME})
+        set_target_properties(${PROJECT} PROPERTIES RELEASE_OUTPUT_NAME  ${OUTPUT_NAME})
+        set_target_properties(${PROJECT} PROPERTIES SUFFIX  ".dlu")
+        set_target_properties(${PROJECT} PROPERTIES DEBUG_POSTFIX "-x64")
+        set_target_properties(${PROJECT} PROPERTIES RELEASE_POSTFIX "-x64")
+
+        #--------------------------------------------------------------------------#
+        #//////////////////////////////////////////////////////////////////////////#
+        #--------------------------------------------------------------------------#
+
+        install(TARGETS ${PROJECT} RUNTIME DESTINATION "$<CONFIG>" CONFIGURATIONS "Release")
+        install(TARGETS ${PROJECT} RUNTIME DESTINATION "$<CONFIG>" CONFIGURATIONS "Debug")
+
+        #--------------------------------------------------------------------------#
+        #//////////////////////////////////////////////////////////////////////////#
+        #--------------------------------------------------------------------------#
+
+    else()
+        message(STATUS "3DsMax - ${SETUP_MAX_TERGET_3DMAX_VERSION}")
+    endif()
+
 endfunction(SETUP_MAX_TERGET)
 
 #----------------------------------------------------------------------------------#

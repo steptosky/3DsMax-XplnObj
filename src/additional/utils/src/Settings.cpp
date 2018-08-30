@@ -57,7 +57,7 @@
 #	endif
 #endif
 
-#define noexcept _NOEXCEPT
+//#define noexcept _NOEXCEPT
 
 #ifndef NDEBUG
 #   define EXC_PRINT_FILE

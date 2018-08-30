@@ -2,7 +2,7 @@
 #//////////////////////////////////////////////////////////////////////////////////#
 #----------------------------------------------------------------------------------#
 #
-#  Copyright (C) 2017, StepToSky
+#  Copyright (C) 2018, StepToSky
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,9 @@
 #
 # Conan basic setup. 
 #
+# Version 1.1.0
+#    Changed some var names
+#
 # Version 1.0.0
 #
 #----------------------------------------------------------------------------------#
@@ -41,21 +44,23 @@
 #----------------------------------------------------------------------------------#
 # conan.io
 
-cmake_minimum_required (VERSION 3.7.0)
-
-message(STATUS "==============================================")
-message(STATUS "Process conan data")
-if(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake")
-	include(${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
-	message(STATUS "Found and included 'conanbuildinfo_multi.cmake'")
-elseif(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
-	include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-	message(STATUS "Found and included 'conanbuildinfo.cmake'")
-else()
-	message(FATAL_ERROR "'conanbuildinfo_multi.cmake' or 'conanbuildinfo.cmake' are not found."
-	" Probably you have forgotten to run 'conan install'")
+if (BUILD_TESTING)
+    set(ENV{CONAN_BUILD_TESTING} "1")
 endif()
-conan_basic_setup(TARGETS)
+
+set(CONAN_CMAKE_SOURCE "${CMAKE_SOURCE_DIR}/cmake/conan.cmake")
+set(CONAN_CMAKE_DEST "${CMAKE_BINARY_DIR}/conan.cmake")
+
+if(NOT EXISTS ${CONAN_CMAKE_SOURCE})
+    message(STATUS "conan.cmake ${CONAN_CMAKE_SOURCE} isn't found")
+    message(STATUS "Downloading conan.cmake from https://github.com/memsharded/cmake-conan")
+    file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
+            ${CONAN_CMAKE_SOURCE}) 
+    message(STATUS "==============================================")
+endif()
+
+file(COPY ${CONAN_CMAKE_SOURCE} DESTINATION ${CMAKE_BINARY_DIR})
+include(${CONAN_CMAKE_DEST})
 
 #----------------------------------------------------------------------------------#
 #//////////////////////////////////////////////////////////////////////////////////#
