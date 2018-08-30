@@ -21,8 +21,10 @@ Importing is still under developing and doesn't work properly!
 - [change log](doc/changelog.txt) this file has to be filled during the release process and contains information about changes.
 
 ## Developing and Building
-- You have to install `conan` and [add](https://docs.conan.io/en/latest/reference/commands/misc/remote.html) 
-  our [bintray remote](https://bintray.com/steptosky/conan-open-source).
+- You have to install `conan` and [add](https://docs.conan.io/en/latest/reference/commands/misc/remote.html):  
+    - If it isn't available [conan-center](https://bintray.com/conan/conan-center) remote the link can be `https://conan.bintray.com`.
+    - [bincrafters bintray](https://bintray.com/bincrafters/public-conan) remote.
+    - [steptosky bintray](https://bintray.com/steptosky/conan-open-source) remote.
 - You have to get the 3DsMax SDK and then put it into your conan repository or your conan local cache.  
   See [Conan 3dsmax SDK recipes](https://github.com/steptosky/conan-3dsmax-sdk-recipes).
 - Adjust the file [conanfile.txt](conanfile.txt). You may comment unnecessary 3DsMax SDK version with the `#` symbol. It also turns off corresponding build targets.
