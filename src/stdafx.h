@@ -65,6 +65,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <tuple>
+#include <regex>
 
 //-------------------------------------------------------------------------
 
