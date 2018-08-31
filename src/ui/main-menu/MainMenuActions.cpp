@@ -32,7 +32,7 @@
 #include "resource/ResHelper.h"
 
 #define NumElements(array) (sizeof(array) / sizeof(array[0]))
-static ActionDescription spActions[] = {
+static ActionDescription gActions[] = {
         {MENU_ACTION_DOC, IDS_MAIN_MENU_DOC, IDS_MAIN_MENU_DOC, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
         {MENU_ACTION_UPDATE, IDS_MAIN_MENU_UPDATE,IDS_MAIN_MENU_UPDATE, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
         {MENU_ACTION_DONATE, IDS_MAIN_MENU_DONATE, IDS_MAIN_MENU_DONATE, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
@@ -62,8 +62,8 @@ TSTR & MainMenuActions::nameNotConst() {
 MainMenuActions::MainMenuActions()
     : ActionTable(mTableId, mTableContextId, nameNotConst()) {
 
-    BuildActionTable(nullptr, NumElements(spActions), spActions, ResHelper::hInstance);
-    DbgAssert(MainMenuActions::Count() == NumElements(spActions));
+    BuildActionTable(nullptr, NumElements(gActions), gActions, ResHelper::hInstance);
+    DbgAssert(MainMenuActions::Count() == NumElements(gActions));
 }
 
 /**************************************************************************************************/

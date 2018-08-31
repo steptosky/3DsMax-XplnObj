@@ -69,7 +69,7 @@ void Factory::showVersionIncompatible() {
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-MainMenuPresenter::IView * Factory::cereateMainMenuView() {
+MainMenuPresenter::IView * Factory::createMainMenuView() {
     return new MainMenu();
 }
 

@@ -81,7 +81,7 @@ void MainMenu::destroy() {
     // If we update the menu we have to recreate it or it will look like previously one.
     // So for now we just delete the menu when 3Ds Max is closed 
     // and create it again when 3Ds Max is started.
-    RemoveMenu();
+    removeMenu();
 }
 
 /**************************************************************************************************/
@@ -176,7 +176,7 @@ void MainMenu::installMenu() {
     }
 }
 
-void MainMenu::RemoveMenu() {
+void MainMenu::removeMenu() {
     IMenuManager * manager = mIp->GetMenuManager();
     IMenu * menu = manager->FindMenu(_T(MENU_NAME));
 

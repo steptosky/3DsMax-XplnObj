@@ -56,7 +56,7 @@ private:
     void destroy();
 
     void installMenu();
-    void RemoveMenu();
+    void removeMenu();
 
     BOOL ExecuteAction(int id) override;
 
