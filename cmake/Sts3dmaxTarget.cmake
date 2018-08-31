@@ -156,6 +156,20 @@ function(SETUP_MAX_TERGET)
         set_target_properties(${PROJECT} PROPERTIES DEBUG_POSTFIX "-x64")
         set_target_properties(${PROJECT} PROPERTIES RELEASE_POSTFIX "-x64")
 
+        set (BASE_RELEASE_OUT_DIR ${CMAKE_BINARY_DIR}/Release/${PROJECT})
+        set (BASE_DEBUG_OUT_DIR ${CMAKE_BINARY_DIR}/Debug/${PROJECT})
+        set_target_properties(${PROJECT} 
+            PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${BASE_RELEASE_OUT_DIR}
+            ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${BASE_DEBUG_OUT_DIR}
+            
+            LIBRARY_OUTPUT_DIRECTORY_RELEASE ${BASE_RELEASE_OUT_DIR}
+            LIBRARY_OUTPUT_DIRECTORY_DEBUG ${BASE_DEBUG_OUT_DIR}
+            
+            RUNTIME_OUTPUT_DIRECTORY_RELEASE ${BASE_RELEASE_OUT_DIR}
+            RUNTIME_OUTPUT_DIRECTORY_DEBUG ${BASE_DEBUG_OUT_DIR}
+        )
+
         #--------------------------------------------------------------------------#
         #//////////////////////////////////////////////////////////////////////////#
         #--------------------------------------------------------------------------#
