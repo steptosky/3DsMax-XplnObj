@@ -1,6 +1,11 @@
 
 The 3DsMax X-Plane Obj Exporter/Importer change-log.
 ===============================================================================
+Next
+
+- Fixed: LIGHT_SPILL_CUSTOM direction export.
+
+===============================================================================
 2.3.0 (05.10.2017)
 
 - Added: Error if any LOD except the first one contains hard polygons.
