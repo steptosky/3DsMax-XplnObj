@@ -12,8 +12,11 @@ Importing is still under developing and doesn't work properly!
 
 ## Dependencies
 - [CMake 3.7.0+](https://cmake.org/) building tool.
-- [Conan 1.6+](https://www.conan.io) package manager.
-- [StepToSky X-Plane obj library](https://github.com/steptosky/XplnObj) used through the conan.
+- [Conan 1.6+](https://www.conan.io) package manager.  
+- [XplnObj 0.6.2](https://github.com/steptosky/XplnObj) is used via conan.
+- [sts-signals 0.1.2](https://github.com/steptosky/sts-signals) is used via conan.
+- [sts-semver 0.2.1](https://github.com/steptosky/sts-semver) is used via conan.
+- [jsonformoderncpp 3.1.2](https://github.com/nlohmann/json) is used via conan.
 - 3Ds Max SDK. Usually you can find it on 3Ds Max installation CD or image.
 
 ## Memo for the library developers
