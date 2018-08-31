@@ -42,7 +42,7 @@
 
 struct LightGetter : LightIO::ILightIO {
 
-    LightGetter(INode * node)
+    explicit LightGetter(INode * node)
         : mNode(node),
           mTime(GetCOREInterface()->GetTime()) {
         assert(node);
@@ -85,9 +85,10 @@ struct LightGetter : LightIO::ILightIO {
 
     void gotLight(const xobj::ObjLightSpillCust & inLight) override {
         pLight = static_cast<xobj::ObjAbstractLight *>(inLight.clone());
-        xobj::ObjLightSpillCust * lobj = static_cast<xobj::ObjLightSpillCust *>(pLight);
-
+        //-----------------------------------
+        auto * lobj = static_cast<xobj::ObjLightSpillCust *>(pLight);
         Object * obj = mNode->GetObjectRef();
+
         // Omni
         if (obj->ClassID() != Class_ID(SPOT_LIGHT_CLASS_ID, 0)) {
             lobj->setSemiRaw(1.0f);
@@ -100,10 +101,10 @@ struct LightGetter : LightIO::ILightIO {
             DbgAssert(targetNode);
             if (targetNode) {
                 // Get vector
-                TimeValue currTime = GetCOREInterface()->GetTime();
-                Matrix3 targetNodeTm = targetNode->GetNodeTM(currTime);
-                Matrix3 nodeTm = mNode->GetObjectTM(currTime);
-                Point3 targetPosition = Normalize(targetNodeTm.GetRow(3) - nodeTm.GetRow(3));
+                const TimeValue currTime = GetCOREInterface()->GetTime();
+                const Matrix3 targetNodeTm = targetNode->GetNodeTM(currTime);
+                const Matrix3 nodeTm = mNode->GetObjectTM(currTime);
+                const Point3 targetPosition = Normalize(targetNodeTm.GetRow(3) - nodeTm.GetRow(3));
                 lobj->setDirection(xobj::Point3(targetPosition.x, targetPosition.y, targetPosition.z));
                 //Get cone
                 GenLight * light = dynamic_cast<GenLight*>(obj);
@@ -225,10 +226,10 @@ INode * ConverterLight::toMaxLightParam(const xobj::ObjLightParam * inObjLight) 
 
 INode * ConverterLight::toMaxLightCustom(const xobj::ObjLightCustom * inObjLight) {
     if (inObjLight) {
-        GenLight * mLight = GetCOREInterface()->CreateLightObject(OMNI_LIGHT);
-        if (mLight == nullptr)
+        GenLight * light = GetCOREInterface()->CreateLightObject(OMNI_LIGHT);
+        if (light == nullptr)
             return nullptr;
-        INode * pnode = GetCOREInterface()->CreateObjectNode(mLight);
+        INode * pnode = GetCOREInterface()->CreateObjectNode(light);
         if (pnode == nullptr)
             return nullptr;
 
@@ -250,10 +251,10 @@ INode * ConverterLight::toMaxLightCustom(const xobj::ObjLightCustom * inObjLight
 INode * ConverterLight::toMaxLightSpillCust(const xobj::ObjLightSpillCust * inObjLight) {
     if (inObjLight) {
         const xobj::Point3 & xpoint = inObjLight->direction();
-        GenLight * mLight = GetCOREInterface()->CreateLightObject(xpoint.isEmpty() ? OMNI_LIGHT : TSPOT_LIGHT);
-        if (mLight == nullptr)
+        GenLight * light = GetCOREInterface()->CreateLightObject(xpoint.isEmpty() ? OMNI_LIGHT : TSPOT_LIGHT);
+        if (light == nullptr)
             return nullptr;
-        INode * pnode = GetCOREInterface()->CreateObjectNode(mLight);
+        INode * pnode = GetCOREInterface()->CreateObjectNode(light);
         if (pnode == nullptr)
             return nullptr;
 
@@ -271,11 +272,11 @@ INode * ConverterLight::toMaxLightSpillCust(const xobj::ObjLightSpillCust * inOb
             DbgAssert(targetNode);
             if (targetNode) {
                 // Get vector
-                TimeValue currTime = GetCOREInterface()->GetTime();
+                const TimeValue currTime = GetCOREInterface()->GetTime();
                 Matrix3 nodeTm = pnode->GetObjectTM(currTime);
                 nodeTm.Translate(Point3(xpoint.x, xpoint.y, xpoint.z));
                 targetNode->SetNodeTM(currTime, nodeTm);
-                mLight->SetFallsize(currTime, stsff::math::radToDeg(inObjLight->semiAngle()));
+                light->SetFallsize(currTime, stsff::math::radToDeg(inObjLight->semiAngle()));
             }
         }
         return pnode;
@@ -287,10 +288,10 @@ INode * ConverterLight::toMaxLightSpillCust(const xobj::ObjLightSpillCust * inOb
 
 INode * ConverterLight::toMaxLightPoint(const xobj::ObjLightPoint * inObjLight) {
     if (inObjLight) {
-        GenLight * mLight = GetCOREInterface()->CreateLightObject(OMNI_LIGHT);
-        if (mLight == nullptr)
+        GenLight * light = GetCOREInterface()->CreateLightObject(OMNI_LIGHT);
+        if (light == nullptr)
             return nullptr;
-        INode * pnode = GetCOREInterface()->CreateObjectNode(mLight);
+        INode * pnode = GetCOREInterface()->CreateObjectNode(light);
         if (pnode == nullptr)
             return nullptr;
 
@@ -312,7 +313,7 @@ INode * ConverterLight::toMaxLightPoint(const xobj::ObjLightPoint * inObjLight) 
 /**************************************************************************************************/
 
 void ConverterLight::setPosition(TimeValue /*t*/, INode * /*mode*/,
-                                 const xobj::TMatrix & /*targetTm*/, const xobj::Point3 & /*pos*/) {
+                                 const xobj::TMatrix & /*targetTm*/, const xobj::Point3 & /*position*/) {
     // TODO Implementation
 }
 
