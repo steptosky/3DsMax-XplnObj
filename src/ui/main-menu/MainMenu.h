@@ -29,7 +29,7 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "presenters/MainMenuPresenter.h"
+#include "presenters/MainMenu.h"
 
 #pragma warning(push, 0)
 #include <max.h>
@@ -44,7 +44,7 @@ namespace ui {
 /*!
  * \details X-Plane plugin main menu itself.
  */
-class MainMenu : public ActionCallback, public MainMenuPresenter::IView {
+class MainMenu : public ActionCallback, public presenters::MainMenu::IView {
 public:
 
     MainMenu();

@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 **  Copyright(C) 2017, StepToSky
 **
@@ -27,26 +29,46 @@
 **  Contacts: www.steptosky.com
 */
 
-#include <cassert>
-#include "MainMenuPresenter.h"
-#include "models/MdLinks.h"
-#include "ui/Factory.h"
+#include <functional>
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
-
-MainMenuPresenter::MainMenuPresenter(IView * view)
-    : mView(view) {
-
-    assert(mView);
-    mView->signalDonate = &MdLinks::openDonate;
-    mView->signalUpdate = &MdLinks::openPluginBinary;
-    mView->signalDoc = &MdLinks::openDocBinary;
-    mView->signalAbout = &ui::Factory::showAboutWindow;
-    mView->signalSettings = &ui::Factory::showSettingsWindow;
-}
+namespace presenters {
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
+
+/*!
+ * \details Presenter for the X-Plane plugin main menu.
+ */
+class MainMenu {
+public:
+
+    //-------------------------------------------------------------------------
+
+    class IView {
+    public:
+        virtual ~IView() = default;
+        std::function<void()> signalDonate;
+        std::function<void()> signalUpdate;
+        std::function<void()> signalDoc;
+        std::function<void()> signalAbout;
+        std::function<void()> signalSettings;
+    };
+
+    //-------------------------------------------------------------------------
+
+    explicit MainMenu(IView * view);
+    virtual ~MainMenu() = default;
+
+    //-------------------------------------------------------------------------
+
+private:
+
+    IView * mView;
+
+};
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+}

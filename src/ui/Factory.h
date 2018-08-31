@@ -29,7 +29,7 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "presenters/MainMenuPresenter.h"
+#include "presenters/MainMenu.h"
 #include "common/String.h"
 
 class INode;
@@ -57,7 +57,7 @@ public:
     static void showNotImplemented();
     static void showVersionIncompatible();
 
-    static MainMenuPresenter::IView * createMainMenuView();
+    static presenters::MainMenu::IView * createMainMenuView();
 
     static void showUpdatedObjects(const std::vector<INode *> & nodes);
     static void sceneUpdateInfo(const TCHAR * text);

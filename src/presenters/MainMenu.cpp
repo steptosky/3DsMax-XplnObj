@@ -1,5 +1,3 @@
-#pragma once
-
 /*
 **  Copyright(C) 2017, StepToSky
 **
@@ -29,43 +27,32 @@
 **  Contacts: www.steptosky.com
 */
 
-#include <functional>
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
+
+#include "MainMenu.h"
+#include "models/MdLinks.h"
+#include "ui/Factory.h"
+
+namespace presenters {
+
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
+
+MainMenu::MainMenu(IView * view)
+    : mView(view) {
+
+    DbgAssert(mView);
+    mView->signalDonate = &MdLinks::openDonate;
+    mView->signalUpdate = &MdLinks::openPluginBinary;
+    mView->signalDoc = &MdLinks::openDocBinary;
+    mView->signalAbout = &ui::Factory::showAboutWindow;
+    mView->signalSettings = &ui::Factory::showSettingsWindow;
+}
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
-
-/*!
- * \details Presenter for the X-Plane plugin main menu.
- */
-class MainMenuPresenter {
-public:
-
-    //-------------------------------------------------------------------------
-
-    class IView {
-    public:
-        virtual ~IView() = default;
-        std::function<void()> signalDonate;
-        std::function<void()> signalUpdate;
-        std::function<void()> signalDoc;
-        std::function<void()> signalAbout;
-        std::function<void()> signalSettings;
-    };
-
-    //-------------------------------------------------------------------------
-
-    explicit MainMenuPresenter(IView * view);
-    virtual ~MainMenuPresenter() = default;
-
-    //-------------------------------------------------------------------------
-
-private:
-
-    IView * mView;
-
-};
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+}

@@ -42,7 +42,7 @@
 #include "common/Config.h"
 #include "update/UpdateChecker.h"
 #include "Settings.h"
-#include "presenters/MainMenuPresenter.h"
+#include "presenters/MainMenu.h"
 #include "update-scene/SceneUpdater.h"
 
 #define COMMON_CLASS_ID	Class_ID(0xf5226b9, 0x5b131ef2)
@@ -103,8 +103,8 @@ private:
     UpdateChecker mUpdateChecker;
     SceneUpdater mSceneUpdater;
 
-    std::unique_ptr<MainMenuPresenter::IView> mMainMenuView;
-    std::unique_ptr<MainMenuPresenter> mMainMenuPresenter;
+    std::unique_ptr<presenters::MainMenu::IView> mMainMenuView;
+    std::unique_ptr<presenters::MainMenu> mMainMenuPresenter;
 
     //-------------------------------------------------------------------------
 
