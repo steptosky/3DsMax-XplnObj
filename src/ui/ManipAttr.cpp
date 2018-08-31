@@ -211,6 +211,12 @@ void ManipAttr::destroy() {
 void ManipAttr::initWindow(HWND hWnd) {
     cCmbManipType.setup(hWnd, CMB_MANIPTYPE);
     for (auto m : xobj::EManipulator::list()) {
+        if (m.id() == xobj::EManipulator::command_knob2 ||
+            m.id() == xobj::EManipulator::drag_rotate ||
+            m.id() == xobj::EManipulator::command_switch_lr2 ||
+            m.id() == xobj::EManipulator::command_switch_ud2) {
+            continue;
+        }
         cCmbManipType.addItem(sts::toString(m.toUiString()));
     }
     cCmbManipType.setCurrSelected(0);
