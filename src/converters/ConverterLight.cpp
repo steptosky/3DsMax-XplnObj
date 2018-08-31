@@ -104,7 +104,7 @@ struct LightGetter : LightIO::ILightIO {
                 const TimeValue currTime = GetCOREInterface()->GetTime();
                 const Matrix3 targetNodeTm = targetNode->GetNodeTM(currTime);
                 const Matrix3 nodeTm = mNode->GetObjectTM(currTime);
-                const Point3 targetPosition = Normalize(targetNodeTm.GetRow(3) - nodeTm.GetRow(3));
+                const Point3 targetPosition = Inverse(nodeTm * Inverse(targetNodeTm)).GetRow(3);
                 lobj->setDirection(xobj::Point3(targetPosition.x, targetPosition.y, targetPosition.z));
                 //Get cone
                 GenLight * light = dynamic_cast<GenLight*>(obj);
