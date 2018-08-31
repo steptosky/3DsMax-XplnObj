@@ -41,10 +41,10 @@
 /**************************************************************************************************/
 
 Config::Config() {
-	// Path like: C:\Users\Alex\AppData\Local\Autodesk\3dsMax\9 - 64bit\enu\plugcfg
-	mConfigFile = sts::toMbString(IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR));
-	mConfigFile.append("\\xpln_obj_io.ini");
-	load();
+    // Path like: C:\Users\Alex\AppData\Local\Autodesk\3dsMax\9 - 64bit\enu\plugcfg
+    mConfigFile = sts::toMbString(IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR));
+    mConfigFile.append("\\xpln_obj_io.ini");
+    load();
 }
 
 /**************************************************************************************************/

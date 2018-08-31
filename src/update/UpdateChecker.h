@@ -29,9 +29,10 @@
 **  Contacts: www.steptosky.com
 */
 
-#include <mutex>
 #include <vector>
-#include <additional/utils/SemVersion.h>
+#include <thread>
+#include <mutex>
+#include <sts/semver/SemVersion.h>
 
 /********************************************************************************************************/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,46 +41,46 @@
 class UpdateChecker {
 public:
 
-	struct Update {
-		bool valid = false;
-		std::vector<std::string> error;
-		sts::SemVersion version;
-	};
+    struct Update {
+        bool valid = false;
+        std::vector<std::string> error;
+        sts::semver::SemVersion version;
+    };
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	UpdateChecker() = default;
-	~UpdateChecker();
+    UpdateChecker() = default;
+    ~UpdateChecker();
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void checkForUpdate();
-	void freeResources();
+    void checkForUpdate();
+    void freeResources();
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	Update updateInfo() const;
+    Update updateInfo() const;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 private:
 
-	Update mUpdateInfo;
-	std::thread * mThread = nullptr;
-	mutable std::mutex mMutex;
+    Update mUpdateInfo;
+    std::thread * mThread = nullptr;
+    mutable std::mutex mMutex;
 
-	void setUpdateInfo(Update ipdate);
-	static void checkUpdateTask(void * inUserData);
-	static std::string extractVersion(const std::string & jsonData);
+    void setUpdateInfo(Update ipdate);
+    static void checkUpdateTask(void * inUserData);
+    static std::string extractVersion(const std::string & jsonData);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	struct Response {
-		std::vector<std::string> error;
-		std::string body;
-	};
+    struct Response {
+        std::vector<std::string> error;
+        std::string body;
+    };
 
-	static Response latestReleaseTag();
+    static Response latestReleaseTag();
 
 };
 

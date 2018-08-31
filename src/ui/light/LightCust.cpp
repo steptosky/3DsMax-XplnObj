@@ -40,289 +40,289 @@
 
 namespace ui {
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Static area *///////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Static area *///////////////////////////////////////////
+/**************************************************************************************************/
 
-	INT_PTR LightCust::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		LightCust * theDlg;
-		if (msg == WM_INITDIALOG) {
-			theDlg = reinterpret_cast<LightCust*>(lParam);
-			DLSetWindowLongPtr(hWnd, lParam);
-			theDlg->initWindow(hWnd);
-		}
-		else if (msg == WM_DESTROY) {
-			theDlg = DLGetWindowLongPtr<LightCust*>(hWnd);
-			theDlg->destroyWindow(hWnd);
-		}
-		else {
-			theDlg = DLGetWindowLongPtr<LightCust *>(hWnd);
-			if (!theDlg) {
-				return FALSE;
-			}
-		}
+INT_PTR LightCust::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    LightCust * theDlg;
+    if (msg == WM_INITDIALOG) {
+        theDlg = reinterpret_cast<LightCust*>(lParam);
+        DLSetWindowLongPtr(hWnd, lParam);
+        theDlg->initWindow(hWnd);
+    }
+    else if (msg == WM_DESTROY) {
+        theDlg = DLGetWindowLongPtr<LightCust*>(hWnd);
+        theDlg->destroyWindow(hWnd);
+    }
+    else {
+        theDlg = DLGetWindowLongPtr<LightCust *>(hWnd);
+        if (!theDlg) {
+            return FALSE;
+        }
+    }
 
-		//--------------------------------------
+    //--------------------------------------
 
-		switch (msg) {
-			case WM_COMMAND: {
-				switch (LOWORD(wParam)) {
-					case IDC_BTN_DATAREF: {
-						Factory::showNotImplemented();;
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			case WM_CUSTEDIT_ENTER: {
-				switch (LOWORD(wParam)) {
-					case IDC_EDIT_DATAREF: {
-						theDlg->mData->setDataRef(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)));
-						theDlg->eventParamChanged(true);
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			case CC_SPINNER_CHANGE: {
-				switch (LOWORD(wParam)) {
-					case IDC_R_SPIN: {
-						xobj::Color color = theDlg->mData->color();
-						color.setRed(theDlg->mSpnR->GetFVal());
-						theDlg->mData->setColor(color);
-						theDlg->eventParamChanged(true);
-						break;
-					}
-					case IDC_G_SPIN: {
-						xobj::Color color = theDlg->mData->color();
-						color.setGreen(theDlg->mSpnG->GetFVal());
-						theDlg->mData->setColor(color);
-						theDlg->eventParamChanged(true);
-						break;
-					}
-					case IDC_B_SPIN: {
-						xobj::Color color = theDlg->mData->color();
-						color.setBlue(theDlg->mSpnB->GetFVal());
-						theDlg->mData->setColor(color);
-						theDlg->eventParamChanged(true);
-						break;
-					}
-					case IDC_A_SPIN: {
-						xobj::Color color = theDlg->mData->color();
-						color.setAlpha(theDlg->mSpnA->GetFVal());
-						theDlg->mData->setColor(color);
-						theDlg->eventParamChanged(true);
-						break;
-					}
-					case IDC_SIZE_SPIN: {
-						theDlg->mData->setSize(theDlg->mSpnSize->GetFVal());
-						theDlg->eventParamChanged(true);
-						break;
-					}
-					case IDC_S1_SPIN: {
-						xobj::RectangleI rect = theDlg->mData->textureRect();
-						xobj::Point2 p = rect.point1();
-						p.x = theDlg->mSpnS1->GetFVal();
-						rect.setPoint1(p);
-						theDlg->mData->setTextureRect(rect);
-						theDlg->eventParamChanged(true);
-						break;
-					}
-					case IDC_T1_SPIN: {
-						xobj::RectangleI rect = theDlg->mData->textureRect();
-						xobj::Point2 p = rect.point1();
-						p.y = theDlg->mSpnT1->GetFVal();
-						rect.setPoint1(p);
-						theDlg->mData->setTextureRect(rect);
-						theDlg->eventParamChanged(true);
-						break;
-					}
-					case IDC_S2_SPIN: {
-						xobj::RectangleI rect = theDlg->mData->textureRect();
-						xobj::Point2 p = rect.point2();
-						p.x = theDlg->mSpnS2->GetFVal();
-						rect.setPoint2(p);
-						theDlg->mData->setTextureRect(rect);
-						theDlg->eventParamChanged(true);
-						break;
-					}
-					case IDC_T2_SPIN: {
-						xobj::RectangleI rect = theDlg->mData->textureRect();
-						xobj::Point2 p = rect.point2();
-						p.y = theDlg->mSpnT2->GetFVal();
-						rect.setPoint2(p);
-						theDlg->mData->setTextureRect(rect);
-						theDlg->eventParamChanged(true);
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			default: break;
-		}
-		return FALSE;
-	}
+    switch (msg) {
+        case WM_COMMAND: {
+            switch (LOWORD(wParam)) {
+                case IDC_BTN_DATAREF: {
+                    Factory::showNotImplemented();;
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        case WM_CUSTEDIT_ENTER: {
+            switch (LOWORD(wParam)) {
+                case IDC_EDIT_DATAREF: {
+                    theDlg->mData->setDataRef(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)));
+                    theDlg->eventParamChanged(true);
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        case CC_SPINNER_CHANGE: {
+            switch (LOWORD(wParam)) {
+                case IDC_R_SPIN: {
+                    xobj::Color color = theDlg->mData->color();
+                    color.setRed(theDlg->mSpnR->GetFVal());
+                    theDlg->mData->setColor(color);
+                    theDlg->eventParamChanged(true);
+                    break;
+                }
+                case IDC_G_SPIN: {
+                    xobj::Color color = theDlg->mData->color();
+                    color.setGreen(theDlg->mSpnG->GetFVal());
+                    theDlg->mData->setColor(color);
+                    theDlg->eventParamChanged(true);
+                    break;
+                }
+                case IDC_B_SPIN: {
+                    xobj::Color color = theDlg->mData->color();
+                    color.setBlue(theDlg->mSpnB->GetFVal());
+                    theDlg->mData->setColor(color);
+                    theDlg->eventParamChanged(true);
+                    break;
+                }
+                case IDC_A_SPIN: {
+                    xobj::Color color = theDlg->mData->color();
+                    color.setAlpha(theDlg->mSpnA->GetFVal());
+                    theDlg->mData->setColor(color);
+                    theDlg->eventParamChanged(true);
+                    break;
+                }
+                case IDC_SIZE_SPIN: {
+                    theDlg->mData->setSize(theDlg->mSpnSize->GetFVal());
+                    theDlg->eventParamChanged(true);
+                    break;
+                }
+                case IDC_S1_SPIN: {
+                    xobj::RectangleI rect = theDlg->mData->textureRect();
+                    xobj::Point2 p = rect.point1();
+                    p.x = theDlg->mSpnS1->GetFVal();
+                    rect.setPoint1(p);
+                    theDlg->mData->setTextureRect(rect);
+                    theDlg->eventParamChanged(true);
+                    break;
+                }
+                case IDC_T1_SPIN: {
+                    xobj::RectangleI rect = theDlg->mData->textureRect();
+                    xobj::Point2 p = rect.point1();
+                    p.y = theDlg->mSpnT1->GetFVal();
+                    rect.setPoint1(p);
+                    theDlg->mData->setTextureRect(rect);
+                    theDlg->eventParamChanged(true);
+                    break;
+                }
+                case IDC_S2_SPIN: {
+                    xobj::RectangleI rect = theDlg->mData->textureRect();
+                    xobj::Point2 p = rect.point2();
+                    p.x = theDlg->mSpnS2->GetFVal();
+                    rect.setPoint2(p);
+                    theDlg->mData->setTextureRect(rect);
+                    theDlg->eventParamChanged(true);
+                    break;
+                }
+                case IDC_T2_SPIN: {
+                    xobj::RectangleI rect = theDlg->mData->textureRect();
+                    xobj::Point2 p = rect.point2();
+                    p.y = theDlg->mSpnT2->GetFVal();
+                    rect.setPoint2(p);
+                    theDlg->mData->setTextureRect(rect);
+                    theDlg->eventParamChanged(true);
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        default: break;
+    }
+    return FALSE;
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	LightCust::LightCust() {
-		mData = nullptr;
-	}
+LightCust::LightCust() {
+    mData = nullptr;
+}
 
-	LightCust::~LightCust() {
-		LightCust::destroy();
-	}
+LightCust::~LightCust() {
+    LightCust::destroy();
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void LightCust::show(xobj::ObjLightCustom * inData) {
-		mData = inData;
-		toWindow();
-		mHwnd.show();
-	}
+void LightCust::show(xobj::ObjLightCustom * inData) {
+    mData = inData;
+    toWindow();
+    mHwnd.show();
+}
 
-	void LightCust::hide() {
-		mHwnd.hide();
-	}
+void LightCust::hide() {
+    mHwnd.hide();
+}
 
-	void LightCust::create(HWND inParent) {
-		assert(inParent);
-		mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
-									MAKEINTRESOURCE(IDD_ROLL_LIGHT_CUST_OBJ),
-									inParent,
-									reinterpret_cast<DLGPROC>(panelProc),
-									reinterpret_cast<LPARAM>(this)));
-		assert(mHwnd);
-	}
+void LightCust::create(HWND inParent) {
+    assert(inParent);
+    mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
+                                  MAKEINTRESOURCE(IDD_ROLL_LIGHT_CUST_OBJ),
+                                  inParent,
+                                  reinterpret_cast<DLGPROC>(panelProc),
+                                  reinterpret_cast<LPARAM>(this)));
+    assert(mHwnd);
+}
 
-	void LightCust::destroy() {
-		assert(mHwnd);
-		DestroyWindow(mHwnd.hwnd());
-		mHwnd.release();
-		mData = nullptr;
-	}
+void LightCust::destroy() {
+    assert(mHwnd);
+    DestroyWindow(mHwnd.hwnd());
+    mHwnd.release();
+    mData = nullptr;
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void LightCust::initWindow(HWND hWnd) {
-		mSpnR = SetupFloatSpinner(hWnd, IDC_R_SPIN, IDC_R_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
-		mSpnG = SetupFloatSpinner(hWnd, IDC_G_SPIN, IDC_G_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
-		mSpnB = SetupFloatSpinner(hWnd, IDC_B_SPIN, IDC_B_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
-		mSpnA = SetupFloatSpinner(hWnd, IDC_A_SPIN, IDC_A_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
+void LightCust::initWindow(HWND hWnd) {
+    mSpnR = SetupFloatSpinner(hWnd, IDC_R_SPIN, IDC_R_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
+    mSpnG = SetupFloatSpinner(hWnd, IDC_G_SPIN, IDC_G_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
+    mSpnB = SetupFloatSpinner(hWnd, IDC_B_SPIN, IDC_B_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
+    mSpnA = SetupFloatSpinner(hWnd, IDC_A_SPIN, IDC_A_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
 
-		mSpnSize = SetupFloatSpinner(hWnd, IDC_SIZE_SPIN, IDC_SIZE_EDIT, 0.0f, 100.0f, 1.0f, 0.1f);
+    mSpnSize = SetupFloatSpinner(hWnd, IDC_SIZE_SPIN, IDC_SIZE_EDIT, 0.0f, 100.0f, 1.0f, 0.1f);
 
-		cBtnDataRef.setup(hWnd, IDC_BTN_DATAREF);
-		cEdtDataRef = GetICustEdit(GetDlgItem(hWnd, IDC_EDIT_DATAREF));
+    cBtnDataRef.setup(hWnd, IDC_BTN_DATAREF);
+    cEdtDataRef = GetICustEdit(GetDlgItem(hWnd, IDC_EDIT_DATAREF));
 
-		mSpnS1 = SetupFloatSpinner(hWnd, IDC_S1_SPIN, IDC_S1_EDIT, 0.0f, 1.0f, 0.0f, 0.1f);
-		mSpnT1 = SetupFloatSpinner(hWnd, IDC_T1_SPIN, IDC_T1_EDIT, 0.0f, 1.0f, 0.0f, 0.1f);
-		mSpnS2 = SetupFloatSpinner(hWnd, IDC_S2_SPIN, IDC_S2_EDIT, 0.0f, 1.0f, 1.0f, 0.1f);
-		mSpnT2 = SetupFloatSpinner(hWnd, IDC_T2_SPIN, IDC_T2_EDIT, 0.0f, 1.0f, 1.0f, 0.1f);
+    mSpnS1 = SetupFloatSpinner(hWnd, IDC_S1_SPIN, IDC_S1_EDIT, 0.0f, 1.0f, 0.0f, 0.1f);
+    mSpnT1 = SetupFloatSpinner(hWnd, IDC_T1_SPIN, IDC_T1_EDIT, 0.0f, 1.0f, 0.0f, 0.1f);
+    mSpnS2 = SetupFloatSpinner(hWnd, IDC_S2_SPIN, IDC_S2_EDIT, 0.0f, 1.0f, 1.0f, 0.1f);
+    mSpnT2 = SetupFloatSpinner(hWnd, IDC_T2_SPIN, IDC_T2_EDIT, 0.0f, 1.0f, 1.0f, 0.1f);
 
-		assert(mSpnR);
-		assert(mSpnG);
-		assert(mSpnB);
-		assert(mSpnA);
-		assert(mSpnSize);
-		assert(mSpnS1);
-		assert(mSpnT1);
-		assert(mSpnS2);
-		assert(mSpnT2);
-		assert(cEdtDataRef);
-		assert(cBtnDataRef);
-	}
+    assert(mSpnR);
+    assert(mSpnG);
+    assert(mSpnB);
+    assert(mSpnA);
+    assert(mSpnSize);
+    assert(mSpnS1);
+    assert(mSpnT1);
+    assert(mSpnS2);
+    assert(mSpnT2);
+    assert(cEdtDataRef);
+    assert(cBtnDataRef);
+}
 
-	void LightCust::destroyWindow(HWND /*hWnd*/) {
-		ReleaseISpinner(mSpnR);
-		ReleaseISpinner(mSpnG);
-		ReleaseISpinner(mSpnB);
-		ReleaseISpinner(mSpnA);
-		ReleaseISpinner(mSpnSize);
-		ReleaseISpinner(mSpnS1);
-		ReleaseISpinner(mSpnT1);
-		ReleaseISpinner(mSpnS2);
-		ReleaseISpinner(mSpnT2);
-		cBtnDataRef.release();
-		ReleaseICustEdit(cEdtDataRef);
-	}
+void LightCust::destroyWindow(HWND /*hWnd*/) {
+    ReleaseISpinner(mSpnR);
+    ReleaseISpinner(mSpnG);
+    ReleaseISpinner(mSpnB);
+    ReleaseISpinner(mSpnA);
+    ReleaseISpinner(mSpnSize);
+    ReleaseISpinner(mSpnS1);
+    ReleaseISpinner(mSpnT1);
+    ReleaseISpinner(mSpnS2);
+    ReleaseISpinner(mSpnT2);
+    cBtnDataRef.release();
+    ReleaseICustEdit(cEdtDataRef);
+}
 
-	void LightCust::toWindow() {
-		if (mData) {
-			enableControls();
-			const xobj::Color & color = mData->color();
-			mSpnR->SetValue(color.red(), FALSE);
-			mSpnG->SetValue(color.green(), FALSE);
-			mSpnB->SetValue(color.blue(), FALSE);
-			mSpnA->SetValue(color.alpha(), FALSE);
-			mSpnSize->SetValue(mData->size(), FALSE);
+void LightCust::toWindow() {
+    if (mData) {
+        enableControls();
+        const xobj::Color & color = mData->color();
+        mSpnR->SetValue(color.red(), FALSE);
+        mSpnG->SetValue(color.green(), FALSE);
+        mSpnB->SetValue(color.blue(), FALSE);
+        mSpnA->SetValue(color.alpha(), FALSE);
+        mSpnSize->SetValue(mData->size(), FALSE);
 
-			mSpnS1->SetValue(mData->textureRect().point1().x, FALSE);
-			mSpnT1->SetValue(mData->textureRect().point1().y, FALSE);
-			mSpnS2->SetValue(mData->textureRect().point2().x, FALSE);
-			mSpnT2->SetValue(mData->textureRect().point2().y, FALSE);
+        mSpnS1->SetValue(mData->textureRect().point1().x, FALSE);
+        mSpnT1->SetValue(mData->textureRect().point1().y, FALSE);
+        mSpnS2->SetValue(mData->textureRect().point2().x, FALSE);
+        mSpnT2->SetValue(mData->textureRect().point2().y, FALSE);
 
-			UiUtilities::setText(cEdtDataRef, sts::toString(mData->dataRef()));
-		}
-		else {
-			disableControls();
-		}
-	}
+        UiUtilities::setText(cEdtDataRef, sts::toString(mData->dataRef()));
+    }
+    else {
+        disableControls();
+    }
+}
 
-	void LightCust::toData() {
-		xobj::Color color(mSpnR->GetFVal(), mSpnG->GetFVal(), mSpnB->GetFVal(), mSpnA->GetFVal());
-		mData->setColor(color);
-		mData->setSize(mSpnSize->GetFVal());
+void LightCust::toData() {
+    xobj::Color color(mSpnR->GetFVal(), mSpnG->GetFVal(), mSpnB->GetFVal(), mSpnA->GetFVal());
+    mData->setColor(color);
+    mData->setSize(mSpnSize->GetFVal());
 
-		xobj::RectangleI rect(xobj::Point2(mSpnS1->GetFVal(), mSpnT1->GetFVal()),
-							xobj::Point2(mSpnS2->GetFVal(), mSpnT2->GetFVal()));
-		mData->setTextureRect(rect);
+    xobj::RectangleI rect(xobj::Point2(mSpnS1->GetFVal(), mSpnT1->GetFVal()),
+                          xobj::Point2(mSpnS2->GetFVal(), mSpnT2->GetFVal()));
+    mData->setTextureRect(rect);
 
-		mData->setDataRef(sts::toMbString(UiUtilities::getText(cEdtDataRef)));
-	}
+    mData->setDataRef(sts::toMbString(UiUtilities::getText(cEdtDataRef)));
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void LightCust::enableControls() {
-		mSpnR->Enable();
-		mSpnG->Enable();
-		mSpnB->Enable();
-		mSpnA->Enable();
-		mSpnSize->Enable();
-		mSpnS1->Enable();
-		mSpnT1->Enable();
-		mSpnS2->Enable();
-		mSpnT2->Enable();
-		cBtnDataRef.enable();
-		cEdtDataRef->Enable();
-	}
+void LightCust::enableControls() {
+    mSpnR->Enable();
+    mSpnG->Enable();
+    mSpnB->Enable();
+    mSpnA->Enable();
+    mSpnSize->Enable();
+    mSpnS1->Enable();
+    mSpnT1->Enable();
+    mSpnS2->Enable();
+    mSpnT2->Enable();
+    cBtnDataRef.enable();
+    cEdtDataRef->Enable();
+}
 
-	void LightCust::disableControls() {
-		mSpnR->Disable();
-		mSpnG->Disable();
-		mSpnB->Disable();
-		mSpnA->Disable();
-		mSpnSize->Disable();
-		mSpnS1->Disable();
-		mSpnT1->Disable();
-		mSpnS2->Disable();
-		mSpnT2->Disable();
-		cBtnDataRef.disable();
-		cEdtDataRef->Disable();
-	}
+void LightCust::disableControls() {
+    mSpnR->Disable();
+    mSpnG->Disable();
+    mSpnB->Disable();
+    mSpnA->Disable();
+    mSpnSize->Disable();
+    mSpnS1->Disable();
+    mSpnT1->Disable();
+    mSpnS2->Disable();
+    mSpnT2->Disable();
+    cBtnDataRef.disable();
+    cEdtDataRef->Disable();
+}
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

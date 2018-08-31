@@ -29,134 +29,132 @@
 **  Contacts: www.steptosky.com
 */
 
-#include <stdio.h>
-
 namespace sts {
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	/*!
-	 * \details Guarantees only one instance in process scope.\n
-	 * Example of using
-	 * \code
-	 * class SingleTest : public sts::Single< SingleTest > {
-	 *
-	 *    friend sts::Single< SingleTest >;
-	 *    SingleTest() = default;
-	 *    ~SingleTest() = default;
-	 *    
-	 *    public:
-	 *    
-	 *    //...
-	 *
-	 * };
-	 * \endcode
-	 */
-	template<class Type>
-	class Single {
-	public:
+/*!
+ * \details Guarantees only one instance in process scope.\n
+ * Example of using
+ * \code
+ * class SingleTest : public sts::Single< SingleTest > {
+ *
+ *    friend sts::Single< SingleTest >;
+ *    SingleTest() = default;
+ *    ~SingleTest() = default;
+ *    
+ *    public:
+ *    
+ *    //...
+ *
+ * };
+ * \endcode
+ */
+template<class Type>
+class Single {
+public:
 
-		/*!
-		 * \details Gets pointer to instance of the "Type" using constructors with arguments.
-		 * \note This method will not create new instance if it is already exist.
-		 * \tparam Args 
-		 * \param vals 
-		 * \return Pointer to created instance.
-		 */
-		template<class ... Args>
-		static Type * init(Args && ... vals) {
-			if (mInstanceCounter == 0) {
-				mInstance = new Type(vals ...);
-			}
-			mInstanceCounter++;
-			return mInstance;
-		}
+    /*!
+     * \details Gets pointer to instance of the "Type" using constructors with arguments.
+     * \note This method will not create new instance if it is already exist.
+     * \tparam Args 
+     * \param vals 
+     * \return Pointer to created instance.
+     */
+    template<class ... Args>
+    static Type * init(Args && ... vals) {
+        if (mInstanceCounter == 0) {
+            mInstance = new Type(vals ...);
+        }
+        mInstanceCounter++;
+        return mInstance;
+    }
 
-		/*!
-		 * \details Gets pointer to instance of the "Type".
-		 */
-		static Type * instance() {
-			if (mInstanceCounter == 0) {
-				mInstance = new Type();
-			}
-			mInstanceCounter++;
-			return mInstance;
-		}
+    /*!
+     * \details Gets pointer to instance of the "Type".
+     */
+    static Type * instance() {
+        if (mInstanceCounter == 0) {
+            mInstance = new Type();
+        }
+        mInstanceCounter++;
+        return mInstance;
+    }
 
-		/*!
-		 * \details Checks whether instance is instanced.
-		 */
-		static bool isInstanced() {
-			return mInstance != nullptr;
-		}
+    /*!
+     * \details Checks whether instance is instanced.
+     */
+    static bool isInstanced() {
+        return mInstance != nullptr;
+    }
 
-		/*!
-		 * \details Checks whether instance is instanced.
-		 * \deprecated Use Single::isInstanced instead.
-		 */
-		[[deprecated("Use Single::isInstanced instead")]]
-		static bool isInitialized() {
-			return mInstance != nullptr;
-		}
+    /*!
+     * \details Checks whether instance is instanced.
+     * \deprecated Use Single::isInstanced instead.
+     */
+    [[deprecated("Use Single::isInstanced instead")]]
+    static bool isInitialized() {
+        return mInstance != nullptr;
+    }
 
-		/*!
-		 * \details Gets internal counter value.
-		 * This counter shows how many parts of a project code have not called Single::safeFree().
-		 */
-		static unsigned usedCount() {
-			return mInstanceCounter;
-		}
+    /*!
+     * \details Gets internal counter value.
+     * This counter shows how many parts of a project code have not called Single::safeFree().
+     */
+    static unsigned usedCount() {
+        return mInstanceCounter;
+    }
 
-		/*!
-		 * \details One decrement, if the counter is 0 then instance will be deleted.
-		 */
-		static void safeFree() {
-			if (mInstanceCounter != 0) {
-				mInstanceCounter--;
-				if (mInstanceCounter == 0) {
-					free();
-				}
-			}
-		}
+    /*!
+     * \details One decrement, if the counter is 0 then instance will be deleted.
+     */
+    static void safeFree() {
+        if (mInstanceCounter != 0) {
+            mInstanceCounter--;
+            if (mInstanceCounter == 0) {
+                free();
+            }
+        }
+    }
 
-		/*!
-		 * \details Deletes instance and set counter to 0
-		 */
-		static void free() {
-			if (mInstance != nullptr) {
-				delete mInstance;
-			}
-			mInstance = nullptr;
-			mInstanceCounter = 0;
-		}
+    /*!
+     * \details Deletes instance and set counter to 0
+     */
+    static void free() {
+        if (mInstance != nullptr) {
+            delete mInstance;
+        }
+        mInstance = nullptr;
+        mInstanceCounter = 0;
+    }
 
-	protected:
+protected:
 
-		friend Type;
-		Single(const Single &) = delete;
-		Single & operator =(const Single &) = delete;
+    friend Type;
+    Single(const Single &) = delete;
+    Single & operator =(const Single &) = delete;
 
-		Single() = default;
-		~Single() = default;
+    Single() = default;
+    ~Single() = default;
 
-		static Type * mInstance;
-		static unsigned int mInstanceCounter;
+    static Type * mInstance;
+    static unsigned int mInstanceCounter;
 
-	};
+};
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	template<typename Type>
-	Type * Single<Type>::mInstance = nullptr;
+template<typename Type>
+Type * Single<Type>::mInstance = nullptr;
 
-	template<typename Type>
-	unsigned int Single<Type>::mInstanceCounter = 0;
+template<typename Type>
+unsigned int Single<Type>::mInstanceCounter = 0;
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 }

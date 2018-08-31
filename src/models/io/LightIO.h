@@ -47,73 +47,73 @@
 
 class LightIO {
 
-	LightIO() = default;
-	~LightIO() = default;
+    LightIO() = default;
+    ~LightIO() = default;
 
 public:
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	class ILightIO {
-	public:
-		virtual ~ILightIO() = default;
-		virtual void gotLight(const xobj::ObjLightCustom & inLight) = 0;
-		virtual void gotLight(const xobj::ObjLightNamed & inLight) = 0;
-		virtual void gotLight(const xobj::ObjLightParam & inLight) = 0;
-		virtual void gotLight(const xobj::ObjLightPoint & inLight) = 0;
-		virtual void gotLight(const xobj::ObjLightSpillCust & inLight) = 0;
-		virtual void gotNoLight() = 0;
-	};
+    class ILightIO {
+    public:
+        virtual ~ILightIO() = default;
+        virtual void gotLight(const xobj::ObjLightCustom & inLight) = 0;
+        virtual void gotLight(const xobj::ObjLightNamed & inLight) = 0;
+        virtual void gotLight(const xobj::ObjLightParam & inLight) = 0;
+        virtual void gotLight(const xobj::ObjLightPoint & inLight) = 0;
+        virtual void gotLight(const xobj::ObjLightSpillCust & inLight) = 0;
+        virtual void gotNoLight() = 0;
+    };
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static bool canApply(INode * node);
-	static bool cloneData(INode * from, INode * to);
+    static bool canApply(INode * node);
+    static bool cloneData(INode * from, INode * to);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static bool loadFromNode(INode * inNode, ILightIO * inCallback);
-	static void removeFromNode(INode * node);
-	static void saveToNode(INode * outNode, const xobj::ObjAbstract * inLight);
+    static bool loadFromNode(INode * inNode, ILightIO * inCallback);
+    static void removeFromNode(INode * node);
+    static void saveToNode(INode * outNode, const xobj::ObjAbstract * inLight);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 private:
 
-	template<typename T>
-	static void saveToNodeInternal(INode * outNode, const T & inLight) {
-		if (!outNode) {
-			LError << "INode is nullptr";
-			return;
-		}
+    template<typename T>
+    static void saveToNodeInternal(INode * outNode, const T & inLight) {
+        if (!outNode) {
+            LError << "INode is nullptr";
+            return;
+        }
 
-		std::stringstream buf;
-		sts::DataStream stream(&buf);
-		stream.writeFormatVersion();
-		stream.setValue<uint8_t>(uint8_t(1)); // node io version
-		xobj::eObjectType type = inLight.objType();
-		stream.setValue<int32_t>(type);
-		save(stream, inLight);
-		saveDataToNode(outNode, buf);
-	}
+        std::stringstream buf;
+        sts::DataStream stream(&buf);
+        stream.writeFormatVersion();
+        stream.setValue<uint8_t>(uint8_t(1)); // node io version
+        xobj::eObjectType type = inLight.objType();
+        stream.setValue<int32_t>(type);
+        save(stream, inLight);
+        saveDataToNode(outNode, buf);
+    }
 
-	static void save(sts::DataStreamO & stream, const xobj::ObjLightCustom & inLight);
-	static void save(sts::DataStreamO & stream, const xobj::ObjLightNamed & inLight);
-	static void save(sts::DataStreamO & stream, const xobj::ObjLightParam & inLight);
-	static void save(sts::DataStreamO & stream, const xobj::ObjLightPoint & inManip);
-	static void save(sts::DataStreamO & stream, const xobj::ObjLightSpillCust & inLight);
+    static void save(sts::DataStreamO & stream, const xobj::ObjLightCustom & inLight);
+    static void save(sts::DataStreamO & stream, const xobj::ObjLightNamed & inLight);
+    static void save(sts::DataStreamO & stream, const xobj::ObjLightParam & inLight);
+    static void save(sts::DataStreamO & stream, const xobj::ObjLightPoint & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::ObjLightSpillCust & inLight);
 
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::ObjLightCustom & outLight);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::ObjLightNamed & outLight);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::ObjLightParam & outLight);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::ObjLightPoint & outLight);
-	static bool load(INode * node, sts::DataStreamI & stream, xobj::ObjLightSpillCust & outLight);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::ObjLightCustom & outLight);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::ObjLightNamed & outLight);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::ObjLightParam & outLight);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::ObjLightPoint & outLight);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::ObjLightSpillCust & outLight);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static void saveDataToNode(INode * outNode, const std::stringstream & indata);
+    static void saveDataToNode(INode * outNode, const std::stringstream & indata);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 };
 

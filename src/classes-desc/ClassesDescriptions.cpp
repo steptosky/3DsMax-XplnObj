@@ -40,33 +40,33 @@
 /**************************************************************************************************/
 
 ClassDesc2 * ClassesDescriptions::exporter() {
-	static ExporterDesc desc;
-	return &desc;
+    static ExporterDesc desc;
+    return &desc;
 }
 
 ClassDesc2 * ClassesDescriptions::importer() {
-	static ImporterDesc desc;
-	return &desc;
+    static ImporterDesc desc;
+    return &desc;
 }
 
 ClassDesc2 * ClassesDescriptions::mainObj() {
-	static MainObjDesc desc;
-	return &desc;
+    static MainObjDesc desc;
+    return &desc;
 }
 
 ClassDesc2 * ClassesDescriptions::smokeObj() {
-	static SmokeObjDesc desc;
-	return &desc;
+    static SmokeObjDesc desc;
+    return &desc;
 }
 
 ClassDesc2 * ClassesDescriptions::lodObj() {
-	static LodObjDesc desc;
-	return &desc;
+    static LodObjDesc desc;
+    return &desc;
 }
 
 ClassDesc2 * ClassesDescriptions::commonClass() {
-	static CommonClassDesc desc;
-	return &desc;
+    static CommonClassDesc desc;
+    return &desc;
 }
 
 /**************************************************************************************************/

@@ -36,28 +36,28 @@
 /**************************************************************************************************/
 
 bool Settings::isSavedAsXplnScene() const {
-	return value("xpln_scene", false);
+    return value("xpln_scene", false);
 }
 
 void Settings::prepareDataForSave() {
-	setSceneVersion(pluginVersion());
-	setValue("xpln_scene", NodeVisitor::sceneContainsMainObj());
+    setSceneVersion(pluginVersion());
+    setValue("xpln_scene", NodeVisitor::sceneContainsMainObj());
 }
 
-void Settings::setSceneVersion(const sts::SemVersion & version) {
-	setValue("verMajor", version.major);
-	setValue("verMinor", version.minor);
-	setValue("verPatch", version.patch);
+void Settings::setSceneVersion(const sts::semver::SemVersion & version) {
+    setValue("verMajor", version.mMajor);
+    setValue("verMinor", version.mMinor);
+    setValue("verPatch", version.mPatch);
 }
 
-sts::SemVersion Settings::sceneVersion() const {
-	return sts::SemVersion(value("verMajor", uint32_t(0)),
-							value("verMinor", uint32_t(0)),
-							value("verPatch", uint32_t(0)));
+sts::semver::SemVersion Settings::sceneVersion() const {
+    return sts::semver::SemVersion(value("verMajor", uint32_t(0)),
+                           value("verMinor", uint32_t(0)),
+                           value("verPatch", uint32_t(0)));
 }
 
-sts::SemVersion Settings::pluginVersion() {
-	return sts::SemVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH);
+sts::semver::SemVersion Settings::pluginVersion() {
+    return sts::semver::SemVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH);
 }
 
 /**************************************************************************************************/

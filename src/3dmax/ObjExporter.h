@@ -34,7 +34,6 @@
 #pragma warning(pop)
 
 #include "ui/DlgExport.h"
-#include "Converters/Converterer.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,26 +42,26 @@
 class ObjExporter : public SceneExport {
 public:
 
-	ObjExporter();
-	~ObjExporter();
+    ObjExporter();
+    ~ObjExporter();
 
-	int ExtCount() override; // Number of extensions supported
-	const TCHAR * Ext(int n) override; // Extension #n (i.e. "3DS")
-	const TCHAR * LongDesc() override; // Long ASCII description (i.e. "Autodesk 3D Studio File")
-	const TCHAR * ShortDesc() override; // Short ASCII description (i.e. "3D Studio")
-	const TCHAR * AuthorName() override; // ASCII Author name
-	const TCHAR * CopyrightMessage() override; // ASCII Copyright message
-	const TCHAR * OtherMessage1() override; // Other message #1
-	const TCHAR * OtherMessage2() override; // Other message #2
-	unsigned int Version() override; // Version number * 100 (i.e. v3.01 = 301)
-	void ShowAbout(HWND hWnd) override; // Show DLL's "About..." box
+    int ExtCount() override;                   // Number of extensions supported
+    const TCHAR * Ext(int n) override;         // Extension #n (i.e. "3DS")
+    const TCHAR * LongDesc() override;         // Long ASCII description (i.e. "Autodesk 3D Studio File")
+    const TCHAR * ShortDesc() override;        // Short ASCII description (i.e. "3D Studio")
+    const TCHAR * AuthorName() override;       // ASCII Author name
+    const TCHAR * CopyrightMessage() override; // ASCII Copyright message
+    const TCHAR * OtherMessage1() override;    // Other message #1
+    const TCHAR * OtherMessage2() override;    // Other message #2
+    unsigned int Version() override;           // Version number * 100 (i.e. v3.01 = 301)
+    void ShowAbout(HWND hWnd) override;        // Show DLL's "About..." box
 
-	BOOL SupportsOptions(int ext, DWORD options) override;
-	int DoExport(const TCHAR * name, ExpInterface * ei, Interface * i, BOOL suppressPrompts = FALSE, DWORD options = 0) override;
+    BOOL SupportsOptions(int ext, DWORD options) override;
+    int DoExport(const TCHAR * name, ExpInterface * ei, Interface * i, BOOL suppressPrompts = FALSE, DWORD options = 0) override;
 
 private:
 
-	ui::DlgExport * mDlgMain = nullptr;
+    ui::DlgExport * mDlgMain = nullptr;
 
 };
 

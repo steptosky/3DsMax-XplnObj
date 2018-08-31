@@ -44,42 +44,42 @@
 
 class AnimIO {
 
-	AnimIO() = default;
-	~AnimIO() = default;
+    AnimIO() = default;
+    ~AnimIO() = default;
 
 public:
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static bool canApply(INode * node);
+    static bool canApply(INode * node);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static bool loadRotateFromNode(INode * inNode, MdAnimRot & outAnimRot, eAnimRotateIOID axis);
-	static bool loadTransFromNode(INode * inNode, MdAnimTrans & outAnimRot);
-	static bool loadVisibilityFromNode(INode * inNode, MdAnimVis & outAnimVis);
+    static bool loadRotateFromNode(INode * inNode, MdAnimRot & outAnimRot, eAnimRotateIOID axis);
+    static bool loadTransFromNode(INode * inNode, MdAnimTrans & outAnimRot);
+    static bool loadVisibilityFromNode(INode * inNode, MdAnimVis & outAnimVis);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static void removeRotateFromNode(INode * node, eAnimRotateIOID axis);
-	static void removeAnimTransFromNode(INode * node);
-	static void removeVisibilityFromNode(INode * node);
+    static void removeRotateFromNode(INode * node, eAnimRotateIOID axis);
+    static void removeAnimTransFromNode(INode * node);
+    static void removeVisibilityFromNode(INode * node);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static void saveRotateToNode(INode * outNode, const MdAnimRot & inAnimRot, eAnimRotateIOID axis);
-	static void saveTransToNode(INode * outNode, const MdAnimTrans & inAnimRot);
-	static void saveVisibilityToNode(INode * outNode, const MdAnimVis & inAnimVis);
+    static void saveRotateToNode(INode * outNode, const MdAnimRot & inAnimRot, eAnimRotateIOID axis);
+    static void saveTransToNode(INode * outNode, const MdAnimTrans & inAnimRot);
+    static void saveVisibilityToNode(INode * outNode, const MdAnimVis & inAnimVis);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static bool cloneTransData(INode * from, INode * to);
-	static bool cloneRotateData(INode * from, INode * to);
-	static bool cloneVisibilityData(INode * from, INode * to);
+    static bool cloneTransData(INode * from, INode * to);
+    static bool cloneRotateData(INode * from, INode * to);
+    static bool cloneVisibilityData(INode * from, INode * to);
 
 private:
 
-	static bool cloneData(INode * from, INode * to, DWORD index);
+    static bool cloneData(INode * from, INode * to, DWORD index);
 
 };
 

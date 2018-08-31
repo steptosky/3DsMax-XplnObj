@@ -42,16 +42,19 @@
  * \details Parameter blocks of the X-Lod object
  */
 enum eLodObjParamsBlocks : BlockID {
-	LodObjParams = 0,
-	LodObjDisplay, //!< For internal using
+    LodObjParams = 0,
+    LodObjDisplay,
+    //!< For internal using
 };
 
 /*!
  * \details Values of the \link eLodObjParamsBlocks::LodObjParams \endlink parameters block.
  */
 enum eLodParams : ParamID {
-	PLodObjNear, //!< Float
-	PLodObjFar, //!< Float
+    PLodObjNear,
+    //!< Float
+    PLodObjFar,
+    //!< Float
 };
 
 /**************************************************************************************************/

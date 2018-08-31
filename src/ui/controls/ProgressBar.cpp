@@ -28,31 +28,31 @@
 */
 
 #include "ProgressBar.h "
-#include "commctrl.h"
+#include <commctrl.h>
 
 namespace win {
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ProgressBar::setRange(int inStart, int inStop) {
-		SendMessage(hwnd(), PBM_SETRANGE, 0, MAKELPARAM(inStart, inStop));
-	}
+void ProgressBar::setRange(int inStart, int inStop) {
+    SendMessage(hwnd(), PBM_SETRANGE, 0, MAKELPARAM(inStart, inStop));
+}
 
-	void ProgressBar::setStep(int inStep) {
-		SendMessage(hwnd(), PBM_SETSTEP, (WPARAM)inStep, 0);
-	}
+void ProgressBar::setStep(int inStep) {
+    SendMessage(hwnd(), PBM_SETSTEP, (WPARAM)inStep, 0);
+}
 
-	void ProgressBar::stepIt() {
-		SendMessage(hwnd(), PBM_STEPIT, 0, 0);
-	}
+void ProgressBar::stepIt() {
+    SendMessage(hwnd(), PBM_STEPIT, 0, 0);
+}
 
-	void ProgressBar::setPosition(int inCurrPosition) {
-		SendMessage(hwnd(), PBM_SETPOS, (WPARAM)inCurrPosition, 0);
-	}
+void ProgressBar::setPosition(int inCurrPosition) {
+    SendMessage(hwnd(), PBM_SETPOS, (WPARAM)inCurrPosition, 0);
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 }

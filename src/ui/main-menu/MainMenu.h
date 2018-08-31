@@ -29,7 +29,7 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "presenters/MainMenuPresenter.h"
+#include "presenters/MainMenu.h"
 
 #pragma warning(push, 0)
 #include <max.h>
@@ -37,35 +37,35 @@
 
 namespace ui {
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	/*!
-	 * \details X-Plane plugin main menu itself.
-	 */
-	class MainMenu : public ActionCallback , public MainMenuPresenter::IView {
-	public:
+/*!
+ * \details X-Plane plugin main menu itself.
+ */
+class MainMenu : public ActionCallback, public presenters::MainMenu::IView {
+public:
 
-		MainMenu();
-		virtual ~MainMenu();
+    MainMenu();
+    virtual ~MainMenu();
 
-	private:
+private:
 
-		void create();
-		void destroy();
+    void create();
+    void destroy();
 
-		void installMenu();
-		void RemoveMenu();
+    void installMenu();
+    void removeMenu();
 
-		BOOL ExecuteAction(int id) override;
+    BOOL ExecuteAction(int id) override;
 
-		ActionTable * mActionTable;
-		Interface * mIp;
+    ActionTable * mActionTable;
+    Interface * mIp;
 
-	};
+};
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 }

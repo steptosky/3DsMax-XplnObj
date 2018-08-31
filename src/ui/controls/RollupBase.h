@@ -36,108 +36,108 @@
 
 namespace maxwin {
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class RollupBase {
-	public:
+class RollupBase {
+public:
 
-		explicit RollupBase(HINSTANCE hinstance)
-			: Id(0),
-			mMainWnd(nullptr),
-			mHInstance(hinstance) {
-			assert(mHInstance);
-		}
+    explicit RollupBase(HINSTANCE hinstance)
+        : Id(0),
+          mMainWnd(nullptr),
+          mHInstance(hinstance) {
+        assert(mHInstance);
+    }
 
-		virtual ~RollupBase() {
-			if (mMainWnd) {
-				deleteRollup();
-			}
-			mMainWnd = nullptr;
-		}
+    virtual ~RollupBase() {
+        if (mMainWnd) {
+            deleteRollup();
+        }
+        mMainWnd = nullptr;
+    }
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		HWND hwnd() { return mMainWnd; }
-		virtual void create() = 0;
-		virtual void destroy() = 0;
-		//-------------------------------------------------------------------------
+    HWND hwnd() { return mMainWnd; }
+    virtual void create() = 0;
+    virtual void destroy() = 0;
+    //-------------------------------------------------------------------------
 
-		bool isOpen() {
-			IRollupWindow * Ip = getInterface();
-			return (Ip->IsPanelOpen(Id) == TRUE) ? true : false;
-		}
+    bool isOpen() {
+        IRollupWindow * Ip = getInterface();
+        return (Ip->IsPanelOpen(Id) == TRUE) ? true : false;
+    }
 
-		void setOpen(bool open) {
-			IRollupWindow * Ip = getInterface();
-			return Ip->SetPanelOpen(Id, (open) ? TRUE : FALSE);
-		}
+    void setOpen(bool open) {
+        IRollupWindow * Ip = getInterface();
+        return Ip->SetPanelOpen(Id, (open) ? TRUE : FALSE);
+    }
 
-	protected:
+protected:
 
-		void createRollup(int panel, TSTR name, void * param) {
-			IRollupWindow * Ip = getInterface();
-			if (Ip) {
-				if (mMainWnd) {
-					Id = Ip->ReplaceRollup(Id, mHInstance, MAKEINTRESOURCE(panel),
-											panelDlgProc, name, (LPARAM)param, NULL);
-					mMainWnd = Ip->GetPanelDlg(Id);
-				}
-				else {
-					Id = Ip->AppendRollup(mHInstance, MAKEINTRESOURCE(panel),
-										panelDlgProc, name, (LPARAM)param, NULL);
-					mMainWnd = Ip->GetPanelDlg(Id);
-				}
-			}
-		}
+    void createRollup(int panel, TSTR name, void * param) {
+        IRollupWindow * Ip = getInterface();
+        if (Ip) {
+            if (mMainWnd) {
+                Id = Ip->ReplaceRollup(Id, mHInstance, MAKEINTRESOURCE(panel),
+                                       panelDlgProc, name, (LPARAM)param, NULL);
+                mMainWnd = Ip->GetPanelDlg(Id);
+            }
+            else {
+                Id = Ip->AppendRollup(mHInstance, MAKEINTRESOURCE(panel),
+                                      panelDlgProc, name, (LPARAM)param, NULL);
+                mMainWnd = Ip->GetPanelDlg(Id);
+            }
+        }
+    }
 
-		void deleteRollup() {
-			IRollupWindow * Ip = getInterface();
-			if (Ip) {
-				if (mMainWnd)
-					Ip->DeleteRollup(Id, 1);
-				mMainWnd = nullptr;
-			}
-		}
+    void deleteRollup() {
+        IRollupWindow * Ip = getInterface();
+        if (Ip) {
+            if (mMainWnd)
+                Ip->DeleteRollup(Id, 1);
+            mMainWnd = nullptr;
+        }
+    }
 
-	private:
+private:
 
-		virtual void initWindow(HWND hWnd) = 0;
-		virtual void destroyWindow(HWND hWnd) = 0;
-		virtual IRollupWindow * getInterface() = 0;
-		virtual INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) = 0;
-		//-------------------------------------------------------------------------
+    virtual void initWindow(HWND hWnd) = 0;
+    virtual void destroyWindow(HWND hWnd) = 0;
+    virtual IRollupWindow * getInterface() = 0;
+    virtual INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) = 0;
+    //-------------------------------------------------------------------------
 
-		static INT_PTR CALLBACK panelDlgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-			RollupBase * theDlg = nullptr;
-			if (msg == WM_INITDIALOG) {
-				theDlg = reinterpret_cast<RollupBase *>(lParam);
-				theDlg->mMainWnd = hWnd;
-				DLSetWindowLongPtr(hWnd, lParam);
-				theDlg->initWindow(hWnd);
-			}
-			else if (msg == WM_DESTROY) {
-				theDlg = DLGetWindowLongPtr<RollupBase *>(hWnd);
-				theDlg->destroyWindow(hWnd);
-			}
-			else {
-				theDlg = DLGetWindowLongPtr<RollupBase *>(hWnd);
-				if (!theDlg) {
-					return FALSE;
-				}
-			}
+    static INT_PTR CALLBACK panelDlgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+        RollupBase * theDlg = nullptr;
+        if (msg == WM_INITDIALOG) {
+            theDlg = reinterpret_cast<RollupBase *>(lParam);
+            theDlg->mMainWnd = hWnd;
+            DLSetWindowLongPtr(hWnd, lParam);
+            theDlg->initWindow(hWnd);
+        }
+        else if (msg == WM_DESTROY) {
+            theDlg = DLGetWindowLongPtr<RollupBase *>(hWnd);
+            theDlg->destroyWindow(hWnd);
+        }
+        else {
+            theDlg = DLGetWindowLongPtr<RollupBase *>(hWnd);
+            if (!theDlg) {
+                return FALSE;
+            }
+        }
 
-			return theDlg->panelProc(hWnd, msg, wParam, lParam);
-		}
+        return theDlg->panelProc(hWnd, msg, wParam, lParam);
+    }
 
-		int Id;
-		HWND mMainWnd;
-		HINSTANCE mHInstance;
+    int Id;
+    HWND mMainWnd;
+    HINSTANCE mHInstance;
 
-	};
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

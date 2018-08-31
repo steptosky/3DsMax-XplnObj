@@ -6,7 +6,7 @@
 #include <max.h>
 #pragma warning(pop)
 
-class SmokeIcon { 
+class SmokeIcon {
 public:
 
     static void fillMesh(Mesh & outMesh, const float scale);

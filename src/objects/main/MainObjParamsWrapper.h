@@ -55,120 +55,120 @@
 class MainObjParamsWrapper {
 public:
 
-	MainObjParamsWrapper(IParamBlock2 * pbAttr, IParamBlock2 * pbExp, const TimeValue t, const Interval & interval);
-	MainObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval);
-	~MainObjParamsWrapper() = default;
+    MainObjParamsWrapper(IParamBlock2 * pbAttr, IParamBlock2 * pbExp, const TimeValue t, const Interval & interval);
+    MainObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval);
+    ~MainObjParamsWrapper() = default;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static bool isMainObj(INode * inNode);
+    static bool isMainObj(INode * inNode);
 
-	/***************************************************************************************/
+    /***************************************************************************************/
 
-	void setExportEnable(bool inState);
-	void setMeshExport(bool inState);
-	void setLinesExport(bool inState);
-	void setLightsExport(bool inState);
-	void setAnimationExport(bool inState);
-	void setOptimisation(bool inState);
-	void setInstancing(bool inState);
-	void setDebug(bool inState);
+    void setExportEnable(bool inState);
+    void setMeshExport(bool inState);
+    void setLinesExport(bool inState);
+    void setLightsExport(bool inState);
+    void setAnimationExport(bool inState);
+    void setOptimisation(bool inState);
+    void setInstancing(bool inState);
+    void setDebug(bool inState);
 
-	bool isExportEnable();
-	bool isMeshExport();
-	bool isLinesExport();
-	bool isLightsExport();
-	bool isAnimationExport();
-	bool isOptimisation();
-	bool isInstancing();
-	bool isDebug();
-	//-------------------------------------------------------------------------
+    bool isExportEnable();
+    bool isMeshExport();
+    bool isLinesExport();
+    bool isLightsExport();
+    bool isAnimationExport();
+    bool isOptimisation();
+    bool isInstancing();
+    bool isDebug();
+    //-------------------------------------------------------------------------
 
-	void setNameMesh(bool inState);
-	void setNameLines(bool inState);
-	void setNameLights(bool inState);
-	void setNameDummies(bool inState);
-	void setTreeHierarchy(bool inState);
+    void setNameMesh(bool inState);
+    void setNameLines(bool inState);
+    void setNameLights(bool inState);
+    void setNameDummies(bool inState);
+    void setTreeHierarchy(bool inState);
 
-	bool isNameMesh();
-	bool isNameLines();
-	bool isNameLights();
-	bool isNameDummies();
-	bool isTreeHierarchy();
+    bool isNameMesh();
+    bool isNameLines();
+    bool isNameLights();
+    bool isNameDummies();
+    bool isTreeHierarchy();
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void setScale(bool inManual, float inValue);
-	bool isManualScale();
-	float scale();
+    void setScale(bool inManual, float inValue);
+    bool isManualScale();
+    float scale();
 
-	/***************************************************************************************/
+    /***************************************************************************************/
 
-	void setPathPrefix(const std::string & inStr);
-	void setTexture(const std::string & inStr);
-	void setTextureLit(const std::string & inStr);
-	void setTextureNormal(const std::string & inStr);
+    void setPathPrefix(const std::string & inStr);
+    void setTexture(const std::string & inStr);
+    void setTextureLit(const std::string & inStr);
+    void setTextureNormal(const std::string & inStr);
 
-	std::string pathPrefix();
-	std::string texture();
-	std::string textureLit();
-	std::string textureNormal();
+    std::string pathPrefix();
+    std::string texture();
+    std::string textureLit();
+    std::string textureNormal();
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void setBlendGlass(bool inState);
-	void setNormalMetalness(bool inState);
-	void setNoShadow(bool inState);
-	void setTilted(bool inState);
-	void setCockpitLit(bool inState);
+    void setBlendGlass(bool inState);
+    void setNormalMetalness(bool inState);
+    void setNoShadow(bool inState);
+    void setTilted(bool inState);
+    void setCockpitLit(bool inState);
 
-	bool isBlendGlass();
-	bool isNormalMetalness();
-	bool isNoShadow();
-	bool isTilted();
-	bool isCockpitLit();
+    bool isBlendGlass();
+    bool isNormalMetalness();
+    bool isNoShadow();
+    bool isTilted();
+    bool isCockpitLit();
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void setWetDry(const xobj::AttrWetDry & inAttr);
-	void setBlend(const xobj::AttrBlend & inAttr);
-	void setLayerGroup(const xobj::AttrLayerGroup & inAttr);
-	void setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup & inAttr);
-	void setLodDrap(const xobj::AttrLodDrap & inAttr);
-	void setSlungWeight(const xobj::AttrSlungLoadWeight & inAttr);
-	void setSpecular(const xobj::AttrSpecular & inAttr);
-	void setTint(const xobj::AttrTint & inAttr);
-	void setSlopeLimit(const xobj::AttrSlopeLimit & inAttr);
-	void setCockpitRegion(const xobj::AttrCockpitRegion & inAttr, xobj::AttrCockpitRegion::eNum inIdx);
+    void setWetDry(const xobj::AttrWetDry & inAttr);
+    void setBlend(const xobj::AttrBlend & inAttr);
+    void setLayerGroup(const xobj::AttrLayerGroup & inAttr);
+    void setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup & inAttr);
+    void setLodDrap(const xobj::AttrLodDrap & inAttr);
+    void setSlungWeight(const xobj::AttrSlungLoadWeight & inAttr);
+    void setSpecular(const xobj::AttrSpecular & inAttr);
+    void setTint(const xobj::AttrTint & inAttr);
+    void setSlopeLimit(const xobj::AttrSlopeLimit & inAttr);
+    void setCockpitRegion(const xobj::AttrCockpitRegion & inAttr, xobj::AttrCockpitRegion::eNum inIdx);
 
-	xobj::AttrWetDry wetDry();
-	xobj::AttrBlend blend();
-	xobj::AttrLayerGroup layerGroup();
-	xobj::AttrDrapedLayerGroup drapedLayerGroup();
-	xobj::AttrLodDrap lodDrap();
-	xobj::AttrSlungLoadWeight slungWeight();
-	xobj::AttrSpecular specular();
-	xobj::AttrTint tint();
-	xobj::AttrSlopeLimit slopeLimit();
-	xobj::AttrCockpitRegion cockpitRegion(xobj::AttrCockpitRegion::eNum inIdx);
+    xobj::AttrWetDry wetDry();
+    xobj::AttrBlend blend();
+    xobj::AttrLayerGroup layerGroup();
+    xobj::AttrDrapedLayerGroup drapedLayerGroup();
+    xobj::AttrLodDrap lodDrap();
+    xobj::AttrSlungLoadWeight slungWeight();
+    xobj::AttrSpecular specular();
+    xobj::AttrTint tint();
+    xobj::AttrSlopeLimit slopeLimit();
+    xobj::AttrCockpitRegion cockpitRegion(xobj::AttrCockpitRegion::eNum inIdx);
 
-	/***************************************************************************************/
+    /***************************************************************************************/
 
-	INode * node() const {
-		return mNode;
-	}
+    INode * node() const {
+        return mNode;
+    }
 
-	TimeValue timeValue() const {
-		return mT;
-	}
+    TimeValue timeValue() const {
+        return mT;
+    }
 
 private:
 
-	Interval mInterval;
-	TimeValue mT = 0;
-	IParamBlock2 * mPbExp = nullptr;
-	IParamBlock2 * mPbAttr = nullptr;
-	INode * mNode = nullptr;
+    Interval mInterval;
+    TimeValue mT = 0;
+    IParamBlock2 * mPbExp = nullptr;
+    IParamBlock2 * mPbAttr = nullptr;
+    INode * mNode = nullptr;
 
 };
 

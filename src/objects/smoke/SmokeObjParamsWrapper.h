@@ -34,7 +34,7 @@
 #include <iparamb2.h>
 #pragma warning(pop)
 
-#include "xpln/obj/ObjSmoke.h"
+#include <xpln/obj/ObjSmoke.h>
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,31 +46,31 @@
 class SmokeObjParamsWrapper {
 public:
 
-	SmokeObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval);
-	~SmokeObjParamsWrapper() = default;
+    SmokeObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval);
+    ~SmokeObjParamsWrapper() = default;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static bool isSmokeObj(INode * inNode);
+    static bool isSmokeObj(INode * inNode);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void setType(const xobj::ObjSmoke::eSmokeType val);
-	void setSize(const float val);
+    void setType(const xobj::ObjSmoke::eSmokeType val);
+    void setSize(const float val);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	xobj::ObjSmoke::eSmokeType type();
-	float size();
+    xobj::ObjSmoke::eSmokeType type();
+    float size();
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 private:
 
-	Interval mInterval;
-	TimeValue mT = 0;
-	IParamBlock2 * mPb2 = nullptr;
-	INode * mNode = nullptr;
+    Interval mInterval;
+    TimeValue mT = 0;
+    IParamBlock2 * mPb2 = nullptr;
+    INode * mNode = nullptr;
 
 };
 

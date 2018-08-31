@@ -29,43 +29,43 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "presenters/MainMenuPresenter.h"
+#include "presenters/MainMenu.h"
 #include "common/String.h"
 
 class INode;
 
 namespace ui {
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	/*!
-	 * \details This class is responsible for creation the GUI elements.
-	 * 
-	 *          The 3Ds Max has many changes in the GUI API between some versions,
-	 *          so we need to encapsulate some functional for making our life easer.
-	 *          
-	 *          The most bigger changes are coming from 2017 version where the 3Ds Max's
-	 *          developers started migration the GUI to the QT (www.qt.io). 
-	 */
-	class Factory {
-	public:
+/*!
+ * \details This class is responsible for creation the GUI elements.
+ * 
+ *          The 3Ds Max has many changes in the GUI API between some versions,
+ *          so we need to encapsulate some functional for making our life easier.
+ *          
+ *          The most bigger changes are coming from 2017 version where the 3Ds Max's
+ *          developers started migration the GUI to the QT (www.qt.io). 
+ */
+class Factory {
+public:
 
-		static void showAboutWindow();
-		static void showSettingsWindow();
-		static void showNotImplemented();
-		static void showVersionIncompatible();
+    static void showAboutWindow();
+    static void showSettingsWindow();
+    static void showNotImplemented();
+    static void showVersionIncompatible();
 
-		static MainMenuPresenter::IView * cereateMainMenuView();
+    static presenters::MainMenu::IView * createMainMenuView();
 
-		static void showUpdatedObjects(const std::vector<INode *> & nodes);
-		static void sceneUpdateInfo(const TCHAR * text);
+    static void showUpdatedObjects(const std::vector<INode *> & nodes);
+    static void sceneUpdateInfo(const TCHAR * text);
 
-	};
+};
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
 }

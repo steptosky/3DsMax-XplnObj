@@ -29,12 +29,7 @@
 
 #include "ObjExporter.h "
 #include "Info.h"
-#include "common/String.h"
 #include "resource/ResHelper.h"
-
-#pragma warning(push, 0)
-#include <iparamb2.h>
-#pragma warning(pop)
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
@@ -49,11 +44,11 @@ ObjExporter::~ObjExporter() {}
 /**************************************************************************************************/
 
 int ObjExporter::DoExport(const TCHAR * name, ExpInterface * /*ei*/, Interface * ip, BOOL suppressPrompts, DWORD options) {
-	mDlgMain = new ui::DlgExport();
-	//ip->SetTime(TimeValue(0), TRUE);
-	mDlgMain->show(name, ip, suppressPrompts == TRUE, options == SCENE_EXPORT_SELECTED ? true : false);
-	delete mDlgMain;
-	return TRUE;
+    mDlgMain = new ui::DlgExport();
+    //ip->SetTime(TimeValue(0), TRUE);
+    mDlgMain->show(name, ip, suppressPrompts == TRUE, options == SCENE_EXPORT_SELECTED ? true : false);
+    delete mDlgMain;
+    return TRUE;
 }
 
 /**************************************************************************************************/
@@ -61,55 +56,55 @@ int ObjExporter::DoExport(const TCHAR * name, ExpInterface * /*ei*/, Interface *
 /**************************************************************************************************/
 
 int ObjExporter::ExtCount() {
-	// Returns the number of file name extensions supported by the plug-in.
-	return 1;
+    // Returns the number of file name extensions supported by the plug-in.
+    return 1;
 }
 
 const TCHAR * ObjExporter::Ext(int /*n*/) {
-	// Return the 'i-th' file name extension (i.e. \"3DS\").
-	return _T("obj");
+    // Return the 'i-th' file name extension (i.e. \"3DS\").
+    return _T("obj");
 }
 
 const TCHAR * ObjExporter::LongDesc() {
-	// Return long ASCII description (i.e. \"Targa 2.0 Image File\")
-	return _T("X-Obj-Exporter");
+    // Return long ASCII description (i.e. \"Targa 2.0 Image File\")
+    return _T("X-Obj-Exporter");
 }
 
 const TCHAR * ObjExporter::ShortDesc() {
-	// Return short ASCII description (i.e. \"Targa\")
-	return _T("X-Plane obj");
+    // Return short ASCII description (i.e. \"Targa\")
+    return _T("X-Plane obj");
 }
 
 const TCHAR * ObjExporter::AuthorName() {
-	return _T(XIO_ORGANIZATION_WEBLINK);
+    return _T(XIO_ORGANIZATION_WEBLINK);
 }
 
 const TCHAR * ObjExporter::CopyrightMessage() {
-	return _T(XIO_COPYRIGHT);
+    return _T(XIO_COPYRIGHT);
 }
 
 const TCHAR * ObjExporter::OtherMessage1() {
-	// Return Other message #1 if any
-	return _T(XIO_PROJECT_DESCRIPTION);
+    // Return Other message #1 if any
+    return _T(XIO_PROJECT_DESCRIPTION);
 }
 
 const TCHAR * ObjExporter::OtherMessage2() {
-	// Return other message #2 in any
-	return _T("");
+    // Return other message #2 in any
+    return _T("");
 }
 
 unsigned int ObjExporter::Version() {
-	// Return Version number * 100 (i.e. v3.01 = 301)
-	return XIO_VERSION;
+    // Return Version number * 100 (i.e. v3.01 = 301)
+    return XIO_VERSION;
 }
 
 void ObjExporter::ShowAbout(HWND /*hWnd*/) {
-	// Optional
+    // Optional
 }
 
 BOOL ObjExporter::SupportsOptions(int /*ext*/, DWORD /*options*/) {
-	// Decide which options to support.  Simply return true for each option supported by each Extension the exporter supports.
-	return TRUE;
+    // Decide which options to support.  Simply return true for each option supported by each Extension the exporter supports.
+    return TRUE;
 }
 
 /**************************************************************************************************/

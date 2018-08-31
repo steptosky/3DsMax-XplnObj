@@ -29,53 +29,52 @@
 
 #pragma once
 
-#include "common/String.h"
+#include <xpln/obj/ObjLightNamed.h>
 #include "AbstractLight.h"
 #include "ui/controls/Base.h"
 #include "ui/controls/Combo.h"
-#include <xpln/obj/ObjLightNamed.h>
 
 namespace ui {
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class LightNamed : public AbstractLight {
-	public:
+class LightNamed : public AbstractLight {
+public:
 
-		win::Base & getCBase() override {
-			return mHwnd;
-		}
+    win::Base & getCBase() override {
+        return mHwnd;
+    }
 
-		void create(HWND inParent) override;
-		void show(xobj::ObjLightNamed * inData);
-		void hide();
-		void destroy() override;
+    void create(HWND inParent) override;
+    void show(xobj::ObjLightNamed * inData);
+    void hide();
+    void destroy() override;
 
-		LightNamed();
-		virtual ~LightNamed();
+    LightNamed();
+    virtual ~LightNamed();
 
-	private:
+private:
 
-		static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-		void initWindow(HWND hWnd);
-		void destroyWindow(HWND hWnd);
+    void initWindow(HWND hWnd);
+    void destroyWindow(HWND hWnd);
 
-		void toWindow();
-		void toData();
+    void toWindow();
+    void toData();
 
-		void enableControls();
-		void disableControls();
+    void enableControls();
+    void disableControls();
 
-		xobj::ObjLightNamed * mData = nullptr;
-		win::Base mHwnd;
+    xobj::ObjLightNamed * mData = nullptr;
+    win::Base mHwnd;
 
-		win::Combo cCmbName;
-	};
+    win::Combo cCmbName;
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

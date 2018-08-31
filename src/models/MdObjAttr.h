@@ -42,33 +42,33 @@
 class MdObjAttr {
 public:
 
-	MdObjAttr();
-	~MdObjAttr();
+    MdObjAttr();
+    ~MdObjAttr();
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void reset();
-	static void cloneData(INode * from, INode * to);
+    void reset();
+    static void cloneData(INode * from, INode * to);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void clearLink();
-	bool linkNode(INode * node);
-	void saveToNode(const xobj::AttrSet & inVals) const { saveToNode(mNode, inVals); }
-	bool loadFromNode(xobj::AttrSet & outVals) { return loadFromNode(mNode, outVals); }
+    void clearLink();
+    bool linkNode(INode * node);
+    void saveToNode(const xobj::AttrSet & inVals) const { saveToNode(mNode, inVals); }
+    bool loadFromNode(xobj::AttrSet & outVals) { return loadFromNode(mNode, outVals); }
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 private:
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void saveToNode(INode * node, const xobj::AttrSet & inVals) const;
-	bool loadFromNode(INode * node, xobj::AttrSet & outVals);
+    void saveToNode(INode * node, const xobj::AttrSet & inVals) const;
+    bool loadFromNode(INode * node, xobj::AttrSet & outVals);
 
-	INode * mNode = nullptr;
+    INode * mNode = nullptr;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 };
 
 /**************************************************************************************************/

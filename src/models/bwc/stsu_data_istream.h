@@ -29,124 +29,130 @@
 
 #pragma once
 
-#include <iostream>
-#include <stdint.h>
-#include <cstring>
+#include <iosfwd>
+#include <string>
+#include <cstdint>
 
-namespace sts_bwc { // backward compatibility
+namespace sts_bwc {
+// backward compatibility
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	/*!
-	\details Data Input Stream class provide a stream operation with data which interpreted like bytes (not characters, e.t.c.).
-	         Used std::istream like internal byte buffer.
-	*/
-	class DataStreamI {
-	protected:
+/*!
+\details Data Input Stream class provide a stream operation with data which interpreted like bytes (not characters, e.t.c.).
+         Used std::istream like internal byte buffer.
+*/
+class DataStreamI {
+protected:
 
-		explicit DataStreamI();
-		void setStream(std::istream * inStream) { mStream = inStream; }
+    explicit DataStreamI();
+    void setStream(std::istream * inStream) { mStream = inStream; }
 
-	public:
+public:
 
-		/*!
-		\details Constructor
-		\param [in] inStream reference to a std::istream.
-		*/
-		explicit DataStreamI(std::istream & inStream);
+    /*!
+    \details Constructor
+    \param [in] inStream reference to a std::istream.
+    */
+    explicit DataStreamI(std::istream & inStream);
 
-		/*! \details  Destructor */
-		virtual ~DataStreamI();
+    /*! \details  Destructor */
+    virtual ~DataStreamI();
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		/*! \details Gives reference to internal byte buffer. */
-		std::istream & getStdIStream() { return *mStream; }
+    /*! \details Gives reference to internal byte buffer. */
+    std::istream & getStdIStream() { return *mStream; }
 
-		/*! \details  Gives const reference to internal byte buffer. */
-		const std::istream & getStdIStream() const { return *mStream; }
+    /*! \details  Gives const reference to internal byte buffer. */
+    const std::istream & getStdIStream() const { return *mStream; }
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		/*! \details Error codes */
-		enum class eErrors {
-			ok = 0,//!< No errors
-			readError,//!< Error during read operation
-			readZerroBytes,//!< Asked to read zero bytes - it's not correct -> error
-			writeError,//!< Error during write operation
-			writeZerroBytes,//!< Asked to write zero bytes - it's not correct -> error
-			seekError//!< Seek operation error
-		};
+    /*! \details Error codes */
+    enum class eErrors {
+        ok = 0,
+        //!< No errors
+        readError,
+        //!< Error during read operation
+        readZerroBytes,
+        //!< Asked to read zero bytes - it's not correct -> error
+        writeError,
+        //!< Error during write operation
+        writeZerroBytes,
+        //!< Asked to write zero bytes - it's not correct -> error
+        seekError //!< Seek operation error
+    };
 
-		/*! \details Gives last error */
-		const eErrors & getInputLastError() const { return mError; }
+    /*! \details Gives last error */
+    const eErrors & getInputLastError() const { return mError; }
 
-		/*! \details  Reset errors */
-		void resetInputErrors() { mError = eErrors::ok; }
+    /*! \details  Reset errors */
+    void resetInputErrors() { mError = eErrors::ok; }
 
-		//-------------------------------------------------------------------------
-		/* Reads operators
-		*/
-		DataStreamI & operator>>(char & outVal);
-		DataStreamI & operator>>(int8_t & outVal);
-		DataStreamI & operator>>(uint8_t & outVal);
-		DataStreamI & operator>>(int16_t & outVal);
-		DataStreamI & operator>>(uint16_t & outVal);
-		DataStreamI & operator>>(int32_t & outVal);
-		DataStreamI & operator>>(uint32_t & outVal);
-		DataStreamI & operator>>(int64_t & outVal);
-		DataStreamI & operator>>(uint64_t & outVal);
+    //-------------------------------------------------------------------------
+    /* Reads operators
+    */
+    DataStreamI & operator>>(char & outVal);
+    DataStreamI & operator>>(int8_t & outVal);
+    DataStreamI & operator>>(uint8_t & outVal);
+    DataStreamI & operator>>(int16_t & outVal);
+    DataStreamI & operator>>(uint16_t & outVal);
+    DataStreamI & operator>>(int32_t & outVal);
+    DataStreamI & operator>>(uint32_t & outVal);
+    DataStreamI & operator>>(int64_t & outVal);
+    DataStreamI & operator>>(uint64_t & outVal);
 
-		DataStreamI & operator>>(bool & outVal);
-		DataStreamI & operator>>(float & outVal);
-		DataStreamI & operator>>(double & outVal);
+    DataStreamI & operator>>(bool & outVal);
+    DataStreamI & operator>>(float & outVal);
+    DataStreamI & operator>>(double & outVal);
 
-		/*! \details Reads null-terminated character sequences */
-		DataStreamI & operator>>(char *& outVal);
+    /*! \details Reads null-terminated character sequences */
+    DataStreamI & operator>>(char *& outVal);
 
-		/*! \details Reads null-terminated character sequences */
-		DataStreamI & operator>>(wchar_t *& outVal);
+    /*! \details Reads null-terminated character sequences */
+    DataStreamI & operator>>(wchar_t *& outVal);
 
-		DataStreamI & operator>>(std::string & outVal);
-		DataStreamI & operator>>(std::wstring & outVal);
+    DataStreamI & operator>>(std::string & outVal);
+    DataStreamI & operator>>(std::wstring & outVal);
 
-		//DataStream &operator>>(std::streambuf &outVal);
-	private:
-		DataStreamI & readBytes(wchar_t *& outVal, uint64_t & outLen);
-		DataStreamI & readBytes(char *& outVal, uint64_t & outLen);
-	public:
+    //DataStream &operator>>(std::streambuf &outVal);
+private:
+    DataStreamI & readBytes(wchar_t *& outVal, uint64_t & outLen);
+    DataStreamI & readBytes(char *& outVal, uint64_t & outLen);
+public:
 
-		/*!
-		\details Reads raw bytes
-		\param [out] outVal buffer for read bytes.
-		\param [in] inLen number of bytes to read.
-		*/
-		DataStreamI & readRawData(char * outVal, uint64_t inLen);
+    /*!
+    \details Reads raw bytes
+    \param [out] outVal buffer for read bytes.
+    \param [in] inLen number of bytes to read.
+    */
+    DataStreamI & readRawData(char * outVal, uint64_t inLen);
 
-		/*!
-		\details Skip raw bytes
-		\param [in] inLen number of bytes to skip.
-		*/
-		DataStreamI & skipRawBytes(uint64_t inLen);
+    /*!
+    \details Skip raw bytes
+    \param [in] inLen number of bytes to skip.
+    */
+    DataStreamI & skipRawBytes(uint64_t inLen);
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	private:
+private:
 
-		DataStreamI(const DataStreamI & inCopy)
-			: mStream(inCopy.mStream) {}
+    DataStreamI(const DataStreamI & inCopy)
+        : mStream(inCopy.mStream) {}
 
-		DataStreamI & operator =(const DataStreamI &) { return *this; }
+    DataStreamI & operator =(const DataStreamI &) { return *this; }
 
-		eErrors mError;
-		std::istream * mStream;
+    eErrors mError;
+    std::istream * mStream;
 
-	};
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-}// namespace sts
+} // namespace sts

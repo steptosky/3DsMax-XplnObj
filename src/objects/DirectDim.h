@@ -40,15 +40,15 @@
 class DirectDim : public ParamDimension {
 public:
 
-	DirectDim() = default;
-	virtual ~DirectDim() = default;
+    DirectDim() = default;
+    virtual ~DirectDim() = default;
 
-	float GetDimScale() override { return 1.0f; }
-	void SetDimScale() override {}
-	MCHAR * DimensionName() override { return _M(""); }
-	DimType DimensionType() override { return DIM_CUSTOM; }
-	float Convert(float value) override { return value; }
-	float UnConvert(float value) override { return value; }
+    float GetDimScale() override { return 1.0f; }
+    void SetDimScale() override {}
+    MCHAR * DimensionName() override { return _M(""); }
+    DimType DimensionType() override { return DIM_CUSTOM; }
+    float Convert(float value) override { return value; }
+    float UnConvert(float value) override { return value; }
 
 };
 

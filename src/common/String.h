@@ -33,7 +33,6 @@
 #include <max.h>
 #pragma warning(pop)
 
-#include <tchar.h>
 #include "additional/utils/StringUtils.h"
 
 /**************************************************************************************************/

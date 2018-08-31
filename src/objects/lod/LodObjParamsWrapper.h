@@ -44,31 +44,31 @@
 class LodObjParamsWrapper {
 public:
 
-	LodObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval);
-	~LodObjParamsWrapper() = default;
+    LodObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval);
+    ~LodObjParamsWrapper() = default;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static bool isLodObj(INode * inNode);
+    static bool isLodObj(INode * inNode);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void setNearValue(float inVal);
-	void setFarValue(float inVal);
+    void setNearValue(float inVal);
+    void setFarValue(float inVal);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	float nearValue();
-	float farValue();
+    float nearValue();
+    float farValue();
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 private:
 
-	Interval mInterval;
-	TimeValue mT = 0;
-	IParamBlock2 * mPb2 = nullptr;
-	INode * mNode = nullptr;
+    Interval mInterval;
+    TimeValue mT = 0;
+    IParamBlock2 * mPb2 = nullptr;
+    INode * mNode = nullptr;
 
 };
 

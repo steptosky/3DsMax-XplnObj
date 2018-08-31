@@ -42,40 +42,40 @@
 class MdManip {
 public:
 
-	MdManip();
-	~MdManip();
+    MdManip();
+    ~MdManip();
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void reset();
-	static void cloneData(INode * from, INode * to);
+    void reset();
+    static void cloneData(INode * from, INode * to);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void saveToNode(const xobj::AttrManipBase & inManip) const { saveToNode(mNode, inManip); }
-	bool loadFromNode(ManipIO::IManipIo * callBack) { return loadFromNode(mNode, callBack); }
+    void saveToNode(const xobj::AttrManipBase & inManip) const { saveToNode(mNode, inManip); }
+    bool loadFromNode(ManipIO::IManipIo * callBack) { return loadFromNode(mNode, callBack); }
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	bool hasLink() const { return mNode != nullptr; }
-	void clearLink();
+    bool hasLink() const { return mNode != nullptr; }
+    void clearLink();
 
-	bool linkNode(INode * node);
-	const INode * linkedNode() const { return mNode; }
-	INode * linkedNode() { return mNode; }
+    bool linkNode(INode * node);
+    const INode * linkedNode() const { return mNode; }
+    INode * linkedNode() { return mNode; }
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 private:
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void saveToNode(INode * node, const xobj::AttrManipBase & inManip) const;
-	bool loadFromNode(INode * node, ManipIO::IManipIo * callBack);
+    void saveToNode(INode * node, const xobj::AttrManipBase & inManip) const;
+    bool loadFromNode(INode * node, ManipIO::IManipIo * callBack);
 
-	INode * mNode = nullptr;
+    INode * mNode = nullptr;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 };
 
 /********************************************************************************************************/

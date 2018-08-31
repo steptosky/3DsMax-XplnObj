@@ -27,52 +27,54 @@
 **  Contacts: www.steptosky.com
 */
 
+#include <sstream> 
 #include "stsu_data_stream.h"
 
-namespace sts_bwc { // backward compatibility
+namespace sts_bwc {
+// backward compatibility
 
-	/********************************************************************************************************/
-	///////////////////////////////////////* Constructors/Destructor *////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+///////////////////////////////////////* Constructors/Destructor *////////////////////////////////////////
+/********************************************************************************************************/
 
-	DataStream::DataStream(std::iostream & inStream)
-		: mStream(inStream),
-		mIsStreamOwn(false) {
-		DataStreamI::setStream(&mStream);
-		DataStreamO::setStream(&mStream);
-	}
+DataStream::DataStream(std::iostream & inStream)
+    : mStream(inStream),
+      mIsStreamOwn(false) {
+    DataStreamI::setStream(&mStream);
+    DataStreamO::setStream(&mStream);
+}
 
-	DataStream::DataStream(std::stringbuf & inStreamBuf)
-		: mStream(*new std::stringstream()),
-		mIsStreamOwn(true) {
-		mStream.rdbuf(&inStreamBuf);
-		DataStreamI::setStream(&mStream);
-		DataStreamO::setStream(&mStream);
-	}
+DataStream::DataStream(std::stringbuf & inStreamBuf)
+    : mStream(*new std::stringstream()),
+      mIsStreamOwn(true) {
+    mStream.rdbuf(&inStreamBuf);
+    DataStreamI::setStream(&mStream);
+    DataStreamO::setStream(&mStream);
+}
 
-	DataStream::DataStream()
-		: mStream(*new std::stringstream()),
-		mIsStreamOwn(true),
-		DataStreamI(mStream),
-		DataStreamO(mStream) {
-		DataStreamI::setStream(&mStream);
-		DataStreamO::setStream(&mStream);
-	}
+DataStream::DataStream()
+    : mStream(*new std::stringstream()),
+      mIsStreamOwn(true),
+      DataStreamI(mStream),
+      DataStreamO(mStream) {
+    DataStreamI::setStream(&mStream);
+    DataStreamO::setStream(&mStream);
+}
 
-	// Is not using
-	DataStream::DataStream(const DataStream & incOpy)
-		: mStream(incOpy.mStream) {
-		DataStreamI::setStream(&mStream);
-		DataStreamO::setStream(&mStream);
-	}
+// Is not using
+DataStream::DataStream(const DataStream & incOpy)
+    : mStream(incOpy.mStream) {
+    DataStreamI::setStream(&mStream);
+    DataStreamO::setStream(&mStream);
+}
 
-	DataStream::~DataStream() {
-		if (mIsStreamOwn)
-			delete &mStream;
-	}
+DataStream::~DataStream() {
+    if (mIsStreamOwn)
+        delete &mStream;
+}
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-}// namespace sts
+} // namespace sts

@@ -36,10 +36,10 @@
 HINSTANCE ResHelper::hInstance = nullptr;
 
 const TCHAR * ResHelper::string256(int id) {
-	static TCHAR buf[256];
-	if (hInstance)
-		return LoadString(hInstance, id, buf, _countof(buf)) ? buf : NULL;
-	return nullptr;
+    static TCHAR buf[256];
+    if (hInstance)
+        return LoadString(hInstance, id, buf, _countof(buf)) ? buf : NULL;
+    return nullptr;
 }
 
 /**************************************************************************************************/

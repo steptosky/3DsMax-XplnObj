@@ -33,8 +33,8 @@
 #include <3dsmaxport.h>
 #pragma warning(pop)
 
-#include "ui/UiUtilities.h"
 #include <xpln/enums/ECursor.h>
+#include "ui/UiUtilities.h"
 #include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
@@ -42,242 +42,241 @@
 
 namespace ui {
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Static area *///////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Static area *///////////////////////////////////////////
+/**************************************************************************************************/
 
-	INT_PTR ManipAttrDragAxisPix::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		ManipAttrDragAxisPix * theDlg;
-		if (msg == WM_INITDIALOG) {
-			theDlg = reinterpret_cast<ManipAttrDragAxisPix*>(lParam);
-			DLSetWindowLongPtr(hWnd, lParam);
-			theDlg->initWindow(hWnd);
-		}
-		else if (msg == WM_DESTROY) {
-			theDlg = DLGetWindowLongPtr<ManipAttrDragAxisPix*>(hWnd);
-			theDlg->destroyWindow(hWnd);
-		}
-		else {
-			theDlg = DLGetWindowLongPtr<ManipAttrDragAxisPix *>(hWnd);
-			if (!theDlg) {
-				return FALSE;
-			}
-		}
+INT_PTR ManipAttrDragAxisPix::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    ManipAttrDragAxisPix * theDlg;
+    if (msg == WM_INITDIALOG) {
+        theDlg = reinterpret_cast<ManipAttrDragAxisPix*>(lParam);
+        DLSetWindowLongPtr(hWnd, lParam);
+        theDlg->initWindow(hWnd);
+    }
+    else if (msg == WM_DESTROY) {
+        theDlg = DLGetWindowLongPtr<ManipAttrDragAxisPix*>(hWnd);
+        theDlg->destroyWindow(hWnd);
+    }
+    else {
+        theDlg = DLGetWindowLongPtr<ManipAttrDragAxisPix *>(hWnd);
+        if (!theDlg) {
+            return FALSE;
+        }
+    }
 
-		//--------------------------------------
+    //--------------------------------------
 
-		switch (msg) {
-			case WM_COMMAND: {
-				switch (LOWORD(wParam)) {
-					case BTN_DATAREF: {
-						Factory::showNotImplemented();
-						break;
-					}
-					case CMB_CURSOR: {
-						if (HIWORD(wParam) == CBN_SELCHANGE) {
-							theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
-							theDlg->save();
-						}
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			case WM_CUSTEDIT_ENTER: {
-				switch (LOWORD(wParam)) {
-					case EDIT_DATAREF: {
-						theDlg->mData.setDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)).c_str());
-						theDlg->save();
-						break;
-					}
-					case EDIT_TOOLTIP: {
-						theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)).c_str());
-						theDlg->save();
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			case CC_SPINNER_CHANGE: {
-				switch (LOWORD(wParam)) {
-					case SPN_V1: {
-						theDlg->mData.setVal1(theDlg->mSpnVal1->GetFVal());
-						theDlg->save();
-						break;
-					}
-					case SPN_V2: {
-						theDlg->mData.setVal2(theDlg->mSpnVal2->GetFVal());
-						theDlg->save();
-						break;
-					}
-					case SPN_DX: {
-						theDlg->mData.setDxPix(theDlg->mSpnDx->GetIVal());
-						theDlg->save();
-						break;
-					}
-					case SPN_STEP: {
-						theDlg->mData.setStep(theDlg->mSpnStep->GetIVal());
-						theDlg->save();
-						break;
-					}
-					case SPN_EXP: {
-						theDlg->mData.setExp(theDlg->mSpnExp->GetFVal());
-						theDlg->save();
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			default: break;
-		}
-		return 0;
-	}
+    switch (msg) {
+        case WM_COMMAND: {
+            switch (LOWORD(wParam)) {
+                case BTN_DATAREF: {
+                    Factory::showNotImplemented();
+                    break;
+                }
+                case CMB_CURSOR: {
+                    if (HIWORD(wParam) == CBN_SELCHANGE) {
+                        theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
+                        theDlg->save();
+                    }
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        case WM_CUSTEDIT_ENTER: {
+            switch (LOWORD(wParam)) {
+                case EDIT_DATAREF: {
+                    theDlg->mData.setDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)).c_str());
+                    theDlg->save();
+                    break;
+                }
+                case EDIT_TOOLTIP: {
+                    theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)).c_str());
+                    theDlg->save();
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        case CC_SPINNER_CHANGE: {
+            switch (LOWORD(wParam)) {
+                case SPN_V1: {
+                    theDlg->mData.setVal1(theDlg->mSpnVal1->GetFVal());
+                    theDlg->save();
+                    break;
+                }
+                case SPN_V2: {
+                    theDlg->mData.setVal2(theDlg->mSpnVal2->GetFVal());
+                    theDlg->save();
+                    break;
+                }
+                case SPN_DX: {
+                    theDlg->mData.setDxPix(theDlg->mSpnDx->GetIVal());
+                    theDlg->save();
+                    break;
+                }
+                case SPN_STEP: {
+                    theDlg->mData.setStep(theDlg->mSpnStep->GetIVal());
+                    theDlg->save();
+                    break;
+                }
+                case SPN_EXP: {
+                    theDlg->mData.setExp(theDlg->mSpnExp->GetFVal());
+                    theDlg->save();
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        default: break;
+    }
+    return 0;
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	ManipAttrDragAxisPix::ManipAttrDragAxisPix(MdManip * modelData)
-		: mModelData(modelData) {
-		assert(mModelData);
-	}
+ManipAttrDragAxisPix::ManipAttrDragAxisPix(MdManip * modelData)
+    : mModelData(modelData) {
+    assert(mModelData);
+}
 
-	ManipAttrDragAxisPix::~ManipAttrDragAxisPix() {
-		ManipAttrDragAxisPix::destroy();
-	}
+ManipAttrDragAxisPix::~ManipAttrDragAxisPix() {
+    ManipAttrDragAxisPix::destroy();
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrDragAxisPix::create(HWND inParent) {
-		assert(inParent);
-		mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
-									MAKEINTRESOURCE(ROLL_MANIP_DRAGXYZ_PIX),
-									inParent,
-									reinterpret_cast<DLGPROC>(panelProc),
-									reinterpret_cast<LPARAM>(this)));
-		assert(mHwnd);
-		if (mHwnd) {
-			toWindow();
-			mWheel.create(inParent);
-			calculateSize();
-			mHwnd.show(true);
-		}
-		else {
-			LError << WinCode(GetLastError());
-		}
-	}
+void ManipAttrDragAxisPix::create(HWND inParent) {
+    assert(inParent);
+    mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
+                                  MAKEINTRESOURCE(ROLL_MANIP_DRAGXYZ_PIX),
+                                  inParent,
+                                  reinterpret_cast<DLGPROC>(panelProc),
+                                  reinterpret_cast<LPARAM>(this)));
+    assert(mHwnd);
+    if (mHwnd) {
+        toWindow();
+        mWheel.create(inParent);
+        calculateSize();
+        mHwnd.show(true);
+    }
+    else {
+        LError << WinCode(GetLastError());
+    }
+}
 
-	void ManipAttrDragAxisPix::destroy() {
-		if (mHwnd) {
-			BOOL res = DestroyWindow(mHwnd.hwnd());
-			if (!res) {
-				LError << WinCode(GetLastError());
-			}
-			mHwnd.release();
-		}
-	}
+void ManipAttrDragAxisPix::destroy() {
+    if (mHwnd) {
+        BOOL res = DestroyWindow(mHwnd.hwnd());
+        if (!res) {
+            LError << WinCode(GetLastError());
+        }
+        mHwnd.release();
+    }
+}
 
-	RECT ManipAttrDragAxisPix::rect() const {
-		return mSize;
-	}
+RECT ManipAttrDragAxisPix::rect() const {
+    return mSize;
+}
 
-	void ManipAttrDragAxisPix::move(const POINT & point) {
-		if (mHwnd) {
-			mHwnd.move(point);
-			calculateSize();
-		}
-	}
+void ManipAttrDragAxisPix::move(const POINT & point) {
+    if (mHwnd) {
+        mHwnd.move(point);
+        calculateSize();
+    }
+}
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Functions */////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrDragAxisPix::calculateSize() {
-		if (mHwnd) {
-			mSize = mHwnd.rect();
-			mWheel.move(POINT{0, mSize.bottom});
-			RECT wheelRect = mWheel.rect();
-			mSize.bottom += (wheelRect.bottom - wheelRect.top);
-		}
-	}
+void ManipAttrDragAxisPix::calculateSize() {
+    if (mHwnd) {
+        mSize = mHwnd.rect();
+        mWheel.move(POINT{0, mSize.bottom});
+        RECT wheelRect = mWheel.rect();
+        mSize.bottom += (wheelRect.bottom - wheelRect.top);
+    }
+}
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Functions */////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrDragAxisPix::setManip(const xobj::AttrManipBase & manip) {
-		if (manip.type() != mData.type()) {
-			LError << "Incorrect manipulator: " << manip.type().toString();
-			return;
-		}
-		mData = static_cast<const xobj::AttrManipDragAxisPix &>(manip);
-		mWheel.setManip(mData);
-	}
+void ManipAttrDragAxisPix::setManip(const xobj::AttrManipBase & manip) {
+    if (manip.type() != mData.type()) {
+        LError << "Incorrect manipulator: " << manip.type().toString();
+        return;
+    }
+    mData = static_cast<const xobj::AttrManipDragAxisPix &>(manip);
+    mWheel.setManip(mData.wheel());
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrDragAxisPix::initWindow(HWND hWnd) {
-		std::function<void(const xobj::AttrManipWheel &)> callback = [this](const xobj::AttrManipWheel & wheel) mutable {
-					assert(dynamic_cast<xobj::AttrManipWheel*>(&mData));
-					static_cast<xobj::AttrManipWheel&>(mData) = wheel;
-					mModelData->saveToNode(mData);
-				};
-		mWheel.setCallBack(callback);
+void ManipAttrDragAxisPix::initWindow(HWND hWnd) {
+    std::function<void(const xobj::AttrManipWheel &)> callback = [this](const xobj::AttrManipWheel & wheel) mutable {
+        mData.setWheel(wheel);
+        mModelData->saveToNode(mData);
+    };
+    mWheel.setCallBack(callback);
 
-		mSpnVal1 = SetupFloatSpinner(hWnd, SPN_V1, SPN_V1_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
-		mSpnVal2 = SetupFloatSpinner(hWnd, SPN_V2, SPN_V2_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+    mSpnVal1 = SetupFloatSpinner(hWnd, SPN_V1, SPN_V1_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+    mSpnVal2 = SetupFloatSpinner(hWnd, SPN_V2, SPN_V2_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
 
-		mSpnDx = SetupIntSpinner(hWnd, SPN_DX, SPN_DX_EDIT, -10000, 10000, 0);
-		mSpnStep = SetupIntSpinner(hWnd, SPN_STEP, SPN_STEP_EDIT, -10000, 10000, 0);
-		mSpnExp = SetupFloatSpinner(hWnd, SPN_EXP, SPN_EXP_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+    mSpnDx = SetupIntSpinner(hWnd, SPN_DX, SPN_DX_EDIT, -10000, 10000, 0);
+    mSpnStep = SetupIntSpinner(hWnd, SPN_STEP, SPN_STEP_EDIT, -10000, 10000, 0);
+    mSpnExp = SetupFloatSpinner(hWnd, SPN_EXP, SPN_EXP_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
 
-		cBtnDataRef.setup(hWnd, BTN_DATAREF);
-		cEdtDataRef = GetICustEdit(GetDlgItem(hWnd, EDIT_DATAREF));
-		cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
-		cCmbCursor.setup(hWnd, CMB_CURSOR);
+    cBtnDataRef.setup(hWnd, BTN_DATAREF);
+    cEdtDataRef = GetICustEdit(GetDlgItem(hWnd, EDIT_DATAREF));
+    cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
+    cCmbCursor.setup(hWnd, CMB_CURSOR);
 
-		for (auto & curr : xobj::ECursor::list()) {
-			cCmbCursor.addItem(sts::toString(curr.toUiString()));
-		}
-		cCmbCursor.setCurrSelected(0);
-	}
+    for (auto & curr : xobj::ECursor::list()) {
+        cCmbCursor.addItem(sts::toString(curr.toUiString()));
+    }
+    cCmbCursor.setCurrSelected(0);
+}
 
-	void ManipAttrDragAxisPix::destroyWindow(HWND /*hWnd*/) {
-		ReleaseISpinner(mSpnVal1);
-		ReleaseISpinner(mSpnVal2);
-		ReleaseISpinner(mSpnDx);
-		ReleaseISpinner(mSpnStep);
-		ReleaseISpinner(mSpnExp);
+void ManipAttrDragAxisPix::destroyWindow(HWND /*hWnd*/) {
+    ReleaseISpinner(mSpnVal1);
+    ReleaseISpinner(mSpnVal2);
+    ReleaseISpinner(mSpnDx);
+    ReleaseISpinner(mSpnStep);
+    ReleaseISpinner(mSpnExp);
 
-		cBtnDataRef.release();
-		ReleaseICustEdit(cEdtDataRef);
-		ReleaseICustEdit(cEdtToolType);
-		cCmbCursor.release();
-	}
+    cBtnDataRef.release();
+    ReleaseICustEdit(cEdtDataRef);
+    ReleaseICustEdit(cEdtToolType);
+    cCmbCursor.release();
+}
 
-	void ManipAttrDragAxisPix::toWindow() {
-		mSpnVal1->SetValue(mData.val1(), FALSE);
-		mSpnVal2->SetValue(mData.val2(), FALSE);
+void ManipAttrDragAxisPix::toWindow() {
+    mSpnVal1->SetValue(mData.val1(), FALSE);
+    mSpnVal2->SetValue(mData.val2(), FALSE);
 
-		mSpnDx->SetValue(mData.dxPix(), FALSE);
-		mSpnStep->SetValue(mData.step(), FALSE);
-		mSpnExp->SetValue(mData.exp(), FALSE);
+    mSpnDx->SetValue(mData.dxPix(), FALSE);
+    mSpnStep->SetValue(mData.step(), FALSE);
+    mSpnExp->SetValue(mData.exp(), FALSE);
 
-		UiUtilities::setText(cEdtDataRef, sts::toString(mData.dataref()));
+    UiUtilities::setText(cEdtDataRef, sts::toString(mData.dataref()));
 
-		UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
-		cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
-	}
+    UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
+    cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
+}
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
 }

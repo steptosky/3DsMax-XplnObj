@@ -38,38 +38,38 @@
 
 namespace ui {
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class UpdatedObjects {
-	public:
+class UpdatedObjects {
+public:
 
-		UpdatedObjects();
-		virtual ~UpdatedObjects();
+    UpdatedObjects();
+    virtual ~UpdatedObjects();
 
-		bool show(const std::vector<INode *> * nodes, HWND parent);
+    bool show(const std::vector<INode *> * nodes, HWND parent);
 
-	private:
+private:
 
-		void destroy();
+    void destroy();
 
-		static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-		void initWindow(HWND hWnd);
-		void destroyWindow(HWND hWnd);
+    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    void initWindow(HWND hWnd);
+    void destroyWindow(HWND hWnd);
 
-		void showData();
+    void showData();
 
-		win::Base cBtnOk;
-		win::Base mEditInfo;
-		win::Base mLstObjects;
-		win::Base mMainWin;
-		const std::vector<INode *> * mData = nullptr;
-		HWND mParent;
+    win::Base cBtnOk;
+    win::Base mEditInfo;
+    win::Base mLstObjects;
+    win::Base mMainWin;
+    const std::vector<INode *> * mData = nullptr;
+    HWND mParent;
 
-	};
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

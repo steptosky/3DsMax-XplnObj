@@ -1,59 +1,59 @@
-# This Plugin is for the 3DsMax, it allows you to export to X-Plane obj format.
-- The plugin is distributed under 
-[BSD (3-Clause)](http://opensource.org/licenses/BSD-3-Clause) 
-license for more information read the [license](license.txt) file.
-- [The X-Plane official website](http://www.x-plane.com/)
-- [The X-Plane obj specification](http://developer.x-plane.com/?article=obj8-file-format-specification)
-- The plugin supports 9-2017 3Ds Max (x64 only)
-- Minimum C++ standard is 14
 
-## Warning 
-The importing is still under developing and does not work correctly!
+# The X-Plane .obj exporter for the 3DsMax.
+- The plugin is distributed under [BSD (3-Clause)](http://opensource.org/licenses/BSD-3-Clause) license.
+  For more information read the [license](license.txt) file.
+- The X-Plane [official website](http://www.x-plane.com/).
+- The X-Plane [obj specification](http://developer.x-plane.com/?article=obj8-file-format-specification).
+- The plugin supports `9-2017` 3DsMaxs (x64 only).
+- The plugin requires C++ 14 or higher standard.
+
+### Warning 
+Importing is still under developing and doesn't work properly!
 
 ## Dependencies
-- [CMake 3.7.0+](https://cmake.org/)
-- [Conan 0.27+](https://www.conan.io) - dependency tool
-- [StepToSky X-Plane obj library](https://github.com/steptosky/XplnObj) - used through the conan
-- 3Ds Max SDK - Usually you can find it on 3Ds Max installation cd or image
+- [CMake 3.7.0+](https://cmake.org/) building tool.
+- [Conan 1.6+](https://www.conan.io) package manager.  
+- [XplnObj 0.6.2](https://github.com/steptosky/XplnObj) is used via conan.
+- [sts-signals 0.1.2](https://github.com/steptosky/sts-signals) is used via conan.
+- [sts-semver 0.2.1](https://github.com/steptosky/sts-semver) is used via conan.
+- [jsonformoderncpp 3.1.2](https://github.com/nlohmann/json) is used via conan.
+- 3Ds Max SDK. Usually you can find it on 3Ds Max installation CD or image.
 
-## Build
-- The release [check list](doc/release-checklist.md) - is used for producing the releases.
-- You have to get the 3DsMax sdk and then put it into conan repository, 
-see [this](https://bitbucket.org/steptosky/conan-recipe-3dsmax-sdk) for
-more information.
-- Adjust the file [conanfile.txt](conanfile.txt), you can comment 
-unnecessary 3DsMax sdk version with *#*. 
-It also will turn off appropriate targets.
+## Memo for the library developers
+- [release-checklist](doc/release-checklist.md) see this file when you are making the release.
+- [change log](doc/changelog.txt) this file has to be filled during the release process and contains information about changes.
+
+## Developing and Building
+- You have to install `conan` and [add](https://docs.conan.io/en/latest/reference/commands/misc/remote.html):  
+    - If it isn't available [conan-center](https://bintray.com/conan/conan-center) remote the link can be `https://conan.bintray.com`.
+    - [bincrafters bintray](https://bintray.com/bincrafters/public-conan) remote.
+    - [steptosky bintray](https://bintray.com/steptosky/conan-open-source) remote.
+- You have to get the 3DsMax SDK and then put it into your conan repository or your conan local cache.  
+  See [Conan 3dsmax SDK recipes](https://github.com/steptosky/conan-3dsmax-sdk-recipes).
+- Adjust the file [conanfile.txt](conanfile.txt). You may comment unnecessary 3DsMax SDK version with the `#` symbol. It also turns off corresponding build targets.
+``` bash
+...
+#3DsMaxSdk2009/last@steptosky/stable   isn't used
+3DsMaxSdk2010/last@steptosky/stable    is used
+...
 ```
-#3DsMaxSdk2009/last@steptosky/stable   will not be used
-3DsMaxSdk2010/last@steptosky/stable
-```
-- Create the buld folder ```mkdir build``` and go in ```cd build```
-- Use ```conan install .. --profile ../conan-profiles/vs2015MD-Release --build=outdated``` to get all necessary dependencies.  
-You can use predefined profiles as in this example or your ones.
-- Use ```cmake -G "Visual Studio 14 Win64" ../ -DCMAKE_INSTALL_PREFIX=../output```
-for generation the visual studio 2015 project.
-- Use ```cmake --build . --target install --config Release``` 
-for building the project with cmake or use visual studio.
-- You can make a *.bat* file and copy/paste and adjust the following script there.  
-  
-```
-::==========================================================
-@echo off
-set dir="msvc"
-if not exist %dir% mkdir %dir%
-cd %dir%
-::==========================================================
-call conan install .. --profile ../conan-profiles/vs2015MD-Release -g cmake_multi --build=outdated
-call conan install .. --profile ../conan-profiles/vs2015MD-Debug -g cmake_multi --build=outdated
-::==========================================================
-call cmake -G "Visual Studio 14 Win64" ../ -DCMAKE_INSTALL_PREFIX=../output
-::call cmake --build . --target install --config Release
-::call cmake --build . --target install --config Debug
-cd ../
-::==========================================================
-```
-- See also [Dev notes](doc/dev-notes.md)
+- If you are going to develop you may generate the `Visual Studio 2017` project with the file `msvc-2017.bat` in the root repository folder.  
+  You also may copy that file and make necessary changes as you wish using the origin script as the example.  
+- If you just want to build the plugins you may use the scripts inside the `ci` folder.  
+  Pay attention those scripts must be run from the root repository folder `ci/build-vs2017.bat`.
+    - `ci/build-release-vs2017.bat` - Builds and installs release target only. This script is usually used for making public release versions.
+    - `ci/build-vs2017.bat` - Builds and installs release and debug targets. This script is usually used in CI jobs for checking your work.
+- If you want to upload built plugins to github:
+  - You have to build and install [github-release](https://github.com/aktau/github-release). And make it accessible via your `PATH` environment variable.
+  - Adjust `REPOSITORY_NAME` and `REPOSITORY_USER_NAME` variables in the file [StsUploadToGithub.cmake](cmake/StsUploadToGithub.cmake) if necessary.
+  - Set the environment variable `GITHUB_TOKEN` - your access token from github account.
+  - Run `ci/upload-to-github.bat` the release targets of the project must be built and installed for all supported 3DsMax versions.
+
+#### Cmake variables
+| Variables | Type | Description |
+|----------:|:----:|:------------|
+| **ADD_3DMAXS_EXEC** | _ON/OFF_  | If enabled then the default 3DsMaxs' path to `3dsmax.exe` will be added as the command for debugging. It is adjusted to be used with the `Visual Studio 2017`, it may not work with other ones. |
+
 
 ## Copyright
 Copyright (c) 2017, StepToSky team. All rights reserved.  

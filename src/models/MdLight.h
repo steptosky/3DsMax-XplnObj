@@ -43,36 +43,36 @@
 class MdLight {
 public:
 
-	MdLight();
-	~MdLight();
+    MdLight();
+    ~MdLight();
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void reset();
-	static void cloneData(INode * from, INode * to);
+    void reset();
+    static void cloneData(INode * from, INode * to);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void clearLink();
-	bool linkNode(INode * node);
+    void clearLink();
+    bool linkNode(INode * node);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void saveToNode(const xobj::ObjAbstract & inObj) const { saveToNode(mNode, inObj); }
-	bool loadFromNode(LightIO::ILightIO * callBack) { return loadFromNode(mNode, callBack); }
+    void saveToNode(const xobj::ObjAbstract & inObj) const { saveToNode(mNode, inObj); }
+    bool loadFromNode(LightIO::ILightIO * callBack) { return loadFromNode(mNode, callBack); }
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 private:
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void saveToNode(INode * node, const xobj::ObjAbstract & inObj) const;
-	bool loadFromNode(INode * node, LightIO::ILightIO * callBack);
+    void saveToNode(INode * node, const xobj::ObjAbstract & inObj) const;
+    bool loadFromNode(INode * node, LightIO::ILightIO * callBack);
 
-	INode * mNode = nullptr;
+    INode * mNode = nullptr;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 };
 
 /**************************************************************************************************/

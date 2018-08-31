@@ -47,57 +47,57 @@
 class NodeIO {
 public:
 
-	//---------------------------------------------------------------
+    //---------------------------------------------------------------
 
-	static void cloneData(INode * NodeFrom, INode * NodeTo, DWORD index) {
-		if (NodeFrom) {
-			AppDataChunk * chunkFrom = dataChunk(NodeFrom, index);
-			if (chunkFrom) {
-				saveData(NodeTo, index, chunkFrom->data, chunkFrom->length);
-			}
-		}
-	}
+    static void cloneData(INode * NodeFrom, INode * NodeTo, DWORD index) {
+        if (NodeFrom) {
+            AppDataChunk * chunkFrom = dataChunk(NodeFrom, index);
+            if (chunkFrom) {
+                saveData(NodeTo, index, chunkFrom->data, chunkFrom->length);
+            }
+        }
+    }
 
-	static void saveData(INode * outNode, DWORD index, const void * data, DWORD length) {
-		if (outNode) {
-			AppDataChunk * chunk = outNode->GetAppDataChunk(COMMON_CLASS_ID, GUP_CLASS_ID, index);
-			if (chunk) {
-				if (chunk->length != length) {
-					chunk->length = length;
-					chunk->data = MAX_realloc(chunk->data, chunk->length);
-				}
-				memcpy(chunk->data, data, chunk->length);
-			}
-			else {
-				void * nodeBuf = MAX_malloc(length);
-				memcpy(nodeBuf, data, length);
-				outNode->AddAppDataChunk(COMMON_CLASS_ID, GUP_CLASS_ID, index, length, nodeBuf);
-			}
-		}
-	}
+    static void saveData(INode * outNode, DWORD index, const void * data, DWORD length) {
+        if (outNode) {
+            AppDataChunk * chunk = outNode->GetAppDataChunk(COMMON_CLASS_ID, GUP_CLASS_ID, index);
+            if (chunk) {
+                if (chunk->length != length) {
+                    chunk->length = length;
+                    chunk->data = MAX_realloc(chunk->data, chunk->length);
+                }
+                memcpy(chunk->data, data, chunk->length);
+            }
+            else {
+                void * nodeBuf = MAX_malloc(length);
+                memcpy(nodeBuf, data, length);
+                outNode->AddAppDataChunk(COMMON_CLASS_ID, GUP_CLASS_ID, index, length, nodeBuf);
+            }
+        }
+    }
 
-	static void saveData(INode * outNode, DWORD index, const std::string & inBytes) {
-		saveData(outNode, index, reinterpret_cast<const void*>(inBytes.data()), static_cast<DWORD>(inBytes.size()));
-	}
+    static void saveData(INode * outNode, DWORD index, const std::string & inBytes) {
+        saveData(outNode, index, reinterpret_cast<const void*>(inBytes.data()), static_cast<DWORD>(inBytes.size()));
+    }
 
-	//---------------------------------------------------------------
+    //---------------------------------------------------------------
 
-	static AppDataChunk * dataChunk(INode * node, DWORD index) {
-		if (node) {
-			return node->GetAppDataChunk(COMMON_CLASS_ID, GUP_CLASS_ID, index);
-		}
-		return nullptr;
-	}
+    static AppDataChunk * dataChunk(INode * node, DWORD index) {
+        if (node) {
+            return node->GetAppDataChunk(COMMON_CLASS_ID, GUP_CLASS_ID, index);
+        }
+        return nullptr;
+    }
 
-	//---------------------------------------------------------------
+    //---------------------------------------------------------------
 
-	static void removeData(INode * node, DWORD index) {
-		if (node) {
-			node->RemoveAppDataChunk(COMMON_CLASS_ID, GUP_CLASS_ID, index);
-		}
-	}
+    static void removeData(INode * node, DWORD index) {
+        if (node) {
+            node->RemoveAppDataChunk(COMMON_CLASS_ID, GUP_CLASS_ID, index);
+        }
+    }
 
-	//---------------------------------------------------------------
+    //---------------------------------------------------------------
 
 };
 

@@ -27,36 +27,32 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "Picture.h "
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
 
-namespace win {
+#include "MainMenu.h"
+#include "models/MdLinks.h"
+#include "ui/Factory.h"
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+namespace presenters {
 
-	void Picture::setPicture(const String & inFileName) {
-		HBITMAP hbm = (HBITMAP)::LoadImage(NULL, inFileName.c_str(), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-		hbm = (HBITMAP)SendDlgItemMessage(parent(), controlId(), STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hbm);
-		if (hbm != NULL)
-			DeleteObject(hbm);
-	}
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	void Picture::setPicture(HBITMAP inBitmap) {
-		inBitmap = (HBITMAP)SendDlgItemMessage(parent(), controlId(), STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)inBitmap);
-		if (inBitmap != NULL)
-			DeleteObject(inBitmap);
-	}
+MainMenu::MainMenu(IView * view)
+    : mView(view) {
 
-	void Picture::setPicture(HINSTANCE hInstance, int inResuorce) {
-		HBITMAP hbm = (HBITMAP)::LoadImage(hInstance, MAKEINTRESOURCE(inResuorce), IMAGE_BITMAP, 0, 0, NULL);
-		hbm = (HBITMAP)SendDlgItemMessage(parent(), controlId(), STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hbm);
-		if (hbm != NULL)
-			DeleteObject(hbm);
-	}
+    DbgAssert(mView);
+    mView->signalDonate = &MdLinks::openDonate;
+    mView->signalUpdate = &MdLinks::openPluginBinary;
+    mView->signalDoc = &MdLinks::openDocBinary;
+    mView->signalAbout = &ui::Factory::showAboutWindow;
+    mView->signalSettings = &ui::Factory::showSettingsWindow;
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
-
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 }

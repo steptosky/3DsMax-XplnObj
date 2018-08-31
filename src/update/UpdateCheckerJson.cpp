@@ -28,7 +28,10 @@
 */
 
 #include "UpdateChecker.h"
-#include "3rdParties/json/json.hpp"
+
+#pragma warning(push, 0)
+#include <nlohmann/json.hpp>
+#pragma warning(pop)
 
 using namespace nlohmann;
 
@@ -46,8 +49,8 @@ using namespace nlohmann;
 /**************************************************************************************************/
 
 std::string UpdateChecker::extractVersion(const std::string & jsonData) {
-	auto j3 = json::parse(jsonData);
-	return j3["tag_name"];
+    auto j3 = json::parse(jsonData);
+    return j3["tag_name"];
 }
 
 /**************************************************************************************************/

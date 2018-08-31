@@ -42,52 +42,52 @@ class INode;
 class NodeVisitor {
 public:
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	/*!
-	 * \return false if you want to stop the process otherwise true.
-	 */
-	typedef std::function<bool(INode *)> Function;
+    /*!
+     * \return false if you want to stop the process otherwise true.
+     */
+    typedef std::function<bool(INode *)> Function;
 
-	/*!
-	 * \details Visit all the INode in the scene according to their hierarchy
-	 *          and call specified function for each one.
-	 * \param fn function which will receive each INode. 
-	 * \return false if process was stopped by the function 
-	 *         otherwise true which means that all the nodes were processed.
-	 */
-	static bool visitAll(const Function & fn);
+    /*!
+     * \details Visit all the INode in the scene according to their hierarchy
+     *          and call specified function for each one.
+     * \param fn function which will receive each INode. 
+     * \return false if process was stopped by the function 
+     *         otherwise true which means that all the nodes were processed.
+     */
+    static bool visitAll(const Function & fn);
 
-	/*!
-	 * \details Visit all the INode of the given root one according to their hierarchy
-	 *          and call specified function for each one.
-	 * \param fn function which will receive each INode. 
-	 * \return false if process was stopped by the function 
-	 *         otherwise true which means that all the nodes were processed.
-	 */
-	static bool visitAllOf(INode * root, const Function & fn);
+    /*!
+     * \details Visit all the INode of the given root one according to their hierarchy
+     *          and call specified function for each one.
+     * \param fn function which will receive each INode. 
+     * \return false if process was stopped by the function 
+     *         otherwise true which means that all the nodes were processed.
+     */
+    static bool visitAllOf(INode * root, const Function & fn);
 
-	/*!
-	 * \details Visit all the children INode of the given root one according to their order
-	 *          and call specified function for each one.
-	 * \param fn function which will receive each INode. 
-	 * \return false if process was stopped by the function 
-	 *         otherwise true which means that all the nodes were processed.
-	 */
-	static bool visitChildrenOf(INode * root, const Function & fn);
+    /*!
+     * \details Visit all the children INode of the given root one according to their order
+     *          and call specified function for each one.
+     * \param fn function which will receive each INode. 
+     * \return false if process was stopped by the function 
+     *         otherwise true which means that all the nodes were processed.
+     */
+    static bool visitChildrenOf(INode * root, const Function & fn);
 
-	//-------------------------------------------------------------------------
-	// Predefined methods
-		
-	/*!
-	 * \details Check whether the current scene contains at least one x-plane main object.
-	 *          It checks only children of the root node and 
-	 *          does not check children of children.
-	 * \return True if contains otherwise false.
-	 */
-	static bool sceneContainsMainObj();
+    //-------------------------------------------------------------------------
+    // Predefined methods
 
-	//-------------------------------------------------------------------------
+    /*!
+     * \details Check whether the current scene contains at least one x-plane main object.
+     *          It checks only children of the root node and 
+     *          does not check children of children.
+     * \return True if contains otherwise false.
+     */
+    static bool sceneContainsMainObj();
+
+    //-------------------------------------------------------------------------
 };
 
 /**************************************************************************************************/

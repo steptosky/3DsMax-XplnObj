@@ -37,11 +37,11 @@
 /**************************************************************************************************/
 
 MdObjAttr::MdObjAttr() {
-	reset();
+    reset();
 }
 
 MdObjAttr::~MdObjAttr() {
-	clearLink();
+    clearLink();
 }
 
 /**************************************************************************************************/
@@ -51,7 +51,7 @@ MdObjAttr::~MdObjAttr() {
 void MdObjAttr::reset() {}
 
 void MdObjAttr::cloneData(INode * from, INode * to) {
-	ObjAttrIO::cloneData(from, to);
+    ObjAttrIO::cloneData(from, to);
 }
 
 /**************************************************************************************************/
@@ -59,23 +59,23 @@ void MdObjAttr::cloneData(INode * from, INode * to) {
 /**************************************************************************************************/
 
 void MdObjAttr::clearLink() {
-	mNode = nullptr;
-	reset();
+    mNode = nullptr;
+    reset();
 }
 
 bool MdObjAttr::linkNode(INode * node) {
-	clearLink();
-	mNode = node;
+    clearLink();
+    mNode = node;
 
-	if (mNode == nullptr) {
-		return false;
-	}
+    if (mNode == nullptr) {
+        return false;
+    }
 
-	if (!ObjAttrIO::canApply(mNode)) {
-		return false;
-	}
+    if (!ObjAttrIO::canApply(mNode)) {
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 /**************************************************************************************************/
@@ -83,28 +83,28 @@ bool MdObjAttr::linkNode(INode * node) {
 /**************************************************************************************************/
 
 void MdObjAttr::saveToNode(INode * node, const xobj::AttrSet & inVals) const {
-	if (node) {
-		try {
-			ObjAttrIO::saveToNode(node, inVals);
-		}
-		catch (std::exception & e) {
-			LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
-					<< "> object. Reason: <" << e.what() << ">";
-		}
-	}
+    if (node) {
+        try {
+            ObjAttrIO::saveToNode(node, inVals);
+        }
+        catch (std::exception & e) {
+            LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
+                    << "> object. Reason: <" << e.what() << ">";
+        }
+    }
 }
 
 bool MdObjAttr::loadFromNode(INode * node, xobj::AttrSet & outVals) {
-	if (node) {
-		try {
-			return ObjAttrIO::loadFromNode(node, outVals);
-		}
-		catch (std::exception & e) {
-			LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
-					<< "> object. Reason: <" << e.what() << ">";
-		}
-	}
-	return false;
+    if (node) {
+        try {
+            return ObjAttrIO::loadFromNode(node, outVals);
+        }
+        catch (std::exception & e) {
+            LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
+                    << "> object. Reason: <" << e.what() << ">";
+        }
+    }
+    return false;
 }
 
 /**************************************************************************************************/

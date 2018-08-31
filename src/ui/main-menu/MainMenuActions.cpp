@@ -32,42 +32,42 @@
 #include "resource/ResHelper.h"
 
 #define NumElements(array) (sizeof(array) / sizeof(array[0]))
-static ActionDescription spActions[] = {
-			{MENU_ACTION_DOC, IDS_MAIN_MENU_DOC, IDS_MAIN_MENU_DOC, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
-			{MENU_ACTION_UPDATE, IDS_MAIN_MENU_UPDATE,IDS_MAIN_MENU_UPDATE, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
-			{MENU_ACTION_DONATE, IDS_MAIN_MENU_DONATE, IDS_MAIN_MENU_DONATE, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
-			{MENU_ACTION_ABOUT, IDS_MAIN_MENU_ABOUT, IDS_MAIN_MENU_ABOUT, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
-			{MENU_ACTION_SETTINGS, IDS_MAIN_MENU_SETTINGS, IDS_MAIN_MENU_SETTINGS, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY}
-	};
+static ActionDescription gActions[] = {
+        {MENU_ACTION_DOC, IDS_MAIN_MENU_DOC, IDS_MAIN_MENU_DOC, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
+        {MENU_ACTION_UPDATE, IDS_MAIN_MENU_UPDATE,IDS_MAIN_MENU_UPDATE, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
+        {MENU_ACTION_DONATE, IDS_MAIN_MENU_DONATE, IDS_MAIN_MENU_DONATE, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
+        {MENU_ACTION_ABOUT, IDS_MAIN_MENU_ABOUT, IDS_MAIN_MENU_ABOUT, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
+        {MENU_ACTION_SETTINGS, IDS_MAIN_MENU_SETTINGS, IDS_MAIN_MENU_SETTINGS, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY}
+};
 
 namespace ui {
 
-	/**************************************************************************************************/
-	/////////////////////////////////////////* Static area *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+/////////////////////////////////////////* Static area *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	const TSTR & MainMenuActions::name() {
-		return nameNotConst();
-	}
+const TSTR & MainMenuActions::name() {
+    return nameNotConst();
+}
 
-	TSTR & MainMenuActions::nameNotConst() {
-		static TSTR name(ResHelper::string256(IDS_MAIN_MENU_ACTION_TABLE_CATEGORY));
-		return name;
-	}
+TSTR & MainMenuActions::nameNotConst() {
+    static TSTR name(ResHelper::string256(IDS_MAIN_MENU_ACTION_TABLE_CATEGORY));
+    return name;
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	MainMenuActions::MainMenuActions()
-		: ActionTable(mTableId, mTableContextId, nameNotConst()) {
+MainMenuActions::MainMenuActions()
+    : ActionTable(mTableId, mTableContextId, nameNotConst()) {
 
-		BuildActionTable(nullptr, NumElements(spActions), spActions, ResHelper::hInstance);
-		DbgAssert(MainMenuActions::Count() == NumElements(spActions));
-	}
+    BuildActionTable(nullptr, NumElements(gActions), gActions, ResHelper::hInstance);
+    DbgAssert(MainMenuActions::Count() == NumElements(gActions));
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
 }

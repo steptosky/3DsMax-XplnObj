@@ -33,8 +33,8 @@
 #include <3dsmaxport.h>
 #pragma warning(pop)
 
-#include "ui/UiUtilities.h"
 #include <xpln/enums/ECursor.h>
+#include "ui/UiUtilities.h"
 #include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
@@ -42,231 +42,230 @@
 
 namespace ui {
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Static area *///////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Static area *///////////////////////////////////////////
+/**************************************************************************************************/
 
-	INT_PTR ManipAttrWrap::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		ManipAttrWrap * theDlg;
-		if (msg == WM_INITDIALOG) {
-			theDlg = reinterpret_cast<ManipAttrWrap*>(lParam);
-			DLSetWindowLongPtr(hWnd, lParam);
-			theDlg->initWindow(hWnd);
-		}
-		else if (msg == WM_DESTROY) {
-			theDlg = DLGetWindowLongPtr<ManipAttrWrap*>(hWnd);
-			theDlg->destroyWindow(hWnd);
-		}
-		else {
-			theDlg = DLGetWindowLongPtr<ManipAttrWrap *>(hWnd);
-			if (!theDlg) {
-				return FALSE;
-			}
-		}
+INT_PTR ManipAttrWrap::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    ManipAttrWrap * theDlg;
+    if (msg == WM_INITDIALOG) {
+        theDlg = reinterpret_cast<ManipAttrWrap*>(lParam);
+        DLSetWindowLongPtr(hWnd, lParam);
+        theDlg->initWindow(hWnd);
+    }
+    else if (msg == WM_DESTROY) {
+        theDlg = DLGetWindowLongPtr<ManipAttrWrap*>(hWnd);
+        theDlg->destroyWindow(hWnd);
+    }
+    else {
+        theDlg = DLGetWindowLongPtr<ManipAttrWrap *>(hWnd);
+        if (!theDlg) {
+            return FALSE;
+        }
+    }
 
-		//--------------------------------------
+    //--------------------------------------
 
-		switch (msg) {
-			case WM_COMMAND: {
-				switch (LOWORD(wParam)) {
-					case BTN_DATAREF: {
-						Factory::showNotImplemented();
-						break;
-					}
-					case CMB_CURSOR: {
-						if (HIWORD(wParam) == CBN_SELCHANGE) {
-							theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
-							theDlg->save();
-						}
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			case WM_CUSTEDIT_ENTER: {
-				switch (LOWORD(wParam)) {
-					case EDIT_DATAREF: {
-						theDlg->mData.setDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)));
-						theDlg->save();
-						break;
-					}
-					case EDIT_TOOLTIP: {
-						theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
-						theDlg->save();
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			case CC_SPINNER_CHANGE: {
-				switch (LOWORD(wParam)) {
-					case SPN_DOWN: {
-						theDlg->mData.setDown(theDlg->mSpnDown->GetFVal());
-						theDlg->save();
-						break;
-					}
-					case SPN_HOLD: {
-						theDlg->mData.setHold(theDlg->mSpnHold->GetFVal());
-						theDlg->save();
-						break;
-					}
-					case SPN_MIN: {
-						theDlg->mData.setMinimum(theDlg->mSpnMim->GetFVal());
-						theDlg->save();
-						break;
-					}
-					case SPN_MAX: {
-						theDlg->mData.setMaximum(theDlg->mSpnMax->GetFVal());
-						theDlg->save();
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			default: break;
-		}
-		return 0;
-	}
+    switch (msg) {
+        case WM_COMMAND: {
+            switch (LOWORD(wParam)) {
+                case BTN_DATAREF: {
+                    Factory::showNotImplemented();
+                    break;
+                }
+                case CMB_CURSOR: {
+                    if (HIWORD(wParam) == CBN_SELCHANGE) {
+                        theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
+                        theDlg->save();
+                    }
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        case WM_CUSTEDIT_ENTER: {
+            switch (LOWORD(wParam)) {
+                case EDIT_DATAREF: {
+                    theDlg->mData.setDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)));
+                    theDlg->save();
+                    break;
+                }
+                case EDIT_TOOLTIP: {
+                    theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
+                    theDlg->save();
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        case CC_SPINNER_CHANGE: {
+            switch (LOWORD(wParam)) {
+                case SPN_DOWN: {
+                    theDlg->mData.setDown(theDlg->mSpnDown->GetFVal());
+                    theDlg->save();
+                    break;
+                }
+                case SPN_HOLD: {
+                    theDlg->mData.setHold(theDlg->mSpnHold->GetFVal());
+                    theDlg->save();
+                    break;
+                }
+                case SPN_MIN: {
+                    theDlg->mData.setMinimum(theDlg->mSpnMim->GetFVal());
+                    theDlg->save();
+                    break;
+                }
+                case SPN_MAX: {
+                    theDlg->mData.setMaximum(theDlg->mSpnMax->GetFVal());
+                    theDlg->save();
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        default: break;
+    }
+    return 0;
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	ManipAttrWrap::ManipAttrWrap(MdManip * modelData)
-		: mModelData(modelData) {
-		assert(mModelData);
-	}
+ManipAttrWrap::ManipAttrWrap(MdManip * modelData)
+    : mModelData(modelData) {
+    assert(mModelData);
+}
 
-	ManipAttrWrap::~ManipAttrWrap() {
-		ManipAttrWrap::destroy();
-	}
+ManipAttrWrap::~ManipAttrWrap() {
+    ManipAttrWrap::destroy();
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrWrap::create(HWND inParent) {
-		assert(inParent);
-		mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
-									MAKEINTRESOURCE(ROLL_MANIP_WRAP),
-									inParent,
-									reinterpret_cast<DLGPROC>(panelProc),
-									reinterpret_cast<LPARAM>(this)));
-		assert(mHwnd);
-		if (mHwnd) {
-			toWindow();
-			mWheel.create(inParent);
-			calculateSize();
-			mHwnd.show(true);
-		}
-		else {
-			LError << WinCode(GetLastError());
-		}
-	}
+void ManipAttrWrap::create(HWND inParent) {
+    assert(inParent);
+    mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
+                                  MAKEINTRESOURCE(ROLL_MANIP_WRAP),
+                                  inParent,
+                                  reinterpret_cast<DLGPROC>(panelProc),
+                                  reinterpret_cast<LPARAM>(this)));
+    assert(mHwnd);
+    if (mHwnd) {
+        toWindow();
+        mWheel.create(inParent);
+        calculateSize();
+        mHwnd.show(true);
+    }
+    else {
+        LError << WinCode(GetLastError());
+    }
+}
 
-	void ManipAttrWrap::destroy() {
-		if (mHwnd) {
-			BOOL res = DestroyWindow(mHwnd.hwnd());
-			if (!res) {
-				LError << WinCode(GetLastError());
-			}
-			mHwnd.release();
-		}
-	}
+void ManipAttrWrap::destroy() {
+    if (mHwnd) {
+        BOOL res = DestroyWindow(mHwnd.hwnd());
+        if (!res) {
+            LError << WinCode(GetLastError());
+        }
+        mHwnd.release();
+    }
+}
 
-	RECT ManipAttrWrap::rect() const {
-		return mSize;
-	}
+RECT ManipAttrWrap::rect() const {
+    return mSize;
+}
 
-	void ManipAttrWrap::move(const POINT & point) {
-		if (mHwnd) {
-			mHwnd.move(point);
-			calculateSize();
-		}
-	}
+void ManipAttrWrap::move(const POINT & point) {
+    if (mHwnd) {
+        mHwnd.move(point);
+        calculateSize();
+    }
+}
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Functions */////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrWrap::calculateSize() {
-		if (mHwnd) {
-			mSize = mHwnd.rect();
-			mWheel.move(POINT{0, mSize.bottom});
-			RECT wheelRect = mWheel.rect();
-			mSize.bottom += (wheelRect.bottom - wheelRect.top);
-		}
-	}
+void ManipAttrWrap::calculateSize() {
+    if (mHwnd) {
+        mSize = mHwnd.rect();
+        mWheel.move(POINT{0, mSize.bottom});
+        RECT wheelRect = mWheel.rect();
+        mSize.bottom += (wheelRect.bottom - wheelRect.top);
+    }
+}
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Functions */////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrWrap::setManip(const xobj::AttrManipBase & manip) {
-		if (manip.type() != mData.type()) {
-			LError << "Incorrect manipulator: " << manip.type().toString();
-			return;
-		}
-		mData = static_cast<const xobj::AttrManipWrap &>(manip);
-		mWheel.setManip(mData);
-	}
+void ManipAttrWrap::setManip(const xobj::AttrManipBase & manip) {
+    if (manip.type() != mData.type()) {
+        LError << "Incorrect manipulator: " << manip.type().toString();
+        return;
+    }
+    mData = static_cast<const xobj::AttrManipWrap &>(manip);
+    mWheel.setManip(mData.wheel());
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrWrap::initWindow(HWND hWnd) {
-		std::function<void(const xobj::AttrManipWheel &)> callback = [this](const xobj::AttrManipWheel & wheel) mutable {
-					assert(dynamic_cast<xobj::AttrManipWheel*>(&mData));
-					static_cast<xobj::AttrManipWheel&>(mData) = wheel;
-					mModelData->saveToNode(mData);
-				};
-		mWheel.setCallBack(callback);
+void ManipAttrWrap::initWindow(HWND hWnd) {
+    std::function<void(const xobj::AttrManipWheel &)> callback = [this](const xobj::AttrManipWheel & wheel) mutable {
+        mData.setWheel(wheel);
+        mModelData->saveToNode(mData);
+    };
+    mWheel.setCallBack(callback);
 
-		mSpnDown = SetupFloatSpinner(hWnd, SPN_DOWN, SPN_DOWN_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
-		mSpnHold = SetupFloatSpinner(hWnd, SPN_HOLD, SPN_HOLD_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+    mSpnDown = SetupFloatSpinner(hWnd, SPN_DOWN, SPN_DOWN_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+    mSpnHold = SetupFloatSpinner(hWnd, SPN_HOLD, SPN_HOLD_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
 
-		mSpnMim = SetupFloatSpinner(hWnd, SPN_MIN, SPN_MIN_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
-		mSpnMax = SetupFloatSpinner(hWnd, SPN_MAX, SPN_MAX_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+    mSpnMim = SetupFloatSpinner(hWnd, SPN_MIN, SPN_MIN_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+    mSpnMax = SetupFloatSpinner(hWnd, SPN_MAX, SPN_MAX_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
 
-		cBtnDataRef.setup(hWnd, IDC_BTN_DATAREF);
-		cEdtDataRef = GetICustEdit(GetDlgItem(hWnd, EDIT_DATAREF));
-		cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
-		cCmbCursor.setup(hWnd, CMB_CURSOR);
+    cBtnDataRef.setup(hWnd, IDC_BTN_DATAREF);
+    cEdtDataRef = GetICustEdit(GetDlgItem(hWnd, EDIT_DATAREF));
+    cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
+    cCmbCursor.setup(hWnd, CMB_CURSOR);
 
-		for (auto & curr : xobj::ECursor::list()) {
-			cCmbCursor.addItem(sts::toString(curr.toUiString()));
-		}
-		cCmbCursor.setCurrSelected(0);
-	}
+    for (auto & curr : xobj::ECursor::list()) {
+        cCmbCursor.addItem(sts::toString(curr.toUiString()));
+    }
+    cCmbCursor.setCurrSelected(0);
+}
 
-	void ManipAttrWrap::destroyWindow(HWND /*hWnd*/) {
-		ReleaseISpinner(mSpnDown);
-		ReleaseISpinner(mSpnHold);
-		ReleaseISpinner(mSpnMim);
-		ReleaseISpinner(mSpnMax);
+void ManipAttrWrap::destroyWindow(HWND /*hWnd*/) {
+    ReleaseISpinner(mSpnDown);
+    ReleaseISpinner(mSpnHold);
+    ReleaseISpinner(mSpnMim);
+    ReleaseISpinner(mSpnMax);
 
-		cBtnDataRef.release();
-		ReleaseICustEdit(cEdtDataRef);
-		ReleaseICustEdit(cEdtToolType);
-		cCmbCursor.release();
-	}
+    cBtnDataRef.release();
+    ReleaseICustEdit(cEdtDataRef);
+    ReleaseICustEdit(cEdtToolType);
+    cCmbCursor.release();
+}
 
-	void ManipAttrWrap::toWindow() {
-		mSpnDown->SetValue(mData.down(), FALSE);
-		mSpnHold->SetValue(mData.hold(), FALSE);
-		mSpnMim->SetValue(mData.minimum(), FALSE);
-		mSpnMax->SetValue(mData.maximum(), FALSE);
-		UiUtilities::setText(cEdtDataRef, sts::toString(mData.dataref()));
-		UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
-		cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
-	}
+void ManipAttrWrap::toWindow() {
+    mSpnDown->SetValue(mData.down(), FALSE);
+    mSpnHold->SetValue(mData.hold(), FALSE);
+    mSpnMim->SetValue(mData.minimum(), FALSE);
+    mSpnMax->SetValue(mData.maximum(), FALSE);
+    UiUtilities::setText(cEdtDataRef, sts::toString(mData.dataref()));
+    UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
+    cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
+}
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
 }

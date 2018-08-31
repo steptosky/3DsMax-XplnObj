@@ -40,13 +40,13 @@
 
 class ConverterDummy {
 
-	ConverterDummy() = default;
-	~ConverterDummy() = default;
+    ConverterDummy() = default;
+    ~ConverterDummy() = default;
 
 public:
 
-	static INode * toMax(const xobj::ObjAbstract * inXObj);
-	static xobj::ObjDummy * toXpln(INode * inNode);
+    static INode * toMax(const xobj::ObjAbstract * inXObj);
+    static xobj::ObjDummy * toXpln(INode * inNode);
 
 };
 

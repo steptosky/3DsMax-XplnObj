@@ -40,130 +40,129 @@
 #include "ui/anim/AnimTransView.h"
 #include "ui/anim/AnimVisView.h"
 #include "ui/controls/Base.h"
-#include "models/MdManip.h"
 
 namespace ui {
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class ObjAttr;
-	class ManipAttr;
-	class LightAttr;
+class ObjAttr;
+class ManipAttr;
+class LightAttr;
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class MainDock {
+class MainDock {
 
-		MainDock(const MainDock &) = delete;
-		MainDock & operator =(const MainDock &) = delete;
+    MainDock(const MainDock &) = delete;
+    MainDock & operator =(const MainDock &) = delete;
 
-	public:
+public:
 
-		MainDock();
-		virtual ~MainDock();
+    MainDock();
+    virtual ~MainDock();
 
-		HWND getHwnd() {
-			return mDock.hwnd();
-		}
+    HWND getHwnd() {
+        return mDock.hwnd();
+    }
 
-		bool create(HWND inParent);
-		void destroy();
+    bool create(HWND inParent);
+    void destroy();
 
-		//---------------------------------------------
+    //---------------------------------------------
 
-		void becomeHidden();
-		void becomeShown();
+    void becomeHidden();
+    void becomeShown();
 
-		//---------------------------------------------
+    //---------------------------------------------
 
-		int getMaxHeight() const {
-			return mMaxHeight;
-		}
+    int getMaxHeight() const {
+        return mMaxHeight;
+    }
 
-		int getMinHeight() const {
-			return mMinHeight;
-		}
+    int getMinHeight() const {
+        return mMinHeight;
+    }
 
-		int getMaxWidth() const {
-			return mMaxWidth;
-		}
+    int getMaxWidth() const {
+        return mMaxWidth;
+    }
 
-		int getMinWidth() const {
-			return mMinWidth;
-		}
+    int getMinWidth() const {
+        return mMinWidth;
+    }
 
-		void setSize(int inWidth, int inHeight);
-		RECT getSize(bool posIgnore = false);
+    void setSize(int inWidth, int inHeight);
+    RECT getSize(bool posIgnore = false);
 
-		//---------------------------------------------
+    //---------------------------------------------
 
-	private:
+private:
 
-		//--------------------------------------
+    //--------------------------------------
 
-		void registerCallbacks();
-		void unRegisterCallbacks();
+    void registerCallbacks();
+    void unRegisterCallbacks();
 
-		static void slotObjectSelectionChange(void * param, NotifyInfo * info);
-		static void slotObjectsDeleted(void * param, NotifyInfo * info);
+    static void slotObjectSelectionChange(void * param, NotifyInfo * info);
+    static void slotObjectsDeleted(void * param, NotifyInfo * info);
 
-		//--------------------------------------
+    //--------------------------------------
 
-		void selectionChanged();
-		void setNoSelection();
-		void setOneSelection();
-		void setMultiSelection(int count);
+    void selectionChanged();
+    void setNoSelection();
+    void setOneSelection();
+    void setMultiSelection(int count);
 
-		void objectsDeleted(Tab<INode*> * nodeTab);
+    void objectsDeleted(Tab<INode*> * nodeTab);
 
-		//--------------------------------------
+    //--------------------------------------
 
-		static INT_PTR DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+    static INT_PTR DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		//--------------------------------------
+    //--------------------------------------
 
-		void saveConfig();
-		void loadConfig();
+    void saveConfig();
+    void loadConfig();
 
-		//--------------------------------------
+    //--------------------------------------
 
-		int mMaxHeight;
-		int mMinHeight;
-		int mMaxWidth;
-		int mMinWidth;
+    int mMaxHeight;
+    int mMinHeight;
+    int mMaxWidth;
+    int mMinWidth;
 
-		//--------------------------------------
+    //--------------------------------------
 
-		void GetDesktopResolution(int & horizontal, int & vertical);
+    void GetDesktopResolution(int & horizontal, int & vertical);
 
-		//--------------------------------------
+    //--------------------------------------
 
-		Interface * mIp = nullptr;
+    Interface * mIp = nullptr;
 
-		ObjAttr * mBaseAttrUI = nullptr;
-		ManipAttr * mManipAttrUI = nullptr;
-		LightAttr * mLightAttrUI = nullptr;
+    ObjAttr * mBaseAttrUI = nullptr;
+    ManipAttr * mManipAttrUI = nullptr;
+    LightAttr * mLightAttrUI = nullptr;
 
-		AnimRotateRollup * mAnimRotateRollup = nullptr;
-		AnimTransView * mAnimTransRollup = nullptr;
-		AnimVisView * mAnimVisRollup = nullptr;
+    AnimRotateRollup * mAnimRotateRollup = nullptr;
+    AnimTransView * mAnimTransRollup = nullptr;
+    AnimVisView * mAnimVisRollup = nullptr;
 
-		MdObjAttr mMdBaseAttr;
-		MdLight mMdLight;
+    MdObjAttr mMdBaseAttr;
+    MdLight mMdLight;
 
-		INode * mCurrNode = nullptr;
-		win::Base mDock;
-		win::Base mRollupArea;
+    INode * mCurrNode = nullptr;
+    win::Base mDock;
+    win::Base mRollupArea;
 
-		IRollupWindow * mIRollupWindow = nullptr;
-	};
+    IRollupWindow * mIRollupWindow = nullptr;
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
 }

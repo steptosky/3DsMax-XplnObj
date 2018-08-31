@@ -42,49 +42,49 @@
 class ConverterMesh {
 public:
 
-	static INode * toMax(const xobj::ObjAbstract * xObj);
-	static xobj::ObjMesh * toXpln(INode * node);
+    static INode * toMax(const xobj::ObjAbstract * xObj);
+    static xobj::ObjMesh * toXpln(INode * node);
 
-	static Mesh * extractMesh(INode * inNode);
+    static Mesh * extractMesh(INode * inNode);
 
-	ConverterMesh() = default;
-	~ConverterMesh() = default;
+    ConverterMesh() = default;
+    ~ConverterMesh() = default;
 
 private:
 
-	class MPoint {
-	public:
+    class MPoint {
+    public:
 
-		int vertexIdx;
-		int TextureVertexIdx;
-		Point3 normal;
+        int vertexIdx;
+        int TextureVertexIdx;
+        Point3 normal;
 
-		MPoint(int inVertextIdx, int inTextureVertexIdx) {
-			vertexIdx = inVertextIdx;
-			TextureVertexIdx = inTextureVertexIdx;
-		}
+        MPoint(int inVertextIdx, int inTextureVertexIdx) {
+            vertexIdx = inVertextIdx;
+            TextureVertexIdx = inTextureVertexIdx;
+        }
 
-		~MPoint() { }
-	};
+        ~MPoint() { }
+    };
 
-	struct MFace {
+    struct MFace {
 
-		int vertices[3];
-		int smGroupIdx;
-		int materialIdx;
+        int vertices[3];
+        int smGroupIdx;
+        int materialIdx;
 
-	};
+    };
 
-	typedef std::vector<MFace> FaceList;
-	typedef std::vector<MPoint> VertList;
+    typedef std::vector<MFace> FaceList;
+    typedef std::vector<MPoint> VertList;
 
-	static Point3 vertexNormal(Mesh * mesh, int faceNo, RVertex * rv);
-	static void addFace(FaceList & faces, VertList & vertices, int inFaceIdx, Mesh * inMesh);
-	static size_t idx(VertList & vertices, const MPoint & p);
-	static void saveVerts(VertList & vertices, xobj::ObjMesh * inXMesh, Mesh * inMesh);
-	static void saveFaces(FaceList & faces, xobj::ObjMesh * objMesh);
+    static Point3 vertexNormal(Mesh * mesh, int faceNo, RVertex * rv);
+    static void addFace(FaceList & faces, VertList & vertices, int inFaceIdx, Mesh * inMesh);
+    static size_t idx(VertList & vertices, const MPoint & p);
+    static void saveVerts(VertList & vertices, xobj::ObjMesh * inXMesh, Mesh * inMesh);
+    static void saveFaces(FaceList & faces, xobj::ObjMesh * objMesh);
 
-	static bool isBone(INode * node);
+    static bool isBone(INode * node);
 
 };
 

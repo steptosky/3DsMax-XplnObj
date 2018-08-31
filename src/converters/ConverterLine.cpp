@@ -33,8 +33,8 @@
 #include <splshape.h>
 #pragma warning(pop)
 
-#include "Common/String.h"
 #include <cassert>
+#include "Common/String.h"
 #include "ConverterUtils.h"
 
 /**************************************************************************************************/
@@ -42,43 +42,43 @@
 /**************************************************************************************************/
 
 ConverterLine::ObjLineList ConverterLine::toXpln(INode * inNode, const Matrix3 & inTargetTm) {
-	assert(inNode);
+    assert(inNode);
 
-	ObjLineList linelist;
+    ObjLineList linelist;
 
-	SplineShape * shape = getShape(inNode);
-	if (shape == nullptr)
-		return linelist;
+    SplineShape * shape = getShape(inNode);
+    if (shape == nullptr)
+        return linelist;
 
-	Matrix3 tm = inNode->GetNodeTM(GetCOREInterface()->GetTime());
-	Matrix3 offsetTm = ConverterUtils::offsetMatrix(inNode);
+    Matrix3 tm = inNode->GetNodeTM(GetCOREInterface()->GetTime());
+    Matrix3 offsetTm = ConverterUtils::offsetMatrix(inNode);
 
-	// collect lines to line container... 
-	int numCurves = shape->NumberOfCurves();
-	for (int idx = 0; idx < numCurves; idx++) {
-		Spline3D * spline = shape->shape.GetSpline(idx);
-		int numKnots = spline->KnotCount();
-		xobj::ObjLine * xLine = nullptr;
-		Point3 point;
+    // collect lines to line container... 
+    int numCurves = shape->NumberOfCurves();
+    for (int idx = 0; idx < numCurves; idx++) {
+        Spline3D * spline = shape->shape.GetSpline(idx);
+        int numKnots = spline->KnotCount();
+        xobj::ObjLine * xLine = nullptr;
+        Point3 point;
 
-		if (numKnots) {
-			xLine = new xobj::ObjLine;
-			xLine->setObjectName(sts::toMbString(inNode->GetName()));
-			linelist.push_back(xLine);
-		}
-		for (int kid = 0; kid < numKnots; kid++) {
-			point = spline->GetKnotPoint(kid);
-			point = (point * tm) * Inverse(inTargetTm);
-			point = point * offsetTm;
-			xLine->verticesList().push_back(xobj::ObjLine::Vertex(xobj::Point3(point.x, point.y, point.z),
-																xobj::Color(0.5, 0.5, 0.5)));
-		}
-		// TODO: Doesn't work after refactoring
-		// xLine->setClosed(spline->Closed() ? true : false);
-		xLine->setObjectName(sts::toMbString(inNode->GetName()).c_str());
-	}
+        if (numKnots) {
+            xLine = new xobj::ObjLine;
+            xLine->setObjectName(sts::toMbString(inNode->GetName()));
+            linelist.push_back(xLine);
+        }
+        for (int kid = 0; kid < numKnots; kid++) {
+            point = spline->GetKnotPoint(kid);
+            point = (point * tm) * Inverse(inTargetTm);
+            point = point * offsetTm;
+            xLine->verticesList().push_back(xobj::ObjLine::Vertex(xobj::Point3(point.x, point.y, point.z),
+                                                                  xobj::Color(0.5, 0.5, 0.5)));
+        }
+        // TODO: Doesn't work after refactoring
+        // xLine->setClosed(spline->Closed() ? true : false);
+        xLine->setObjectName(sts::toMbString(inNode->GetName()).c_str());
+    }
 
-	return linelist;
+    return linelist;
 }
 
 /**************************************************************************************************/
@@ -86,18 +86,18 @@ ConverterLine::ObjLineList ConverterLine::toXpln(INode * inNode, const Matrix3 &
 /**************************************************************************************************/
 
 SplineShape * ConverterLine::getShape(INode * inNode) {
-	SplineShape * shape = nullptr;
-	ObjectState os = inNode->EvalWorldState(GetCOREInterface()->GetTime());
-	if (os.obj->IsSubClassOf(splineShapeClassID)) {
-		shape = static_cast<SplineShape *>(os.obj);
-	}
-	else if (os.obj->CanConvertToType(splineShapeClassID)) {
-		shape = static_cast<SplineShape *>(os.obj->ConvertToType(GetCOREInterface()->GetTime(), splineShapeClassID));
-	}
-	if (shape == nullptr)
-		return nullptr;
+    SplineShape * shape = nullptr;
+    ObjectState os = inNode->EvalWorldState(GetCOREInterface()->GetTime());
+    if (os.obj->IsSubClassOf(splineShapeClassID)) {
+        shape = static_cast<SplineShape *>(os.obj);
+    }
+    else if (os.obj->CanConvertToType(splineShapeClassID)) {
+        shape = static_cast<SplineShape *>(os.obj->ConvertToType(GetCOREInterface()->GetTime(), splineShapeClassID));
+    }
+    if (shape == nullptr)
+        return nullptr;
 
-	return shape;
+    return shape;
 }
 
 /**************************************************************************************************/

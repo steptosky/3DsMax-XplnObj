@@ -40,15 +40,15 @@
 class ScaleDim : public ParamDimension {
 public:
 
-	ScaleDim() = default;
-	virtual ~ScaleDim() = default;
+    ScaleDim() = default;
+    virtual ~ScaleDim() = default;
 
-	float GetDimScale() override { return 1.0f; }
-	void SetDimScale() override {}
-	MCHAR * DimensionName() override { return _M("scl"); }
-	DimType DimensionType() override { return DIM_CUSTOM; }
-	float Convert(float value) override { return value; }
-	float UnConvert(float value) override { return value; }
+    float GetDimScale() override { return 1.0f; }
+    void SetDimScale() override {}
+    MCHAR * DimensionName() override { return _M("scl"); }
+    DimType DimensionType() override { return DIM_CUSTOM; }
+    float Convert(float value) override { return value; }
+    float UnConvert(float value) override { return value; }
 
 };
 

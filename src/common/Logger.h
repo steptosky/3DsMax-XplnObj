@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include <list>
+#include <vector>
 #include "additional/utils/Single.h"
 #include "additional/utils/BaseLogger.h"
 
@@ -98,74 +98,74 @@
 class LogSys;
 
 class Logger : public sts::Single<Logger> {
-	friend Single<Logger>;
-	Logger();
+    friend Single<Logger>;
+    Logger();
 public:
 
-	typedef void (*UserConsoleCallBack)(sts::BaseLogger::eType type, const char * msg);
+    typedef void (*UserConsoleCallBack)(sts::BaseLogger::eType type, const char * msg);
 
-	virtual ~Logger();
+    virtual ~Logger();
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	/*!
-	 * \details The callback will be called only for messages 
-	 *          that must be displayed in the user console.
-	 * \param callback [in] 
-	 */
-	static void registerUserConsoleCallback(UserConsoleCallBack callback);
+    /*!
+     * \details The callback will be called only for messages 
+     *          that must be displayed in the user console.
+     * \param callback [in] 
+     */
+    static void registerUserConsoleCallback(UserConsoleCallBack callback);
 
-	/*!
-	 * \see \link Logger::registerUserConsoleCallback \endlink
-	 * \param callback [in] 
-	 */
-	static void unregisterUserConsoleCallback(UserConsoleCallBack callback);
+    /*!
+     * \see \link Logger::registerUserConsoleCallback \endlink
+     * \param callback [in] 
+     */
+    static void unregisterUserConsoleCallback(UserConsoleCallBack callback);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static void logCallBack(sts::BaseLogger::eType inType,
-							const char * inMsg,
-							const char * file,
-							int line,
-							const char * function,
-							const char * category);
+    static void logCallBack(sts::BaseLogger::eType inType,
+                            const char * inMsg,
+                            const char * file,
+                            int line,
+                            const char * function,
+                            const char * category);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	/*!
-	 * \details Saves current log to the given file path.
-	 * \param where 
-	 */
-	void saveLog(const MSTR & where) const;
+    /*!
+     * \details Saves current log to the given file path.
+     * \param where 
+     */
+    void saveLog(const MSTR & where) const;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static std::string aboutXLibInfo(bool inUseWinEol);
-	static std::string shortAboutXLibInfo(bool inUseWinEol);
+    static std::string aboutXLibInfo(bool inUseWinEol);
+    static std::string shortAboutXLibInfo(bool inUseWinEol);
 
-	static std::string aboutInfo(bool inUseWinEol);
-	static std::string shortAboutInfo(bool inUseWinEol);
+    static std::string aboutInfo(bool inUseWinEol);
+    static std::string shortAboutInfo(bool inUseWinEol);
 
-	static const std::string & versionShortString() { return mVersionShortString; }
-	static const std::string & versionString() { return mVersionString; }
+    static const std::string & versionShortString() { return mVersionShortString; }
+    static const std::string & versionString() { return mVersionString; }
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 private:
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	static void printInformation();
-	static void createVersionStrings();
+    static void printInformation();
+    static void createVersionStrings();
 
-	static std::list<UserConsoleCallBack> mCallbacks;
-	static LogSys * mMaxLog;
-	static std::string mVersionShortString;
-	static std::string mVersionString;
+    static std::vector<UserConsoleCallBack> mCallbacks;
+    static LogSys * mMaxLog;
+    static std::string mVersionShortString;
+    static std::string mVersionString;
 
-	MSTR mLogFile;
+    MSTR mLogFile;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 };
 

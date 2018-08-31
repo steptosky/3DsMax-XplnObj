@@ -1,5 +1,7 @@
+#pragma once
+
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2018, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -27,26 +29,65 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "MainMenuPresenter.h"
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+
+#ifdef _MSC_VER
+#   define ENABLE_PRECOMPILED_HEADERS
+#endif
+
+#ifdef ENABLE_PRECOMPILED_HEADERS
+
+//-------------------------------------------------------------------------
+
 #include <cassert>
-#include "models/MdLinks.h"
-#include "ui/Factory.h"
+
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+
+#include <cstdint>
+#include <cstddef>
+#include <limits>
+
+#include <thread>
+#include <mutex>
+
+#include <vector>
+#include <map>
+#include <list>
+
+#include <functional>
+#include <utility>
+#include <memory>
+#include <stdexcept>
+#include <algorithm>
+#include <tuple>
+#include <regex>
+
+//-------------------------------------------------------------------------
+
 #include "common/Logger.h"
+#include "common/String.h"
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
+//-------------------------------------------------------------------------
 
-MainMenuPresenter::MainMenuPresenter(IView * view)
-	: mView(view) {
+// 3d max SDK produces too many warnings,
+// So It isn't possible to see the plugin's ones.
+#pragma warning(push, 0)
+#include <max.h>
+#include <3dsmaxport.h>
 
-	assert(mView);
-	mView->signalDonate = &MdLinks::openDonate;
-	mView->signalUpdate = &MdLinks::openPluginBinary;
-	mView->signalDoc = &MdLinks::openDocBinary;
-	mView->signalAbout = &ui::Factory::showAboutWindow;
-	mView->signalSettings = &ui::Factory::showSettingsWindow;
-}
+#include <imenuman.h>
+#include <iparamb2.h>
+#include <notify.h>
+#pragma warning(pop)
+
+//-------------------------------------------------------------------------
+
+#endif
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -33,8 +33,8 @@
 #include <max.h>
 #pragma warning(pop)
 
-#include "additional/utils/Single.h"
 #include <xpln/obj/Transform.h>
+#include "additional/utils/Single.h"
 #include "models/MdAnimRot.h"
 #include "xpln/common/EulerXyzHelper.h"
 
@@ -44,49 +44,49 @@
 
 class ConverterAnim : public sts::Single<ConverterAnim> {
 
-	ConverterAnim() = default;
-	~ConverterAnim() = default;
+    ConverterAnim() = default;
+    ~ConverterAnim() = default;
 
 public:
 
-	//------------------------------------------------------------------
+    //------------------------------------------------------------------
 
-	static bool toXPLN(INode * node, xobj::Transform * transform);
+    static bool toXPLN(INode * node, xobj::Transform * transform);
 
-	static bool toMax(INode * /*node*/, xobj::Transform * /*transform*/) {
-		// TODO Implementation
-		return true;
-	}
+    static bool toMax(INode * /*node*/, xobj::Transform * /*transform*/) {
+        // TODO Implementation
+        return true;
+    }
 
-	//------------------------------------------------------------------
+    //------------------------------------------------------------------
 
 private:
 
-	static void visibilityToXPLN(INode * node, xobj::Transform & transform);
+    static void visibilityToXPLN(INode * node, xobj::Transform & transform);
 
-	static void objAnimRotate(INode * node, xobj::Transform & transform);
-	static void objAnimRotateAxis(INode * node, Control * control, char axis, xobj::AnimRotate & outXAnim);
-	static xobj::AnimRotate::KeyList * getRotateAxisAnimation(Control * inAxis,
-															const MdAnimRot::KeyValueList & inVals, int inIsReversed);
+    static void objAnimRotate(INode * node, xobj::Transform & transform);
+    static void objAnimRotateAxis(INode * node, Control * control, char axis, xobj::AnimRotate & outXAnim);
+    static xobj::AnimRotate::KeyList * getRotateAxisAnimation(Control * inAxis,
+                                                              const MdAnimRot::KeyValueList & inVals, int inIsReversed);
 
-	//------------------------------------------------------------------
+    //------------------------------------------------------------------
 
-	static void objAnimTrans(INode * node, xobj::Transform & transform);
-	static Point3 translateValue(Control * inXCtrl, Control * inYCtrl, Control * inZCtrl, TimeValue time);
+    static void objAnimTrans(INode * node, xobj::Transform & transform);
+    static Point3 translateValue(Control * inXCtrl, Control * inYCtrl, Control * inZCtrl, TimeValue time);
 
-	//------------------------------------------------------------------
+    //------------------------------------------------------------------
 
-	static bool rotAnimValidation(INode * node, Control * inControl, const char * inCtrlName, char axis);
-	static bool transAnimValidation(INode * node, Control * inControl, const char * inCtrlName, char axis);
+    static bool rotAnimValidation(INode * node, Control * inControl, const char * inCtrlName, char axis);
+    static bool transAnimValidation(INode * node, Control * inControl, const char * inCtrlName, char axis);
 
-	//------------------------------------------------------------------
+    //------------------------------------------------------------------
 
-	static bool checkRotateKeysValue(INode * node,
-									const xobj::AnimRotate::KeyList & keyList, const char * inCtrlName, char axis);
-	static bool checkTransKeysValue(INode * node,
-									const xobj::AnimTrans::KeyList & keyList, const char * inCtrlName);
+    static bool checkRotateKeysValue(INode * node,
+                                     const xobj::AnimRotate::KeyList & keyList, const char * inCtrlName, char axis);
+    static bool checkTransKeysValue(INode * node,
+                                    const xobj::AnimTrans::KeyList & keyList, const char * inCtrlName);
 
-	static float rotateValue(Control * inAxis, TimeValue t);
+    static float rotateValue(Control * inAxis, TimeValue t);
 
 };
 

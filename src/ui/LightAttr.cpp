@@ -35,7 +35,7 @@
 #include "light/LightNamed.h"
 #include "light/LightParam.h"
 #include "light/LightSpillCust.h"
-#include "Resource/resource.h"
+#include "resource/resource.h"
 #include "resource/ResHelper.h"
 
 #define UI_LIGHT_NONE "None"
@@ -46,273 +46,273 @@
 
 namespace ui {
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	INT_PTR LightAttr::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
-		switch (msg) {
-			case WM_COMMAND: {
-				switch (LOWORD(wParam)) {
-					case IDC_CMB_LIGHTTYPE: {
-						if (HIWORD(wParam) == CBN_SELCHANGE) {
-							destroyAllSubWindows();
-							recalculateSize();
-							createSubWindow();
-						}
-					}
-					default: break;;
-				}
-				break;
-			}
-			default: break;
-		}
-		return FALSE;
-	}
+INT_PTR LightAttr::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
+    switch (msg) {
+        case WM_COMMAND: {
+            switch (LOWORD(wParam)) {
+                case IDC_CMB_LIGHTTYPE: {
+                    if (HIWORD(wParam) == CBN_SELCHANGE) {
+                        destroyAllSubWindows();
+                        recalculateSize();
+                        createSubWindow();
+                    }
+                }
+                default: break;;
+            }
+            break;
+        }
+        default: break;
+    }
+    return FALSE;
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	LightAttr::LightAttr()
-		: RollupBase(ResHelper::hInstance) {
-		mData = nullptr;
-		currSubWin = nullptr;
+LightAttr::LightAttr()
+    : RollupBase(ResHelper::hInstance) {
+    mData = nullptr;
+    currSubWin = nullptr;
 
-		mChildren.insert(std::make_pair(_T(UI_LIGHT_NAMED), nullptr));
-		mChildren.insert(std::make_pair(_T(UI_LIGHT_PARAM), nullptr));
-		mChildren.insert(std::make_pair(_T(UI_LIGHT_CUSTOM), nullptr));
-		mChildren.insert(std::make_pair(_T(UI_LIGHT_SPILL), nullptr));
-	}
+    mChildren.insert(std::make_pair(_T(UI_LIGHT_NAMED), nullptr));
+    mChildren.insert(std::make_pair(_T(UI_LIGHT_PARAM), nullptr));
+    mChildren.insert(std::make_pair(_T(UI_LIGHT_CUSTOM), nullptr));
+    mChildren.insert(std::make_pair(_T(UI_LIGHT_SPILL), nullptr));
+}
 
-	LightAttr::~LightAttr() {
-		LightAttr::destroy();
-	}
+LightAttr::~LightAttr() {
+    LightAttr::destroy();
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void LightAttr::show(MdLight * inOutData) {
-		mData = inOutData;
-		toWindow();
-	}
+void LightAttr::show(MdLight * inOutData) {
+    mData = inOutData;
+    toWindow();
+}
 
-	void LightAttr::create(IRollupWindow * rollWin) {
-		mIp = rollWin;
-		create();
-	}
+void LightAttr::create(IRollupWindow * rollWin) {
+    mIp = rollWin;
+    create();
+}
 
-	void LightAttr::create() {
-		createRollup(IDD_ROLL_LIGHT_MAIN_OBJ, _T("X Light attributes"), this);
-		GetWindowRect(this->hwnd(), &mThisSize);
-		createSubWindow();
-		show(nullptr);
-	}
+void LightAttr::create() {
+    createRollup(IDD_ROLL_LIGHT_MAIN_OBJ, _T("X Light attributes"), this);
+    GetWindowRect(this->hwnd(), &mThisSize);
+    createSubWindow();
+    show(nullptr);
+}
 
-	void LightAttr::destroy() {
-		if (this->hwnd() != nullptr) {
-			destroyAllSubWindows();
-			deleteRollup();
-		}
-	}
+void LightAttr::destroy() {
+    if (this->hwnd() != nullptr) {
+        destroyAllSubWindows();
+        deleteRollup();
+    }
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void LightAttr::initWindow(HWND hWnd) {
-		cCmbLightType.setup(hWnd, IDC_CMB_LIGHTTYPE);
-		cCmbLightType.addItem(_T(UI_LIGHT_NONE));
-		cCmbLightType.addItem(_T(UI_LIGHT_NAMED));
-		cCmbLightType.addItem(_T(UI_LIGHT_PARAM));
-		cCmbLightType.addItem(_T(UI_LIGHT_CUSTOM));
-		cCmbLightType.addItem(_T(UI_LIGHT_SPILL));
-		cCmbLightType.setCurrSelected(0);
-	}
+void LightAttr::initWindow(HWND hWnd) {
+    cCmbLightType.setup(hWnd, IDC_CMB_LIGHTTYPE);
+    cCmbLightType.addItem(_T(UI_LIGHT_NONE));
+    cCmbLightType.addItem(_T(UI_LIGHT_NAMED));
+    cCmbLightType.addItem(_T(UI_LIGHT_PARAM));
+    cCmbLightType.addItem(_T(UI_LIGHT_CUSTOM));
+    cCmbLightType.addItem(_T(UI_LIGHT_SPILL));
+    cCmbLightType.setCurrSelected(0);
+}
 
-	void LightAttr::destroyWindow(HWND /*hWnd*/) {
-		cCmbLightType.release();
-	}
+void LightAttr::destroyWindow(HWND /*hWnd*/) {
+    cCmbLightType.release();
+}
 
-	void LightAttr::toWindow() {
-		destroyAllSubWindows();
-		recalculateSize();
-		if (mData) {
-			enableControls();
-			mData->loadFromNode(this);
-		}
-		else {
-			disableControls();
-		}
-	}
+void LightAttr::toWindow() {
+    destroyAllSubWindows();
+    recalculateSize();
+    if (mData) {
+        enableControls();
+        mData->loadFromNode(this);
+    }
+    else {
+        disableControls();
+    }
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void LightAttr::enableControls() {
-		cCmbLightType.enable();
-	}
+void LightAttr::enableControls() {
+    cCmbLightType.enable();
+}
 
-	void LightAttr::disableControls() {
-		cCmbLightType.disable();
-	}
+void LightAttr::disableControls() {
+    cCmbLightType.disable();
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void LightAttr::createSubWindow() {
-		if (mData != nullptr) {
-			sts::Str currItem = cCmbLightType.currSelectedText();
+void LightAttr::createSubWindow() {
+    if (mData != nullptr) {
+        sts::Str currItem = cCmbLightType.currSelectedText();
 
-			//-------------------------------------------------
-			if (currItem == _T(UI_LIGHT_NONE)) {
-				setCurrLight(nullptr);
-			}
-			//-------------------------------------------------
-			else if (currItem == _T(UI_LIGHT_NAMED)) {
-				gotLight(xobj::ObjLightNamed());
-			}
-			//-------------------------------------------------
-			else if (currItem == _T(UI_LIGHT_CUSTOM)) {
-				gotLight(xobj::ObjLightCustom());
-			}
-			//-------------------------------------------------
-			else if (currItem == _T(UI_LIGHT_PARAM)) {
-				gotLight(xobj::ObjLightParam());
-			}
-			//-------------------------------------------------
-			else if (currItem == _T(UI_LIGHT_SPILL)) {
-				gotLight(xobj::ObjLightSpillCust());
-			}
-			//-------------------------------------------------
-		}
-	}
+        //-------------------------------------------------
+        if (currItem == _T(UI_LIGHT_NONE)) {
+            setCurrLight(nullptr);
+        }
+            //-------------------------------------------------
+        else if (currItem == _T(UI_LIGHT_NAMED)) {
+            gotLight(xobj::ObjLightNamed());
+        }
+            //-------------------------------------------------
+        else if (currItem == _T(UI_LIGHT_CUSTOM)) {
+            gotLight(xobj::ObjLightCustom());
+        }
+            //-------------------------------------------------
+        else if (currItem == _T(UI_LIGHT_PARAM)) {
+            gotLight(xobj::ObjLightParam());
+        }
+            //-------------------------------------------------
+        else if (currItem == _T(UI_LIGHT_SPILL)) {
+            gotLight(xobj::ObjLightSpillCust());
+        }
+        //-------------------------------------------------
+    }
+}
 
-	void LightAttr::recalculateSize() {
-		if (currSubWin == nullptr) {
-			mIp->SetPageDlgHeight(mIp->GetPanelIndex(this->hwnd()), mThisSize.bottom - mThisSize.top);
-			return;
-		}
+void LightAttr::recalculateSize() {
+    if (currSubWin == nullptr) {
+        mIp->SetPageDlgHeight(mIp->GetPanelIndex(this->hwnd()), mThisSize.bottom - mThisSize.top);
+        return;
+    }
 
-		RECT size = currSubWin->rect();
-		size.top = size.top + (mThisSize.bottom - mThisSize.top);
-		size.bottom = size.bottom + (mThisSize.bottom - mThisSize.top);
-		MoveWindow(currSubWin->hwnd(), 0, mThisSize.bottom - mThisSize.top, size.right - size.left, size.bottom - size.top, FALSE);
-		mIp->SetPageDlgHeight(mIp->GetPanelIndex(this->hwnd()), mThisSize.bottom - mThisSize.top + size.bottom - size.top);
-		mIp->UpdateLayout();
-	}
+    RECT size = currSubWin->rect();
+    size.top = size.top + (mThisSize.bottom - mThisSize.top);
+    size.bottom = size.bottom + (mThisSize.bottom - mThisSize.top);
+    MoveWindow(currSubWin->hwnd(), 0, mThisSize.bottom - mThisSize.top, size.right - size.left, size.bottom - size.top, FALSE);
+    mIp->SetPageDlgHeight(mIp->GetPanelIndex(this->hwnd()), mThisSize.bottom - mThisSize.top + size.bottom - size.top);
+    mIp->UpdateLayout();
+}
 
-	void LightAttr::destroyAllSubWindows() {
-		for (auto & curr : mChildren) {
-			if (curr.second != nullptr) {
-				delete curr.second;
-				curr.second = nullptr;
-			}
-		}
-		currSubWin = nullptr;
-	}
+void LightAttr::destroyAllSubWindows() {
+    for (auto & curr : mChildren) {
+        if (curr.second != nullptr) {
+            delete curr.second;
+            curr.second = nullptr;
+        }
+    }
+    currSubWin = nullptr;
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void LightAttr::onParamChanged(bool) {
-		if (mData) {
-			mData->saveToNode(*currentLight<xobj::ObjAbstract>());
-		}
-	}
+void LightAttr::onParamChanged(bool) {
+    if (mData) {
+        mData->saveToNode(*currentLight<xobj::ObjAbstract>());
+    }
+}
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Functions */////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void LightAttr::gotLight(const xobj::ObjLightCustom & inLight) {
-		auto item = mChildren.find(_T(UI_LIGHT_CUSTOM));
-		if (item != mChildren.end()) {
-			setCurrLight(inLight.clone());
-			LightCust * ui = new LightCust;
-			delete item->second;
-			item->second = ui;
-			ui->eventParamChanged.connect(this, &LightAttr::onParamChanged);
-			ui->create(this->hwnd());
-			ui->show(currentLight<xobj::ObjLightCustom>());
-			currSubWin = &ui->getCBase();
-			cCmbLightType.setCurrSelected(_T(UI_LIGHT_CUSTOM));
-			recalculateSize();
-		}
-		else {
-			LError << "Internal error. There is no 'Custom' in the container.";
-		}
-	}
+void LightAttr::gotLight(const xobj::ObjLightCustom & inLight) {
+    auto item = mChildren.find(_T(UI_LIGHT_CUSTOM));
+    if (item != mChildren.end()) {
+        setCurrLight(inLight.clone());
+        LightCust * ui = new LightCust;
+        delete item->second;
+        item->second = ui;
+        ui->eventParamChanged.connect(this, &LightAttr::onParamChanged);
+        ui->create(this->hwnd());
+        ui->show(currentLight<xobj::ObjLightCustom>());
+        currSubWin = &ui->getCBase();
+        cCmbLightType.setCurrSelected(_T(UI_LIGHT_CUSTOM));
+        recalculateSize();
+    }
+    else {
+        LError << "Internal error. There is no 'Custom' in the container.";
+    }
+}
 
-	void LightAttr::gotLight(const xobj::ObjLightNamed & inLight) {
-		auto item = mChildren.find(_T(UI_LIGHT_NAMED));
-		if (item != mChildren.end()) {
-			setCurrLight(inLight.clone());
-			LightNamed * ui = new LightNamed;
-			delete item->second;
-			item->second = ui;
-			ui->eventParamChanged.connect(this, &LightAttr::onParamChanged);
-			ui->create(this->hwnd());
-			ui->show(currentLight<xobj::ObjLightNamed>());
-			currSubWin = &ui->getCBase();
-			cCmbLightType.setCurrSelected(_T(UI_LIGHT_NAMED));
-			recalculateSize();
-		}
-		else {
-			LError << "Internal error. There is no 'Named' in the container.";
-		}
-	}
+void LightAttr::gotLight(const xobj::ObjLightNamed & inLight) {
+    auto item = mChildren.find(_T(UI_LIGHT_NAMED));
+    if (item != mChildren.end()) {
+        setCurrLight(inLight.clone());
+        LightNamed * ui = new LightNamed;
+        delete item->second;
+        item->second = ui;
+        ui->eventParamChanged.connect(this, &LightAttr::onParamChanged);
+        ui->create(this->hwnd());
+        ui->show(currentLight<xobj::ObjLightNamed>());
+        currSubWin = &ui->getCBase();
+        cCmbLightType.setCurrSelected(_T(UI_LIGHT_NAMED));
+        recalculateSize();
+    }
+    else {
+        LError << "Internal error. There is no 'Named' in the container.";
+    }
+}
 
-	void LightAttr::gotLight(const xobj::ObjLightParam & inLight) {
-		auto item = mChildren.find(_T(UI_LIGHT_PARAM));
-		if (item != mChildren.end()) {
-			setCurrLight(inLight.clone());
-			LightParam * ui = new LightParam;
-			delete item->second;
-			item->second = ui;
-			ui->eventParamChanged.connect(this, &LightAttr::onParamChanged);
-			ui->create(this->hwnd());
-			ui->show(currentLight<xobj::ObjLightParam>());
-			currSubWin = &ui->getCBase();
-			cCmbLightType.setCurrSelected(_T(UI_LIGHT_PARAM));
-			recalculateSize();
-		}
-		else {
-			LError << "Internal error. There is no 'Param' in the container.";
-		}
-	}
+void LightAttr::gotLight(const xobj::ObjLightParam & inLight) {
+    auto item = mChildren.find(_T(UI_LIGHT_PARAM));
+    if (item != mChildren.end()) {
+        setCurrLight(inLight.clone());
+        LightParam * ui = new LightParam;
+        delete item->second;
+        item->second = ui;
+        ui->eventParamChanged.connect(this, &LightAttr::onParamChanged);
+        ui->create(this->hwnd());
+        ui->show(currentLight<xobj::ObjLightParam>());
+        currSubWin = &ui->getCBase();
+        cCmbLightType.setCurrSelected(_T(UI_LIGHT_PARAM));
+        recalculateSize();
+    }
+    else {
+        LError << "Internal error. There is no 'Param' in the container.";
+    }
+}
 
-	void LightAttr::gotLight(const xobj::ObjLightPoint & /*inLight*/) {}
+void LightAttr::gotLight(const xobj::ObjLightPoint & /*inLight*/) {}
 
-	void LightAttr::gotLight(const xobj::ObjLightSpillCust & inLight) {
-		auto item = mChildren.find(_T(UI_LIGHT_SPILL));
-		if (item != mChildren.end()) {
-			setCurrLight(inLight.clone());
-			LightSpillCust * ui = new LightSpillCust;
-			delete item->second;
-			item->second = ui;
-			ui->eventParamChanged.connect(this, &LightAttr::onParamChanged);
-			ui->create(this->hwnd());
-			ui->show(currentLight<xobj::ObjLightSpillCust>());
-			currSubWin = &ui->getCBase();
-			cCmbLightType.setCurrSelected(_T(UI_LIGHT_SPILL));
-			recalculateSize();
-		}
-		else {
-			LError << "Internal error. There is no 'Spill Custom' in the container.";
-		}
-	}
+void LightAttr::gotLight(const xobj::ObjLightSpillCust & inLight) {
+    auto item = mChildren.find(_T(UI_LIGHT_SPILL));
+    if (item != mChildren.end()) {
+        setCurrLight(inLight.clone());
+        LightSpillCust * ui = new LightSpillCust;
+        delete item->second;
+        item->second = ui;
+        ui->eventParamChanged.connect(this, &LightAttr::onParamChanged);
+        ui->create(this->hwnd());
+        ui->show(currentLight<xobj::ObjLightSpillCust>());
+        currSubWin = &ui->getCBase();
+        cCmbLightType.setCurrSelected(_T(UI_LIGHT_SPILL));
+        recalculateSize();
+    }
+    else {
+        LError << "Internal error. There is no 'Spill Custom' in the container.";
+    }
+}
 
-	void LightAttr::gotNoLight() {
-		setCurrLight(nullptr);
-		cCmbLightType.setCurrSelected(_T(UI_LIGHT_NONE));
-	}
+void LightAttr::gotNoLight() {
+    setCurrLight(nullptr);
+    cCmbLightType.setCurrSelected(_T(UI_LIGHT_NONE));
+}
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

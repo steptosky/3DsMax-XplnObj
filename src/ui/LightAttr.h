@@ -28,89 +28,91 @@
 */
 
 #pragma once
+
 #include <map>
+#include <sts/signals/Signal.h>
+
 #include "common/String.h"
 #include "ui/controls/Combo.h"
 #include "models/MdLight.h"
 #include "light/AbstractLight.h"
 #include "ui/controls/RollupBase.h"
-#include "additional/utils/Signal.h"
 
 namespace ui {
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class LightAttr : public maxwin::RollupBase, LightIO::ILightIO, public sts::HasSlots {
-	public:
+class LightAttr : public maxwin::RollupBase, LightIO::ILightIO, public sts::signals::AutoDisconnect {
+public:
 
-		void create(IRollupWindow * rollWin);
-		void destroy() override;
+    void create(IRollupWindow * rollWin);
+    void destroy() override;
 
-		void show(MdLight * inOutData);
+    void show(MdLight * inOutData);
 
-		LightAttr();
-		virtual ~LightAttr();
+    LightAttr();
+    virtual ~LightAttr();
 
-	private:
+private:
 
-		void create() override;
-		void createSubWindow();
-		void destroyAllSubWindows();
-		void recalculateSize();
+    void create() override;
+    void createSubWindow();
+    void destroyAllSubWindows();
+    void recalculateSize();
 
-		IRollupWindow * getInterface() override {
-			return mIp;
-		}
+    IRollupWindow * getInterface() override {
+        return mIp;
+    }
 
-		INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
-		void initWindow(HWND hWnd) override;
-		void destroyWindow(HWND hWnd) override;
+    INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+    void initWindow(HWND hWnd) override;
+    void destroyWindow(HWND hWnd) override;
 
-		win::Combo cCmbLightType;
+    win::Combo cCmbLightType;
 
-		void toWindow();
+    void toWindow();
 
-		void enableControls();
-		void disableControls();
+    void enableControls();
+    void disableControls();
 
-		void onParamChanged(bool);
+    void onParamChanged(bool);
 
-		MdLight * mData = nullptr;
-		IRollupWindow * mIp = nullptr;
-		RECT mThisSize;
+    MdLight * mData = nullptr;
+    IRollupWindow * mIp = nullptr;
+    RECT mThisSize;
 
-		std::map<const sts::Str, AbstractLight *> mChildren;
-		win::Base * currSubWin = nullptr;
+    std::map<const sts::Str, AbstractLight *> mChildren;
+    win::Base * currSubWin = nullptr;
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		void setCurrLight(xobj::ObjAbstract * inManip) {
-			delete mCurrLight;
-			mCurrLight = inManip;
-		}
+    void setCurrLight(xobj::ObjAbstract * inManip) {
+        delete mCurrLight;
+        mCurrLight = inManip;
+    }
 
-		template<typename T>
-		T * currentLight() {
-			return dynamic_cast<T*>(mCurrLight);
-		}
+    template<typename T>
+    T * currentLight() {
+        return dynamic_cast<T*>(mCurrLight);
+    }
 
-		xobj::ObjAbstract * mCurrLight = nullptr;
+    xobj::ObjAbstract * mCurrLight = nullptr;
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		void gotLight(const xobj::ObjLightCustom & inLight) override;
-		void gotLight(const xobj::ObjLightNamed & inLight) override;
-		void gotLight(const xobj::ObjLightParam & inLight) override;
-		void gotLight(const xobj::ObjLightPoint & inLight) override;
-		void gotLight(const xobj::ObjLightSpillCust & inLight) override;
-		void gotNoLight() override;
+    void gotLight(const xobj::ObjLightCustom & inLight) override;
+    void gotLight(const xobj::ObjLightNamed & inLight) override;
+    void gotLight(const xobj::ObjLightParam & inLight) override;
+    void gotLight(const xobj::ObjLightPoint & inLight) override;
+    void gotLight(const xobj::ObjLightSpillCust & inLight) override;
+    void gotNoLight() override;
 
-		//-------------------------------------------------------------------------
-	};
+    //-------------------------------------------------------------------------
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

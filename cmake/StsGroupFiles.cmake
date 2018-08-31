@@ -2,7 +2,7 @@
 #//////////////////////////////////////////////////////////////////////////////////#
 #----------------------------------------------------------------------------------#
 #
-#  Copyright (C) 2017, StepToSky
+#  Copyright (C) 2018, StepToSky
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -39,33 +39,33 @@
 #
 #----------------------------------------------------------------------------------#
 #
-#	Usage example:
-#		file(GLOB_RECURSE CM_FILES 
-#			"*.h" 
-#			"*.inl" 
-#			"*.cpp" 
-#			"${CMAKE_SOURCE_DIR}/include/*.h" 
-#			"${CMAKE_SOURCE_DIR}/include/*.inl" 
-#			"${CMAKE_SOURCE_DIR}/include/*.cpp"
-#		)
-#		
-#		include(StsGroupFiles)
-#		groupFiles("${CM_FILES}")
+#   Usage example:
+#       file(GLOB_RECURSE CM_FILES 
+#           "*.h" 
+#           "*.inl" 
+#           "*.cpp" 
+#           "${CMAKE_SOURCE_DIR}/include/*.h" 
+#           "${CMAKE_SOURCE_DIR}/include/*.inl" 
+#           "${CMAKE_SOURCE_DIR}/include/*.cpp"
+#       )
+#       
+#       include(StsGroupFiles)
+#       groupFiles("${CM_FILES}")
 #
-#	WARNING: File list must be quoted i.e. "${CM_FILES}"
-#		
+#   WARNING: File list must be quoted i.e. "${CM_FILES}"
+#
 #----------------------------------------------------------------------------------#
 #//////////////////////////////////////////////////////////////////////////////////#
 #----------------------------------------------------------------------------------#
 # Helpers
 
 macro(groupFiles _source_file_list_)
-	foreach(curr_file ${_source_file_list_}) 	
-		get_filename_component(PARENT_DIR "${curr_file}" PATH)	
-		string(REPLACE  "${CMAKE_SOURCE_DIR}/" "" GROUP "${PARENT_DIR}")	  
-		string(REPLACE "/" "\\" GROUP "${GROUP}")
-		source_group("${GROUP}" FILES "${curr_file}")	
-	endforeach()
+    foreach(curr_file ${_source_file_list_})
+        get_filename_component(PARENT_DIR "${curr_file}" PATH)
+        string(REPLACE  "${CMAKE_SOURCE_DIR}/" "" GROUP "${PARENT_DIR}")
+        string(REPLACE "/" "\\" GROUP "${GROUP}")
+        source_group("${GROUP}" FILES "${curr_file}")
+    endforeach()
 endmacro()
 
 #----------------------------------------------------------------------------------#

@@ -42,16 +42,19 @@
  * \details Parameter blocks of the X-Smoke object
  */
 enum eSmokeObjParamsBlocks : BlockID {
-	SmokeObjParams = 0,
-	SmokeObjDisplay, //!< For internal using
+    SmokeObjParams = 0,
+    SmokeObjDisplay,
+    //!< For internal using
 };
 
 /*!
  * \details Values of the \link eSmokeObjParamsBlocks::SmokeObjParams \endlink parameters block.
  */
 enum eSmokeParams : ParamID {
-	PSmokeObjAttr_SmokeType = 25, //<! int 
-	PSmokeObjAttr_Size = 50, //!< Float
+    PSmokeObjAttr_SmokeType = 25,
+    //<! int 
+    PSmokeObjAttr_Size = 50,
+    //!< Float
 };
 
 /**************************************************************************************************/

@@ -37,20 +37,20 @@
 /**************************************************************************************************/
 
 void Mesh2Cpp::saveSelected(const std::string & name, const std::string & folderPath) {
-	Interface * ip = GetCOREInterface();
-	if (ip->GetSelNodeCount() == 0) {
-		return;
-	}
-	INode * node = ip->GetSelNode(0);
-	Mesh * m = ConverterMesh::extractMesh(node);
-	if (m) {
-		save(*m, name, folderPath);
-	}
+    Interface * ip = GetCOREInterface();
+    if (ip->GetSelNodeCount() == 0) {
+        return;
+    }
+    INode * node = ip->GetSelNode(0);
+    Mesh * m = ConverterMesh::extractMesh(node);
+    if (m) {
+        save(*m, name, folderPath);
+    }
 }
 
 void Mesh2Cpp::save(const Mesh & mesh, const std::string & name, const std::string & folderPath) {
-	writeHeader(name, sts::MbStrUtils::joinStr(folderPath, "/", name, "-gen.h"));
-	writeCpp(mesh, name, sts::MbStrUtils::joinStr(folderPath, "/", name, "-gen.cpp"));
+    writeHeader(name, sts::MbStrUtils::joinStr(folderPath, "/", name, "-gen.h"));
+    writeCpp(mesh, name, sts::MbStrUtils::joinStr(folderPath, "/", name, "-gen.cpp"));
 }
 
 /**************************************************************************************************/
@@ -58,69 +58,69 @@ void Mesh2Cpp::save(const Mesh & mesh, const std::string & name, const std::stri
 /**************************************************************************************************/
 
 void Mesh2Cpp::writeHeader(const std::string & name, const std::string & filePath) {
-	std::ofstream out(filePath);
-	if (out) {
-		out << std::fixed;
-		out.precision(6);
+    std::ofstream out(filePath);
+    if (out) {
+        out << std::fixed;
+        out.precision(6);
 
-		out << "#pragma once" << std::endl;
-		out << std::endl;
-		out << "/* Auto-generated file */" << std::endl;
-		out << std::endl;
-		out << "#pragma warning(push, 0)" << std::endl;
-		out << "#include <max.h>" << std::endl;
-		out << "#pragma warning(pop)" << std::endl;
-		out << std::endl;
-		out << "class " << name << " { " << std::endl;
-		out << "public:" << std::endl;
-		out << std::endl;
-		out << "    static void fillMesh(Mesh & outMesh, const float scale);" << std::endl;
-		out << std::endl;
-		out << "};" << std::endl;
-	}
-	out.close();
+        out << "#pragma once" << std::endl;
+        out << std::endl;
+        out << "/* Auto-generated file */" << std::endl;
+        out << std::endl;
+        out << "#pragma warning(push, 0)" << std::endl;
+        out << "#include <max.h>" << std::endl;
+        out << "#pragma warning(pop)" << std::endl;
+        out << std::endl;
+        out << "class " << name << " { " << std::endl;
+        out << "public:" << std::endl;
+        out << std::endl;
+        out << "    static void fillMesh(Mesh & outMesh, const float scale);" << std::endl;
+        out << std::endl;
+        out << "};" << std::endl;
+    }
+    out.close();
 }
 
 void Mesh2Cpp::writeCpp(const Mesh & mesh, const std::string & name, const std::string & filePath) {
-	std::ofstream out(filePath);
-	if (out) {
-		out << std::fixed;
-		out.precision(6);
+    std::ofstream out(filePath);
+    if (out) {
+        out << std::fixed;
+        out.precision(6);
 
-		out << "#include \"" << name << "-gen.h\"" << std::endl;
-		out << std::endl;
-		out << "/* Auto-generated file */" << std::endl;
-		out << std::endl;
-		out << "void " << name << "::fillMesh(Mesh & outMesh, const float scale) {" << std::endl;
-		out << std::endl;
-		out << "\toutMesh.setNumVerts(" << mesh.numVerts << ");" << std::endl;
-		out << "\toutMesh.setNumFaces(" << mesh.numFaces << ");" << std::endl;
-		out << std::endl;
+        out << "#include \"" << name << "-gen.h\"" << std::endl;
+        out << std::endl;
+        out << "/* Auto-generated file */" << std::endl;
+        out << std::endl;
+        out << "void " << name << "::fillMesh(Mesh & outMesh, const float scale) {" << std::endl;
+        out << std::endl;
+        out << "\toutMesh.setNumVerts(" << mesh.numVerts << ");" << std::endl;
+        out << "\toutMesh.setNumFaces(" << mesh.numFaces << ");" << std::endl;
+        out << std::endl;
 
-		for (size_t i = 0; i < mesh.numVerts; ++i) {
-			out << "\toutMesh.verts[" << i << "].x = scale * " << mesh.verts[i].x << "f;" << std::endl;
-			out << "\toutMesh.verts[" << i << "].y = scale * " << mesh.verts[i].y << "f;" << std::endl;
-			out << "\toutMesh.verts[" << i << "].z = scale * " << mesh.verts[i].z << "f;" << std::endl;
-		}
+        for (size_t i = 0; i < mesh.numVerts; ++i) {
+            out << "\toutMesh.verts[" << i << "].x = scale * " << mesh.verts[i].x << "f;" << std::endl;
+            out << "\toutMesh.verts[" << i << "].y = scale * " << mesh.verts[i].y << "f;" << std::endl;
+            out << "\toutMesh.verts[" << i << "].z = scale * " << mesh.verts[i].z << "f;" << std::endl;
+        }
 
-		for (size_t i = 0; i < mesh.numFaces; ++i) {
-			out << "\toutMesh.faces[" << i << "].setVerts("
-					<< mesh.faces[i].getVert(0) << ", "
-					<< mesh.faces[i].getVert(1) << ", "
-					<< mesh.faces[i].getVert(2) << ");"
-					<< std::endl;
+        for (size_t i = 0; i < mesh.numFaces; ++i) {
+            out << "\toutMesh.faces[" << i << "].setVerts("
+                    << mesh.faces[i].getVert(0) << ", "
+                    << mesh.faces[i].getVert(1) << ", "
+                    << mesh.faces[i].getVert(2) << ");"
+                    << std::endl;
 
-			out << "\toutMesh.faces[" << i << "].setEdgeVisFlags("
-					<< mesh.faces[i].getEdgeVis(0) << ", "
-					<< mesh.faces[i].getEdgeVis(1) << ", "
-					<< mesh.faces[i].getEdgeVis(2) << ");"
-					<< std::endl;
-		}
-		out << std::endl;
-		out << "\toutMesh.InvalidateGeomCache();" << std::endl;
-		out << "}" << std::endl;
-	}
-	out.close();
+            out << "\toutMesh.faces[" << i << "].setEdgeVisFlags("
+                    << mesh.faces[i].getEdgeVis(0) << ", "
+                    << mesh.faces[i].getEdgeVis(1) << ", "
+                    << mesh.faces[i].getEdgeVis(2) << ");"
+                    << std::endl;
+        }
+        out << std::endl;
+        out << "\toutMesh.InvalidateGeomCache();" << std::endl;
+        out << "}" << std::endl;
+    }
+    out.close();
 }
 
 /**************************************************************************************************/

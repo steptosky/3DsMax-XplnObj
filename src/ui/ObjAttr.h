@@ -29,125 +29,125 @@
 
 #pragma once
 
+#include <xpln/obj/attributes/AttrSet.h>
 #include "ui/controls/RollupBase.h"
 #include "ui/controls/CheckBox.h"
 #include "ui/controls/Base.h"
-#include <xpln/obj/attributes/AttrSet.h>
 #include "ui/controls/Combo.h"
 #include "models/MdObjAttr.h"
 
 namespace ui {
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class ObjAttr : public maxwin::RollupBase {
-	public:
+class ObjAttr : public maxwin::RollupBase {
+public:
 
-		void create(IRollupWindow * rollWin);
-		void destroy() override;
+    void create(IRollupWindow * rollWin);
+    void destroy() override;
 
-		void show(MdObjAttr * inOutData);
+    void show(MdObjAttr * inOutData);
 
-		ObjAttr();
-		virtual ~ObjAttr();
+    ObjAttr();
+    virtual ~ObjAttr();
 
-	private:
+private:
 
-		void create() override;
+    void create() override;
 
-		IRollupWindow * getInterface() override {
-			return mIp;
-		}
+    IRollupWindow * getInterface() override {
+        return mIp;
+    }
 
-		INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
-		void initWindow(HWND hWnd) override;
-		void destroyWindow(HWND hWnd) override;
+    INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+    void initWindow(HWND hWnd) override;
+    void destroyWindow(HWND hWnd) override;
 
-		void toWindow();
+    void toWindow();
 
-		xobj::AttrSet mData;
-		MdObjAttr * mMdData = nullptr;
-		IRollupWindow * mIp = nullptr;
+    xobj::AttrSet mData;
+    MdObjAttr * mMdData = nullptr;
+    IRollupWindow * mIp = nullptr;
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		win::CheckBox cChkSunLight;
-		win::CheckBox cChkTwoSided;
-		win::CheckBox cChkDraped;
-		win::CheckBox cChkShadow;
-		win::CheckBox cChkSolidCamera;
-		win::CheckBox cChkDraw;
+    win::CheckBox cChkSunLight;
+    win::CheckBox cChkTwoSided;
+    win::CheckBox cChkDraped;
+    win::CheckBox cChkShadow;
+    win::CheckBox cChkSolidCamera;
+    win::CheckBox cChkDraw;
 
-		void enableBool(bool state);
-		void dropFromUiBool();
-		void loadToUiBool();
+    void enableBool(bool state);
+    void dropFromUiBool();
+    void loadToUiBool();
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		win::CheckBox cChkShiny;
-		ISpinnerControl * cSpnShinyRatio = nullptr;
+    win::CheckBox cChkShiny;
+    ISpinnerControl * cSpnShinyRatio = nullptr;
 
-		void enableShiny(bool state);
-		void dropFromUiShiny();
-		void loadToUiShiny();
+    void enableShiny(bool state);
+    void dropFromUiShiny();
+    void loadToUiShiny();
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		win::CheckBox cChkCockpit;
-		win::Combo cCmbCockpit;
+    win::CheckBox cChkCockpit;
+    win::Combo cCmbCockpit;
 
-		void enableCockpit(bool state);
-		void dropFromUiCockpit();
-		void loadToUiCockpit();
+    void enableCockpit(bool state);
+    void dropFromUiCockpit();
+    void loadToUiCockpit();
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		win::CheckBox cChkHard;
-		win::CheckBox cChkHardDeck;
-		win::Combo cCmbHard;
+    win::CheckBox cChkHard;
+    win::CheckBox cChkHardDeck;
+    win::Combo cCmbHard;
 
-		void enableHard(bool state);
-		void dropFromUiHard();
-		void loadToUiHard();
+    void enableHard(bool state);
+    void dropFromUiHard();
+    void loadToUiHard();
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		win::Combo cCmbBlend;
-		ISpinnerControl * cSpnBlendRatio = nullptr;
+    win::Combo cCmbBlend;
+    ISpinnerControl * cSpnBlendRatio = nullptr;
 
-		void enableBlend(bool state);
-		void dropFromUiBlend();
-		void loadToUiBlend();
+    void enableBlend(bool state);
+    void dropFromUiBlend();
+    void loadToUiBlend();
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		win::CheckBox cChkPolyOffset;
-		ISpinnerControl * cSpnPolyOstDist = nullptr;
+    win::CheckBox cChkPolyOffset;
+    ISpinnerControl * cSpnPolyOstDist = nullptr;
 
-		void enablePolyOffset(bool state);
-		void dropFromUiPolyOffset();
-		void loadToUiPolyOffset();
+    void enablePolyOffset(bool state);
+    void dropFromUiPolyOffset();
+    void loadToUiPolyOffset();
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		win::CheckBox cChkLightLevel;
-		ICustEdit * cEdtLightLevelDrf = nullptr;
-		win::Base cBtnLightLevelDrf;
-		ISpinnerControl * cSpnLightLevelVal1 = nullptr;
-		ISpinnerControl * cSpnLightLevelVal2 = nullptr;
+    win::CheckBox cChkLightLevel;
+    ICustEdit * cEdtLightLevelDrf = nullptr;
+    win::Base cBtnLightLevelDrf;
+    ISpinnerControl * cSpnLightLevelVal1 = nullptr;
+    ISpinnerControl * cSpnLightLevelVal2 = nullptr;
 
-		void enableLightLevel(bool state);
-		void dropFromUiLightLevel();
-		void loadToUiLightLevel();
+    void enableLightLevel(bool state);
+    void dropFromUiLightLevel();
+    void loadToUiLightLevel();
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	};
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
 }

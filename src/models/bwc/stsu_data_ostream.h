@@ -29,115 +29,121 @@
 
 #pragma once
 
-#include <iostream>
-#include <stdint.h>
-#include <cstring>
+#include <iosfwd>
+#include <string>
+#include <cstdint>
 
-namespace sts_bwc { // backward compatibility
+namespace sts_bwc {
+// backward compatibility
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	/*!
-	\details Data Output Stream class provide a stream operation with data which interpreted like bytes (not characters, e.t.c.).
-	         Used std::iostream like internal byte buffer.
-	*/
-	class DataStreamO {
-	protected:
+/*!
+\details Data Output Stream class provide a stream operation with data which interpreted like bytes (not characters, e.t.c.).
+         Used std::iostream like internal byte buffer.
+*/
+class DataStreamO {
+protected:
 
-		explicit DataStreamO();
-		void setStream(std::ostream * inStream) { mStream = inStream; }
+    explicit DataStreamO();
+    void setStream(std::ostream * inStream) { mStream = inStream; }
 
-	public:
+public:
 
-		/*!
-		\details Constructor
-		\param [in] inStream reference to a std::ostream.
-		*/
-		explicit DataStreamO(std::ostream & inStream);
+    /*!
+    \details Constructor
+    \param [in] inStream reference to a std::ostream.
+    */
+    explicit DataStreamO(std::ostream & inStream);
 
-		/*! \details Destructor */
-		virtual ~DataStreamO();
+    /*! \details Destructor */
+    virtual ~DataStreamO();
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		/*! \details Gives reference to internal byte buffer. */
-		std::ostream & getStdOStream() { return *mStream; }
+    /*! \details Gives reference to internal byte buffer. */
+    std::ostream & getStdOStream() { return *mStream; }
 
-		/*! \details  Gives const reference to internal byte buffer.*/
-		const std::ostream & getStdOStream() const { return *mStream; }
+    /*! \details  Gives const reference to internal byte buffer.*/
+    const std::ostream & getStdOStream() const { return *mStream; }
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		/*! \details Error codes */
-		enum class eErrors {
-			ok = 0,//!< No errors
-			readError,//!< Error during read operation
-			readZerroBytes,//!< Asked to read zero bytes - it's not correct -> error
-			writeError,//!< Error during write operation
-			writeZerroBytes,//!< Asked to write zero bytes - it's not correct -> error
-			seekError//!< Seek operation error
-		};
+    /*! \details Error codes */
+    enum class eErrors {
+        ok = 0,
+        //!< No errors
+        readError,
+        //!< Error during read operation
+        readZerroBytes,
+        //!< Asked to read zero bytes - it's not correct -> error
+        writeError,
+        //!< Error during write operation
+        writeZerroBytes,
+        //!< Asked to write zero bytes - it's not correct -> error
+        seekError //!< Seek operation error
+    };
 
-		/*! \details Gives last error */
-		const eErrors & getOutputLastError() const { return mError; }
+    /*! \details Gives last error */
+    const eErrors & getOutputLastError() const { return mError; }
 
-		/*! \details Reset errors */
-		void resetOutputErrors() { mError = eErrors::ok; }
+    /*! \details Reset errors */
+    void resetOutputErrors() { mError = eErrors::ok; }
 
-		//-------------------------------------------------------------------------
-		/* Writes operators
-		*/
-		DataStreamO & operator<<(char inVal);
-		DataStreamO & operator<<(int8_t inVal);
-		DataStreamO & operator<<(uint8_t inVal);
-		DataStreamO & operator<<(int16_t inVal);
-		DataStreamO & operator<<(uint16_t inVal);
-		DataStreamO & operator<<(int32_t inVal);
-		DataStreamO & operator<<(uint32_t inVal);
-		DataStreamO & operator<<(int64_t inVal);
-		DataStreamO & operator<<(uint64_t inVal);
+    //-------------------------------------------------------------------------
+    /* Writes operators
+    */
+    DataStreamO & operator<<(char inVal);
+    DataStreamO & operator<<(int8_t inVal);
+    DataStreamO & operator<<(uint8_t inVal);
+    DataStreamO & operator<<(int16_t inVal);
+    DataStreamO & operator<<(uint16_t inVal);
+    DataStreamO & operator<<(int32_t inVal);
+    DataStreamO & operator<<(uint32_t inVal);
+    DataStreamO & operator<<(int64_t inVal);
+    DataStreamO & operator<<(uint64_t inVal);
 
-		DataStreamO & operator<<(bool inVal);
-		DataStreamO & operator<<(float inVal);
-		DataStreamO & operator<<(double inVal);
+    DataStreamO & operator<<(bool inVal);
+    DataStreamO & operator<<(float inVal);
+    DataStreamO & operator<<(double inVal);
 
-		/*! \details Writes null-terminated character sequences */
-		DataStreamO & operator<<(const char * inVal);
+    /*! \details Writes null-terminated character sequences */
+    DataStreamO & operator<<(const char * inVal);
 
-		/*! \details  Writes null-terminated character sequences */
-		DataStreamO & operator<<(const wchar_t * inVal);
+    /*! \details  Writes null-terminated character sequences */
+    DataStreamO & operator<<(const wchar_t * inVal);
 
-		DataStreamO & operator<<(const std::string & inVal);
-		DataStreamO & operator<<(const std::wstring & inVal);
-		//DataStream &operator<<(std::streambuf &inVal);        
+    DataStreamO & operator<<(const std::string & inVal);
+    DataStreamO & operator<<(const std::wstring & inVal);
+    //DataStream &operator<<(std::streambuf &inVal);        
 
-		/*!
-		\details Writes raw bytes
-		\param [in] inVal Bytes for write.
-		\param [in] len number of bytes to write.
-		*/
-		DataStreamO & writeRawData(const char * inVal, uint64_t len);
+    /*!
+    \details Writes raw bytes
+    \param [in] inVal Bytes for write.
+    \param [in] len number of bytes to write.
+    */
+    DataStreamO & writeRawData(const char * inVal, uint64_t len);
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	private:
+private:
 
-		DataStreamO(const DataStreamO & inCopy)
-			: mStream(inCopy.mStream) {}
+    DataStreamO(const DataStreamO & inCopy)
+        : mStream(inCopy.mStream) {}
 
-		DataStreamO & operator =(const DataStreamO &) { return *this; }
+    DataStreamO & operator =(const DataStreamO &) { return *this; }
 
-		DataStreamO & writeBytes(const char * inVal, uint64_t len);
+    DataStreamO & writeBytes(const char * inVal, uint64_t len);
 
-		eErrors mError;
-		std::ostream * mStream;
+    eErrors mError;
+    std::ostream * mStream;
 
-	};
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-}// namespace sts
+} // namespace sts

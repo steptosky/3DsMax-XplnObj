@@ -41,46 +41,46 @@
 
 struct MdAnimVis {
 
-	MdAnimVis();
+    MdAnimVis();
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	typedef xobj::AnimVisibility::Key Key;
-	typedef xobj::AnimVisibility::KeyList KeyList;
+    typedef xobj::AnimVisibility::Key Key;
+    typedef xobj::AnimVisibility::KeyList KeyList;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void reset();
-	static void cloneData(INode * from, INode * to);
+    void reset();
+    static void cloneData(INode * from, INode * to);
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	void saveToNode() const { saveToNode(mNode); }
-	bool loadFromNode() { return loadFromNode(mNode); }
-	//-------------------------------------------------------------------------
+    void saveToNode() const { saveToNode(mNode); }
+    bool loadFromNode() { return loadFromNode(mNode); }
+    //-------------------------------------------------------------------------
 
-	bool hasLink() const { return mNode != nullptr; }
-	void clearLink();
+    bool hasLink() const { return mNode != nullptr; }
+    void clearLink();
 
-	bool linkNode(INode * node, bool loadData = true);
-	const INode * linkedNode() const { return mNode; }
-	INode * linkedNode() { return mNode; }
-	//-------------------------------------------------------------------------
+    bool linkNode(INode * node, bool loadData = true);
+    const INode * linkedNode() const { return mNode; }
+    INode * linkedNode() { return mNode; }
+    //-------------------------------------------------------------------------
 
-	bool mEnable = false;
-	KeyList mKeyList;
-	static const unsigned char mVersion = 1;
+    bool mEnable = false;
+    KeyList mKeyList;
+    static const unsigned char mVersion = 1;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 private:
 
-	void saveToNode(INode * node) const;
-	bool loadFromNode(INode * node);
+    void saveToNode(INode * node) const;
+    bool loadFromNode(INode * node);
 
-	INode * mNode = nullptr;
+    INode * mNode = nullptr;
 
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 };
 

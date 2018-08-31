@@ -33,8 +33,8 @@
 #include <3dsmaxport.h>
 #pragma warning(pop)
 
-#include "ui/UiUtilities.h"
 #include <xpln/enums/ECursor.h>
+#include "ui/UiUtilities.h"
 #include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
@@ -42,170 +42,170 @@
 
 namespace ui {
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Static area *///////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Static area *///////////////////////////////////////////
+/**************************************************************************************************/
 
-	INT_PTR ManipAttrCmd::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		ManipAttrCmd * theDlg;
-		if (msg == WM_INITDIALOG) {
-			theDlg = reinterpret_cast<ManipAttrCmd*>(lParam);
-			DLSetWindowLongPtr(hWnd, lParam);
-			theDlg->initWindow(hWnd);
-		}
-		else if (msg == WM_DESTROY) {
-			theDlg = DLGetWindowLongPtr<ManipAttrCmd*>(hWnd);
-			theDlg->destroyWindow(hWnd);
-		}
-		else {
-			theDlg = DLGetWindowLongPtr<ManipAttrCmd *>(hWnd);
-			if (!theDlg) {
-				return FALSE;
-			}
-		}
+INT_PTR ManipAttrCmd::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    ManipAttrCmd * theDlg;
+    if (msg == WM_INITDIALOG) {
+        theDlg = reinterpret_cast<ManipAttrCmd*>(lParam);
+        DLSetWindowLongPtr(hWnd, lParam);
+        theDlg->initWindow(hWnd);
+    }
+    else if (msg == WM_DESTROY) {
+        theDlg = DLGetWindowLongPtr<ManipAttrCmd*>(hWnd);
+        theDlg->destroyWindow(hWnd);
+    }
+    else {
+        theDlg = DLGetWindowLongPtr<ManipAttrCmd *>(hWnd);
+        if (!theDlg) {
+            return FALSE;
+        }
+    }
 
-		//--------------------------------------
+    //--------------------------------------
 
-		switch (msg) {
-			case WM_COMMAND: {
-				switch (LOWORD(wParam)) {
-					case BTN_COMMAND: {
-						Factory::showNotImplemented();
-						break;
-					}
-					case CMB_CURSOR: {
-						if (HIWORD(wParam) == CBN_SELCHANGE) {
-							theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
-							theDlg->save();
-						}
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			case WM_CUSTEDIT_ENTER: {
-				switch (LOWORD(wParam)) {
-					case EDIT_COMMAND: {
-						theDlg->mData.setCommand(sts::toMbString(UiUtilities::getText(theDlg->cEdtCommand)));
-						theDlg->save();
-						break;
-					}
-					case EDIT_TOOLTIP: {
-						theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
-						theDlg->save();
-						break;
-					}
-					default: break;
-				}
-				break;
-			}
-			default: break;
-		}
-		return 0;
-	}
+    switch (msg) {
+        case WM_COMMAND: {
+            switch (LOWORD(wParam)) {
+                case BTN_COMMAND: {
+                    Factory::showNotImplemented();
+                    break;
+                }
+                case CMB_CURSOR: {
+                    if (HIWORD(wParam) == CBN_SELCHANGE) {
+                        theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
+                        theDlg->save();
+                    }
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        case WM_CUSTEDIT_ENTER: {
+            switch (LOWORD(wParam)) {
+                case EDIT_COMMAND: {
+                    theDlg->mData.setCmd(sts::toMbString(UiUtilities::getText(theDlg->cEdtCommand)));
+                    theDlg->save();
+                    break;
+                }
+                case EDIT_TOOLTIP: {
+                    theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
+                    theDlg->save();
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        default: break;
+    }
+    return 0;
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	ManipAttrCmd::ManipAttrCmd(MdManip * modelData)
-		: mModelData(modelData) {
-		assert(mModelData);
-	}
+ManipAttrCmd::ManipAttrCmd(MdManip * modelData)
+    : mModelData(modelData) {
+    assert(mModelData);
+}
 
-	ManipAttrCmd::~ManipAttrCmd() {
-		ManipAttrCmd::destroy();
-	}
+ManipAttrCmd::~ManipAttrCmd() {
+    ManipAttrCmd::destroy();
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrCmd::create(HWND inParent) {
-		assert(inParent);
-		mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
-									MAKEINTRESOURCE(ROLL_MANIP_COMMAND),
-									inParent,
-									reinterpret_cast<DLGPROC>(panelProc),
-									reinterpret_cast<LPARAM>(this)));
-		assert(mHwnd);
-		if (mHwnd) {
-			toWindow();
-			mHwnd.show(true);
-		}
-		else {
-			LError << WinCode(GetLastError());
-		}
-	}
+void ManipAttrCmd::create(HWND inParent) {
+    assert(inParent);
+    mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
+                                  MAKEINTRESOURCE(ROLL_MANIP_COMMAND),
+                                  inParent,
+                                  reinterpret_cast<DLGPROC>(panelProc),
+                                  reinterpret_cast<LPARAM>(this)));
+    assert(mHwnd);
+    if (mHwnd) {
+        toWindow();
+        mHwnd.show(true);
+    }
+    else {
+        LError << WinCode(GetLastError());
+    }
+}
 
-	void ManipAttrCmd::destroy() {
-		if (mHwnd) {
-			BOOL res = DestroyWindow(mHwnd.hwnd());
-			if (!res) {
-				LError << WinCode(GetLastError());
-			}
-			mHwnd.release();
-		}
-	}
+void ManipAttrCmd::destroy() {
+    if (mHwnd) {
+        BOOL res = DestroyWindow(mHwnd.hwnd());
+        if (!res) {
+            LError << WinCode(GetLastError());
+        }
+        mHwnd.release();
+    }
+}
 
-	RECT ManipAttrCmd::rect() const {
-		RECT r{0,0,0,0};
-		if (mHwnd) {
-			r = mHwnd.rect();
-		}
-		return r;
-	}
+RECT ManipAttrCmd::rect() const {
+    RECT r{0, 0, 0, 0};
+    if (mHwnd) {
+        r = mHwnd.rect();
+    }
+    return r;
+}
 
-	void ManipAttrCmd::move(const POINT & point) {
-		if (mHwnd) {
-			mHwnd.move(point);
-		}
-	}
+void ManipAttrCmd::move(const POINT & point) {
+    if (mHwnd) {
+        mHwnd.move(point);
+    }
+}
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Functions */////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrCmd::setManip(const xobj::AttrManipBase & manip) {
-		if (manip.type() != mData.type()) {
-			LError << "Incorrect manipulator: " << manip.type().toString();
-			return;
-		}
-		mData = static_cast<const xobj::AttrManipCmd &>(manip);
-	}
+void ManipAttrCmd::setManip(const xobj::AttrManipBase & manip) {
+    if (manip.type() != mData.type()) {
+        LError << "Incorrect manipulator: " << manip.type().toString();
+        return;
+    }
+    mData = static_cast<const xobj::AttrManipCmd &>(manip);
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrCmd::initWindow(HWND hWnd) {
-		cBtnCommand.setup(hWnd, BTN_COMMAND);
-		cEdtCommand = GetICustEdit(GetDlgItem(hWnd, EDIT_COMMAND));
-		cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
-		cCmbCursor.setup(hWnd, CMB_CURSOR);
+void ManipAttrCmd::initWindow(HWND hWnd) {
+    cBtnCommand.setup(hWnd, BTN_COMMAND);
+    cEdtCommand = GetICustEdit(GetDlgItem(hWnd, EDIT_COMMAND));
+    cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
+    cCmbCursor.setup(hWnd, CMB_CURSOR);
 
-		for (auto & curr : xobj::ECursor::list()) {
-			cCmbCursor.addItem(sts::toString(curr.toUiString()));
-		}
-		cCmbCursor.setCurrSelected(0);
-	}
+    for (auto & curr : xobj::ECursor::list()) {
+        cCmbCursor.addItem(sts::toString(curr.toUiString()));
+    }
+    cCmbCursor.setCurrSelected(0);
+}
 
-	void ManipAttrCmd::destroyWindow(HWND /*hWnd*/) {
-		cBtnCommand.release();
-		cCmbCursor.release();
-		ReleaseICustEdit(cEdtCommand);
-		ReleaseICustEdit(cEdtToolType);
-	}
+void ManipAttrCmd::destroyWindow(HWND /*hWnd*/) {
+    cBtnCommand.release();
+    cCmbCursor.release();
+    ReleaseICustEdit(cEdtCommand);
+    ReleaseICustEdit(cEdtToolType);
+}
 
-	void ManipAttrCmd::toWindow() {
-		UiUtilities::setText(cEdtCommand, sts::toString(mData.command()));
-		UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
-		cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
-	}
+void ManipAttrCmd::toWindow() {
+    UiUtilities::setText(cEdtCommand, sts::toString(mData.cmd()));
+    UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
+    cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
+}
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
 }

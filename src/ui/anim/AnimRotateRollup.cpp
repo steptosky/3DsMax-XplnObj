@@ -29,95 +29,95 @@
 
 #include "AnimRotateRollup.h"
 #include "common/Logger.h"
-#include "Resource/resource.h"
+#include "resource/resource.h"
 #include "resource/ResHelper.h"
 
 namespace ui {
 
-	/**************************************************************************************************/
-	/////////////////////////////////////////* Static area *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+/////////////////////////////////////////* Static area *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	INT_PTR AnimRotateRollup::panelProc(HWND /*hWnd*/, UINT /*msg*/, WPARAM /*wParam*/, LPARAM /*lParam*/) {
-		return 0;
-	}
+INT_PTR AnimRotateRollup::panelProc(HWND /*hWnd*/, UINT /*msg*/, WPARAM /*wParam*/, LPARAM /*lParam*/) {
+    return 0;
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	AnimRotateRollup::AnimRotateRollup()
-		: RollupBase(ResHelper::hInstance) {}
+AnimRotateRollup::AnimRotateRollup()
+    : RollupBase(ResHelper::hInstance) {}
 
-	AnimRotateRollup::~AnimRotateRollup() {
-		AnimRotateRollup::destroy();
-	}
+AnimRotateRollup::~AnimRotateRollup() {
+    AnimRotateRollup::destroy();
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void AnimRotateRollup::create(IRollupWindow * rollWin) {
-		mIp = rollWin;
-		create();
-	}
+void AnimRotateRollup::create(IRollupWindow * rollWin) {
+    mIp = rollWin;
+    create();
+}
 
-	void AnimRotateRollup::create() {
-		createRollup(IDD_ROLL_ANIM_OBJ, _T("Animation Rotate"), this);
-		adjustSize();
-	}
+void AnimRotateRollup::create() {
+    createRollup(IDD_ROLL_ANIM_OBJ, _T("Animation Rotate"), this);
+    adjustSize();
+}
 
-	void AnimRotateRollup::destroy() {
-		if (this->hwnd() != nullptr) {
-			deleteRollup();
-		}
-	}
+void AnimRotateRollup::destroy() {
+    if (this->hwnd() != nullptr) {
+        deleteRollup();
+    }
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void AnimRotateRollup::initWindow(HWND hWnd) {
-		mXView = new AnimRotateAxisView(MdAnimRot::X);
-		mYView = new AnimRotateAxisView(MdAnimRot::Y);
-		mZView = new AnimRotateAxisView(MdAnimRot::Z);
-		if (!mXView->create(hWnd)) {
-			LError << "Can't create dialog for X roatation animation";
-		}
-		if (!mYView->create(hWnd)) {
-			LError << "Can't create dialog for Y roatation animation";
-		}
-		if (!mZView->create(hWnd)) {
-			LError << "Can't create dialog for Z roatation animation";
-		}
-	}
+void AnimRotateRollup::initWindow(HWND hWnd) {
+    mXView = new AnimRotateAxisView(MdAnimRot::X);
+    mYView = new AnimRotateAxisView(MdAnimRot::Y);
+    mZView = new AnimRotateAxisView(MdAnimRot::Z);
+    if (!mXView->create(hWnd)) {
+        LError << "Can't create dialog for X roatation animation";
+    }
+    if (!mYView->create(hWnd)) {
+        LError << "Can't create dialog for Y roatation animation";
+    }
+    if (!mZView->create(hWnd)) {
+        LError << "Can't create dialog for Z roatation animation";
+    }
+}
 
-	void AnimRotateRollup::destroyWindow(HWND /*hWnd*/) {
-		mXView->destroy();
-		mYView->destroy();
-		mZView->destroy();
-		delete mXView;
-		delete mYView;
-		delete mZView;
-	}
+void AnimRotateRollup::destroyWindow(HWND /*hWnd*/) {
+    mXView->destroy();
+    mYView->destroy();
+    mZView->destroy();
+    delete mXView;
+    delete mYView;
+    delete mZView;
+}
 
-	void AnimRotateRollup::adjustSize() {
-		RECT size = mXView->clientRect();
-		LONG height = (size.bottom - size.top) * 3;
+void AnimRotateRollup::adjustSize() {
+    RECT size = mXView->clientRect();
+    LONG height = (size.bottom - size.top) * 3;
 
-		size.top += size.bottom - size.top;
-		size.left = 0;
-		mYView->setWindowPos(size);
+    size.top += size.bottom - size.top;
+    size.left = 0;
+    mYView->setWindowPos(size);
 
-		size.top += size.top;
-		size.left = 0;
-		mZView->setWindowPos(size);
+    size.top += size.top;
+    size.left = 0;
+    mZView->setWindowPos(size);
 
-		IRollupPanel * panel = mIp->GetPanel(hwnd());
-		panel->SetDlgHeight(height);
-	}
+    IRollupPanel * panel = mIp->GetPanel(hwnd());
+    panel->SetDlgHeight(height);
+}
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

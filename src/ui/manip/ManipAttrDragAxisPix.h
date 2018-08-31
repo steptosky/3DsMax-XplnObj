@@ -29,73 +29,73 @@
 
 #pragma once
 
+#include <xpln/obj/manipulators/AttrManipDragAxisPix.h>
 #include "ManipInterface.h"
 #include "ui/controls/Combo.h"
 #include "ui/controls/Base.h"
 #include "models/MdManip.h"
-#include <xpln/obj/manipulators/AttrManipDragAxisPix.h>
 #include "ManipAttrWheel.h"
 
 namespace ui {
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-	class ManipAttrDragAxisPix : public ManipInterface {
-	public:
+class ManipAttrDragAxisPix : public ManipInterface {
+public:
 
-		explicit ManipAttrDragAxisPix(MdManip * modelData);
-		virtual ~ManipAttrDragAxisPix();
+    explicit ManipAttrDragAxisPix(MdManip * modelData);
+    virtual ~ManipAttrDragAxisPix();
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		void create(HWND inParent) override;
-		void destroy() override;
-		RECT rect() const override;
-		void move(const POINT & point) override;
+    void create(HWND inParent) override;
+    void destroy() override;
+    RECT rect() const override;
+    void move(const POINT & point) override;
 
-		void setManip(const xobj::AttrManipBase & manip) override;
+    void setManip(const xobj::AttrManipBase & manip) override;
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	private:
+private:
 
-		static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-		void initWindow(HWND hWnd);
-		void destroyWindow(HWND hWnd);
-		void calculateSize();
+    void initWindow(HWND hWnd);
+    void destroyWindow(HWND hWnd);
+    void calculateSize();
 
-		void toWindow();
+    void toWindow();
 
-		void save() const {
-			mModelData->saveToNode(mData);
-		}
+    void save() const {
+        mModelData->saveToNode(mData);
+    }
 
-		RECT mSize;
+    RECT mSize;
 
-		MdManip * mModelData;
-		xobj::AttrManipDragAxisPix mData;
-		ManipAttrWheel mWheel;
+    MdManip * mModelData;
+    xobj::AttrManipDragAxisPix mData;
+    ManipAttrWheel mWheel;
 
-		win::Base mHwnd;
+    win::Base mHwnd;
 
-		ISpinnerControl * mSpnDx = nullptr;
-		ISpinnerControl * mSpnStep = nullptr;
-		ISpinnerControl * mSpnExp = nullptr;
+    ISpinnerControl * mSpnDx = nullptr;
+    ISpinnerControl * mSpnStep = nullptr;
+    ISpinnerControl * mSpnExp = nullptr;
 
-		ISpinnerControl * mSpnVal1 = nullptr;
-		ISpinnerControl * mSpnVal2 = nullptr;
+    ISpinnerControl * mSpnVal1 = nullptr;
+    ISpinnerControl * mSpnVal2 = nullptr;
 
-		win::Base cBtnDataRef;
-		ICustEdit * cEdtDataRef = nullptr;
-		ICustEdit * cEdtToolType = nullptr;
-		win::Combo cCmbCursor;
-	};
+    win::Base cBtnDataRef;
+    ICustEdit * cEdtDataRef = nullptr;
+    ICustEdit * cEdtToolType = nullptr;
+    win::Combo cCmbCursor;
+};
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
 }

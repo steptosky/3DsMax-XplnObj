@@ -34,85 +34,85 @@
 
 namespace ui {
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Static area *///////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Static area *///////////////////////////////////////////
+/**************************************************************************************************/
 
-	INT_PTR ManipAttrNoop::panelProc(HWND /*hWnd*/, UINT /*msg*/, WPARAM /*wParam*/, LPARAM /*lParam*/) {
-		return 0;
-	}
+INT_PTR ManipAttrNoop::panelProc(HWND /*hWnd*/, UINT /*msg*/, WPARAM /*wParam*/, LPARAM /*lParam*/) {
+    return 0;
+}
 
-	/**************************************************************************************************/
-	////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
 
-	ManipAttrNoop::ManipAttrNoop(MdManip * modelData)
-		: mModelData(modelData) {
-		assert(mModelData);
-	}
+ManipAttrNoop::ManipAttrNoop(MdManip * modelData)
+    : mModelData(modelData) {
+    assert(mModelData);
+}
 
-	ManipAttrNoop::~ManipAttrNoop() {
-		ManipAttrNoop::destroy();
-	}
+ManipAttrNoop::~ManipAttrNoop() {
+    ManipAttrNoop::destroy();
+}
 
-	/**************************************************************************************************/
-	///////////////////////////////////////////* Functions *////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrNoop::create(HWND inParent) {
-		assert(inParent);
-		mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
-									MAKEINTRESOURCE(ROLL_MANIP_NOOP),
-									inParent,
-									reinterpret_cast<DLGPROC>(panelProc),
-									reinterpret_cast<LPARAM>(this)));
-		assert(mHwnd);
-		if (mHwnd) {
-			mHwnd.show(true);
-		}
-		else {
-			LError << WinCode(GetLastError());
-		}
-	}
+void ManipAttrNoop::create(HWND inParent) {
+    assert(inParent);
+    mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
+                                  MAKEINTRESOURCE(ROLL_MANIP_NOOP),
+                                  inParent,
+                                  reinterpret_cast<DLGPROC>(panelProc),
+                                  reinterpret_cast<LPARAM>(this)));
+    assert(mHwnd);
+    if (mHwnd) {
+        mHwnd.show(true);
+    }
+    else {
+        LError << WinCode(GetLastError());
+    }
+}
 
-	void ManipAttrNoop::destroy() {
-		if (mHwnd) {
-			BOOL res = DestroyWindow(mHwnd.hwnd());
-			if (!res) {
-				LError << WinCode(GetLastError());
-			}
-			mHwnd.release();
-		}
-	}
+void ManipAttrNoop::destroy() {
+    if (mHwnd) {
+        BOOL res = DestroyWindow(mHwnd.hwnd());
+        if (!res) {
+            LError << WinCode(GetLastError());
+        }
+        mHwnd.release();
+    }
+}
 
-	RECT ManipAttrNoop::rect() const {
-		RECT r{0,0,0,0};
-		if (mHwnd) {
-			r = mHwnd.rect();
-		}
-		return r;
-	}
+RECT ManipAttrNoop::rect() const {
+    RECT r{0, 0, 0, 0};
+    if (mHwnd) {
+        r = mHwnd.rect();
+    }
+    return r;
+}
 
-	void ManipAttrNoop::move(const POINT & point) {
-		if (mHwnd) {
-			mHwnd.move(point);
-		}
-	}
+void ManipAttrNoop::move(const POINT & point) {
+    if (mHwnd) {
+        mHwnd.move(point);
+    }
+}
 
-	/**************************************************************************************************/
-	//////////////////////////////////////////* Functions */////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-	void ManipAttrNoop::setManip(const xobj::AttrManipBase & manip) {
-		if (manip.type() != mData.type()) {
-			LError << "Incorrect manipulator: " << manip.type().toString();
-			return;
-		}
-		mData = static_cast<const xobj::AttrManipNoop &>(manip);
-	}
+void ManipAttrNoop::setManip(const xobj::AttrManipBase & manip) {
+    if (manip.type() != mData.type()) {
+        LError << "Incorrect manipulator: " << manip.type().toString();
+        return;
+    }
+    mData = static_cast<const xobj::AttrManipNoop &>(manip);
+}
 
-	/********************************************************************************************************/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/********************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
 }

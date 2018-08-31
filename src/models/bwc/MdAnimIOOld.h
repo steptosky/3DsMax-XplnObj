@@ -37,44 +37,45 @@
 #include "models/MdAnimTrans.h"
 #include "models/MdAnimVis.h"
 
-namespace bcw { // backward compatibility
+namespace bcw {
+// backward compatibility
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-	/*!
-	 * \details This class is for backward compatibility.
-	 *          It loads the animation data from the previous version.
-	 */
-	class MdAnimIoOld {
+/*!
+ * \details This class is for backward compatibility.
+ *          It loads the animation data from the previous version.
+ */
+class MdAnimIoOld {
 
-		MdAnimIoOld() = default;
-		~MdAnimIoOld() = default;
+    MdAnimIoOld() = default;
+    ~MdAnimIoOld() = default;
 
-	public:
+public:
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		static bool loadRotateFromNode(INode * inNode, AppDataChunk * data, MdAnimRot & outAnimRot);
-		static bool loadTransFromNode(INode * inNode, AppDataChunk * data, MdAnimTrans & outAnimRot);
-		static bool loadVisibilityFromNode(INode * inNode, AppDataChunk * data, MdAnimVis & outAnimVis);
+    static bool loadRotateFromNode(INode * inNode, AppDataChunk * data, MdAnimRot & outAnimRot);
+    static bool loadTransFromNode(INode * inNode, AppDataChunk * data, MdAnimTrans & outAnimRot);
+    static bool loadVisibilityFromNode(INode * inNode, AppDataChunk * data, MdAnimVis & outAnimVis);
 
-		static void removeRotateFromNode(INode * node);
-		static void removeAnimTransFromNode(INode * node);
-		static void removeVisibilityFromNode(INode * node);
+    static void removeRotateFromNode(INode * node);
+    static void removeAnimTransFromNode(INode * node);
+    static void removeVisibilityFromNode(INode * node);
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-		static AppDataChunk * dataRotate(INode * node);
-		static AppDataChunk * dataTrans(INode * node);
-		static AppDataChunk * dataVisibility(INode * node);
+    static AppDataChunk * dataRotate(INode * node);
+    static AppDataChunk * dataTrans(INode * node);
+    static AppDataChunk * dataVisibility(INode * node);
 
-		//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
-	};
+};
 
-	/**************************************************************************************************/
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 }
