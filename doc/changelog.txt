@@ -1,9 +1,15 @@
 
 The 3DsMax X-Plane Obj Exporter/Importer change-log.
 ===============================================================================
-Next
+2.3.1 (31.08.2018)
 
+- Updated: Some manipulators UI text to be shorter.
+- Updated: Limits for values of hide/show animation. 10 000 -> 1 000 000.
 - Fixed: LIGHT_SPILL_CUSTOM direction export.
+- Fixed: Signature printing.
+- Fixed: Printing incorrect attribute name for the
+			`ATTR_manip_command_switch_up_down` 
+			`ATTR_manip_command_switch_left_right`.
 
 ===============================================================================
 2.3.0 (05.10.2017)
