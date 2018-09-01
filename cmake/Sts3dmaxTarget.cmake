@@ -140,6 +140,7 @@ function(SETUP_MAX_TERGET)
 
             QT5_WRAP_UI(QT_GEN_HDRS ${CM_QT_UI_FILES})
             QT5_ADD_RESOURCES(QT_GEN_RES ${CM_QT_RES_FILES})
+            add_definitions(-DQT_IS_ENABLED)
         endif()
 
         #--------------------------------------------------------------------------#
