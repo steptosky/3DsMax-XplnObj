@@ -40,7 +40,7 @@ namespace ui {
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
-int ToolFrame::ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) {
+int ToolFrame::ProcessMessage(const UINT message, const WPARAM wParam, const LPARAM lParam) {
     switch (message) {
         case WM_DESTROY: {
             saveConfig();
@@ -66,14 +66,13 @@ int ToolFrame::ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) {
             break;
         }
         case WM_SIZING: {
-            RECT * rect = reinterpret_cast<RECT*>(lParam);
-            RECT dockSize = mMainDockUI->getSize(true);
+            auto * rect = reinterpret_cast<RECT*>(lParam);
             rect->right = rect->left + mClientWidth + mBorderPx * 2;
             mResizing = true;
             return TRUE;
         }
         case CUI_POSDATA_MSG: {
-            CUIPosData ** cpd = (CUIPosData **)lParam;
+            auto ** cpd = reinterpret_cast<CUIPosData **>(lParam);
             cpd[0] = getSize();
             return TRUE;
         }
@@ -108,8 +107,6 @@ ToolFrame::ToolFrame() {
     loadConfig();
 }
 
-ToolFrame::~ToolFrame() {}
-
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
@@ -131,7 +128,6 @@ void ToolFrame::create() {
     RECT dockSize = mMainDockUI->getSize(true);
     mClientHeight = dockSize.bottom;
     mClientWidth = dockSize.right;
-    //frame->SetContentHandle(mMainDockUI->hwnd());
 
     if (mCurrFramePos == CUI_FLOATING) {
         dockSize.right = dockSize.right + mBorderPx * 2;
@@ -174,7 +170,6 @@ int ToolFrame::GetHeight(int /*sizeType*/, int /*orient*/) {
 		// client size
 		RECT size;
 		GetClientRect(GetCOREInterface()->GetMAXHWnd(), &size);
-		//size.right = size.right - size.left;
 		mClientHeight = size.bottom - size.top;
 
 		// minus tool bars
@@ -203,18 +198,9 @@ int ToolFrame::GetHeight(int /*sizeType*/, int /*orient*/) {
 					}
 				}
 			}
-
-		//         win::Base base;
-    //         base.setup(f->GetHwnd());
-    //         std::cout << f->GetPosRank() << " " << f->GetPosSubrank() << " Name: " << sts::toMbString(base.text()).c_str();
-    //         RECT s = base.size();
-		//         std::cout << " size: " << s.right - s.left << " " << s.bottom - s.top << std::endl;
 		}
 
-		mClientHeight = mClientHeight - currShift - 60/* buttom line 50*/;
-
-		//    std::cout << mClientHeight << std::endl;
-
+		mClientHeight = mClientHeight - currShift - 60;
 		mMainDockUI->setSize(0, mClientHeight);
 		return mClientHeight;
 #endif

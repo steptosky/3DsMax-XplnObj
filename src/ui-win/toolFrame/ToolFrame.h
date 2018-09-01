@@ -46,17 +46,10 @@ namespace ui {
 class MainDock;
 
 class ToolFrame : public CUIFrameMsgHandler, public CUIPosData, public sts::Single<ToolFrame> {
-
-    ToolFrame(const ToolFrame &) {}
-
-    ToolFrame & operator =(const ToolFrame &) {
-        return *this;
-    }
-
 public:
 
     ToolFrame();
-    virtual ~ToolFrame();
+    virtual ~ToolFrame() = default;
 
     void create();
 
