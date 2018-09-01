@@ -115,10 +115,14 @@ function(SETUP_MAX_TERGET)
         groupFiles("${CM_FILES}")
         
         if (ARGS_QT)
-            file(GLOB_RECURSE CM_QT_UI_FILES  "*.ui")
+            file(GLOB_RECURSE CM_QT_UI_FILES 
+                "${CMAKE_SOURCE_DIR}/src/ui-gt/forms/*.ui"
+            )
             groupFiles("${CM_QT_UI_FILES}")
             
-            file(GLOB_RECURSE CM_QT_RES_FILES "*.qrc" )
+            file(GLOB_RECURSE CM_QT_RES_FILES 
+                "${CMAKE_SOURCE_DIR}/src/resource-qt/*.qrc" 
+            )
             groupFiles("${CM_QT_RES_FILES}")
         endif()
         
@@ -134,6 +138,8 @@ function(SETUP_MAX_TERGET)
         include_directories (${CMAKE_SOURCE_DIR}/src)
 
         if (ARGS_QT)
+            # If you add new qt dependencies then
+            # check the file "StsFixQtLibrariesType.cmake"
             find_package(Qt5Widgets)
             find_package(Qt5Core)
             find_package(Qt5Gui)
