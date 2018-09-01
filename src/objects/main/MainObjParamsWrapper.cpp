@@ -448,7 +448,7 @@ void MainObjParamsWrapper::setScale(bool inManual, float inValue) {
 
 std::string MainObjParamsWrapper::pathPrefix() {
 #if MAX_VERSION_MAJOR < 12
-	TCHAR * val = nullptr;
+    TCHAR * val = nullptr;
 #else
     const MCHAR * val = nullptr;
 #endif
@@ -466,7 +466,7 @@ std::string MainObjParamsWrapper::pathPrefix() {
 
 std::string MainObjParamsWrapper::texture() {
 #if MAX_VERSION_MAJOR < 12
-	TCHAR * val = nullptr;
+    TCHAR * val = nullptr;
 #else
     const MCHAR * val = nullptr;
 #endif
@@ -484,7 +484,7 @@ std::string MainObjParamsWrapper::texture() {
 
 std::string MainObjParamsWrapper::textureLit() {
 #if MAX_VERSION_MAJOR < 12
-	TCHAR * val = nullptr;
+    TCHAR * val = nullptr;
 #else
     const MCHAR * val = nullptr;
 #endif
@@ -502,7 +502,7 @@ std::string MainObjParamsWrapper::textureLit() {
 
 std::string MainObjParamsWrapper::textureNormal() {
 #if MAX_VERSION_MAJOR < 12
-	TCHAR * val = nullptr;
+    TCHAR * val = nullptr;
 #else
     const MCHAR * val = nullptr;
 #endif
@@ -524,7 +524,7 @@ void MainObjParamsWrapper::setPathPrefix(const std::string & inStr) {
     if (mPbAttr) {
         sts::Str str = sts::toString(inStr);
 #if MAX_VERSION_MAJOR < 12
-		TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
+        TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
 #else
         const MCHAR * strVal = str.c_str();
 #endif
@@ -542,7 +542,7 @@ void MainObjParamsWrapper::setTexture(const std::string & inStr) {
     if (mPbAttr) {
         sts::Str str = sts::toString(inStr);
 #if MAX_VERSION_MAJOR < 12
-		TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
+        TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
 #else
         const MCHAR * strVal = str.c_str();
 #endif
@@ -560,7 +560,7 @@ void MainObjParamsWrapper::setTextureLit(const std::string & inStr) {
     if (mPbAttr) {
         sts::Str str = sts::toString(inStr);
 #if MAX_VERSION_MAJOR < 12
-		TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
+        TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
 #else
         const MCHAR * strVal = str.c_str();
 #endif
@@ -578,7 +578,7 @@ void MainObjParamsWrapper::setTextureNormal(const std::string & inStr) {
     if (mPbAttr) {
         sts::Str str = sts::toString(inStr);
 #if MAX_VERSION_MAJOR < 12
-		TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
+        TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
 #else
         const MCHAR * strVal = str.c_str();
 #endif
@@ -758,7 +758,7 @@ xobj::AttrBlend MainObjParamsWrapper::blend() {
 
 xobj::AttrLayerGroup MainObjParamsWrapper::layerGroup() {
 #if MAX_VERSION_MAJOR < 12
-	TCHAR * layer = nullptr;
+    TCHAR * layer = nullptr;
 #else
     const MCHAR * layer = nullptr;
 #endif
@@ -785,7 +785,7 @@ xobj::AttrLayerGroup MainObjParamsWrapper::layerGroup() {
 
 xobj::AttrDrapedLayerGroup MainObjParamsWrapper::drapedLayerGroup() {
 #if MAX_VERSION_MAJOR < 12
-	TCHAR * layer = nullptr;
+    TCHAR * layer = nullptr;
 #else
     const MCHAR * layer = nullptr;
 #endif
@@ -1036,7 +1036,7 @@ void MainObjParamsWrapper::setLayerGroup(const xobj::AttrLayerGroup & inAttr) {
 
         sts::Str str = sts::toString(inAttr.layer().toString());
 #if MAX_VERSION_MAJOR < 12
-		TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
+        TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
 #else
         const MCHAR * strVal = str.c_str();
 #endif
@@ -1058,7 +1058,7 @@ void MainObjParamsWrapper::setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup 
 
         sts::Str str = sts::toString(inAttr.layer().toString());
 #if MAX_VERSION_MAJOR < 12
-		TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
+        TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
 #else
         const MCHAR * strVal = str.c_str();
 #endif

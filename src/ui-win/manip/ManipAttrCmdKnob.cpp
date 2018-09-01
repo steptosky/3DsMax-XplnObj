@@ -41,189 +41,190 @@
 #include "ui-win/Factory.h"
 
 namespace ui {
+namespace win {
 
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    //////////////////////////////////////////* Static area *///////////////////////////////////////////
+    /**************************************************************************************************/
 
-INT_PTR ManipAttrCmdKnob::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    ManipAttrCmdKnob * theDlg;
-    if (msg == WM_INITDIALOG) {
-        theDlg = reinterpret_cast<ManipAttrCmdKnob*>(lParam);
-        DLSetWindowLongPtr(hWnd, lParam);
-        theDlg->initWindow(hWnd);
-    }
-    else if (msg == WM_DESTROY) {
-        theDlg = DLGetWindowLongPtr<ManipAttrCmdKnob*>(hWnd);
-        theDlg->destroyWindow(hWnd);
-    }
-    else {
-        theDlg = DLGetWindowLongPtr<ManipAttrCmdKnob *>(hWnd);
-        if (!theDlg) {
-            return FALSE;
+    INT_PTR ManipAttrCmdKnob::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+        ManipAttrCmdKnob * theDlg;
+        if (msg == WM_INITDIALOG) {
+            theDlg = reinterpret_cast<ManipAttrCmdKnob*>(lParam);
+            DLSetWindowLongPtr(hWnd, lParam);
+            theDlg->initWindow(hWnd);
         }
-    }
+        else if (msg == WM_DESTROY) {
+            theDlg = DLGetWindowLongPtr<ManipAttrCmdKnob*>(hWnd);
+            theDlg->destroyWindow(hWnd);
+        }
+        else {
+            theDlg = DLGetWindowLongPtr<ManipAttrCmdKnob *>(hWnd);
+            if (!theDlg) {
+                return FALSE;
+            }
+        }
 
-    //--------------------------------------
+        //--------------------------------------
 
-    switch (msg) {
-        case WM_COMMAND: {
-            switch (LOWORD(wParam)) {
-                case BTN_COMMAND2: {
-                    Factory::showNotImplemented();
-                    break;
-                }
-                case BTN_COMMAND: {
-                    Factory::showNotImplemented();
-                    break;
-                }
-                case CMB_CURSOR: {
-                    if (HIWORD(wParam) == CBN_SELCHANGE) {
-                        theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
-                        theDlg->save();
+        switch (msg) {
+            case WM_COMMAND: {
+                switch (LOWORD(wParam)) {
+                    case BTN_COMMAND2: {
+                        Factory::showNotImplemented();
+                        break;
                     }
-                    break;
+                    case BTN_COMMAND: {
+                        Factory::showNotImplemented();
+                        break;
+                    }
+                    case CMB_CURSOR: {
+                        if (HIWORD(wParam) == CBN_SELCHANGE) {
+                            theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
+                            theDlg->save();
+                        }
+                        break;
+                    }
+                    default: break;
                 }
-                default: break;
+                break;
             }
-            break;
-        }
-        case WM_CUSTEDIT_ENTER: {
-            switch (LOWORD(wParam)) {
-                case EDIT_COMMAND: {
-                    theDlg->mData.setCmdPositive(sts::toMbString(UiUtilities::getText(theDlg->cEdtCmdPos)));
-                    theDlg->save();
-                    break;
+            case WM_CUSTEDIT_ENTER: {
+                switch (LOWORD(wParam)) {
+                    case EDIT_COMMAND: {
+                        theDlg->mData.setCmdPositive(sts::toMbString(UiUtilities::getText(theDlg->cEdtCmdPos)));
+                        theDlg->save();
+                        break;
+                    }
+                    case EDIT_COMMAND2: {
+                        theDlg->mData.setCmdNegative(sts::toMbString(UiUtilities::getText(theDlg->cEdtCmdNeg)));
+                        theDlg->save();
+                        break;
+                    }
+                    case EDIT_TOOLTIP: {
+                        theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
+                        theDlg->save();
+                        break;
+                    }
+                    default: break;
                 }
-                case EDIT_COMMAND2: {
-                    theDlg->mData.setCmdNegative(sts::toMbString(UiUtilities::getText(theDlg->cEdtCmdNeg)));
-                    theDlg->save();
-                    break;
-                }
-                case EDIT_TOOLTIP: {
-                    theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
-                    theDlg->save();
-                    break;
-                }
-                default: break;
+                break;
             }
-            break;
+            default: break;
         }
-        default: break;
+        return 0;
     }
-    return 0;
-}
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+    /**************************************************************************************************/
 
-ManipAttrCmdKnob::ManipAttrCmdKnob(MdManip * modelData)
-    : mModelData(modelData) {
-    assert(mModelData);
-}
-
-ManipAttrCmdKnob::~ManipAttrCmdKnob() {
-    ManipAttrCmdKnob::destroy();
-}
-
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
-
-void ManipAttrCmdKnob::create(HWND inParent) {
-    assert(inParent);
-    mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
-                                  MAKEINTRESOURCE(ROLL_MANIP_COMMAND_KNOB),
-                                  inParent,
-                                  reinterpret_cast<DLGPROC>(panelProc),
-                                  reinterpret_cast<LPARAM>(this)));
-    assert(mHwnd);
-    if (mHwnd) {
-        toWindow();
-        mHwnd.show(true);
+    ManipAttrCmdKnob::ManipAttrCmdKnob(MdManip * modelData)
+        : mModelData(modelData) {
+        assert(mModelData);
     }
-    else {
-        LError << WinCode(GetLastError());
-    }
-}
 
-void ManipAttrCmdKnob::destroy() {
-    if (mHwnd) {
-        BOOL res = DestroyWindow(mHwnd.hwnd());
-        if (!res) {
+    ManipAttrCmdKnob::~ManipAttrCmdKnob() {
+        ManipAttrCmdKnob::destroy();
+    }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void ManipAttrCmdKnob::create(HWND inParent) {
+        assert(inParent);
+        mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
+                                      MAKEINTRESOURCE(ROLL_MANIP_COMMAND_KNOB),
+                                      inParent,
+                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      reinterpret_cast<LPARAM>(this)));
+        assert(mHwnd);
+        if (mHwnd) {
+            toWindow();
+            mHwnd.show(true);
+        }
+        else {
             LError << WinCode(GetLastError());
         }
-        mHwnd.release();
     }
-}
 
-RECT ManipAttrCmdKnob::rect() const {
-    RECT r{0, 0, 0, 0};
-    if (mHwnd) {
-        r = mHwnd.rect();
+    void ManipAttrCmdKnob::destroy() {
+        if (mHwnd) {
+            BOOL res = DestroyWindow(mHwnd.hwnd());
+            if (!res) {
+                LError << WinCode(GetLastError());
+            }
+            mHwnd.release();
+        }
     }
-    return r;
-}
 
-void ManipAttrCmdKnob::move(const POINT & point) {
-    if (mHwnd) {
-        mHwnd.move(point);
+    RECT ManipAttrCmdKnob::rect() const {
+        RECT r{0, 0, 0, 0};
+        if (mHwnd) {
+            r = mHwnd.rect();
+        }
+        return r;
     }
-}
 
-/**************************************************************************************************/
-//////////////////////////////////////////* Functions */////////////////////////////////////////////
-/**************************************************************************************************/
-
-void ManipAttrCmdKnob::setManip(const xobj::AttrManipBase & manip) {
-    if (manip.type() != mData.type()) {
-        LError << "Incorrect manipulator: " << manip.type().toString();
-        return;
+    void ManipAttrCmdKnob::move(const POINT & point) {
+        if (mHwnd) {
+            mHwnd.move(point);
+        }
     }
-    mData = static_cast<const xobj::AttrManipCmdKnob &>(manip);
-}
 
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    //////////////////////////////////////////* Functions */////////////////////////////////////////////
+    /**************************************************************************************************/
 
-void ManipAttrCmdKnob::initWindow(HWND hWnd) {
-    mLblName.setup(hWnd, LBL_NAME);
-    mLblName.setText("Command axis knob");
-    cBtnCmdPos.setup(hWnd, BTN_COMMAND);
-    cBtnCmdNeg.setup(hWnd, BTN_COMMAND2);
-    cEdtCmdPos = GetICustEdit(GetDlgItem(hWnd, EDIT_COMMAND));
-    cEdtCmdNeg = GetICustEdit(GetDlgItem(hWnd, EDIT_COMMAND2));
-
-    cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
-    cCmbCursor.setup(hWnd, CMB_CURSOR);
-
-    for (auto & curr : xobj::ECursor::list()) {
-        cCmbCursor.addItem(sts::toString(curr.toUiString()));
+    void ManipAttrCmdKnob::setManip(const xobj::AttrManipBase & manip) {
+        if (manip.type() != mData.type()) {
+            LError << "Incorrect manipulator: " << manip.type().toString();
+            return;
+        }
+        mData = static_cast<const xobj::AttrManipCmdKnob &>(manip);
     }
-    cCmbCursor.setCurrSelected(0);
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void ManipAttrCmdKnob::initWindow(HWND hWnd) {
+        mLblName.setup(hWnd, LBL_NAME);
+        mLblName.setText("Command axis knob");
+        cBtnCmdPos.setup(hWnd, BTN_COMMAND);
+        cBtnCmdNeg.setup(hWnd, BTN_COMMAND2);
+        cEdtCmdPos = GetICustEdit(GetDlgItem(hWnd, EDIT_COMMAND));
+        cEdtCmdNeg = GetICustEdit(GetDlgItem(hWnd, EDIT_COMMAND2));
+
+        cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
+        cCmbCursor.setup(hWnd, CMB_CURSOR);
+
+        for (auto & curr : xobj::ECursor::list()) {
+            cCmbCursor.addItem(sts::toString(curr.toUiString()));
+        }
+        cCmbCursor.setCurrSelected(0);
+    }
+
+    void ManipAttrCmdKnob::destroyWindow(HWND /*hWnd*/) {
+        mLblName.release();
+        cBtnCmdNeg.release();
+        ReleaseICustEdit(cEdtCmdNeg);
+        cBtnCmdPos.release();
+        ReleaseICustEdit(cEdtCmdPos);
+        ReleaseICustEdit(cEdtToolType);
+        cCmbCursor.release();
+    }
+
+    void ManipAttrCmdKnob::toWindow() {
+        UiUtilities::setText(cEdtCmdNeg, sts::toString(mData.cmdNegative()));
+        UiUtilities::setText(cEdtCmdPos, sts::toString(mData.cmdPositive()));
+        UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
+        cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
+    }
+
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
 }
-
-void ManipAttrCmdKnob::destroyWindow(HWND /*hWnd*/) {
-    mLblName.release();
-    cBtnCmdNeg.release();
-    ReleaseICustEdit(cEdtCmdNeg);
-    cBtnCmdPos.release();
-    ReleaseICustEdit(cEdtCmdPos);
-    ReleaseICustEdit(cEdtToolType);
-    cCmbCursor.release();
-}
-
-void ManipAttrCmdKnob::toWindow() {
-    UiUtilities::setText(cEdtCmdNeg, sts::toString(mData.cmdNegative()));
-    UiUtilities::setText(cEdtCmdPos, sts::toString(mData.cmdPositive()));
-    UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
-    cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
-}
-
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
-
 }

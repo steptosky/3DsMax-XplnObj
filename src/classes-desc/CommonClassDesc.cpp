@@ -65,7 +65,7 @@ int CommonClassDesc::NumActionTables() { return 1; }
 
 ActionTable * CommonClassDesc::GetActionTable(int) {
     if (mActionTable == nullptr) {
-        mActionTable = new ui::MainMenuActions();
+        mActionTable = new ui::win::MainMenuActions();
     }
     return mActionTable;
 }

@@ -48,8 +48,8 @@ MainMenu::MainMenu(IView * view)
     mView->signalDonate = &MdLinks::openDonate;
     mView->signalUpdate = &MdLinks::openPluginBinary;
     mView->signalDoc = &MdLinks::openDocBinary;
-    mView->signalAbout = &ui::Factory::showAboutWindow;
-    mView->signalSettings = &ui::Factory::showSettingsWindow;
+    mView->signalAbout = &ui::win::Factory::showAboutWindow;
+    mView->signalSettings = &ui::win::Factory::showSettingsWindow;
 }
 
 /**************************************************************************************************/

@@ -61,7 +61,7 @@ public:
 
 private:
 
-    ui::DlgExport * mDlgMain = nullptr;
+    ui::win::DlgExport * mDlgMain = nullptr;
 
 };
 

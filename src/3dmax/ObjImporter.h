@@ -61,7 +61,7 @@ public:
 
 private:
 
-    ui::DlgImport * mDlgMain = nullptr;
+    ui::win::DlgImport * mDlgMain = nullptr;
 
 };
 

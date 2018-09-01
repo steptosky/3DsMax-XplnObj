@@ -33,46 +33,48 @@
 #include "AnimRotateAxisView.h"
 
 namespace ui {
+namespace win {
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
 
-class AnimRotateRollup : public maxwin::RollupBase {
-public:
+    class AnimRotateRollup : public max::win::RollupBase {
+    public:
 
-    void create(IRollupWindow * rollWin);
-    void destroy() override;
+        void create(IRollupWindow * rollWin);
+        void destroy() override;
 
-    AnimRotateRollup();
-    virtual ~AnimRotateRollup();
+        AnimRotateRollup();
+        virtual ~AnimRotateRollup();
 
-private:
+    private:
 
-    void create() override;
+        void create() override;
 
-    IRollupWindow * getInterface() override {
-        return mIp;
-    }
+        IRollupWindow * getInterface() override {
+            return mIp;
+        }
 
-    INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
-    void initWindow(HWND hWnd) override;
-    void destroyWindow(HWND hWnd) override;
+        INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+        void initWindow(HWND hWnd) override;
+        void destroyWindow(HWND hWnd) override;
 
-    IRollupWindow * mIp = nullptr;
+        IRollupWindow * mIp = nullptr;
 
-    //-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
 
-    void adjustSize();
-    //-------------------------------------------------------------------------
+        void adjustSize();
+        //-------------------------------------------------------------------------
 
-    AnimRotateAxisView * mXView = nullptr;
-    AnimRotateAxisView * mYView = nullptr;
-    AnimRotateAxisView * mZView = nullptr;
-    //-------------------------------------------------------------------------
-};
+        AnimRotateAxisView * mXView = nullptr;
+        AnimRotateAxisView * mYView = nullptr;
+        AnimRotateAxisView * mZView = nullptr;
+        //-------------------------------------------------------------------------
+    };
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
+}
 }

@@ -90,7 +90,7 @@ public:
 #if MAX_VERSION_MAJOR > 14
     const MCHAR * GetObjectName() override;
 #else
-	TCHAR * GetObjectName() override;
+    TCHAR * GetObjectName() override;
 #endif
 
     Class_ID ClassID() override;
@@ -116,8 +116,8 @@ public:
     RefResult NotifyRefChanged(const Interval & changeInt, RefTargetHandle hTarget,
                                PartID & partID, RefMessage message, BOOL propagate) override;
 #else
-	RefResult NotifyRefChanged(Interval changeInt, RefTargetHandle hTarget,
-								PartID & partID, RefMessage message) override;
+    RefResult NotifyRefChanged(Interval changeInt, RefTargetHandle hTarget,
+                               PartID & partID, RefMessage message) override;
 #endif
 
     //-------------------------------------------------------------------------

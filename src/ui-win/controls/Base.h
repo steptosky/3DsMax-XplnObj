@@ -35,185 +35,186 @@
 #include <cassert>
 #include "common/Logger.h"
 
+namespace ui {
 namespace win {
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**************************************************************************************************/
 
-class Base {
-public:
+    class Base {
+    public:
 
 #ifdef UNICODE
     typedef std::wstring String;
 #else
-		typedef std::string String;
+        typedef std::string String;
 #endif // UNICODE
 
-    //--------------------------------------------------
+        //--------------------------------------------------
 
-    Base();
-    explicit Base(HWND inHWnd);
-    Base(HWND inParent, int inControlID);
-    virtual ~Base();
+        Base();
+        explicit Base(HWND inHWnd);
+        Base(HWND inParent, int inControlID);
+        virtual ~Base();
 
-    //--------------------------------------------------
+        //--------------------------------------------------
 
-    operator bool() const { return mHwnd != nullptr; }
-    virtual bool setup(HWND inParent, int inControlID);
-    virtual void setup(HWND inHWnd);
-    virtual void release();
+        operator bool() const { return mHwnd != nullptr; }
+        virtual bool setup(HWND inParent, int inControlID);
+        virtual void setup(HWND inHWnd);
+        virtual void release();
 
-    //--------------------------------------------------
+        //--------------------------------------------------
 
-    HWND parent() {
-        assert(mHwnd);
-        return GetParent(mHwnd);
-    }
-
-    HWND parent() const {
-        assert(mHwnd);
-        return GetParent(mHwnd);
-    }
-
-    int controlId() const { return mControlID; }
-    HWND hwnd() { return mHwnd; }
-    HWND hwnd() const { return mHwnd; }
-
-    //--------------------------------------------------
-
-    void enable(bool state) {
-        assert(mHwnd);
-        EnableWindow(mHwnd, static_cast<int>(state));
-    }
-
-    void enable() {
-        enable(true);
-    }
-
-    void disable() {
-        enable(false);
-    }
-
-    //--------------------------------------------------
-
-    void setToolTip(const String & text, const uint32_t showTimeMilisec = 10000);
-
-    //--------------------------------------------------
-
-    RECT winRect() const {
-        assert(mHwnd);
-        RECT r{0, 0, 0, 0};
-        BOOL res = GetWindowRect(mHwnd, &r);
-        if (!res) {
-            LError << WinCode(GetLastError());
+        HWND parent() {
+            assert(mHwnd);
+            return GetParent(mHwnd);
         }
-        return r;
-    }
 
-    RECT clientRect() const {
-        assert(mHwnd);
-        RECT r{0, 0, 0, 0};
-        BOOL res = GetClientRect(mHwnd, &r);
-        if (!res) {
-            LError << WinCode(GetLastError());
+        HWND parent() const {
+            assert(mHwnd);
+            return GetParent(mHwnd);
         }
-        return r;
-    }
 
-    RECT rect() const {
-        assert(mHwnd);
-        RECT r = winRect();
-        MapWindowPoints(HWND_DESKTOP, parent(), reinterpret_cast<LPPOINT>(&r), 2);
-        return r;
-    }
+        int controlId() const { return mControlID; }
+        HWND hwnd() { return mHwnd; }
+        HWND hwnd() const { return mHwnd; }
 
-    void move(const POINT & point, bool repaint = false) {
-        assert(mHwnd);
-        SIZE s = size();
-        BOOL res = MoveWindow(mHwnd, point.x, point.y, s.cx, s.cy, static_cast<int>(repaint));
-        if (!res) {
-            LError << WinCode(GetLastError());
+        //--------------------------------------------------
+
+        void enable(bool state) {
+            assert(mHwnd);
+            EnableWindow(mHwnd, static_cast<int>(state));
         }
-    }
 
-    void setRect(const RECT & rect, bool repaint = false) {
-        assert(mHwnd);
-        BOOL res = MoveWindow(mHwnd, rect.left, rect.top, rect.right, rect.bottom, static_cast<int>(repaint));
-        if (!res) {
-            LError << WinCode(GetLastError());
+        void enable() {
+            enable(true);
         }
-    }
 
-    void setSize(const SIZE & size) {
-        assert(mHwnd);
-        RECT r = rect();
-        r.right = r.left + size.cx;
-        r.bottom = r.top + size.cy;
-        setRect(r);
-    }
+        void disable() {
+            enable(false);
+        }
 
-    SIZE size() const {
-        assert(mHwnd);
-        RECT r = winRect();
-        return SIZE{r.right - r.left, r.bottom - r.top};
-    }
+        //--------------------------------------------------
 
-    //--------------------------------------------------
+        void setToolTip(const String & text, const uint32_t showTimeMilisec = 10000);
 
-    void show(bool state) {
-        assert(mHwnd);
-        ShowWindow(mHwnd, static_cast<int>(state));
-    }
+        //--------------------------------------------------
 
-    void show() {
-        show(true);
-    }
+        RECT winRect() const {
+            assert(mHwnd);
+            RECT r{0, 0, 0, 0};
+            BOOL res = GetWindowRect(mHwnd, &r);
+            if (!res) {
+                LError << WinCode(GetLastError());
+            }
+            return r;
+        }
 
-    void hide() {
-        show(false);
-    }
+        RECT clientRect() const {
+            assert(mHwnd);
+            RECT r{0, 0, 0, 0};
+            BOOL res = GetClientRect(mHwnd, &r);
+            if (!res) {
+                LError << WinCode(GetLastError());
+            }
+            return r;
+        }
 
-    //--------------------------------------------------
+        RECT rect() const {
+            assert(mHwnd);
+            RECT r = winRect();
+            MapWindowPoints(HWND_DESKTOP, parent(), reinterpret_cast<LPPOINT>(&r), 2);
+            return r;
+        }
 
-    void setText(const std::string & text) {
-        assert(mHwnd);
-        SetWindowTextA(mHwnd, text.c_str());
-    }
+        void move(const POINT & point, bool repaint = false) {
+            assert(mHwnd);
+            SIZE s = size();
+            BOOL res = MoveWindow(mHwnd, point.x, point.y, s.cx, s.cy, static_cast<int>(repaint));
+            if (!res) {
+                LError << WinCode(GetLastError());
+            }
+        }
 
-    void setText(const std::wstring & text) {
-        assert(mHwnd);
-        SetWindowTextW(mHwnd, text.c_str());
-    }
+        void setRect(const RECT & rect, bool repaint = false) {
+            assert(mHwnd);
+            BOOL res = MoveWindow(mHwnd, rect.left, rect.top, rect.right, rect.bottom, static_cast<int>(repaint));
+            if (!res) {
+                LError << WinCode(GetLastError());
+            }
+        }
 
-    String text() const;
+        void setSize(const SIZE & size) {
+            assert(mHwnd);
+            RECT r = rect();
+            r.right = r.left + size.cx;
+            r.bottom = r.top + size.cy;
+            setRect(r);
+        }
 
-    //--------------------------------------------------
+        SIZE size() const {
+            assert(mHwnd);
+            RECT r = winRect();
+            return SIZE{r.right - r.left, r.bottom - r.top};
+        }
 
-    void setIndeterminate(bool inState, const String & text = _T(""));
+        //--------------------------------------------------
 
-    bool isIndeterminate() const {
-        return mIsIndeterminate;
-    }
+        void show(bool state) {
+            assert(mHwnd);
+            ShowWindow(mHwnd, static_cast<int>(state));
+        }
 
-    //--------------------------------------------------
+        void show() {
+            show(true);
+        }
 
-private:
+        void hide() {
+            show(false);
+        }
 
-    Base(const Base &) = delete;
-    Base & operator =(const Base &) = delete;
+        //--------------------------------------------------
 
-    void init();
+        void setText(const std::string & text) {
+            assert(mHwnd);
+            SetWindowTextA(mHwnd, text.c_str());
+        }
 
-    int mControlID;
-    HWND mHwnd;
-    String mTmpIndetStr;
-    bool mIsIndeterminate;
+        void setText(const std::wstring & text) {
+            assert(mHwnd);
+            SetWindowTextW(mHwnd, text.c_str());
+        }
 
-};
+        String text() const;
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+        //--------------------------------------------------
 
+        void setIndeterminate(bool inState, const String & text = _T(""));
+
+        bool isIndeterminate() const {
+            return mIsIndeterminate;
+        }
+
+        //--------------------------------------------------
+
+    private:
+
+        Base(const Base &) = delete;
+        Base & operator =(const Base &) = delete;
+
+        void init();
+
+        int mControlID;
+        HWND mHwnd;
+        String mTmpIndetStr;
+        bool mIsIndeterminate;
+
+    };
+
+    /**************************************************************************************************/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**************************************************************************************************/
+}
 }

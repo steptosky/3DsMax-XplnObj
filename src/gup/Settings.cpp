@@ -52,8 +52,8 @@ void Settings::setSceneVersion(const sts::semver::SemVersion & version) {
 
 sts::semver::SemVersion Settings::sceneVersion() const {
     return sts::semver::SemVersion(value("verMajor", uint32_t(0)),
-                           value("verMinor", uint32_t(0)),
-                           value("verPatch", uint32_t(0)));
+                                   value("verMinor", uint32_t(0)),
+                                   value("verPatch", uint32_t(0)));
 }
 
 sts::semver::SemVersion Settings::pluginVersion() {

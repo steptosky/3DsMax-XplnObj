@@ -35,43 +35,44 @@
 #include "models/MdManip.h"
 
 namespace ui {
+namespace win {
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
 
-class ManipAttrNoop : public ManipInterface {
-public:
+    class ManipAttrNoop : public ManipInterface {
+    public:
 
-    explicit ManipAttrNoop(MdManip * modelData);
-    virtual ~ManipAttrNoop();
+        explicit ManipAttrNoop(MdManip * modelData);
+        virtual ~ManipAttrNoop();
 
-    //-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
 
-    void create(HWND inParent) override;
-    void destroy() override;
-    RECT rect() const override;
-    void move(const POINT & point) override;
+        void create(HWND inParent) override;
+        void destroy() override;
+        RECT rect() const override;
+        void move(const POINT & point) override;
 
-    void setManip(const xobj::AttrManipBase & manip) override;
+        void setManip(const xobj::AttrManipBase & manip) override;
 
-    //-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
 
-private:
+    private:
 
-    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+        static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-    void save() const {
-        mModelData->saveToNode(mData);
-    }
+        void save() const {
+            mModelData->saveToNode(mData);
+        }
 
-    win::Base mHwnd;
-    MdManip * mModelData;
-    xobj::AttrManipNoop mData;
-};
+        win::Base mHwnd;
+        MdManip * mModelData;
+        xobj::AttrManipNoop mData;
+    };
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
-
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
+}
 }

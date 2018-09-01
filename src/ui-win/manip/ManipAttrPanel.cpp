@@ -33,86 +33,87 @@
 #include "resource/ResHelper.h"
 
 namespace ui {
+namespace win {
 
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    //////////////////////////////////////////* Static area *///////////////////////////////////////////
+    /**************************************************************************************************/
 
-INT_PTR ManipAttrPanel::panelProc(HWND /*hWnd*/, UINT /*msg*/, WPARAM /*wParam*/, LPARAM /*lParam*/) {
-    return 0;
-}
-
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
-
-ManipAttrPanel::ManipAttrPanel(MdManip * modelData)
-    : mModelData(modelData) {
-    assert(mModelData);
-}
-
-ManipAttrPanel::~ManipAttrPanel() {
-    ManipAttrPanel::destroy();
-}
-
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
-
-void ManipAttrPanel::create(HWND inParent) {
-    assert(inParent);
-    mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
-                                  MAKEINTRESOURCE(ROLL_MANIP_PANEL),
-                                  inParent,
-                                  reinterpret_cast<DLGPROC>(panelProc),
-                                  reinterpret_cast<LPARAM>(this)));
-    assert(mHwnd);
-    if (mHwnd) {
-        mHwnd.show(true);
+    INT_PTR ManipAttrPanel::panelProc(HWND /*hWnd*/, UINT /*msg*/, WPARAM /*wParam*/, LPARAM /*lParam*/) {
+        return 0;
     }
-    else {
-        LError << WinCode(GetLastError());
-    }
-}
 
-void ManipAttrPanel::destroy() {
-    if (mHwnd) {
-        BOOL res = DestroyWindow(mHwnd.hwnd());
-        if (!res) {
+    /**************************************************************************************************/
+    ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+    /**************************************************************************************************/
+
+    ManipAttrPanel::ManipAttrPanel(MdManip * modelData)
+        : mModelData(modelData) {
+        assert(mModelData);
+    }
+
+    ManipAttrPanel::~ManipAttrPanel() {
+        ManipAttrPanel::destroy();
+    }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void ManipAttrPanel::create(HWND inParent) {
+        assert(inParent);
+        mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
+                                      MAKEINTRESOURCE(ROLL_MANIP_PANEL),
+                                      inParent,
+                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      reinterpret_cast<LPARAM>(this)));
+        assert(mHwnd);
+        if (mHwnd) {
+            mHwnd.show(true);
+        }
+        else {
             LError << WinCode(GetLastError());
         }
-        mHwnd.release();
     }
-}
 
-RECT ManipAttrPanel::rect() const {
-    RECT r{0, 0, 0, 0};
-    if (mHwnd) {
-        r = mHwnd.rect();
+    void ManipAttrPanel::destroy() {
+        if (mHwnd) {
+            BOOL res = DestroyWindow(mHwnd.hwnd());
+            if (!res) {
+                LError << WinCode(GetLastError());
+            }
+            mHwnd.release();
+        }
     }
-    return r;
-}
 
-void ManipAttrPanel::move(const POINT & point) {
-    if (mHwnd) {
-        mHwnd.move(point);
+    RECT ManipAttrPanel::rect() const {
+        RECT r{0, 0, 0, 0};
+        if (mHwnd) {
+            r = mHwnd.rect();
+        }
+        return r;
     }
-}
 
-/**************************************************************************************************/
-//////////////////////////////////////////* Functions */////////////////////////////////////////////
-/**************************************************************************************************/
-
-void ManipAttrPanel::setManip(const xobj::AttrManipBase & manip) {
-    if (manip.type() != mData.type()) {
-        LError << "Incorrect manipulator: " << manip.type().toString();
-        return;
+    void ManipAttrPanel::move(const POINT & point) {
+        if (mHwnd) {
+            mHwnd.move(point);
+        }
     }
-    mData = static_cast<const xobj::AttrManipPanel &>(manip);
+
+    /**************************************************************************************************/
+    //////////////////////////////////////////* Functions */////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void ManipAttrPanel::setManip(const xobj::AttrManipBase & manip) {
+        if (manip.type() != mData.type()) {
+            LError << "Incorrect manipulator: " << manip.type().toString();
+            return;
+        }
+        mData = static_cast<const xobj::AttrManipPanel &>(manip);
+    }
+
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
 }
-
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
-
 }

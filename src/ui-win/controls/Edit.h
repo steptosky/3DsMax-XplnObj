@@ -36,44 +36,46 @@
 #include "Base.h"
 #include <WindowsX.h>
 
+namespace ui {
 namespace win {
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**************************************************************************************************/
 
-class Edit : public Base {
-public:
+    class Edit : public Base {
+    public:
 
-    void setMaxChar(int inMaxChar) {
-        mMaxChar = inMaxChar;
-        Edit_LimitText(hwnd(), mMaxChar);
-    }
+        void setMaxChar(int inMaxChar) {
+            mMaxChar = inMaxChar;
+            Edit_LimitText(hwnd(), mMaxChar);
+        }
 
-    void setReadOnly(bool enable) {
-        Edit_SetReadOnly(hwnd(), enable);
-    }
+        void setReadOnly(bool enable) {
+            Edit_SetReadOnly(hwnd(), enable);
+        }
 
-    Edit(int inMaxChar = STS_EDITCONTROL_MAXCHARS) {
-        this->_defaultVals();
-        this->setMaxChar(inMaxChar);
-    }
+        Edit(int inMaxChar = STS_EDITCONTROL_MAXCHARS) {
+            this->_defaultVals();
+            this->setMaxChar(inMaxChar);
+        }
 
-    virtual ~Edit() {
-        _defaultVals();
-    }
+        virtual ~Edit() {
+            _defaultVals();
+        }
 
-private:
+    private:
 
-    int mMaxChar;
+        int mMaxChar;
 
-    void Edit::_defaultVals() {
-        mMaxChar = STS_EDITCONTROL_MAXCHARS;
-    }
+        void Edit::_defaultVals() {
+            mMaxChar = STS_EDITCONTROL_MAXCHARS;
+        }
 
-};
+    };
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-};
+    /**************************************************************************************************/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**************************************************************************************************/
+}
+}

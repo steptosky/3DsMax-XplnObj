@@ -93,7 +93,7 @@ Read the help for more information about this issue.");
     if (versionFrom < sts::semver::SemVersion(2, 2, 0)) {
         LMessage << LOG_PREFIX << msg;
         std::vector<INode*> nodes;
-        ui::Factory::sceneUpdateInfo(msgStartUpdate);
+        ui::win::Factory::sceneUpdateInfo(msgStartUpdate);
         //-------------------------------
         auto fn = [&nodes](INode * node) ->bool {
             xobj::AttrSet attrSet;
@@ -121,7 +121,7 @@ Read the help for more information about this issue.");
         //-------------------------------
         NodeVisitor::visitAll(fn);
         LMessage << LOG_PREFIX << msg << " " << nodes.size() << " objects updated";
-        ui::Factory::showUpdatedObjects(nodes);
+        ui::win::Factory::showUpdatedObjects(nodes);
         //-------------------------------
     }
 }

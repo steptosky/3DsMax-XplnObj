@@ -41,234 +41,235 @@
 #include "ui-win/Factory.h"
 
 namespace ui {
+namespace win {
 
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    //////////////////////////////////////////* Static area *///////////////////////////////////////////
+    /**************************************************************************************************/
 
-INT_PTR ManipAttrAxisSwitchUd::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    ManipAttrAxisSwitchUd * theDlg;
-    if (msg == WM_INITDIALOG) {
-        theDlg = reinterpret_cast<ManipAttrAxisSwitchUd*>(lParam);
-        DLSetWindowLongPtr(hWnd, lParam);
-        theDlg->initWindow(hWnd);
-    }
-    else if (msg == WM_DESTROY) {
-        theDlg = DLGetWindowLongPtr<ManipAttrAxisSwitchUd*>(hWnd);
-        theDlg->destroyWindow(hWnd);
-    }
-    else {
-        theDlg = DLGetWindowLongPtr<ManipAttrAxisSwitchUd *>(hWnd);
-        if (!theDlg) {
-            return FALSE;
+    INT_PTR ManipAttrAxisSwitchUd::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+        ManipAttrAxisSwitchUd * theDlg;
+        if (msg == WM_INITDIALOG) {
+            theDlg = reinterpret_cast<ManipAttrAxisSwitchUd*>(lParam);
+            DLSetWindowLongPtr(hWnd, lParam);
+            theDlg->initWindow(hWnd);
         }
-    }
+        else if (msg == WM_DESTROY) {
+            theDlg = DLGetWindowLongPtr<ManipAttrAxisSwitchUd*>(hWnd);
+            theDlg->destroyWindow(hWnd);
+        }
+        else {
+            theDlg = DLGetWindowLongPtr<ManipAttrAxisSwitchUd *>(hWnd);
+            if (!theDlg) {
+                return FALSE;
+            }
+        }
 
-    //--------------------------------------
+        //--------------------------------------
 
-    switch (msg) {
-        case WM_COMMAND: {
-            switch (LOWORD(wParam)) {
-                case BTN_DATAREF: {
-                    Factory::showNotImplemented();
-                    break;
-                }
-                case CMB_CURSOR: {
-                    if (HIWORD(wParam) == CBN_SELCHANGE) {
-                        theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
-                        theDlg->save();
+        switch (msg) {
+            case WM_COMMAND: {
+                switch (LOWORD(wParam)) {
+                    case BTN_DATAREF: {
+                        Factory::showNotImplemented();
+                        break;
                     }
-                    break;
+                    case CMB_CURSOR: {
+                        if (HIWORD(wParam) == CBN_SELCHANGE) {
+                            theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
+                            theDlg->save();
+                        }
+                        break;
+                    }
+                    default: break;
                 }
-                default: break;
+                break;
             }
-            break;
-        }
-        case WM_CUSTEDIT_ENTER: {
-            switch (LOWORD(wParam)) {
-                case EDIT_DATAREF: {
-                    theDlg->mData.setDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)));
-                    theDlg->save();
-                    break;
+            case WM_CUSTEDIT_ENTER: {
+                switch (LOWORD(wParam)) {
+                    case EDIT_DATAREF: {
+                        theDlg->mData.setDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)));
+                        theDlg->save();
+                        break;
+                    }
+                    case EDIT_TOOLTIP: {
+                        theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
+                        theDlg->save();
+                        break;
+                    }
+                    default: break;
                 }
-                case EDIT_TOOLTIP: {
-                    theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
-                    theDlg->save();
-                    break;
-                }
-                default: break;
+                break;
             }
-            break;
-        }
-        case CC_SPINNER_CHANGE: {
-            switch (LOWORD(wParam)) {
-                case SPN_CLICK_DELTA: {
-                    theDlg->mData.setClickDelta(theDlg->mSpnClick->GetFVal());
-                    theDlg->save();
-                    break;
+            case CC_SPINNER_CHANGE: {
+                switch (LOWORD(wParam)) {
+                    case SPN_CLICK_DELTA: {
+                        theDlg->mData.setClickDelta(theDlg->mSpnClick->GetFVal());
+                        theDlg->save();
+                        break;
+                    }
+                    case SPN_HOLD_DELTA: {
+                        theDlg->mData.setHoldDelta(theDlg->mSpnHold->GetFVal());
+                        theDlg->save();
+                        break;
+                    }
+                    case SPN_MIN: {
+                        theDlg->mData.setMinimum(theDlg->mSpnMim->GetFVal());
+                        theDlg->save();
+                        break;
+                    }
+                    case SPN_MAX: {
+                        theDlg->mData.setMaximum(theDlg->mSpnMax->GetFVal());
+                        theDlg->save();
+                        break;
+                    }
+                    default: break;
                 }
-                case SPN_HOLD_DELTA: {
-                    theDlg->mData.setHoldDelta(theDlg->mSpnHold->GetFVal());
-                    theDlg->save();
-                    break;
-                }
-                case SPN_MIN: {
-                    theDlg->mData.setMinimum(theDlg->mSpnMim->GetFVal());
-                    theDlg->save();
-                    break;
-                }
-                case SPN_MAX: {
-                    theDlg->mData.setMaximum(theDlg->mSpnMax->GetFVal());
-                    theDlg->save();
-                    break;
-                }
-                default: break;
+                break;
             }
-            break;
+            default: break;
         }
-        default: break;
+        return 0;
     }
-    return 0;
-}
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+    /**************************************************************************************************/
 
-ManipAttrAxisSwitchUd::ManipAttrAxisSwitchUd(MdManip * modelData)
-    : mModelData(modelData) {
-    assert(mModelData);
-}
-
-ManipAttrAxisSwitchUd::~ManipAttrAxisSwitchUd() {
-    ManipAttrAxisSwitchUd::destroy();
-}
-
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
-
-void ManipAttrAxisSwitchUd::create(HWND inParent) {
-    assert(inParent);
-    mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
-                                  MAKEINTRESOURCE(ROLL_MANIP_AXIS_KNOB), /* the same template */
-                                  inParent,
-                                  reinterpret_cast<DLGPROC>(panelProc),
-                                  reinterpret_cast<LPARAM>(this)));
-    assert(mHwnd);
-    if (mHwnd) {
-        toWindow();
-        mWheel.create(inParent);
-        calculateSize();
-        mHwnd.show(true);
+    ManipAttrAxisSwitchUd::ManipAttrAxisSwitchUd(MdManip * modelData)
+        : mModelData(modelData) {
+        assert(mModelData);
     }
-    else {
-        LError << WinCode(GetLastError());
-    }
-}
 
-void ManipAttrAxisSwitchUd::destroy() {
-    if (mHwnd) {
-        BOOL res = DestroyWindow(mHwnd.hwnd());
-        if (!res) {
+    ManipAttrAxisSwitchUd::~ManipAttrAxisSwitchUd() {
+        ManipAttrAxisSwitchUd::destroy();
+    }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void ManipAttrAxisSwitchUd::create(HWND inParent) {
+        assert(inParent);
+        mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
+                                      MAKEINTRESOURCE(ROLL_MANIP_AXIS_KNOB), /* the same template */
+                                      inParent,
+                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      reinterpret_cast<LPARAM>(this)));
+        assert(mHwnd);
+        if (mHwnd) {
+            toWindow();
+            mWheel.create(inParent);
+            calculateSize();
+            mHwnd.show(true);
+        }
+        else {
             LError << WinCode(GetLastError());
         }
-        mHwnd.release();
     }
-}
 
-RECT ManipAttrAxisSwitchUd::rect() const {
-    return mSize;
-}
-
-void ManipAttrAxisSwitchUd::move(const POINT & point) {
-    if (mHwnd) {
-        mHwnd.move(point);
-        calculateSize();
+    void ManipAttrAxisSwitchUd::destroy() {
+        if (mHwnd) {
+            BOOL res = DestroyWindow(mHwnd.hwnd());
+            if (!res) {
+                LError << WinCode(GetLastError());
+            }
+            mHwnd.release();
+        }
     }
-}
 
-/**************************************************************************************************/
-//////////////////////////////////////////* Functions */////////////////////////////////////////////
-/**************************************************************************************************/
-
-void ManipAttrAxisSwitchUd::calculateSize() {
-    if (mHwnd) {
-        mSize = mHwnd.rect();
-        mWheel.move(POINT{0, mSize.bottom});
-        RECT wheelRect = mWheel.rect();
-        mSize.bottom += (wheelRect.bottom - wheelRect.top);
+    RECT ManipAttrAxisSwitchUd::rect() const {
+        return mSize;
     }
-}
 
-/**************************************************************************************************/
-//////////////////////////////////////////* Functions */////////////////////////////////////////////
-/**************************************************************************************************/
-
-void ManipAttrAxisSwitchUd::setManip(const xobj::AttrManipBase & manip) {
-    if (manip.type() != mData.type()) {
-        LError << "Incorrect manipulator: " << manip.type().toString();
-        return;
+    void ManipAttrAxisSwitchUd::move(const POINT & point) {
+        if (mHwnd) {
+            mHwnd.move(point);
+            calculateSize();
+        }
     }
-    mData = static_cast<const xobj::AttrManipAxisSwitchUpDown &>(manip);
-    mWheel.setManip(mData.wheel());
-}
 
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    //////////////////////////////////////////* Functions */////////////////////////////////////////////
+    /**************************************************************************************************/
 
-void ManipAttrAxisSwitchUd::initWindow(HWND hWnd) {
-    mLblName.setup(hWnd, LBL_NAME);
-    mLblName.setText("Axis switch up-down");
-
-    std::function<void(const xobj::AttrManipWheel &)> callback = [this](const xobj::AttrManipWheel & wheel) mutable {
-        mData.setWheel(wheel);
-        mModelData->saveToNode(mData);
-    };
-    mWheel.setCallBack(callback);
-
-    mSpnClick = SetupFloatSpinner(hWnd, SPN_CLICK_DELTA, SPN_CLICK_DELTA_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
-    mSpnHold = SetupFloatSpinner(hWnd, SPN_HOLD_DELTA, SPN_HOLD_DELTA_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
-
-    mSpnMim = SetupFloatSpinner(hWnd, SPN_MIN, SPN_MIN_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
-    mSpnMax = SetupFloatSpinner(hWnd, SPN_MAX, SPN_MAX_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
-
-    cBtnDataRef.setup(hWnd, BTN_DATAREF);
-    cEdtDataRef = GetICustEdit(GetDlgItem(hWnd, EDIT_DATAREF));
-    cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
-    cCmbCursor.setup(hWnd, CMB_CURSOR);
-
-    for (auto & curr : xobj::ECursor::list()) {
-        cCmbCursor.addItem(sts::toString(curr.toUiString()));
+    void ManipAttrAxisSwitchUd::calculateSize() {
+        if (mHwnd) {
+            mSize = mHwnd.rect();
+            mWheel.move(POINT{0, mSize.bottom});
+            RECT wheelRect = mWheel.rect();
+            mSize.bottom += (wheelRect.bottom - wheelRect.top);
+        }
     }
-    cCmbCursor.setCurrSelected(0);
+
+    /**************************************************************************************************/
+    //////////////////////////////////////////* Functions */////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void ManipAttrAxisSwitchUd::setManip(const xobj::AttrManipBase & manip) {
+        if (manip.type() != mData.type()) {
+            LError << "Incorrect manipulator: " << manip.type().toString();
+            return;
+        }
+        mData = static_cast<const xobj::AttrManipAxisSwitchUpDown &>(manip);
+        mWheel.setManip(mData.wheel());
+    }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void ManipAttrAxisSwitchUd::initWindow(HWND hWnd) {
+        mLblName.setup(hWnd, LBL_NAME);
+        mLblName.setText("Axis switch up-down");
+
+        std::function<void(const xobj::AttrManipWheel &)> callback = [this](const xobj::AttrManipWheel & wheel) mutable {
+            mData.setWheel(wheel);
+            mModelData->saveToNode(mData);
+        };
+        mWheel.setCallBack(callback);
+
+        mSpnClick = SetupFloatSpinner(hWnd, SPN_CLICK_DELTA, SPN_CLICK_DELTA_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+        mSpnHold = SetupFloatSpinner(hWnd, SPN_HOLD_DELTA, SPN_HOLD_DELTA_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+
+        mSpnMim = SetupFloatSpinner(hWnd, SPN_MIN, SPN_MIN_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+        mSpnMax = SetupFloatSpinner(hWnd, SPN_MAX, SPN_MAX_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+
+        cBtnDataRef.setup(hWnd, BTN_DATAREF);
+        cEdtDataRef = GetICustEdit(GetDlgItem(hWnd, EDIT_DATAREF));
+        cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
+        cCmbCursor.setup(hWnd, CMB_CURSOR);
+
+        for (auto & curr : xobj::ECursor::list()) {
+            cCmbCursor.addItem(sts::toString(curr.toUiString()));
+        }
+        cCmbCursor.setCurrSelected(0);
+    }
+
+    void ManipAttrAxisSwitchUd::destroyWindow(HWND /*hWnd*/) {
+        mLblName.release();
+        ReleaseISpinner(mSpnClick);
+        ReleaseISpinner(mSpnHold);
+        ReleaseISpinner(mSpnMim);
+        ReleaseISpinner(mSpnMax);
+        cBtnDataRef.release();
+        ReleaseICustEdit(cEdtDataRef);
+        ReleaseICustEdit(cEdtToolType);
+        cCmbCursor.release();
+    }
+
+    void ManipAttrAxisSwitchUd::toWindow() {
+        mSpnClick->SetValue(mData.clickDelta(), FALSE);
+        mSpnHold->SetValue(mData.holdDelta(), FALSE);
+        mSpnMim->SetValue(mData.minimum(), FALSE);
+        mSpnMax->SetValue(mData.maximum(), FALSE);
+        UiUtilities::setText(cEdtDataRef, sts::toString(mData.dataref()));
+        UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
+        cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
+    }
+
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
 }
-
-void ManipAttrAxisSwitchUd::destroyWindow(HWND /*hWnd*/) {
-    mLblName.release();
-    ReleaseISpinner(mSpnClick);
-    ReleaseISpinner(mSpnHold);
-    ReleaseISpinner(mSpnMim);
-    ReleaseISpinner(mSpnMax);
-    cBtnDataRef.release();
-    ReleaseICustEdit(cEdtDataRef);
-    ReleaseICustEdit(cEdtToolType);
-    cCmbCursor.release();
-}
-
-void ManipAttrAxisSwitchUd::toWindow() {
-    mSpnClick->SetValue(mData.clickDelta(), FALSE);
-    mSpnHold->SetValue(mData.holdDelta(), FALSE);
-    mSpnMim->SetValue(mData.minimum(), FALSE);
-    mSpnMax->SetValue(mData.maximum(), FALSE);
-    UiUtilities::setText(cEdtDataRef, sts::toString(mData.dataref()));
-    UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
-    cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
-}
-
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
-
 }

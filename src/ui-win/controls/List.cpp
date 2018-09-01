@@ -30,101 +30,102 @@
 #include "List.h"
 #include <WindowsX.h>
 
+namespace ui {
 namespace win {
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+    /**************************************************************************************************/
 
-List::List() { }
+    List::List() { }
 
-List::~List() { }
+    List::~List() { }
 
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
 
-void List::addItem(const Base::String & inItem, bool inSelected) {
-    int pos = ListBox_AddString(hwnd(), inItem.c_str());
-    if (inSelected)
-        ListBox_SetCurSel(hwnd(), pos);
-}
-
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
-
-//	int List::removeItem(const std::string & inItem) {
-//		int currIndex = currSelected();
-//		if (currIndex == -1)
-//			return false;
-//		return ListBox_DeleteString(hwnd(), currIndex);
-//	}
-
-void List::removeItem(int inIndex) {
-    ListBox_DeleteString(hwnd(), inIndex);
-}
-
-int List::count() const {
-    return ListBox_GetCount(hwnd());
-}
-
-Base::String List::currSelectedText() const {
-    return itemText(currSelected());
-}
-
-Base::String List::itemText(int index) const {
-    Base::String result;
-    if (index >= 0) {
-        size_t length = 0;
-        TCHAR * text;
-        length = ListBox_GetTextLen(hwnd(), index);
-        text = new TCHAR[length + 1];
-        ListBox_GetText(hwnd(), index, text);
-        result = text;
-        delete[] text;
+    void List::addItem(const Base::String & inItem, bool inSelected) {
+        int pos = ListBox_AddString(hwnd(), inItem.c_str());
+        if (inSelected)
+            ListBox_SetCurSel(hwnd(), pos);
     }
-    return result;
-}
 
-int List::currSelected() const {
-    // Get selected index.
-    int index = ListBox_GetCurSel(hwnd());
-    if (index >= 0) {
-        return index;
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    //	int List::removeItem(const std::string & inItem) {
+    //		int currIndex = currSelected();
+    //		if (currIndex == -1)
+    //			return false;
+    //		return ListBox_DeleteString(hwnd(), currIndex);
+    //	}
+
+    void List::removeItem(int inIndex) {
+        ListBox_DeleteString(hwnd(), inIndex);
     }
-    return -1;
+
+    int List::count() const {
+        return ListBox_GetCount(hwnd());
+    }
+
+    Base::String List::currSelectedText() const {
+        return itemText(currSelected());
+    }
+
+    Base::String List::itemText(int index) const {
+        Base::String result;
+        if (index >= 0) {
+            size_t length = 0;
+            TCHAR * text;
+            length = ListBox_GetTextLen(hwnd(), index);
+            text = new TCHAR[length + 1];
+            ListBox_GetText(hwnd(), index, text);
+            result = text;
+            delete[] text;
+        }
+        return result;
+    }
+
+    int List::currSelected() const {
+        // Get selected index.
+        int index = ListBox_GetCurSel(hwnd());
+        if (index >= 0) {
+            return index;
+        }
+        return -1;
+    }
+
+    bool List::removeCurr() {
+        // Get the selected item.
+        int currIndex = currSelected();
+        if (currIndex == -1)
+            return false;
+        // Delete the selected item.
+        int cStringsRemaining = ListBox_DeleteString(hwnd(), currIndex);
+
+        // If this is not the last item, set the selection to 
+        // the item immediately following the one just deleted.
+        // Otherwise, set the selection to the last item.
+        if (cStringsRemaining > currIndex)
+            ListBox_SetCurSel(hwnd(), currIndex);
+        else
+            ListBox_SetCurSel(hwnd(), cStringsRemaining - 1);
+
+        return true;
+    }
+
+    void List::clear() {
+        SendMessage(hwnd(), LB_RESETCONTENT, NULL, NULL);
+    }
+
+    void List::setCurrSelected(int inIndex) {
+        ListBox_SetCurSel(hwnd(), inIndex);
+    }
+
+    /**************************************************************************************************/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**************************************************************************************************/
 }
-
-bool List::removeCurr() {
-    // Get the selected item.
-    int currIndex = currSelected();
-    if (currIndex == -1)
-        return false;
-    // Delete the selected item.
-    int cStringsRemaining = ListBox_DeleteString(hwnd(), currIndex);
-
-    // If this is not the last item, set the selection to 
-    // the item immediately following the one just deleted.
-    // Otherwise, set the selection to the last item.
-    if (cStringsRemaining > currIndex)
-        ListBox_SetCurSel(hwnd(), currIndex);
-    else
-        ListBox_SetCurSel(hwnd(), cStringsRemaining - 1);
-
-    return true;
-}
-
-void List::clear() {
-    SendMessage(hwnd(), LB_RESETCONTENT, NULL, NULL);
-}
-
-void List::setCurrSelected(int inIndex) {
-    ListBox_SetCurSel(hwnd(), inIndex);
-}
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
 }

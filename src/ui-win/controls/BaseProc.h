@@ -34,60 +34,62 @@
 #include <3dsmaxport.h>
 #pragma warning(pop)
 
-namespace maxwin {
+namespace max {
+namespace win {
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
 
-class BaseProc {
-public:
+    class BaseProc {
+    public:
 
-    explicit BaseProc(HINSTANCE hinstance)
-        : Id(0),
-          mMainWnd(nullptr),
-          mHInstance(hinstance) {
-        assert(mHInstance);
-    }
-
-    virtual ~BaseProc() { mMainWnd = nullptr; }
-    //-------------------------------------------------------------------------
-
-    HWND hwnd() const { return mMainWnd; }
-    //-------------------------------------------------------------------------
-
-    virtual void initWindow(HWND hWnd) = 0;
-    virtual void destroyWindow(HWND hWnd) = 0;
-    virtual INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) = 0;
-    //-------------------------------------------------------------------------
-
-    static INT_PTR CALLBACK BaseDlgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-        if (msg == WM_INITDIALOG) {
-            BaseProc * theDlg = reinterpret_cast<BaseProc *>(lParam);
-            theDlg->mMainWnd = hWnd;
-            DLSetWindowLongPtr(hWnd, lParam);
-            theDlg->initWindow(hWnd);
+        explicit BaseProc(HINSTANCE hinstance)
+            : Id(0),
+              mMainWnd(nullptr),
+              mHInstance(hinstance) {
+            assert(mHInstance);
         }
-        else if (msg == WM_DESTROY) {
+
+        virtual ~BaseProc() { mMainWnd = nullptr; }
+        //-------------------------------------------------------------------------
+
+        HWND hwnd() const { return mMainWnd; }
+        //-------------------------------------------------------------------------
+
+        virtual void initWindow(HWND hWnd) = 0;
+        virtual void destroyWindow(HWND hWnd) = 0;
+        virtual INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) = 0;
+        //-------------------------------------------------------------------------
+
+        static INT_PTR CALLBACK BaseDlgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+            if (msg == WM_INITDIALOG) {
+                BaseProc * theDlg = reinterpret_cast<BaseProc *>(lParam);
+                theDlg->mMainWnd = hWnd;
+                DLSetWindowLongPtr(hWnd, lParam);
+                theDlg->initWindow(hWnd);
+            }
+            else if (msg == WM_DESTROY) {
+                BaseProc * theDlg = DLGetWindowLongPtr<BaseProc *>(hWnd);
+                theDlg->destroyWindow(hWnd);
+            }
             BaseProc * theDlg = DLGetWindowLongPtr<BaseProc *>(hWnd);
-            theDlg->destroyWindow(hWnd);
+            if (!theDlg) {
+                return FALSE;
+            }
+            return theDlg->panelProc(hWnd, msg, wParam, lParam);
         }
-        BaseProc * theDlg = DLGetWindowLongPtr<BaseProc *>(hWnd);
-        if (!theDlg) {
-            return FALSE;
-        }
-        return theDlg->panelProc(hWnd, msg, wParam, lParam);
-    }
 
-private:
+    private:
 
-    int Id;
-    HWND mMainWnd;
-    HINSTANCE mHInstance;
+        int Id;
+        HWND mMainWnd;
+        HINSTANCE mHInstance;
 
-};
+    };
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
+}
 }

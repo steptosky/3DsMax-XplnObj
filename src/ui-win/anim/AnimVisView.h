@@ -40,82 +40,84 @@
 #pragma warning(pop)
 
 namespace ui {
+namespace win {
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
 
-class AnimVisView : public maxwin::RollupBase {
-public:
+    class AnimVisView : public max::win::RollupBase {
+    public:
 
-    void create(IRollupWindow * rollWin);
-    void destroy() override;
+        void create(IRollupWindow * rollWin);
+        void destroy() override;
 
-    AnimVisView();
-    virtual ~AnimVisView();
+        AnimVisView();
+        virtual ~AnimVisView();
 
-private:
+    private:
 
-    void create() override;
+        void create() override;
 
-    IRollupWindow * getInterface() override {
-        return mRollupIp;
-    }
+        IRollupWindow * getInterface() override {
+            return mRollupIp;
+        }
 
-    INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
-    void initWindow(HWND hWnd) override;
-    void destroyWindow(HWND hWnd) override;
-    //----------------------------------------------------
+        INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+        void initWindow(HWND hWnd) override;
+        void destroyWindow(HWND hWnd) override;
+        //----------------------------------------------------
 
-    MdAnimVis mData;
-    void toWindow();
-    void enableControls();
-    void disableControls();
-    void clearValues();
+        MdAnimVis mData;
+        void toWindow();
+        void enableControls();
+        void disableControls();
+        void clearValues();
 
-    void addHideItem() {
-        addItem(MdAnimVis::Key::HIDE);
-    }
+        void addHideItem() {
+            addItem(MdAnimVis::Key::HIDE);
+        }
 
-    void addShowItem() {
-        addItem(MdAnimVis::Key::SHOW);
-    }
+        void addShowItem() {
+            addItem(MdAnimVis::Key::SHOW);
+        }
 
-    void addItem(MdAnimVis::Key::eType type);
-    void deleteItem();
-    void selectionChanged();
-    void selectedDataChanged();
-    void makeUiList();
-    static sts::Str toText(MdAnimVis::Key & curr);
-    void setDataRefValueAsToolType();
+        void addItem(MdAnimVis::Key::eType type);
+        void deleteItem();
+        void selectionChanged();
+        void selectedDataChanged();
+        void makeUiList();
+        static sts::Str toText(MdAnimVis::Key & curr);
+        void setDataRefValueAsToolType();
 
-    int mCurrSelected = 0;
-    win::List cListKeys;
-    win::Base cBtnDataRef;
-    win::Base cBtnAddShow;
-    win::Base cBtnAddHide;
-    win::Base cBtnDelete;
-    win::Base cStcValue1;
-    win::Base cStcValue2;
-    win::CheckBox cChkEnable;
-    ICustEdit * cEditDataRef = nullptr;
-    ISpinnerControl * cSpnValue1 = nullptr;
-    ISpinnerControl * cSpnValue2 = nullptr;
+        int mCurrSelected = 0;
+        win::List cListKeys;
+        win::Base cBtnDataRef;
+        win::Base cBtnAddShow;
+        win::Base cBtnAddHide;
+        win::Base cBtnDelete;
+        win::Base cStcValue1;
+        win::Base cStcValue2;
+        win::CheckBox cChkEnable;
+        ICustEdit * cEditDataRef = nullptr;
+        ISpinnerControl * cSpnValue1 = nullptr;
+        ISpinnerControl * cSpnValue2 = nullptr;
 
-    IRollupWindow * mRollupIp = nullptr;
-    Interface * mIp = nullptr;
-    //-------------------------------------------------------------------------
+        IRollupWindow * mRollupIp = nullptr;
+        Interface * mIp = nullptr;
+        //-------------------------------------------------------------------------
 
-    void registerCallbacks();
-    void unRegisterCallbacks();
+        void registerCallbacks();
+        void unRegisterCallbacks();
 
-    static void slotSelectionChange(void * param, NotifyInfo *);
-    static void slotObjectsDeleted(void * param, NotifyInfo * info);
-    //-------------------------------------------------------------------------
+        static void slotSelectionChange(void * param, NotifyInfo *);
+        static void slotObjectsDeleted(void * param, NotifyInfo * info);
+        //-------------------------------------------------------------------------
 
-};
+    };
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
+}
 }

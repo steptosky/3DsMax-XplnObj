@@ -39,225 +39,227 @@
 #include "ui-win/Factory.h"
 
 namespace ui {
+namespace win {
 
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    //////////////////////////////////////////* Static area *///////////////////////////////////////////
+    /**************************************************************************************************/
 
-INT_PTR LightSpillCust::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    LightSpillCust * theDlg;
-    if (msg == WM_INITDIALOG) {
-        theDlg = reinterpret_cast<LightSpillCust*>(lParam);
-        DLSetWindowLongPtr(hWnd, lParam);
-        theDlg->initWindow(hWnd);
-    }
-    else if (msg == WM_DESTROY) {
-        theDlg = DLGetWindowLongPtr<LightSpillCust*>(hWnd);
-        theDlg->destroyWindow(hWnd);
-    }
-    else {
-        theDlg = DLGetWindowLongPtr<LightSpillCust *>(hWnd);
-        if (!theDlg) {
-            return FALSE;
+    INT_PTR LightSpillCust::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+        LightSpillCust * theDlg;
+        if (msg == WM_INITDIALOG) {
+            theDlg = reinterpret_cast<LightSpillCust*>(lParam);
+            DLSetWindowLongPtr(hWnd, lParam);
+            theDlg->initWindow(hWnd);
         }
-    }
-
-    //--------------------------------------
-
-    switch (msg) {
-        case WM_COMMAND: {
-            switch (LOWORD(wParam)) {
-                case IDC_BTN_DATAREF: {
-                    Factory::showNotImplemented();;
-                    break;
-                }
-                default: break;
+        else if (msg == WM_DESTROY) {
+            theDlg = DLGetWindowLongPtr<LightSpillCust*>(hWnd);
+            theDlg->destroyWindow(hWnd);
+        }
+        else {
+            theDlg = DLGetWindowLongPtr<LightSpillCust *>(hWnd);
+            if (!theDlg) {
+                return FALSE;
             }
-            break;
         }
-        case WM_CUSTEDIT_ENTER: {
-            switch (LOWORD(wParam)) {
-                case IDC_EDIT_DATAREF: {
-                    theDlg->mData->setDataRef(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)));
-                    theDlg->eventParamChanged(true);
-                    break;
+
+        //--------------------------------------
+
+        switch (msg) {
+            case WM_COMMAND: {
+                switch (LOWORD(wParam)) {
+                    case IDC_BTN_DATAREF: {
+                        Factory::showNotImplemented();;
+                        break;
+                    }
+                    default: break;
                 }
-                default: break;
+                break;
             }
-            break;
-        }
-        case CC_SPINNER_CHANGE: {
-            switch (LOWORD(wParam)) {
-                case IDC_R_SPIN: {
-                    xobj::Color color = theDlg->mData->color();
-                    color.setRed(theDlg->mSpnR->GetFVal());
-                    theDlg->mData->setColor(color);
-                    theDlg->eventParamChanged(true);
-                    break;
+            case WM_CUSTEDIT_ENTER: {
+                switch (LOWORD(wParam)) {
+                    case IDC_EDIT_DATAREF: {
+                        theDlg->mData->setDataRef(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)));
+                        theDlg->eventParamChanged(true);
+                        break;
+                    }
+                    default: break;
                 }
-                case IDC_G_SPIN: {
-                    xobj::Color color = theDlg->mData->color();
-                    color.setGreen(theDlg->mSpnG->GetFVal());
-                    theDlg->mData->setColor(color);
-                    theDlg->eventParamChanged(true);
-                    break;
-                }
-                case IDC_B_SPIN: {
-                    xobj::Color color = theDlg->mData->color();
-                    color.setBlue(theDlg->mSpnB->GetFVal());
-                    theDlg->mData->setColor(color);
-                    theDlg->eventParamChanged(true);
-                    break;
-                }
-                case IDC_A_SPIN: {
-                    xobj::Color color = theDlg->mData->color();
-                    color.setAlpha(theDlg->mSpnA->GetFVal());
-                    theDlg->mData->setColor(color);
-                    theDlg->eventParamChanged(true);
-                    break;
-                }
-                case IDC_SIZE_SPIN: {
-                    theDlg->mData->setSize(theDlg->mSpnSize->GetFVal());
-                    theDlg->eventParamChanged(true);
-                    break;
-                }
-                default: break;
+                break;
             }
-            break;
+            case CC_SPINNER_CHANGE: {
+                switch (LOWORD(wParam)) {
+                    case IDC_R_SPIN: {
+                        xobj::Color color = theDlg->mData->color();
+                        color.setRed(theDlg->mSpnR->GetFVal());
+                        theDlg->mData->setColor(color);
+                        theDlg->eventParamChanged(true);
+                        break;
+                    }
+                    case IDC_G_SPIN: {
+                        xobj::Color color = theDlg->mData->color();
+                        color.setGreen(theDlg->mSpnG->GetFVal());
+                        theDlg->mData->setColor(color);
+                        theDlg->eventParamChanged(true);
+                        break;
+                    }
+                    case IDC_B_SPIN: {
+                        xobj::Color color = theDlg->mData->color();
+                        color.setBlue(theDlg->mSpnB->GetFVal());
+                        theDlg->mData->setColor(color);
+                        theDlg->eventParamChanged(true);
+                        break;
+                    }
+                    case IDC_A_SPIN: {
+                        xobj::Color color = theDlg->mData->color();
+                        color.setAlpha(theDlg->mSpnA->GetFVal());
+                        theDlg->mData->setColor(color);
+                        theDlg->eventParamChanged(true);
+                        break;
+                    }
+                    case IDC_SIZE_SPIN: {
+                        theDlg->mData->setSize(theDlg->mSpnSize->GetFVal());
+                        theDlg->eventParamChanged(true);
+                        break;
+                    }
+                    default: break;
+                }
+                break;
+            }
+            default: break;
         }
-        default: break;
+        return FALSE;
     }
-    return FALSE;
-}
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+    /**************************************************************************************************/
 
-LightSpillCust::LightSpillCust() {
-    mData = nullptr;
-}
-
-LightSpillCust::~LightSpillCust() {
-    LightSpillCust::destroy();
-}
-
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
-
-void LightSpillCust::show(xobj::ObjLightSpillCust * inData) {
-    mData = inData;
-    toWindow();
-    mHwnd.show();
-}
-
-void LightSpillCust::hide() {
-    mHwnd.hide();
-}
-
-void LightSpillCust::create(HWND inParent) {
-    assert(inParent);
-    mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
-                                  MAKEINTRESOURCE(IDD_ROLL_LIGHT_SPILLCUST_OBJ),
-                                  inParent,
-                                  reinterpret_cast<DLGPROC>(panelProc),
-                                  reinterpret_cast<LPARAM>(this)));
-    assert(mHwnd);
-}
-
-void LightSpillCust::destroy() {
-    assert(mHwnd);
-    DestroyWindow(mHwnd.hwnd());
-    mHwnd.release();
-    mData = nullptr;
-}
-
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
-
-void LightSpillCust::initWindow(HWND hWnd) {
-    mSpnR = SetupFloatSpinner(hWnd, IDC_R_SPIN, IDC_R_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
-    mSpnG = SetupFloatSpinner(hWnd, IDC_G_SPIN, IDC_G_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
-    mSpnB = SetupFloatSpinner(hWnd, IDC_B_SPIN, IDC_B_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
-    mSpnA = SetupFloatSpinner(hWnd, IDC_A_SPIN, IDC_A_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
-
-    mSpnSize = SetupFloatSpinner(hWnd, IDC_SIZE_SPIN, IDC_SIZE_EDIT, 0.0f, 100.0f, 1.0f, 0.1f);
-
-    cBtnDataRef.setup(hWnd, IDC_BTN_DATAREF);
-    cEdtDataRef = GetICustEdit(GetDlgItem(hWnd, IDC_EDIT_DATAREF));
-
-    assert(mSpnR);
-    assert(mSpnG);
-    assert(mSpnB);
-    assert(mSpnA);
-    assert(mSpnSize);
-    assert(cEdtDataRef);
-    assert(cBtnDataRef);
-}
-
-void LightSpillCust::destroyWindow(HWND /*hWnd*/) {
-    ReleaseISpinner(mSpnR);
-    ReleaseISpinner(mSpnG);
-    ReleaseISpinner(mSpnB);
-    ReleaseISpinner(mSpnA);
-    ReleaseISpinner(mSpnSize);
-
-    cBtnDataRef.release();
-    ReleaseICustEdit(cEdtDataRef);
-}
-
-void LightSpillCust::toWindow() {
-    if (mData) {
-        enableControls();
-        const xobj::Color & color = mData->color();
-        mSpnR->SetValue(color.red(), FALSE);
-        mSpnG->SetValue(color.green(), FALSE);
-        mSpnB->SetValue(color.blue(), FALSE);
-        mSpnA->SetValue(color.alpha(), FALSE);
-        mSpnSize->SetValue(mData->size(), FALSE);
-        UiUtilities::setText(cEdtDataRef, sts::toString(mData->dataRef()));
+    LightSpillCust::LightSpillCust() {
+        mData = nullptr;
     }
-    else {
-        disableControls();
+
+    LightSpillCust::~LightSpillCust() {
+        LightSpillCust::destroy();
     }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void LightSpillCust::show(xobj::ObjLightSpillCust * inData) {
+        mData = inData;
+        toWindow();
+        mHwnd.show();
+    }
+
+    void LightSpillCust::hide() {
+        mHwnd.hide();
+    }
+
+    void LightSpillCust::create(HWND inParent) {
+        assert(inParent);
+        mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
+                                      MAKEINTRESOURCE(IDD_ROLL_LIGHT_SPILLCUST_OBJ),
+                                      inParent,
+                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      reinterpret_cast<LPARAM>(this)));
+        assert(mHwnd);
+    }
+
+    void LightSpillCust::destroy() {
+        assert(mHwnd);
+        DestroyWindow(mHwnd.hwnd());
+        mHwnd.release();
+        mData = nullptr;
+    }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void LightSpillCust::initWindow(HWND hWnd) {
+        mSpnR = SetupFloatSpinner(hWnd, IDC_R_SPIN, IDC_R_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
+        mSpnG = SetupFloatSpinner(hWnd, IDC_G_SPIN, IDC_G_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
+        mSpnB = SetupFloatSpinner(hWnd, IDC_B_SPIN, IDC_B_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
+        mSpnA = SetupFloatSpinner(hWnd, IDC_A_SPIN, IDC_A_EDIT, 0.0f, 1.0f, 0.5f, 0.1f);
+
+        mSpnSize = SetupFloatSpinner(hWnd, IDC_SIZE_SPIN, IDC_SIZE_EDIT, 0.0f, 100.0f, 1.0f, 0.1f);
+
+        cBtnDataRef.setup(hWnd, IDC_BTN_DATAREF);
+        cEdtDataRef = GetICustEdit(GetDlgItem(hWnd, IDC_EDIT_DATAREF));
+
+        assert(mSpnR);
+        assert(mSpnG);
+        assert(mSpnB);
+        assert(mSpnA);
+        assert(mSpnSize);
+        assert(cEdtDataRef);
+        assert(cBtnDataRef);
+    }
+
+    void LightSpillCust::destroyWindow(HWND /*hWnd*/) {
+        ReleaseISpinner(mSpnR);
+        ReleaseISpinner(mSpnG);
+        ReleaseISpinner(mSpnB);
+        ReleaseISpinner(mSpnA);
+        ReleaseISpinner(mSpnSize);
+
+        cBtnDataRef.release();
+        ReleaseICustEdit(cEdtDataRef);
+    }
+
+    void LightSpillCust::toWindow() {
+        if (mData) {
+            enableControls();
+            const xobj::Color & color = mData->color();
+            mSpnR->SetValue(color.red(), FALSE);
+            mSpnG->SetValue(color.green(), FALSE);
+            mSpnB->SetValue(color.blue(), FALSE);
+            mSpnA->SetValue(color.alpha(), FALSE);
+            mSpnSize->SetValue(mData->size(), FALSE);
+            UiUtilities::setText(cEdtDataRef, sts::toString(mData->dataRef()));
+        }
+        else {
+            disableControls();
+        }
+    }
+
+    void LightSpillCust::toData() {
+        xobj::Color color(mSpnR->GetFVal(), mSpnG->GetFVal(), mSpnB->GetFVal(), mSpnA->GetFVal());
+        mData->setColor(color);
+        mData->setSize(mSpnSize->GetFVal());
+        mData->setDataRef(sts::toMbString(UiUtilities::getText(cEdtDataRef)));
+    }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void LightSpillCust::enableControls() {
+        mSpnR->Enable();
+        mSpnG->Enable();
+        mSpnB->Enable();
+        mSpnA->Enable();
+        mSpnSize->Enable();
+
+        cBtnDataRef.enable();
+        cEdtDataRef->Enable();
+    }
+
+    void LightSpillCust::disableControls() {
+        mSpnR->Disable();
+        mSpnG->Disable();
+        mSpnB->Disable();
+        mSpnA->Disable();
+        mSpnSize->Disable();
+
+        cBtnDataRef.disable();
+        cEdtDataRef->Disable();
+    }
+
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
 }
-
-void LightSpillCust::toData() {
-    xobj::Color color(mSpnR->GetFVal(), mSpnG->GetFVal(), mSpnB->GetFVal(), mSpnA->GetFVal());
-    mData->setColor(color);
-    mData->setSize(mSpnSize->GetFVal());
-    mData->setDataRef(sts::toMbString(UiUtilities::getText(cEdtDataRef)));
-}
-
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
-
-void LightSpillCust::enableControls() {
-    mSpnR->Enable();
-    mSpnG->Enable();
-    mSpnB->Enable();
-    mSpnA->Enable();
-    mSpnSize->Enable();
-
-    cBtnDataRef.enable();
-    cEdtDataRef->Enable();
-}
-
-void LightSpillCust::disableControls() {
-    mSpnR->Disable();
-    mSpnG->Disable();
-    mSpnB->Disable();
-    mSpnA->Disable();
-    mSpnSize->Disable();
-
-    cBtnDataRef.disable();
-    cEdtDataRef->Disable();
-}
-
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
 }

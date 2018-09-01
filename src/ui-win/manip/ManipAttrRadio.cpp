@@ -41,205 +41,206 @@
 #include "ui-win/Factory.h"
 
 namespace ui {
+namespace win {
 
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    //////////////////////////////////////////* Static area *///////////////////////////////////////////
+    /**************************************************************************************************/
 
-INT_PTR ManipAttrRadio::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    ManipAttrRadio * theDlg;
-    if (msg == WM_INITDIALOG) {
-        theDlg = reinterpret_cast<ManipAttrRadio*>(lParam);
-        DLSetWindowLongPtr(hWnd, lParam);
-        theDlg->initWindow(hWnd);
-    }
-    else if (msg == WM_DESTROY) {
-        theDlg = DLGetWindowLongPtr<ManipAttrRadio*>(hWnd);
-        theDlg->destroyWindow(hWnd);
-    }
-    else {
-        theDlg = DLGetWindowLongPtr<ManipAttrRadio *>(hWnd);
-        if (!theDlg) {
-            return FALSE;
-        };
-    }
+    INT_PTR ManipAttrRadio::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+        ManipAttrRadio * theDlg;
+        if (msg == WM_INITDIALOG) {
+            theDlg = reinterpret_cast<ManipAttrRadio*>(lParam);
+            DLSetWindowLongPtr(hWnd, lParam);
+            theDlg->initWindow(hWnd);
+        }
+        else if (msg == WM_DESTROY) {
+            theDlg = DLGetWindowLongPtr<ManipAttrRadio*>(hWnd);
+            theDlg->destroyWindow(hWnd);
+        }
+        else {
+            theDlg = DLGetWindowLongPtr<ManipAttrRadio *>(hWnd);
+            if (!theDlg) {
+                return FALSE;
+            };
+        }
 
-    //--------------------------------------
+        //--------------------------------------
 
-    switch (msg) {
-        case WM_COMMAND: {
-            switch (LOWORD(wParam)) {
-                case BTN_DATAREF: {
-                    Factory::showNotImplemented();
-                    break;
-                }
-                case CMB_CURSOR: {
-                    if (HIWORD(wParam) == CBN_SELCHANGE) {
-                        theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
-                        theDlg->save();
+        switch (msg) {
+            case WM_COMMAND: {
+                switch (LOWORD(wParam)) {
+                    case BTN_DATAREF: {
+                        Factory::showNotImplemented();
+                        break;
                     }
-                    break;
+                    case CMB_CURSOR: {
+                        if (HIWORD(wParam) == CBN_SELCHANGE) {
+                            theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
+                            theDlg->save();
+                        }
+                        break;
+                    }
+                    default: break;
                 }
-                default: break;
+                break;
             }
-            break;
-        }
-        case WM_CUSTEDIT_ENTER: {
-            switch (LOWORD(wParam)) {
-                case EDIT_DATAREF: {
-                    theDlg->mData.setDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)));
-                    theDlg->save();
-                    break;
+            case WM_CUSTEDIT_ENTER: {
+                switch (LOWORD(wParam)) {
+                    case EDIT_DATAREF: {
+                        theDlg->mData.setDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)));
+                        theDlg->save();
+                        break;
+                    }
+                    case EDIT_TOOLTIP: {
+                        theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
+                        theDlg->save();
+                        break;
+                    }
+                    default: break;
                 }
-                case EDIT_TOOLTIP: {
-                    theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
-                    theDlg->save();
-                    break;
-                }
-                default: break;
+                break;
             }
-            break;
-        }
-        case CC_SPINNER_CHANGE: {
-            switch (LOWORD(wParam)) {
-                case SPN_DOWN: {
-                    theDlg->mData.setDown(theDlg->mSpnDown->GetFVal());
-                    theDlg->save();
-                    break;
+            case CC_SPINNER_CHANGE: {
+                switch (LOWORD(wParam)) {
+                    case SPN_DOWN: {
+                        theDlg->mData.setDown(theDlg->mSpnDown->GetFVal());
+                        theDlg->save();
+                        break;
+                    }
+                    default: break;
                 }
-                default: break;
+                break;
             }
-            break;
+            default: break;
         }
-        default: break;
+        return 0;
     }
-    return 0;
-}
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+    /**************************************************************************************************/
 
-ManipAttrRadio::ManipAttrRadio(MdManip * modelData)
-    : mModelData(modelData) {
-    assert(mModelData);
-}
-
-ManipAttrRadio::~ManipAttrRadio() {
-    ManipAttrRadio::destroy();
-}
-
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
-
-void ManipAttrRadio::create(HWND inParent) {
-    assert(inParent);
-    mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
-                                  MAKEINTRESOURCE(ROLL_MANIP_RADIO),
-                                  inParent,
-                                  reinterpret_cast<DLGPROC>(panelProc),
-                                  reinterpret_cast<LPARAM>(this)));
-    assert(mHwnd);
-    if (mHwnd) {
-        toWindow();
-        mWheel.create(inParent);
-        calculateSize();
-        mHwnd.show(true);
+    ManipAttrRadio::ManipAttrRadio(MdManip * modelData)
+        : mModelData(modelData) {
+        assert(mModelData);
     }
-    else {
-        LError << WinCode(GetLastError());
-    }
-}
 
-void ManipAttrRadio::destroy() {
-    if (mHwnd) {
-        BOOL res = DestroyWindow(mHwnd.hwnd());
-        if (!res) {
+    ManipAttrRadio::~ManipAttrRadio() {
+        ManipAttrRadio::destroy();
+    }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void ManipAttrRadio::create(HWND inParent) {
+        assert(inParent);
+        mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
+                                      MAKEINTRESOURCE(ROLL_MANIP_RADIO),
+                                      inParent,
+                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      reinterpret_cast<LPARAM>(this)));
+        assert(mHwnd);
+        if (mHwnd) {
+            toWindow();
+            mWheel.create(inParent);
+            calculateSize();
+            mHwnd.show(true);
+        }
+        else {
             LError << WinCode(GetLastError());
         }
-        mHwnd.release();
     }
-}
 
-RECT ManipAttrRadio::rect() const {
-    return mSize;
-}
-
-void ManipAttrRadio::move(const POINT & point) {
-    if (mHwnd) {
-        mHwnd.move(point);
-        calculateSize();
+    void ManipAttrRadio::destroy() {
+        if (mHwnd) {
+            BOOL res = DestroyWindow(mHwnd.hwnd());
+            if (!res) {
+                LError << WinCode(GetLastError());
+            }
+            mHwnd.release();
+        }
     }
-}
 
-/**************************************************************************************************/
-//////////////////////////////////////////* Functions */////////////////////////////////////////////
-/**************************************************************************************************/
-
-void ManipAttrRadio::calculateSize() {
-    if (mHwnd) {
-        mSize = mHwnd.rect();
-        mWheel.move(POINT{0, mSize.bottom});
-        RECT wheelRect = mWheel.rect();
-        mSize.bottom += (wheelRect.bottom - wheelRect.top);
+    RECT ManipAttrRadio::rect() const {
+        return mSize;
     }
-}
 
-/**************************************************************************************************/
-//////////////////////////////////////////* Functions */////////////////////////////////////////////
-/**************************************************************************************************/
-
-void ManipAttrRadio::setManip(const xobj::AttrManipBase & manip) {
-    if (manip.type() != mData.type()) {
-        LError << "Incorrect manipulator: " << manip.type().toString();
-        return;
+    void ManipAttrRadio::move(const POINT & point) {
+        if (mHwnd) {
+            mHwnd.move(point);
+            calculateSize();
+        }
     }
-    mData = static_cast<const xobj::AttrManipRadio &>(manip);
-    mWheel.setManip(mData.wheel());
-}
 
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    //////////////////////////////////////////* Functions */////////////////////////////////////////////
+    /**************************************************************************************************/
 
-void ManipAttrRadio::initWindow(HWND hWnd) {
-    std::function<void(const xobj::AttrManipWheel &)> callback = [this](const xobj::AttrManipWheel & wheel) mutable {
-        mData.setWheel(wheel);
-        mModelData->saveToNode(mData);
-    };
-    mWheel.setCallBack(callback);
-
-    mSpnDown = SetupFloatSpinner(hWnd, SPN_DOWN, SPN_DOWN_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
-
-    cBtnDataRef.setup(hWnd, IDC_BTN_DATAREF);
-    cEdtDataRef = GetICustEdit(GetDlgItem(hWnd, EDIT_DATAREF));
-    cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
-    cCmbCursor.setup(hWnd, CMB_CURSOR);
-
-    for (auto & curr : xobj::ECursor::list()) {
-        cCmbCursor.addItem(sts::toString(curr.toUiString()));
+    void ManipAttrRadio::calculateSize() {
+        if (mHwnd) {
+            mSize = mHwnd.rect();
+            mWheel.move(POINT{0, mSize.bottom});
+            RECT wheelRect = mWheel.rect();
+            mSize.bottom += (wheelRect.bottom - wheelRect.top);
+        }
     }
-    cCmbCursor.setCurrSelected(0);
+
+    /**************************************************************************************************/
+    //////////////////////////////////////////* Functions */////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void ManipAttrRadio::setManip(const xobj::AttrManipBase & manip) {
+        if (manip.type() != mData.type()) {
+            LError << "Incorrect manipulator: " << manip.type().toString();
+            return;
+        }
+        mData = static_cast<const xobj::AttrManipRadio &>(manip);
+        mWheel.setManip(mData.wheel());
+    }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void ManipAttrRadio::initWindow(HWND hWnd) {
+        std::function<void(const xobj::AttrManipWheel &)> callback = [this](const xobj::AttrManipWheel & wheel) mutable {
+            mData.setWheel(wheel);
+            mModelData->saveToNode(mData);
+        };
+        mWheel.setCallBack(callback);
+
+        mSpnDown = SetupFloatSpinner(hWnd, SPN_DOWN, SPN_DOWN_EDIT, -10000.0f, 10000.0f, 0.0f, 0.1f);
+
+        cBtnDataRef.setup(hWnd, IDC_BTN_DATAREF);
+        cEdtDataRef = GetICustEdit(GetDlgItem(hWnd, EDIT_DATAREF));
+        cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
+        cCmbCursor.setup(hWnd, CMB_CURSOR);
+
+        for (auto & curr : xobj::ECursor::list()) {
+            cCmbCursor.addItem(sts::toString(curr.toUiString()));
+        }
+        cCmbCursor.setCurrSelected(0);
+    }
+
+    void ManipAttrRadio::destroyWindow(HWND /*hWnd*/) {
+        ReleaseISpinner(mSpnDown);
+        cBtnDataRef.release();
+        ReleaseICustEdit(cEdtDataRef);
+        ReleaseICustEdit(cEdtToolType);
+        cCmbCursor.release();
+    }
+
+    void ManipAttrRadio::toWindow() {
+        mSpnDown->SetValue(static_cast<float>(mData.down()), FALSE);
+        UiUtilities::setText(cEdtDataRef, sts::toString(mData.dataref()));
+        UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
+        cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
+    }
+
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
 }
-
-void ManipAttrRadio::destroyWindow(HWND /*hWnd*/) {
-    ReleaseISpinner(mSpnDown);
-    cBtnDataRef.release();
-    ReleaseICustEdit(cEdtDataRef);
-    ReleaseICustEdit(cEdtToolType);
-    cCmbCursor.release();
-}
-
-void ManipAttrRadio::toWindow() {
-    mSpnDown->SetValue(static_cast<float>(mData.down()), FALSE);
-    UiUtilities::setText(cEdtDataRef, sts::toString(mData.dataref()));
-    UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
-    cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
-}
-
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
-
 }

@@ -31,39 +31,40 @@
 
 #include "Base.h"
 
+namespace ui {
 namespace win {
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**************************************************************************************************/
 
-class Combo : public Base {
-public:
+    class Combo : public Base {
+    public:
 
-    void addItem(const String & inItem, bool inSelected = false);
-    void removeItem(const String & inItem);
+        void addItem(const String & inItem, bool inSelected = false);
+        void removeItem(const String & inItem);
 
-    void clear() {
-        SendMessage(hwnd(), CB_RESETCONTENT, NULL, NULL);
-    }
+        void clear() {
+            SendMessage(hwnd(), CB_RESETCONTENT, NULL, NULL);
+        }
 
-    int count() const;
+        int count() const;
 
-    void setCurrSelected(int inIndex);
-    bool setCurrSelected(const String & text);
+        void setCurrSelected(int inIndex);
+        bool setCurrSelected(const String & text);
 
-    int currSelected() const;
-    String currSelectedText() const;
+        int currSelected() const;
+        String currSelectedText() const;
 
-    Combo();
-    virtual ~Combo();
+        Combo();
+        virtual ~Combo();
 
-private:
+    private:
 
-};
+    };
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-};
+    /**************************************************************************************************/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**************************************************************************************************/
+}
+}

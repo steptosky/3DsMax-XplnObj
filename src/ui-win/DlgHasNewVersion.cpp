@@ -39,110 +39,111 @@
 #include "resource/ResHelper.h"
 
 namespace ui {
+namespace win {
 
-/********************************************************************************************************/
-/////////////////////////////////////////////* Static area *//////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    /////////////////////////////////////////////* Static area *//////////////////////////////////////////////
+    /********************************************************************************************************/
 
-INT_PTR CALLBACK DlgHasNewVersion::_BaseWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-    DlgHasNewVersion * theDlg;
-    if (message == WM_INITDIALOG) {
-        theDlg = (DlgHasNewVersion*)lParam;
-        theDlg->mDlgMain.setup(hWnd);
-        DLSetWindowLongPtr(hWnd, lParam);
+    INT_PTR CALLBACK DlgHasNewVersion::_BaseWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+        DlgHasNewVersion * theDlg;
+        if (message == WM_INITDIALOG) {
+            theDlg = (DlgHasNewVersion*)lParam;
+            theDlg->mDlgMain.setup(hWnd);
+            DLSetWindowLongPtr(hWnd, lParam);
+        }
+        else {
+            if ((theDlg = DLGetWindowLongPtr<DlgHasNewVersion *>(hWnd)) == NULL)
+                return FALSE;
+            if (message == WM_DESTROY)
+                theDlg->mDlgMain.release();
+        }
+
+        //------------------------------------------------------
+
+        switch (message) {
+            case WM_INITDIALOG:
+                theDlg->InitDlg(hWnd);
+                break;
+            case WM_COMMAND:
+                switch (LOWORD(wParam)) {
+                    case ID_HAS_NEW_VERSION_CANCEL_BUTTON:
+                        EndDialog(hWnd, 0);
+                        break;
+                    case ID_HAS_NEW_VERSION_DOWNLOAD_BUTTON:
+                        //std::string url = theDlg->mData->getPackageUrl();
+                        //ShellExecute(NULL, _T("open"), sts::toString(url).c_str(), NULL, NULL, SW_SHOWNORMAL);
+                        EndDialog(hWnd, 1);
+                        break;
+                }
+                break;
+            case WM_DESTROY:
+                theDlg->DestroyDlg(hWnd);
+                break;
+            case WM_CLOSE:
+                EndDialog(hWnd, 0);
+                break;
+            default:
+                return FALSE;
+        }
+        return TRUE;
     }
-    else {
-        if ((theDlg = DLGetWindowLongPtr<DlgHasNewVersion *>(hWnd)) == NULL)
-            return FALSE;
-        if (message == WM_DESTROY)
-            theDlg->mDlgMain.release();
+
+    /********************************************************************************************************/
+    ///////////////////////////////////////* Constructors/Destructor *////////////////////////////////////////
+    /********************************************************************************************************/
+
+    DlgHasNewVersion::DlgHasNewVersion() {}
+
+    DlgHasNewVersion::~DlgHasNewVersion() {}
+
+    /********************************************************************************************************/
+    //////////////////////////////////////////////* Functions *///////////////////////////////////////////////
+    /********************************************************************************************************/
+
+    bool DlgHasNewVersion::show() {
+        //mData = &inOutData;
+        INT_PTR res = DialogBoxParam(ResHelper::hInstance,
+                                     MAKEINTRESOURCE(IDD_HAS_NEW_VERSION_DIALOG),
+                                     GetCOREInterface()->GetMAXHWnd(),
+                                     _BaseWindowProc, (LPARAM)this);
+        return (res != 0);
     }
 
-    //------------------------------------------------------
+    void DlgHasNewVersion::InitDlg(HWND hWnd) {
+        CenterWindow(mDlgMain.hwnd(), mDlgMain.parent());
+        mHWnd = hWnd;
 
-    switch (message) {
-        case WM_INITDIALOG:
-            theDlg->InitDlg(hWnd);
-            break;
-        case WM_COMMAND:
-            switch (LOWORD(wParam)) {
-                case ID_HAS_NEW_VERSION_CANCEL_BUTTON:
-                    EndDialog(hWnd, 0);
-                    break;
-                case ID_HAS_NEW_VERSION_DOWNLOAD_BUTTON:
-                    //std::string url = theDlg->mData->getPackageUrl();
-                    //ShellExecute(NULL, _T("open"), sts::toString(url).c_str(), NULL, NULL, SW_SHOWNORMAL);
-                    EndDialog(hWnd, 1);
-                    break;
-            }
-            break;
-        case WM_DESTROY:
-            theDlg->DestroyDlg(hWnd);
-            break;
-        case WM_CLOSE:
-            EndDialog(hWnd, 0);
-            break;
-        default:
-            return FALSE;
+        cLabel.setup(hWnd, IDC_HAS_NEW_VERSION_LABEL);
+        cDownloadButton.setup(hWnd, ID_HAS_NEW_VERSION_DOWNLOAD_BUTTON);
+
+        //mDlgMain.setText(sts::toString(productInfo.getProgramName()));
+
+        _toWindow();
+        mDlgMain.show();
     }
-    return TRUE;
+
+    void DlgHasNewVersion::DestroyDlg(HWND /*hWnd*/) {
+        _toVariables();
+
+        cLabel.release();
+    }
+
+    void DlgHasNewVersion::_toWindow() {
+        std::stringstream labelText;
+        labelText << "New Version of Plugin available on server! ( ";
+        //labelText << mData->getUpdateVersion();
+        labelText << " )";
+        cLabel.setText(sts::toString(labelText.str()));
+        cDownloadButton.setText(_T("Download"));
+    }
+
+    void DlgHasNewVersion::_toVariables() {
+        //mData->resetCheckUpdateProcess();
+    }
+
+    /**************************************************************************************************/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**************************************************************************************************/
 }
-
-/********************************************************************************************************/
-///////////////////////////////////////* Constructors/Destructor *////////////////////////////////////////
-/********************************************************************************************************/
-
-DlgHasNewVersion::DlgHasNewVersion() {}
-
-DlgHasNewVersion::~DlgHasNewVersion() {}
-
-/********************************************************************************************************/
-//////////////////////////////////////////////* Functions *///////////////////////////////////////////////
-/********************************************************************************************************/
-
-bool DlgHasNewVersion::show() {
-    //mData = &inOutData;
-    INT_PTR res = DialogBoxParam(ResHelper::hInstance,
-                                 MAKEINTRESOURCE(IDD_HAS_NEW_VERSION_DIALOG),
-                                 GetCOREInterface()->GetMAXHWnd(),
-                                 _BaseWindowProc, (LPARAM)this);
-    return (res != 0);
-}
-
-void DlgHasNewVersion::InitDlg(HWND hWnd) {
-    CenterWindow(mDlgMain.hwnd(), mDlgMain.parent());
-    mHWnd = hWnd;
-
-    cLabel.setup(hWnd, IDC_HAS_NEW_VERSION_LABEL);
-    cDownloadButton.setup(hWnd, ID_HAS_NEW_VERSION_DOWNLOAD_BUTTON);
-
-    //mDlgMain.setText(sts::toString(productInfo.getProgramName()));
-
-    _toWindow();
-    mDlgMain.show();
-}
-
-void DlgHasNewVersion::DestroyDlg(HWND /*hWnd*/) {
-    _toVariables();
-
-    cLabel.release();
-}
-
-void DlgHasNewVersion::_toWindow() {
-    std::stringstream labelText;
-    labelText << "New Version of Plugin available on server! ( ";
-    //labelText << mData->getUpdateVersion();
-    labelText << " )";
-    cLabel.setText(sts::toString(labelText.str()));
-    cDownloadButton.setText(_T("Download"));
-}
-
-void DlgHasNewVersion::_toVariables() {
-    //mData->resetCheckUpdateProcess();
-}
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
 }

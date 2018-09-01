@@ -32,39 +32,41 @@
 #include "ui-win/controls/Base.h"
 
 namespace ui {
+namespace win {
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**************************************************************************************************/
 
-class DlgHasNewVersion {
-public:
+    class DlgHasNewVersion {
+    public:
 
-    bool show();
+        bool show();
 
-    DlgHasNewVersion();
-    ~DlgHasNewVersion();
+        DlgHasNewVersion();
+        ~DlgHasNewVersion();
 
-private:
-    //MdUpdateProgram * mData;
-    HWND mHWnd;
-    void InitDlg(HWND hWnd);
-    void DestroyDlg(HWND hWnd);
-    void _toWindow();
-    void _toVariables();
+    private:
+        //MdUpdateProgram * mData;
+        HWND mHWnd;
+        void InitDlg(HWND hWnd);
+        void DestroyDlg(HWND hWnd);
+        void _toWindow();
+        void _toVariables();
 
-    win::Base cLabel;
-    win::Base cDownloadButton;
+        win::Base cLabel;
+        win::Base cDownloadButton;
 
-    win::Base mDlgMain;
+        win::Base mDlgMain;
 
-private:
+    private:
 
-    static INT_PTR CALLBACK _BaseWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+        static INT_PTR CALLBACK _BaseWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-};
+    };
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
+}
 }

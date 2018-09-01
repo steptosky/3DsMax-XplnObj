@@ -35,55 +35,57 @@
 #include "ui-win/controls/Base.h"
 
 namespace ui {
+namespace win {
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
 
-class LightSpillCust : public AbstractLight {
-public:
+    class LightSpillCust : public AbstractLight {
+    public:
 
-    win::Base & getCBase() override {
-        return mHwnd;
-    }
+        win::Base & getCBase() override {
+            return mHwnd;
+        }
 
-    void create(HWND inParent) override;
-    void show(xobj::ObjLightSpillCust * inData);
-    void hide();
-    void destroy() override;
+        void create(HWND inParent) override;
+        void show(xobj::ObjLightSpillCust * inData);
+        void hide();
+        void destroy() override;
 
-    LightSpillCust();
-    virtual ~LightSpillCust();
+        LightSpillCust();
+        virtual ~LightSpillCust();
 
-private:
+    private:
 
-    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+        static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-    void initWindow(HWND hWnd);
-    void destroyWindow(HWND hWnd);
+        void initWindow(HWND hWnd);
+        void destroyWindow(HWND hWnd);
 
-    void toWindow();
-    void toData();
+        void toWindow();
+        void toData();
 
-    void enableControls();
-    void disableControls();
+        void enableControls();
+        void disableControls();
 
-    win::Base mHwnd;
+        win::Base mHwnd;
 
-    ISpinnerControl * mSpnR = nullptr;
-    ISpinnerControl * mSpnG = nullptr;
-    ISpinnerControl * mSpnB = nullptr;
-    ISpinnerControl * mSpnA = nullptr;
+        ISpinnerControl * mSpnR = nullptr;
+        ISpinnerControl * mSpnG = nullptr;
+        ISpinnerControl * mSpnB = nullptr;
+        ISpinnerControl * mSpnA = nullptr;
 
-    ISpinnerControl * mSpnSize = nullptr;
+        ISpinnerControl * mSpnSize = nullptr;
 
-    win::Base cBtnDataRef;
-    ICustEdit * cEdtDataRef = nullptr;
+        win::Base cBtnDataRef;
+        ICustEdit * cEdtDataRef = nullptr;
 
-    xobj::ObjLightSpillCust * mData = nullptr;
-};
+        xobj::ObjLightSpillCust * mData = nullptr;
+    };
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
+}
 }

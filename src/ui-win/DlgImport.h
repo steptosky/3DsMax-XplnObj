@@ -35,66 +35,68 @@
 #include "common/Logger.h"
 
 namespace ui {
+namespace win {
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
 
-class DlgImport {
-public:
+    class DlgImport {
+    public:
 
-    DlgImport();
-    ~DlgImport();
+        DlgImport();
+        ~DlgImport();
 
-    bool show(const TCHAR * inFileName, Interface * inIp, bool suppressPrompts);
+        bool show(const TCHAR * inFileName, Interface * inIp, bool suppressPrompts);
 
-private:
+    private:
 
-    HWND mHWnd = nullptr;;
-    void InitDlg(HWND hWnd);
-    void DestroyDlg(HWND hWnd);
+        HWND mHWnd = nullptr;;
+        void InitDlg(HWND hWnd);
+        void DestroyDlg(HWND hWnd);
 
-    win::Base mLblVersion;
+        win::Base mLblVersion;
 
-    win::Base mBtnCheckUpdate;
-    win::Base mBtnDonate;
-    win::Base mBtnOk;
-    win::Base mBtnCancel;
-    win::Base mBtnAbout;;
-    win::Edit mEdtLog;
-    win::Base mDlgMain;
+        win::Base mBtnCheckUpdate;
+        win::Base mBtnDonate;
+        win::Base mBtnOk;
+        win::Base mBtnCancel;
+        win::Base mBtnAbout;;
+        win::Edit mEdtLog;
+        win::Base mDlgMain;
 
-    //-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
 
-    uint32_t mErrorCount = 0;
-    uint32_t mWarningCount = 0;
+        uint32_t mErrorCount = 0;
+        uint32_t mWarningCount = 0;
 
-    //-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
 
-    static INT_PTR CALLBACK callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-    static void logCallback(sts::BaseLogger::eType type, const char * msg);
+        static INT_PTR CALLBACK callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+        static void logCallback(sts::BaseLogger::eType type, const char * msg);
 
-    //-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
 
-    int startImport();
-    void finish(bool falied);
+        int startImport();
+        void finish(bool falied);
 
-    Converterer mConverterer;
-    TimeValue mTime = 0;
-    std::string mLogText;
+        Converterer mConverterer;
+        TimeValue mTime = 0;
+        std::string mLogText;
 
-    Interface * mIp = nullptr;
-    const TCHAR * mFileName = nullptr;
-    bool mSuppressPrompts = false;
-    bool mFinished = false;
+        Interface * mIp = nullptr;
+        const TCHAR * mFileName = nullptr;
+        bool mSuppressPrompts = false;
+        bool mFinished = false;
 
-    static DlgImport * gImportDlg;
+        static DlgImport * gImportDlg;
 
-    //-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
 
-};
+    };
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
+}
 }

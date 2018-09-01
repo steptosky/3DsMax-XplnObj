@@ -213,7 +213,7 @@ std::string Logger::aboutInfo(bool inUseWinEol) {
     //-------------------------------------------------------------------------
 
 #ifndef MAX_PRODUCT_YEAR_NUMBER
-	stream << "Project: " XIO_PROJECT_NAME << " " << MAX_VERSION_MAJOR << eol;
+    stream << "Project: " XIO_PROJECT_NAME << " " << MAX_VERSION_MAJOR << eol;
 #else
     stream << "Project: " XIO_PROJECT_NAME << " " << MAX_PRODUCT_YEAR_NUMBER << " (" << MAX_VERSION_MAJOR << ")" << eol;
 #endif
@@ -260,7 +260,7 @@ std::string Logger::shortAboutInfo(bool inUseWinEol) {
     //-------------------------------------------------------------------------
 
 #ifndef MAX_PRODUCT_YEAR_NUMBER
-	stream << "Project: " XIO_PROJECT_NAME << " " << MAX_VERSION_MAJOR << eol;
+    stream << "Project: " XIO_PROJECT_NAME << " " << MAX_VERSION_MAJOR << eol;
 #else
     stream << "Project: " XIO_PROJECT_NAME << " " << MAX_PRODUCT_YEAR_NUMBER << " (" << MAX_VERSION_MAJOR << ")" << eol;
 #endif

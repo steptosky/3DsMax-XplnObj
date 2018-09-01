@@ -36,52 +36,54 @@
 #include "models/MdManip.h"
 
 namespace ui {
+namespace win {
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
 
-class ManipAttrCmd : public ManipInterface {
-public:
+    class ManipAttrCmd : public ManipInterface {
+    public:
 
-    explicit ManipAttrCmd(MdManip * modelData);
-    virtual ~ManipAttrCmd();
+        explicit ManipAttrCmd(MdManip * modelData);
+        virtual ~ManipAttrCmd();
 
-    //-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
 
-    void create(HWND inParent) override;
-    void destroy() override;
-    RECT rect() const override;
-    void move(const POINT & point) override;
+        void create(HWND inParent) override;
+        void destroy() override;
+        RECT rect() const override;
+        void move(const POINT & point) override;
 
-    void setManip(const xobj::AttrManipBase & manip) override;
+        void setManip(const xobj::AttrManipBase & manip) override;
 
-    //-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
 
-private:
+    private:
 
-    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+        static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-    void initWindow(HWND hWnd);
-    void destroyWindow(HWND hWnd);
+        void initWindow(HWND hWnd);
+        void destroyWindow(HWND hWnd);
 
-    void toWindow();
+        void toWindow();
 
-    void save() const {
-        mModelData->saveToNode(mData);
-    }
+        void save() const {
+            mModelData->saveToNode(mData);
+        }
 
-    MdManip * mModelData;
-    xobj::AttrManipCmd mData;
+        MdManip * mModelData;
+        xobj::AttrManipCmd mData;
 
-    win::Base mHwnd;
-    win::Base cBtnCommand;
-    ICustEdit * cEdtCommand = nullptr;
-    ICustEdit * cEdtToolType = nullptr;
-    win::Combo cCmbCursor;
-};
+        win::Base mHwnd;
+        win::Base cBtnCommand;
+        ICustEdit * cEdtCommand = nullptr;
+        ICustEdit * cEdtToolType = nullptr;
+        win::Combo cCmbCursor;
+    };
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
+}
 }

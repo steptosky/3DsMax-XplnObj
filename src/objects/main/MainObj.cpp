@@ -996,7 +996,7 @@ void MainObject::loadRawGlobAttr(sts_bwc::DataStream & stream) const {
     //-------------------------------------------------------------------------
     if (data.chkNoBlend && data.chkShadowBlend) {
         std::string msg("\"shadow blend\" and \"no blend\" can not be enabled at same time. Only data about \"no blend\" will be loaded.");
-        ui::DlgMessageBox::warning(nullptr, "[Backward Compatibility]", msg);
+        ui::win::DlgMessageBox::warning(nullptr, "[Backward Compatibility]", msg);
         LWarning << msg;
     }
     MainObjParamsWrapper wrapper(mAttrParamsPb, mExpPb, TimeValue(0), FOREVER);
@@ -1385,7 +1385,7 @@ RefResult MainObject::NotifyRefChanged(const Interval & /*changeInt*/, RefTarget
                                        PartID & /*partID*/, RefMessage message, BOOL /*propagate*/) {
 #else
 RefResult MainObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /*hTarget*/,
-										PartID & /*partID*/, RefMessage message) {
+                                       PartID & /*partID*/, RefMessage message) {
 #endif
     switch (message) {
         case REFMSG_CHANGE:

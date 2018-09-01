@@ -439,7 +439,7 @@ RefResult LodObject::NotifyRefChanged(const Interval & /*changeInt*/, RefTargetH
                                       PartID & /*partID*/, RefMessage message, BOOL /*propagate*/) {
 #else
 RefResult LodObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /*hTarget*/,
-									PartID & /*partID*/, RefMessage message) {
+                                      PartID & /*partID*/, RefMessage message) {
 #endif
     switch (message) {
         case REFMSG_CHANGE:

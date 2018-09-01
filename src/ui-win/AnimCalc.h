@@ -32,48 +32,50 @@
 #include "ui-win/controls/Base.h"
 
 namespace ui {
+namespace win {
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
 
-class AnimCalc {
-public:
+    class AnimCalc {
+    public:
 
-    struct Key {
-        TimeValue keyTime;
-        float datarefValue;
+        struct Key {
+            TimeValue keyTime;
+            float datarefValue;
+        };
+
+        typedef std::vector<AnimCalc::Key> KeyList;
+
+        bool calculate(KeyList & inOutData, HWND inParent);
+
+        AnimCalc();
+        virtual ~AnimCalc();
+
+    private:
+
+        void destroy();
+
+        static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+        void initWindow(HWND hWnd);
+        void destroyWindow(HWND hWnd);
+
+        void calculateValues();
+
+        ISpinnerControl * cSpnVal1 = nullptr;
+        ISpinnerControl * cSpnVal2 = nullptr;
+
+        win::Base cBtnOk;
+        win::Base cBtnCancel;
+        win::Base mMainWin;
+        KeyList * mData = nullptr;
+        HWND mParent;
+
     };
 
-    typedef std::vector<AnimCalc::Key> KeyList;
-
-    bool calculate(KeyList & inOutData, HWND inParent);
-
-    AnimCalc();
-    virtual ~AnimCalc();
-
-private:
-
-    void destroy();
-
-    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-    void initWindow(HWND hWnd);
-    void destroyWindow(HWND hWnd);
-
-    void calculateValues();
-
-    ISpinnerControl * cSpnVal1 = nullptr;
-    ISpinnerControl * cSpnVal2 = nullptr;
-
-    win::Base cBtnOk;
-    win::Base cBtnCancel;
-    win::Base mMainWin;
-    KeyList * mData = nullptr;
-    HWND mParent;
-
-};
-
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
+}
 }

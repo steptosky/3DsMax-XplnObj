@@ -37,134 +37,136 @@
 #include "common/String.h"
 
 namespace ui {
+namespace win {
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**************************************************************************************************/
 
-INT_PTR UpdatedObjects::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    UpdatedObjects * theDlg;
-    if (msg == WM_INITDIALOG) {
-        theDlg = reinterpret_cast<UpdatedObjects*>(lParam);
-        DLSetWindowLongPtr(hWnd, lParam);
-        CenterWindow(hWnd, theDlg->mParent);
-        theDlg->mMainWin.setup(hWnd);
-        theDlg->initWindow(hWnd);
-    }
-    else if (msg == WM_DESTROY) {
-        theDlg = DLGetWindowLongPtr<UpdatedObjects*>(hWnd);
-        theDlg->destroyWindow(hWnd);
-        theDlg->mMainWin.release();
-    }
-    else {
-        theDlg = DLGetWindowLongPtr<UpdatedObjects *>(hWnd);
-        if (!theDlg) {
-            return FALSE;
+    INT_PTR UpdatedObjects::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+        UpdatedObjects * theDlg;
+        if (msg == WM_INITDIALOG) {
+            theDlg = reinterpret_cast<UpdatedObjects*>(lParam);
+            DLSetWindowLongPtr(hWnd, lParam);
+            CenterWindow(hWnd, theDlg->mParent);
+            theDlg->mMainWin.setup(hWnd);
+            theDlg->initWindow(hWnd);
         }
-    }
-
-    //--------------------------------------
-
-    switch (msg) {
-        case WM_COMMAND: {
-            switch (LOWORD(wParam)) {
-                case IDC_BTN_OK: {
-                    EndDialog(hWnd, 1);
-                    break;
-                }
-                default: break;
-            }
-            break;
-        }
-        case WM_CLOSE:
-            EndDialog(hWnd, 0);
-        default:
-            return 0;
-    }
-    return 0;
-}
-
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
-
-UpdatedObjects::UpdatedObjects()
-    : mParent(nullptr) {
-    mData = nullptr;
-}
-
-UpdatedObjects::~UpdatedObjects() {
-    destroy();
-}
-
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
-
-bool UpdatedObjects::show(const std::vector<INode *> * nodes, HWND parent) {
-    DbgAssert(nodes);
-    DbgAssert(parent);
-    mData = nodes;
-    mParent = parent;
-    return DialogBoxParam(ResHelper::hInstance,
-                          MAKEINTRESOURCE(IDD_UPDATED_OBJECTS),
-                          parent,
-                          reinterpret_cast<DLGPROC>(panelProc),
-                          reinterpret_cast<LPARAM>(this)) ? true : false;
-}
-
-void UpdatedObjects::destroy() {
-    if (mMainWin) {
-        EndDialog(mMainWin.hwnd(), 0);
-        mMainWin.release();
-    }
-}
-
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
-
-void UpdatedObjects::initWindow(HWND hWnd) {
-    cBtnOk.setup(hWnd, IDC_BTN_OK);
-    mEditInfo.setup(hWnd, EDT_INFO);
-    mLstObjects.setup(hWnd, EDT_OBJECTS);
-    showData();
-}
-
-void UpdatedObjects::destroyWindow(HWND /*hWnd*/) {
-    cBtnOk.release();
-    mEditInfo.release();
-    mLstObjects.release();
-}
-
-/**************************************************************************************************/
-///////////////////////////////////////////* Functions *////////////////////////////////////////////
-/**************************************************************************************************/
-
-void UpdatedObjects::showData() {
-    if (mData->empty()) {
-        mEditInfo.setText(_T("There are no affected objects."));
-    }
-    else {
-        sts::Str strCount;
-        if (mData->size() == 1) {
-            strCount = sts::StrUtils::join(_T("There is "), mData->size(), _T(" affected object."));
+        else if (msg == WM_DESTROY) {
+            theDlg = DLGetWindowLongPtr<UpdatedObjects*>(hWnd);
+            theDlg->destroyWindow(hWnd);
+            theDlg->mMainWin.release();
         }
         else {
-            strCount = sts::StrUtils::join(_T("There are "), mData->size(), _T(" affected objects."));
+            theDlg = DLGetWindowLongPtr<UpdatedObjects *>(hWnd);
+            if (!theDlg) {
+                return FALSE;
+            }
         }
-        mEditInfo.setText(sts::StrUtils::joinStr(_T("The following list contains names of the affected objects.\r\n"),
-                                                 _T("You can copy/paste it somewhere and use it later to check the scene manually.\r\n\r\n"),
-                                                 strCount));
-        std::stringstream list;
-        for (const auto n : *mData) {
-            list << sts::toMbString(n->GetName()) << "\r\n";
-        }
-        mLstObjects.setText(list.str());
-    }
-}
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+        //--------------------------------------
+
+        switch (msg) {
+            case WM_COMMAND: {
+                switch (LOWORD(wParam)) {
+                    case IDC_BTN_OK: {
+                        EndDialog(hWnd, 1);
+                        break;
+                    }
+                    default: break;
+                }
+                break;
+            }
+            case WM_CLOSE:
+                EndDialog(hWnd, 0);
+            default:
+                return 0;
+        }
+        return 0;
+    }
+
+    /**************************************************************************************************/
+    ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+    /**************************************************************************************************/
+
+    UpdatedObjects::UpdatedObjects()
+        : mParent(nullptr) {
+        mData = nullptr;
+    }
+
+    UpdatedObjects::~UpdatedObjects() {
+        destroy();
+    }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    bool UpdatedObjects::show(const std::vector<INode *> * nodes, HWND parent) {
+        DbgAssert(nodes);
+        DbgAssert(parent);
+        mData = nodes;
+        mParent = parent;
+        return DialogBoxParam(ResHelper::hInstance,
+                              MAKEINTRESOURCE(IDD_UPDATED_OBJECTS),
+                              parent,
+                              reinterpret_cast<DLGPROC>(panelProc),
+                              reinterpret_cast<LPARAM>(this)) ? true : false;
+    }
+
+    void UpdatedObjects::destroy() {
+        if (mMainWin) {
+            EndDialog(mMainWin.hwnd(), 0);
+            mMainWin.release();
+        }
+    }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void UpdatedObjects::initWindow(HWND hWnd) {
+        cBtnOk.setup(hWnd, IDC_BTN_OK);
+        mEditInfo.setup(hWnd, EDT_INFO);
+        mLstObjects.setup(hWnd, EDT_OBJECTS);
+        showData();
+    }
+
+    void UpdatedObjects::destroyWindow(HWND /*hWnd*/) {
+        cBtnOk.release();
+        mEditInfo.release();
+        mLstObjects.release();
+    }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void UpdatedObjects::showData() {
+        if (mData->empty()) {
+            mEditInfo.setText(_T("There are no affected objects."));
+        }
+        else {
+            sts::Str strCount;
+            if (mData->size() == 1) {
+                strCount = sts::StrUtils::join(_T("There is "), mData->size(), _T(" affected object."));
+            }
+            else {
+                strCount = sts::StrUtils::join(_T("There are "), mData->size(), _T(" affected objects."));
+            }
+            mEditInfo.setText(sts::StrUtils::joinStr(_T("The following list contains names of the affected objects.\r\n"),
+                                                     _T("You can copy/paste it somewhere and use it later to check the scene manually.\r\n\r\n"),
+                                                     strCount));
+            std::stringstream list;
+            for (const auto n : *mData) {
+                list << sts::toMbString(n->GetName()) << "\r\n";
+            }
+            mLstObjects.setText(list.str());
+        }
+    }
+
+    /********************************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /********************************************************************************************************/
+}
 }

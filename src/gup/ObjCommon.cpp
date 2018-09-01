@@ -104,14 +104,14 @@ void ObjCommon::updateCheckWinCallback(HWND hwnd, UINT /*uMsg*/, UINT_PTR idEven
 
 DWORD ObjCommon::Start() {
     //-- Mein Menu ---------------------------
-    mMainMenuView.reset(ui::Factory::createMainMenuView());
+    mMainMenuView.reset(ui::win::Factory::createMainMenuView());
     mMainMenuPresenter = std::make_unique<presenters::MainMenu>(mMainMenuView.get());
     //----------------------------------------
 
     mCloneNodeChunk = new CloneNodeChunk();
 
 #if MAX_VERSION_MAJOR < 20 // 2018
-    mToolFrame = ui::ToolFrame::instance();
+    mToolFrame = ui::win::ToolFrame::instance();
     mToolFrame->create();
 #endif
 
@@ -218,7 +218,7 @@ IOResult ObjCommon::Load(ILoad * iload) {
                     delete[] str;
                     pSettings.fromString(stdstr);
                     if (pSettings.isSavedAsXplnScene() && pSettings.pluginVersion() < pSettings.sceneVersion()) {
-                        ui::Factory::showVersionIncompatible();
+                        ui::win::Factory::showVersionIncompatible();
                         return IO_ERROR;
                     }
                     break;

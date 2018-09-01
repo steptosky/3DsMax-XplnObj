@@ -48,7 +48,9 @@
 #define COMMON_CLASS_ID	Class_ID(0xf5226b9, 0x5b131ef2)
 
 namespace ui {
-class ToolFrame;
+namespace win {
+    class ToolFrame;
+}
 }
 
 /**************************************************************************************************/
@@ -97,7 +99,7 @@ private:
 
     void DeleteThis() override;
 
-    ui::ToolFrame * mToolFrame;
+    ui::win::ToolFrame * mToolFrame;
     Config * mConfig;
     CloneNodeChunk * mCloneNodeChunk;
     UpdateChecker mUpdateChecker;

@@ -31,36 +31,37 @@
 
 #include "Base.h"
 
+namespace ui {
 namespace win {
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+    /**************************************************************************************************/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**************************************************************************************************/
 
-class List : public Base {
-public:
+    class List : public Base {
+    public:
 
-    void addItem(const String & inItem, bool inSelected = false);
+        void addItem(const String & inItem, bool inSelected = false);
 
-    String currSelectedText() const;
-    //int removeItem(const std::string & inItem);
-    void removeItem(int inIndex);
-    void clear();
+        String currSelectedText() const;
+        //int removeItem(const std::string & inItem);
+        void removeItem(int inIndex);
+        void clear();
 
-    int count() const;
-    String itemText(int index) const;
+        int count() const;
+        String itemText(int index) const;
 
-    bool removeCurr();
-    int currSelected() const;
-    void setCurrSelected(int inIndex);
+        bool removeCurr();
+        int currSelected() const;
+        void setCurrSelected(int inIndex);
 
-    List();
-    virtual ~List();
+        List();
+        virtual ~List();
 
-};
+    };
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-};
+    /**************************************************************************************************/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**************************************************************************************************/
+}
+}
