@@ -37,7 +37,7 @@
 #include "common/String.h"
 #include "SerializationId.h"
 #include "common/Logger.h"
-#include "ui/DlgMessageBox.h"
+#include "ui-win/DlgMessageBox.h"
 #include "classes-desc/ClassesDescriptions.h"
 
 namespace bcw {

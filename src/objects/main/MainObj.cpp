@@ -41,7 +41,7 @@
 #include "common/Logger.h"
 #include "common/String.h"
 #include "models/bwc/SerializationId.h"
-#include "ui/DlgMessageBox.h"
+#include "ui-win/DlgMessageBox.h"
 #include "MainObjParamsWrapper.h"
 #include "classes-desc/ClassesDescriptions.h"
 #include "additional/math/Compare.h"

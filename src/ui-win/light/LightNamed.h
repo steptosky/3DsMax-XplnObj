@@ -27,32 +27,54 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
+#pragma once
 
-#include "MainMenu.h"
-#include "models/MdLinks.h"
-#include "ui-win/Factory.h"
+#include <xpln/obj/ObjLightNamed.h>
+#include "AbstractLight.h"
+#include "ui-win/controls/Base.h"
+#include "ui-win/controls/Combo.h"
 
-namespace presenters {
+namespace ui {
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-MainMenu::MainMenu(IView * view)
-    : mView(view) {
+class LightNamed : public AbstractLight {
+public:
 
-    DbgAssert(mView);
-    mView->signalDonate = &MdLinks::openDonate;
-    mView->signalUpdate = &MdLinks::openPluginBinary;
-    mView->signalDoc = &MdLinks::openDocBinary;
-    mView->signalAbout = &ui::Factory::showAboutWindow;
-    mView->signalSettings = &ui::Factory::showSettingsWindow;
-}
+    win::Base & getCBase() override {
+        return mHwnd;
+    }
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+    void create(HWND inParent) override;
+    void show(xobj::ObjLightNamed * inData);
+    void hide();
+    void destroy() override;
+
+    LightNamed();
+    virtual ~LightNamed();
+
+private:
+
+    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+    void initWindow(HWND hWnd);
+    void destroyWindow(HWND hWnd);
+
+    void toWindow();
+    void toData();
+
+    void enableControls();
+    void disableControls();
+
+    xobj::ObjLightNamed * mData = nullptr;
+    win::Base mHwnd;
+
+    win::Combo cCmbName;
+};
+
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

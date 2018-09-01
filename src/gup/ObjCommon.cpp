@@ -28,10 +28,10 @@
 */
 
 #include "ObjCommon.h"
-#include "ui/toolFrame/ToolFrame.h"
+#include "ui-win/toolFrame/ToolFrame.h"
 #include "common/Logger.h"
-#include "ui/Factory.h"
-#include "ui/main-menu/MainMenuActions.h"
+#include "ui-win/Factory.h"
+#include "ui-win/main-menu/MainMenuActions.h"
 #include "resource/ResHelper.h"
 #include "common/NodeVisitor.h"
 

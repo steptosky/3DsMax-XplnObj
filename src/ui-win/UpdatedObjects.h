@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 **  Copyright(C) 2017, StepToSky
 **
@@ -31,28 +33,43 @@
 #include <max.h>
 #pragma warning(pop)
 
-#include "MainMenu.h"
-#include "models/MdLinks.h"
-#include "ui-win/Factory.h"
+#include <vector>
+#include "ui-win/controls/Base.h"
 
-namespace presenters {
+namespace ui {
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-MainMenu::MainMenu(IView * view)
-    : mView(view) {
+class UpdatedObjects {
+public:
 
-    DbgAssert(mView);
-    mView->signalDonate = &MdLinks::openDonate;
-    mView->signalUpdate = &MdLinks::openPluginBinary;
-    mView->signalDoc = &MdLinks::openDocBinary;
-    mView->signalAbout = &ui::Factory::showAboutWindow;
-    mView->signalSettings = &ui::Factory::showSettingsWindow;
-}
+    UpdatedObjects();
+    virtual ~UpdatedObjects();
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+    bool show(const std::vector<INode *> * nodes, HWND parent);
+
+private:
+
+    void destroy();
+
+    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    void initWindow(HWND hWnd);
+    void destroyWindow(HWND hWnd);
+
+    void showData();
+
+    win::Base cBtnOk;
+    win::Base mEditInfo;
+    win::Base mLstObjects;
+    win::Base mMainWin;
+    const std::vector<INode *> * mData = nullptr;
+    HWND mParent;
+
+};
+
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

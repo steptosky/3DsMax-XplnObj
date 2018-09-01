@@ -27,32 +27,32 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
+#pragma once
 
-#include "MainMenu.h"
-#include "models/MdLinks.h"
-#include "ui-win/Factory.h"
+#include <sts/signals/Signal.h>
+#include "ui-win/controls/Base.h"
 
-namespace presenters {
+namespace ui {
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-MainMenu::MainMenu(IView * view)
-    : mView(view) {
+class AbstractLight {
+public:
 
-    DbgAssert(mView);
-    mView->signalDonate = &MdLinks::openDonate;
-    mView->signalUpdate = &MdLinks::openPluginBinary;
-    mView->signalDoc = &MdLinks::openDocBinary;
-    mView->signalAbout = &ui::Factory::showAboutWindow;
-    mView->signalSettings = &ui::Factory::showSettingsWindow;
-}
+    AbstractLight() = default;
+    virtual ~AbstractLight() = default;
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+    sts::signals::Signal<bool> eventParamChanged;
+
+    virtual win::Base & getCBase() = 0;
+    virtual void create(HWND inParent) = 0;
+    virtual void destroy() = 0;
+
+};
+
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

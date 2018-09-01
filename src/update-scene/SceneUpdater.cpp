@@ -37,7 +37,7 @@
 #include "models/MdManip.h"
 #include "models/MdObjAttr.h"
 #include <xpln/obj/ObjMesh.h>
-#include "ui/Factory.h"
+#include "ui-win/Factory.h"
 
 /**************************************************************************************************/
 /////////////////////////////////////////* Static area *////////////////////////////////////////////

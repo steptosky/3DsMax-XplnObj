@@ -27,32 +27,46 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
+#pragma once
 
-#include "MainMenu.h"
-#include "models/MdLinks.h"
-#include "ui-win/Factory.h"
+#include "ui-win/controls/Base.h"
 
-namespace presenters {
+namespace ui {
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-MainMenu::MainMenu(IView * view)
-    : mView(view) {
+class DlgAbout {
 
-    DbgAssert(mView);
-    mView->signalDonate = &MdLinks::openDonate;
-    mView->signalUpdate = &MdLinks::openPluginBinary;
-    mView->signalDoc = &MdLinks::openDocBinary;
-    mView->signalAbout = &ui::Factory::showAboutWindow;
-    mView->signalSettings = &ui::Factory::showSettingsWindow;
-}
+    DlgAbout();
+    ~DlgAbout();
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+public:
+
+    static void show();
+
+private:
+
+    void open();
+    void InitDlg(HWND hWnd);
+    void DestroyDlg(HWND hWnd);
+
+    HWND mHWnd = nullptr;
+    win::Base mLblThisAbout;
+    win::Base mLblLibAbout;
+    win::Base mBtnOk;
+    win::Base mDlgMain;
+
+    //-------------------------------------------------------------------------
+
+    static INT_PTR CALLBACK callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+    //-------------------------------------------------------------------------
+
+};
+
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

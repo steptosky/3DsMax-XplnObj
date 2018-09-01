@@ -27,32 +27,44 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
+#pragma once
 
-#include "MainMenu.h"
-#include "models/MdLinks.h"
-#include "ui-win/Factory.h"
+#include "ui-win/controls/Base.h"
 
-namespace presenters {
-
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
-
-MainMenu::MainMenu(IView * view)
-    : mView(view) {
-
-    DbgAssert(mView);
-    mView->signalDonate = &MdLinks::openDonate;
-    mView->signalUpdate = &MdLinks::openPluginBinary;
-    mView->signalDoc = &MdLinks::openDocBinary;
-    mView->signalAbout = &ui::Factory::showAboutWindow;
-    mView->signalSettings = &ui::Factory::showSettingsWindow;
-}
+namespace ui {
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
+
+class DlgHasNewVersion {
+public:
+
+    bool show();
+
+    DlgHasNewVersion();
+    ~DlgHasNewVersion();
+
+private:
+    //MdUpdateProgram * mData;
+    HWND mHWnd;
+    void InitDlg(HWND hWnd);
+    void DestroyDlg(HWND hWnd);
+    void _toWindow();
+    void _toVariables();
+
+    win::Base cLabel;
+    win::Base cDownloadButton;
+
+    win::Base mDlgMain;
+
+private:
+
+    static INT_PTR CALLBACK _BaseWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+};
+
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

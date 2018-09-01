@@ -27,32 +27,53 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
+#pragma once
+#include "common/String.h"
+#include "ui-win/controls/Base.h"
 
-#include "MainMenu.h"
-#include "models/MdLinks.h"
-#include "ui-win/Factory.h"
+namespace ui {
 
-namespace presenters {
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
+class AnimCalc {
+public:
 
-MainMenu::MainMenu(IView * view)
-    : mView(view) {
+    struct Key {
+        TimeValue keyTime;
+        float datarefValue;
+    };
 
-    DbgAssert(mView);
-    mView->signalDonate = &MdLinks::openDonate;
-    mView->signalUpdate = &MdLinks::openPluginBinary;
-    mView->signalDoc = &MdLinks::openDocBinary;
-    mView->signalAbout = &ui::Factory::showAboutWindow;
-    mView->signalSettings = &ui::Factory::showSettingsWindow;
-}
+    typedef std::vector<AnimCalc::Key> KeyList;
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+    bool calculate(KeyList & inOutData, HWND inParent);
+
+    AnimCalc();
+    virtual ~AnimCalc();
+
+private:
+
+    void destroy();
+
+    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    void initWindow(HWND hWnd);
+    void destroyWindow(HWND hWnd);
+
+    void calculateValues();
+
+    ISpinnerControl * cSpnVal1 = nullptr;
+    ISpinnerControl * cSpnVal2 = nullptr;
+
+    win::Base cBtnOk;
+    win::Base cBtnCancel;
+    win::Base mMainWin;
+    KeyList * mData = nullptr;
+    HWND mParent;
+
+};
+
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 }

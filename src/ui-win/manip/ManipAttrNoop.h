@@ -27,32 +27,51 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
+#pragma once
 
-#include "MainMenu.h"
-#include "models/MdLinks.h"
-#include "ui-win/Factory.h"
+#include <xpln/obj/manipulators/AttrManipNone.h>
+#include "ManipInterface.h"
+#include "ui-win/controls/Base.h"
+#include "models/MdManip.h"
 
-namespace presenters {
+namespace ui {
 
-/**************************************************************************************************/
-////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-/**************************************************************************************************/
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
 
-MainMenu::MainMenu(IView * view)
-    : mView(view) {
+class ManipAttrNoop : public ManipInterface {
+public:
 
-    DbgAssert(mView);
-    mView->signalDonate = &MdLinks::openDonate;
-    mView->signalUpdate = &MdLinks::openPluginBinary;
-    mView->signalDoc = &MdLinks::openDocBinary;
-    mView->signalAbout = &ui::Factory::showAboutWindow;
-    mView->signalSettings = &ui::Factory::showSettingsWindow;
-}
+    explicit ManipAttrNoop(MdManip * modelData);
+    virtual ~ManipAttrNoop();
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
+    //-------------------------------------------------------------------------
+
+    void create(HWND inParent) override;
+    void destroy() override;
+    RECT rect() const override;
+    void move(const POINT & point) override;
+
+    void setManip(const xobj::AttrManipBase & manip) override;
+
+    //-------------------------------------------------------------------------
+
+private:
+
+    static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+    void save() const {
+        mModelData->saveToNode(mData);
+    }
+
+    win::Base mHwnd;
+    MdManip * mModelData;
+    xobj::AttrManipNoop mData;
+};
+
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
+
 }
