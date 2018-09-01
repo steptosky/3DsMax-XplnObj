@@ -87,6 +87,8 @@ namespace win {
                     mIsHidden = false;
                 }
                 break;
+            default:
+                return FALSE;
         }
         return FALSE;
     }
@@ -160,13 +162,13 @@ namespace win {
 
     int ToolFrame::GetHeight(int /*sizeType*/, int /*orient*/) {
 #if MAX_VERSION_MAJOR > 15
-    RECT rect;
-    GetClientRect(GetCOREInterface()->GetMAXHWnd(), &rect);
-    RECT sizeFrame;
-    GetClientRect(mFrameHandle, &sizeFrame);
-    mClientHeight = sizeFrame.bottom;
-    mMainDockUI->setSize(0, mClientHeight);
-    return rect.bottom;
+        RECT rect;
+        GetClientRect(GetCOREInterface()->GetMAXHWnd(), &rect);
+        RECT sizeFrame;
+        GetClientRect(mFrameHandle, &sizeFrame);
+        mClientHeight = sizeFrame.bottom;
+        mMainDockUI->setSize(0, mClientHeight);
+        return rect.bottom;
 #else
         // client size
         RECT size;

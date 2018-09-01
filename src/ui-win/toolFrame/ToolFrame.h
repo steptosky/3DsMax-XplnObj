@@ -35,7 +35,6 @@
 
 #ifndef QT_IS_ENABLED
 
-#include "additional/utils/Single.h"
 
 namespace ui {
 namespace win {
@@ -46,7 +45,7 @@ namespace win {
 
     class MainDock;
 
-    class ToolFrame : public CUIFrameMsgHandler, public CUIPosData, public sts::Single<ToolFrame> {
+    class ToolFrame : public CUIFrameMsgHandler, public CUIPosData {
     public:
 
         ToolFrame();

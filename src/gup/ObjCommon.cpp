@@ -28,10 +28,9 @@
 */
 
 #include "ObjCommon.h"
-#include "ui-win/toolFrame/ToolFrame.h"
+#include "ui/toolFrame/ToolFrame.h"
 #include "common/Logger.h"
 #include "ui-win/Factory.h"
-#include "ui-win/main-menu/MainMenuActions.h"
 #include "resource/ResHelper.h"
 #include "common/NodeVisitor.h"
 
@@ -110,10 +109,8 @@ DWORD ObjCommon::Start() {
 
     mCloneNodeChunk = new CloneNodeChunk();
 
-#if MAX_VERSION_MAJOR < 20 // 2018
-    mToolFrame = ui::win::ToolFrame::instance();
+    mToolFrame = ui::ToolFrame::instance();
     mToolFrame->create();
-#endif
 
     mUpdateChecker.checkForUpdate();
     SetTimer(GetCOREInterface()->GetMAXHWnd(), UINT_PTR(WM_MY_TIMER_ID),
@@ -131,9 +128,7 @@ void ObjCommon::Stop() {
     //----------------------------------------
     UnRegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
     mUpdateChecker.freeResources();
-#if MAX_VERSION_MAJOR < 20 // 2018
     mToolFrame->free();
-#endif
     delete mCloneNodeChunk;
 }
 
