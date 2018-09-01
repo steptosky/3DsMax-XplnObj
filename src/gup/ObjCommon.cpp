@@ -109,8 +109,11 @@ DWORD ObjCommon::Start() {
     //----------------------------------------
 
     mCloneNodeChunk = new CloneNodeChunk();
+
+#if MAX_VERSION_MAJOR < 20 // 2018
     mToolFrame = ui::ToolFrame::instance();
     mToolFrame->create();
+#endif
 
     mUpdateChecker.checkForUpdate();
     SetTimer(GetCOREInterface()->GetMAXHWnd(), UINT_PTR(WM_MY_TIMER_ID),
@@ -128,7 +131,9 @@ void ObjCommon::Stop() {
     //----------------------------------------
     UnRegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
     mUpdateChecker.freeResources();
+#if MAX_VERSION_MAJOR < 20 // 2018
     mToolFrame->free();
+#endif
     delete mCloneNodeChunk;
 }
 

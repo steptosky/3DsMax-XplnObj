@@ -50,11 +50,16 @@ ConverterLine::ObjLineList ConverterLine::toXpln(INode * inNode, const Matrix3 &
     if (shape == nullptr)
         return linelist;
 
-    Matrix3 tm = inNode->GetNodeTM(GetCOREInterface()->GetTime());
+    const auto currTime = GetCOREInterface()->GetTime();
+    Matrix3 tm = inNode->GetNodeTM(currTime);
     Matrix3 offsetTm = ConverterUtils::offsetMatrix(inNode);
 
     // collect lines to line container... 
-    int numCurves = shape->NumberOfCurves();
+#if MAX_VERSION_MAJOR < 20 // 2018
+    const int numCurves = shape->NumberOfCurves();
+#else
+    const int numCurves = shape->NumberOfCurves(currTime);
+#endif
     for (int idx = 0; idx < numCurves; idx++) {
         Spline3D * spline = shape->shape.GetSpline(idx);
         int numKnots = spline->KnotCount();
