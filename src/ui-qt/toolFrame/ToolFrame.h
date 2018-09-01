@@ -31,8 +31,14 @@
 
 #ifdef QT_IS_ENABLED
 
+namespace MaxSDK {
+class QmaxToolBar;
+}
+
 namespace ui {
 namespace qt {
+
+    class ToolbarDockingDelegate;
 
     /**************************************************************************************************/
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,13 +47,14 @@ namespace qt {
     class ToolFrame {
     public:
 
-        ToolFrame();
+        ToolFrame() = default;
         virtual ~ToolFrame() = default;
 
         void create();
 
     private:
-
+        ToolbarDockingDelegate * mDockingDelegate = nullptr;
+        MaxSDK::QmaxToolBar * mToolBar = nullptr;
     };
 
     /**************************************************************************************************/
