@@ -65,8 +65,10 @@ function(SETUP_MAX_TERGET)
             set(QT_PATH $ENV{3DSMAX_${ARGS_3DMAX_VERSION}_QT})
             if (NOT QT_PATH)
                 message(STATUS "3DsMax + ${ARGS_3DMAX_VERSION} QT")
-                message(FATAL_ERROR "Variable [3DSMAX_${ARGS_3DMAX_VERSION}_QT] - isn't found among your environment variables. "
-                                    "Read readme file for information how to setup it. This project needs QT for building.")
+                message(WARNING "Variable [3DSMAX_${ARGS_3DMAX_VERSION}_QT] - isn't found among your environment variables. "
+                                    "Read readme file for information how to setup it. This project needs QT for building.\n"
+                                    "SETUP FOR THIS TARGET IS ABORTED.")
+                return()
             endif()
             
             message(STATUS "3DsMax + ${ARGS_3DMAX_VERSION} QT [${QT_PATH}]")
