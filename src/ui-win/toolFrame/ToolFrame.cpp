@@ -29,7 +29,7 @@
 
 #include "ToolFrame.h"
 
-#if MAX_VERSION_MAJOR < 20 // 2018
+#ifndef QT_IS_ENABLED
 
 #include "ui-win/MainDock.h"
 #include "common/Config.h"
@@ -167,42 +167,42 @@ int ToolFrame::GetHeight(int /*sizeType*/, int /*orient*/) {
     mMainDockUI->setSize(0, mClientHeight);
     return rect.bottom;
 #else
-		// client size
-		RECT size;
-		GetClientRect(GetCOREInterface()->GetMAXHWnd(), &size);
-		mClientHeight = size.bottom - size.top;
+    // client size
+    RECT size;
+    GetClientRect(GetCOREInterface()->GetMAXHWnd(), &size);
+    mClientHeight = size.bottom - size.top;
 
-		// minus tool bars
-		CUIFrameMgr * fm = GetCUIFrameMgr();
-		ICUIFrame * f = nullptr;
-		int count = fm->GetCount();
-		int currTopRang = 0;
-		int currBottomRang = 0;
-		int currShift = 0;
-		RECT tmpRect;
-		for (int i = 0; i < count; ++i) {
-			f = fm->GetICUIFrame(i);
-			if (!f->IsFloating() && !f->IsHidden() && f->IsEnabled()) {
-				if (f->GetCurPosition() == CUI_TOP_DOCK) {
-					if (currTopRang < f->GetPosRank()) {
-						currTopRang = f->GetPosRank();
-						GetWindowRect(f->GetHwnd(), &tmpRect);
-						currShift = currShift + (tmpRect.bottom - tmpRect.top);
-					}
-				}
-				if (f->GetCurPosition() == CUI_BOTTOM_DOCK) {
-					if (currBottomRang < f->GetPosRank()) {
-						currBottomRang = f->GetPosRank();
-						GetWindowRect(f->GetHwnd(), &tmpRect);
-						currShift = currShift + (tmpRect.bottom - tmpRect.top);
-					}
-				}
-			}
-		}
+    // minus tool bars
+    CUIFrameMgr * fm = GetCUIFrameMgr();
+    ICUIFrame * f = nullptr;
+    const int count = fm->GetCount();
+    int currTopRang = 0;
+    int currBottomRang = 0;
+    int currShift = 0;
+    RECT tmpRect;
+    for (int i = 0; i < count; ++i) {
+        f = fm->GetICUIFrame(i);
+        if (!f->IsFloating() && !f->IsHidden() && f->IsEnabled()) {
+            if (f->GetCurPosition() == CUI_TOP_DOCK) {
+                if (currTopRang < f->GetPosRank()) {
+                    currTopRang = f->GetPosRank();
+                    GetWindowRect(f->GetHwnd(), &tmpRect);
+                    currShift = currShift + (tmpRect.bottom - tmpRect.top);
+                }
+            }
+            if (f->GetCurPosition() == CUI_BOTTOM_DOCK) {
+                if (currBottomRang < f->GetPosRank()) {
+                    currBottomRang = f->GetPosRank();
+                    GetWindowRect(f->GetHwnd(), &tmpRect);
+                    currShift = currShift + (tmpRect.bottom - tmpRect.top);
+                }
+            }
+        }
+    }
 
-		mClientHeight = mClientHeight - currShift - 60;
-		mMainDockUI->setSize(0, mClientHeight);
-		return mClientHeight;
+    mClientHeight = mClientHeight - currShift - 60;
+    mMainDockUI->setSize(0, mClientHeight);
+    return mClientHeight;
 #endif
 }
 

@@ -33,7 +33,7 @@
 #include <max.h>
 #pragma warning(pop)
 
-#if MAX_VERSION_MAJOR < 20 // 2018
+#ifndef QT_IS_ENABLED
 
 #include "additional/utils/Single.h"
 
