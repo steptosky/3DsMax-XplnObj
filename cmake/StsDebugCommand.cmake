@@ -48,6 +48,7 @@ set(SETUP_MAX_TERGET_3DMAX_2015_PATH "C:\\Program Files\\Autodesk\\3ds Max 2015\
 set(SETUP_MAX_TERGET_3DMAX_2016_PATH "C:\\Program Files\\Autodesk\\3ds Max 2016\\3dsmax.exe")
 set(SETUP_MAX_TERGET_3DMAX_2017_PATH "C:\\Program Files\\Autodesk\\3ds Max 2017\\3dsmax.exe")
 set(SETUP_MAX_TERGET_3DMAX_2018_PATH "C:\\Program Files\\Autodesk\\3ds Max 2018\\3dsmax.exe")
+set(SETUP_MAX_TERGET_3DMAX_2019_PATH "C:\\Program Files\\Autodesk\\3ds Max 2019\\3dsmax.exe")
 
 function(add_3dmax_path project_name path)
     FILE(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${project_name}.vcxproj.user"

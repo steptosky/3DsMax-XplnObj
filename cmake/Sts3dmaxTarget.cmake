@@ -34,8 +34,6 @@
 #
 # StepToSky 3DsMax terget setup.
 #
-# Version 1.0.0 (03.04.2017)
-#
 #----------------------------------------------------------------------------------#
 #
 #   Usage example:
@@ -47,6 +45,8 @@
 #       SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2008" 3DMAX_VERSION "2008")
 #       SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2009" 3DMAX_VERSION "2009")
 #       SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2010" 3DMAX_VERSION "2010")
+#       SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2018" 3DMAX_VERSION "2018" QT)
+#       SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2019" 3DMAX_VERSION "2019" QT)
 #
 #----------------------------------------------------------------------------------#
 #//////////////////////////////////////////////////////////////////////////////////#
@@ -56,15 +56,31 @@ cmake_minimum_required (VERSION 3.7.0)
 include(CMakeParseArguments)
 
 function(SETUP_MAX_TERGET)
-
     set(oneValueArgs SDK_TARGET 3DMAX_VERSION)
-    cmake_parse_arguments(SETUP_MAX_TERGET "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    set(options QT)
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    
+    if(TARGET CONAN_PKG::${ARGS_SDK_TARGET})
+        if (ARGS_QT)
+            set(QT_PATH $ENV{3DSMAX_${ARGS_3DMAX_VERSION}_QT})
+            if (NOT QT_PATH)
+                message(STATUS "3DsMax + ${ARGS_3DMAX_VERSION} QT")
+                message(FATAL_ERROR "Variable [3DSMAX_${ARGS_3DMAX_VERSION}_QT] - isn't found among your environment variables. "
+                                    "Read readme file for information how to setup it. This project needs QT for building.")
+            endif()
+            
+            message(STATUS "3DsMax + ${ARGS_3DMAX_VERSION} QT [${QT_PATH}]")
+            list(APPEND CMAKE_PREFIX_PATH ${QT_PATH})
+            set(CMAKE_AUTOMOC ON)
+        else ()
+            message(STATUS "3DsMax + ${ARGS_3DMAX_VERSION}")
+        endif()
 
-    if(TARGET CONAN_PKG::${SETUP_MAX_TERGET_SDK_TARGET})
-        message(STATUS "3DsMax + ${SETUP_MAX_TERGET_3DMAX_VERSION}")
-        set (PROJECT "3DsMax-${SETUP_MAX_TERGET_3DMAX_VERSION}")
-        set (OUTPUT_NAME "3DsMax${SETUP_MAX_TERGET_3DMAX_VERSION}-XplnObj")
-        
+        #--------------------------------------------------------------------------#
+
+        set (PROJECT "3DsMax-${ARGS_3DMAX_VERSION}")
+        set (OUTPUT_NAME "3DsMax${ARGS_3DMAX_VERSION}-XplnObj")
+
         #--------------------------------------------------------------------------#
         #//////////////////////////////////////////////////////////////////////////#
         #--------------------------------------------------------------------------#
@@ -79,6 +95,8 @@ function(SETUP_MAX_TERGET)
         #--------------------------------------------------------------------------#
         # project files
 
+        include(StsGroupFiles)
+        
         file(GLOB_RECURSE CM_FILES 
             "${CMAKE_SOURCE_DIR}/src/*.h"
             "${CMAKE_SOURCE_DIR}/src/*.hpp" 
@@ -92,10 +110,16 @@ function(SETUP_MAX_TERGET)
 
             "${CMAKE_SOURCE_DIR}/doc/*"
         )
-
-        include(StsGroupFiles)
         groupFiles("${CM_FILES}")
-
+        
+        if (ARGS_QT)
+            file(GLOB_RECURSE CM_QT_UI_FILES  "*.ui")
+            groupFiles("${CM_QT_UI_FILES}")
+            
+            file(GLOB_RECURSE CM_QT_RES_FILES "*.qrc" )
+            groupFiles("${CM_QT_RES_FILES}")
+        endif()
+        
         list(APPEND CM_FILES "${CMAKE_SOURCE_DIR}/readme.md")
         source_group("doc" FILES "${CMAKE_SOURCE_DIR}/readme.md")
 
@@ -107,19 +131,30 @@ function(SETUP_MAX_TERGET)
         include_directories (${CMAKE_SOURCE_DIR}/include)
         include_directories (${CMAKE_SOURCE_DIR}/src)
 
+        if (ARGS_QT)
+            find_package(Qt5Widgets)
+            find_package(Qt5Core)
+            find_package(Qt5Gui)
+
+            QT5_WRAP_UI(QT_GEN_HDRS ${CM_QT_UI_FILES})
+            QT5_ADD_RESOURCES(QT_GEN_RES ${CM_QT_RES_FILES})
+        endif()
+
         #--------------------------------------------------------------------------#
         #//////////////////////////////////////////////////////////////////////////#
         #--------------------------------------------------------------------------#
 
-        add_library(${PROJECT} SHARED ${CM_FILES})
+        add_library(${PROJECT} SHARED ${CM_FILES} ${CM_QT_UI_FILES} ${CM_QT_RES_FILES})
             
-        target_link_libraries(${PROJECT} CONAN_PKG::${SETUP_MAX_TERGET_SDK_TARGET})
+        target_link_libraries(${PROJECT} CONAN_PKG::${ARGS_SDK_TARGET})
         target_link_libraries(${PROJECT} CONAN_PKG::XplnObj)
         target_link_libraries(${PROJECT} CONAN_PKG::sts-signals)
         target_link_libraries(${PROJECT} CONAN_PKG::sts-semver)
         target_link_libraries(${PROJECT} CONAN_PKG::jsonformoderncpp)
         target_link_libraries(${PROJECT} Winhttp)
         
+        target_link_libraries(${PROJECT} $<$<BOOL:${ARGS_QT}>:Qt5::Widgets>)
+
         #--------------------------------------------------------------------------#
         # cxx standard 
 
@@ -183,7 +218,7 @@ function(SETUP_MAX_TERGET)
         
         if (ADD_3DMAXS_EXEC)
             include(StsDebugCommand)
-            set(3DSMAX_EXE_PATH ${SETUP_MAX_TERGET_3DMAX_${SETUP_MAX_TERGET_3DMAX_VERSION}_PATH})
+            set(3DSMAX_EXE_PATH ${SETUP_MAX_TERGET_3DMAX_${ARGS_3DMAX_VERSION}_PATH})
             if (3DSMAX_EXE_PATH)
                 add_3dmax_path(${PROJECT} "${3DSMAX_EXE_PATH}")
             endif()
@@ -194,7 +229,7 @@ function(SETUP_MAX_TERGET)
         #--------------------------------------------------------------------------#
 
     else()
-        message(STATUS "3DsMax - ${SETUP_MAX_TERGET_3DMAX_VERSION}")
+        message(STATUS "3DsMax - ${ARGS_3DMAX_VERSION}")
     endif()
 
 endfunction(SETUP_MAX_TERGET)

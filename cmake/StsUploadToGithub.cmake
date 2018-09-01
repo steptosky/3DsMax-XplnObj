@@ -156,6 +156,8 @@ upload_plugin("3DsMax2014-XplnObj-x64.dlu")
 upload_plugin("3DsMax2015-XplnObj-x64.dlu")
 upload_plugin("3DsMax2016-XplnObj-x64.dlu")
 upload_plugin("3DsMax2017-XplnObj-x64.dlu")
+upload_plugin("3DsMax2018-XplnObj-x64.dlu")
+upload_plugin("3DsMax2019-XplnObj-x64.dlu")
 
 message(STATUS "==============================================")
 
