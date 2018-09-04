@@ -52,7 +52,7 @@
 #//////////////////////////////////////////////////////////////////////////////////#
 #----------------------------------------------------------------------------------#
 
-cmake_minimum_required (VERSION 3.7.0)
+cmake_minimum_required (VERSION 3.10.0)
 include(CMakeParseArguments)
 
 function(SETUP_MAX_TERGET)
@@ -69,11 +69,15 @@ function(SETUP_MAX_TERGET)
                                     "Read readme file for information how to setup it. This project needs QT for building.\n"
                                     "SETUP FOR THIS TARGET IS ABORTED.")
                 return()
-            endif()
-            
+            endif()            
             message(STATUS "3DsMax + ${ARGS_3DMAX_VERSION} QT [${QT_PATH}]")
+            
             list(APPEND CMAKE_PREFIX_PATH ${QT_PATH})
+            list(APPEND CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/src/ui-qt/forms")
             set(CMAKE_AUTOMOC ON)
+            set(CMAKE_AUTOUIC ON)
+            set(CMAKE_AUTORCC ON)
+            set(CMAKE_INCLUDE_CURRENT_DIR ON)
         else ()
             message(STATUS "3DsMax + ${ARGS_3DMAX_VERSION}")
         endif()
@@ -95,6 +99,22 @@ function(SETUP_MAX_TERGET)
         #--------------------------------------------------------------------------#
         #//////////////////////////////////////////////////////////////////////////#
         #--------------------------------------------------------------------------#
+        # include/link directories
+
+        include_directories (${CMAKE_SOURCE_DIR}/include)
+        include_directories (${CMAKE_SOURCE_DIR}/src)
+        
+        if (ARGS_QT)
+            # If you add new qt dependencies then
+            # check the file "StsFixQtLibrariesType.cmake"
+            find_package(Qt5Widgets)
+            find_package(Qt5Core)
+            find_package(Qt5Gui)
+        endif()
+        
+        #--------------------------------------------------------------------------#
+        #//////////////////////////////////////////////////////////////////////////#
+        #--------------------------------------------------------------------------#
         # project files
 
         include(StsGroupFiles)
@@ -113,46 +133,15 @@ function(SETUP_MAX_TERGET)
             "${CMAKE_SOURCE_DIR}/doc/*"
         )
         groupFiles("${CM_FILES}")
-        
-        if (ARGS_QT)
-            file(GLOB_RECURSE CM_QT_UI_FILES 
-                "${CMAKE_SOURCE_DIR}/src/ui-gt/forms/*.ui"
-            )
-            groupFiles("${CM_QT_UI_FILES}")
-            
-            file(GLOB_RECURSE CM_QT_RES_FILES 
-                "${CMAKE_SOURCE_DIR}/src/resource-qt/*.qrc" 
-            )
-            groupFiles("${CM_QT_RES_FILES}")
-        endif()
-        
+
         list(APPEND CM_FILES "${CMAKE_SOURCE_DIR}/readme.md")
         source_group("doc" FILES "${CMAKE_SOURCE_DIR}/readme.md")
 
         #--------------------------------------------------------------------------#
         #//////////////////////////////////////////////////////////////////////////#
         #--------------------------------------------------------------------------#
-        # include/link directories
 
-        include_directories (${CMAKE_SOURCE_DIR}/include)
-        include_directories (${CMAKE_SOURCE_DIR}/src)
-
-        if (ARGS_QT)
-            # If you add new qt dependencies then
-            # check the file "StsFixQtLibrariesType.cmake"
-            find_package(Qt5Widgets)
-            find_package(Qt5Core)
-            find_package(Qt5Gui)
-
-            QT5_WRAP_UI(QT_GEN_HDRS ${CM_QT_UI_FILES})
-            QT5_ADD_RESOURCES(QT_GEN_RES ${CM_QT_RES_FILES})
-        endif()
-
-        #--------------------------------------------------------------------------#
-        #//////////////////////////////////////////////////////////////////////////#
-        #--------------------------------------------------------------------------#
-
-        add_library(${PROJECT} SHARED ${CM_FILES} ${CM_QT_UI_FILES} ${CM_QT_RES_FILES})
+        add_library(${PROJECT} SHARED ${CM_FILES} ${QT_GEN_HDRS} ${QT_GEN_RES})
             
         target_link_libraries(${PROJECT} CONAN_PKG::${ARGS_SDK_TARGET})
         target_link_libraries(${PROJECT} CONAN_PKG::XplnObj)

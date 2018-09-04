@@ -11,7 +11,7 @@
 Importing is still under developing and doesn't work properly!
 
 ## Dependencies
-- [CMake [3.7.0+]](https://cmake.org/) building tool.
+- [CMake [3.10.0+]](https://cmake.org/) building tool.
 - [Conan [1.6+]](https://www.conan.io) package manager.  
 - [XplnObj [0.6.2]](https://github.com/steptosky/XplnObj) is used via conan.
 - [sts-signals [0.1.2]](https://github.com/steptosky/sts-signals) is used via conan.
