@@ -65,7 +65,7 @@ namespace qt {
             setMinimumWidth(mWinLegacyDock->getMaxWidth());
             setMinimumHeight(100);
 
-            connect(this, &QDockWidget::topLevelChanged, [&](auto) {
+            connect(this, &QDockWidget::topLevelChanged, [&](auto isFloating) {
                 // when the dock becomes floating
                 // it gets titleBarWidget and height are becomes less.
                 // so we need make legacy dock size less too.
@@ -74,7 +74,11 @@ namespace qt {
                 if (tittleBar) {
                     h -= tittleBar->height();
                 }
-                mWinLegacyDock->setSize(0, h - mBottomPadding);
+                auto padding = 0;
+                if (isFloating) {
+                    padding = mBottomPadding;
+                }
+                mWinLegacyDock->setSize(0, h - padding);
             });
         }
 
@@ -86,7 +90,11 @@ namespace qt {
                 height -= tittleBar->height();
             }
 
-            mWinLegacyDock->setSize(0, height - mBottomPadding);
+            auto padding = 0;
+            if (isFloating()) {
+                padding = mBottomPadding;
+            }
+            mWinLegacyDock->setSize(0, height - padding);
         }
 
     private:
