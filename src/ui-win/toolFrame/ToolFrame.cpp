@@ -189,7 +189,10 @@ namespace win {
             }
         }
 
-        mClientHeight = mClientHeight - currShift - 60;
+        // bottom panel 
+        // it isn't calculated by algorithm above.
+        const int bottomPadding = 60;
+        mClientHeight = mClientHeight - currShift - bottomPadding;
         mMainDockUI->setSize(0, mClientHeight);
         return mClientHeight;
 #endif
