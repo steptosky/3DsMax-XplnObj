@@ -32,13 +32,15 @@
 #ifdef QT_IS_ENABLED
 
 namespace MaxSDK {
-class QmaxToolBar;
+class QmaxDockWidget;
 }
 
 namespace ui {
-namespace qt {
+namespace win {
+    class MainDock;
+}
 
-    class ToolbarDockingDelegate;
+namespace qt {
 
     /**************************************************************************************************/
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,8 +55,10 @@ namespace qt {
         void create();
 
     private:
-        ToolbarDockingDelegate * mDockingDelegate = nullptr;
-        MaxSDK::QmaxToolBar * mToolBar = nullptr;
+
+        win::MainDock * mWinLegacyDock = nullptr;
+        MaxSDK::QmaxDockWidget * mDockContainer = nullptr;
+
     };
 
     /**************************************************************************************************/
