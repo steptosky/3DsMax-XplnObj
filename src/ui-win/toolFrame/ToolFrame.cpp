@@ -128,10 +128,10 @@ namespace win {
 
         mMainDockUI = new MainDock();
         mMainDockUI->create(mFrameHandle);
-        RECT dockSize = mMainDockUI->getSize(true);
-        mClientHeight = dockSize.bottom;
-        mClientWidth = dockSize.right;
+        mClientHeight = mMainDockUI->getMinHeight();
+        mClientWidth = mMainDockUI->getMinWidth();
 
+        RECT dockSize = mMainDockUI->getSize(true);
         if (mCurrFramePos == CUI_FLOATING) {
             dockSize.right = dockSize.right + mBorderPx * 2;
             dockSize.left = dockSize.left + 50;
@@ -170,35 +170,21 @@ namespace win {
         mMainDockUI->setSize(0, mClientHeight);
         return rect.bottom;
 #else
-        // client size
         RECT size;
         GetClientRect(GetCOREInterface()->GetMAXHWnd(), &size);
         mClientHeight = size.bottom - size.top;
 
-        // minus tool bars
         CUIFrameMgr * fm = GetCUIFrameMgr();
-        ICUIFrame * f = nullptr;
         const int count = fm->GetCount();
-        int currTopRang = 0;
-        int currBottomRang = 0;
         int currShift = 0;
         RECT tmpRect;
         for (int i = 0; i < count; ++i) {
-            f = fm->GetICUIFrame(i);
+            ICUIFrame * f = fm->GetICUIFrame(i);
             if (!f->IsFloating() && !f->IsHidden() && f->IsEnabled()) {
-                if (f->GetCurPosition() == CUI_TOP_DOCK) {
-                    if (currTopRang < f->GetPosRank()) {
-                        currTopRang = f->GetPosRank();
-                        GetWindowRect(f->GetHwnd(), &tmpRect);
-                        currShift = currShift + (tmpRect.bottom - tmpRect.top);
-                    }
-                }
-                if (f->GetCurPosition() == CUI_BOTTOM_DOCK) {
-                    if (currBottomRang < f->GetPosRank()) {
-                        currBottomRang = f->GetPosRank();
-                        GetWindowRect(f->GetHwnd(), &tmpRect);
-                        currShift = currShift + (tmpRect.bottom - tmpRect.top);
-                    }
+                const auto pos = f->GetCurPosition();
+                if ((pos == CUI_TOP_DOCK || pos == CUI_BOTTOM_DOCK) && f->GetPosSubrank() == 0) {
+                    GetWindowRect(f->GetHwnd(), &tmpRect);
+                    currShift += tmpRect.bottom - tmpRect.top;
                 }
             }
         }
