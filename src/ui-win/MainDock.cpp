@@ -53,7 +53,7 @@ namespace win {
         objCore->objectsDeleted(reinterpret_cast<Tab<INode*>*>(info->callParam));
     }
 
-    INT_PTR MainDock::DialogProc(HWND hWnd, UINT msg, WPARAM /*wParam*/, LPARAM lParam) {
+    INT_PTR CALLBACK MainDock::dialogProc(const HWND hWnd, const UINT msg, WPARAM /*wParam*/, const LPARAM lParam) {
         MainDock * theDlg;
         if (msg == WM_INITDIALOG) {
             theDlg = reinterpret_cast<MainDock*>(lParam);
@@ -87,9 +87,9 @@ namespace win {
         mMinWidth = 185;
 
         mIRollupWindow = nullptr;
-        mBaseAttrUI = new ObjAttr();
-        mManipAttrUI = new ManipAttr();
-        mLightAttrUI = new LightAttr();
+        mBaseAttrUi = new ObjAttr();
+        mManipAttrUi = new ManipAttr();
+        mLightAttrUi = new LightAttr();
         mAnimRotateRollup = new AnimRotateRollup();
         mAnimTransRollup = new AnimTransView();
         mAnimVisRollup = new AnimVisView();
@@ -99,9 +99,9 @@ namespace win {
         unRegisterCallbacks();
         destroy();
 
-        delete mBaseAttrUI;
-        delete mManipAttrUI;
-        delete mLightAttrUI;
+        delete mBaseAttrUi;
+        delete mManipAttrUi;
+        delete mLightAttrUi;
         delete mAnimRotateRollup;
         delete mAnimTransRollup;
         delete mAnimVisRollup;
@@ -113,7 +113,7 @@ namespace win {
 
     void MainDock::objectsDeleted(Tab<INode*> * nodeTab) {
         if (mCurrNode) {
-            int count = nodeTab->Count();
+            const int count = nodeTab->Count();
             for (int i = 0; i < count; ++i) {
                 if (mCurrNode == *(nodeTab->Addr(i)))
                     mCurrNode = nullptr;
@@ -126,7 +126,7 @@ namespace win {
     /**************************************************************************************************/
 
     void MainDock::selectionChanged() {
-        int selectedCount = mIp->GetSelNodeCount();
+        const int selectedCount = mIp->GetSelNodeCount();
         if (selectedCount == 0)
             setNoSelection();
         else if (selectedCount == 1)
@@ -136,21 +136,21 @@ namespace win {
     }
 
     void MainDock::setNoSelection() {
-        mBaseAttrUI->show(nullptr);
-        mLightAttrUI->show(nullptr);
+        mBaseAttrUi->show(nullptr);
+        mLightAttrUi->show(nullptr);
     }
 
     void MainDock::setOneSelection() {
         mCurrNode = mIp->GetSelNode(0);
         assert(mCurrNode);
 
-        mBaseAttrUI->show(mMdBaseAttr.linkNode(mCurrNode) ? &mMdBaseAttr : nullptr);
-        mLightAttrUI->show(mMdLight.linkNode(mCurrNode) ? &mMdLight : nullptr);
+        mBaseAttrUi->show(mMdBaseAttr.linkNode(mCurrNode) ? &mMdBaseAttr : nullptr);
+        mLightAttrUi->show(mMdLight.linkNode(mCurrNode) ? &mMdLight : nullptr);
     }
 
     void MainDock::setMultiSelection(int /*count*/) {
-        mBaseAttrUI->show(nullptr);
-        mLightAttrUI->show(nullptr);
+        mBaseAttrUi->show(nullptr);
+        mLightAttrUi->show(nullptr);
     }
 
     /**************************************************************************************************/
@@ -179,20 +179,18 @@ namespace win {
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    bool MainDock::create(HWND inParent) {
-        mDock.setup(CreateDialogParam(ResHelper::hInstance,
-                                      MAKEINTRESOURCE(IDD_DOCK),
-                                      inParent,
-                                      reinterpret_cast<DLGPROC>(MainDock::DialogProc),
+    bool MainDock::create(const HWND parent) {
+        mDock.setup(CreateDialogParam(ResHelper::hInstance, MAKEINTRESOURCE(IDD_DOCK),
+                                      parent, dialogProc,
                                       reinterpret_cast<LPARAM>(this)));
 
         if (!mDock) {
             return false;
         }
         mIRollupWindow = GetIRollup(GetDlgItem(mDock.hwnd(), IDC_DOCK_ROLLUPS));
-        mBaseAttrUI->create(mIRollupWindow);
-        mManipAttrUI->create(mIRollupWindow);
-        mLightAttrUI->create(mIRollupWindow);
+        mBaseAttrUi->create(mIRollupWindow);
+        mManipAttrUi->create(mIRollupWindow);
+        mLightAttrUi->create(mIRollupWindow);
         mAnimTransRollup->create(mIRollupWindow);
         mAnimRotateRollup->create(mIRollupWindow);
         mAnimVisRollup->create(mIRollupWindow);
@@ -206,7 +204,7 @@ namespace win {
 
         int w = 0;
         int h = 0;
-        GetDesktopResolution(w, h);
+        desktopResolution(w, h);
         setSize(0, h - h / 4);
 
         mDock.show();
@@ -217,9 +215,9 @@ namespace win {
     void MainDock::destroy() {
         saveConfig();
         if (mDock) {
-            mBaseAttrUI->destroy();
-            mManipAttrUI->destroy();
-            mLightAttrUI->destroy();
+            mBaseAttrUi->destroy();
+            mManipAttrUi->destroy();
+            mLightAttrUi->destroy();
             mAnimTransRollup->destroy();
             mAnimRotateRollup->destroy();
             mAnimVisRollup->destroy();
@@ -231,8 +229,9 @@ namespace win {
     RECT MainDock::getSize(bool posIgnore) {
         RECT r;
         GetWindowRect(mDock.hwnd(), &r);
-        if (!posIgnore)
+        if (!posIgnore) {
             return r;
+        }
         r.right = r.right - r.left;
         r.left = 0;
         r.bottom = r.bottom - r.top;
@@ -240,7 +239,7 @@ namespace win {
         return r;
     }
 
-    void MainDock::setSize(int inWidth, int inHeight) {
+    void MainDock::setSize(const int width, const int height) {
         RECT r;
         GetWindowRect(mDock.hwnd(), &r);
 
@@ -249,10 +248,12 @@ namespace win {
         r.bottom = r.bottom - r.top + 10;
         r.top = 10;
 
-        if (inWidth)
-            r.right = r.left + inWidth;
-        if (inHeight)
-            r.bottom = r.top + inHeight;
+        if (width) {
+            r.right = r.left + width;
+        }
+        if (height) {
+            r.bottom = r.top + height;
+        }
         mDock.setRect(r);
 
         r.bottom = r.bottom - r.top;
@@ -264,7 +265,7 @@ namespace win {
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void MainDock::GetDesktopResolution(int & horizontal, int & vertical) {
+    void MainDock::desktopResolution(int & horizontal, int & vertical) {
         RECT desktop;
         memset(&desktop, 0x00, sizeof(desktop));
         const HWND hDesktop = GetDesktopWindow();
@@ -281,9 +282,9 @@ namespace win {
         Config * conf = Config::instance();
         conf->beginGroup(TOTEXT(MainDockUI));
 
-        conf->setValue(TOTEXT(mBaseAttrUI), mBaseAttrUI->isOpen());
-        conf->setValue(TOTEXT(mManipAttrUI), mManipAttrUI->isOpen());
-        conf->setValue(TOTEXT(mLightAttrUI), mLightAttrUI->isOpen());
+        conf->setValue(TOTEXT(mBaseAttrUI), mBaseAttrUi->isOpen());
+        conf->setValue(TOTEXT(mManipAttrUI), mManipAttrUi->isOpen());
+        conf->setValue(TOTEXT(mLightAttrUI), mLightAttrUi->isOpen());
         conf->setValue(TOTEXT(mAnimTransRollup), mAnimTransRollup->isOpen());
         conf->setValue(TOTEXT(mAnimRotateRollup), mAnimRotateRollup->isOpen());
         conf->setValue(TOTEXT(mAnimVisRollup), mAnimVisRollup->isOpen());
@@ -296,9 +297,9 @@ namespace win {
         Config * conf = Config::instance();
         conf->beginGroup(TOTEXT(MainDockUI));
 
-        mBaseAttrUI->setOpen(conf->value(TOTEXT(mBaseAttrUI), true));
-        mManipAttrUI->setOpen(conf->value(TOTEXT(mManipAttrUI), true));
-        mLightAttrUI->setOpen(conf->value(TOTEXT(mLightAttrUI), true));
+        mBaseAttrUi->setOpen(conf->value(TOTEXT(mBaseAttrUI), true));
+        mManipAttrUi->setOpen(conf->value(TOTEXT(mManipAttrUI), true));
+        mLightAttrUi->setOpen(conf->value(TOTEXT(mLightAttrUI), true));
         mAnimTransRollup->setOpen(conf->value(TOTEXT(mAnimTransRollup), true));
         mAnimRotateRollup->setOpen(conf->value(TOTEXT(mAnimRotateRollup), true));
         mAnimVisRollup->setOpen(conf->value(TOTEXT(mAnimVisRollup), true));

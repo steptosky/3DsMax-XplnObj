@@ -31,7 +31,6 @@
 
 #pragma warning(push, 0)
 #include <max.h>
-#include <notify.h>
 #pragma warning(pop)
 
 #include "models/MdObjAttr.h"
@@ -40,6 +39,8 @@
 #include "ui-win/anim/AnimTransView.h"
 #include "ui-win/anim/AnimVisView.h"
 #include "ui-win/controls/Base.h"
+
+struct NotifyInfo;
 
 namespace ui {
 namespace win {
@@ -57,20 +58,24 @@ namespace win {
     /********************************************************************************************************/
 
     class MainDock {
-
-        MainDock(const MainDock &) = delete;
-        MainDock & operator =(const MainDock &) = delete;
-
     public:
 
         MainDock();
+        MainDock(const MainDock &) = delete;
+        MainDock(MainDock &&) = delete;
+
         virtual ~MainDock();
+
+        MainDock & operator=(const MainDock &) = delete;
+        MainDock & operator=(MainDock &&) = delete;
+
+        //---------------------------------------------
 
         HWND getHwnd() {
             return mDock.hwnd();
         }
 
-        bool create(HWND inParent);
+        bool create(HWND parent);
         void destroy();
 
         //---------------------------------------------
@@ -95,7 +100,7 @@ namespace win {
             return mMinWidth;
         }
 
-        void setSize(int inWidth, int inHeight);
+        void setSize(int width, int height);
         RECT getSize(bool posIgnore = false);
 
         //---------------------------------------------
@@ -121,7 +126,7 @@ namespace win {
 
         //--------------------------------------
 
-        static INT_PTR DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+        static INT_PTR dialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
         //--------------------------------------
 
@@ -137,15 +142,15 @@ namespace win {
 
         //--------------------------------------
 
-        void GetDesktopResolution(int & horizontal, int & vertical);
+        void desktopResolution(int & horizontal, int & vertical);
 
         //--------------------------------------
 
         Interface * mIp = nullptr;
 
-        ObjAttr * mBaseAttrUI = nullptr;
-        ManipAttr * mManipAttrUI = nullptr;
-        LightAttr * mLightAttrUI = nullptr;
+        ObjAttr * mBaseAttrUi = nullptr;
+        ManipAttr * mManipAttrUi = nullptr;
+        LightAttr * mLightAttrUi = nullptr;
 
         AnimRotateRollup * mAnimRotateRollup = nullptr;
         AnimTransView * mAnimTransRollup = nullptr;
