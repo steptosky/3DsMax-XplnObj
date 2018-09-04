@@ -202,11 +202,6 @@ namespace win {
         mMinWidth = r.right - r.left;
         mMaxWidth = mMinWidth;
 
-        int w = 0;
-        int h = 0;
-        desktopResolution(w, h);
-        setSize(0, h - h / 4);
-
         mDock.show();
         mIRollupWindow->Show();
         return true;
@@ -226,7 +221,7 @@ namespace win {
         }
     }
 
-    RECT MainDock::getSize(bool posIgnore) {
+    RECT MainDock::getSize(const bool posIgnore) {
         RECT r;
         GetWindowRect(mDock.hwnd(), &r);
         if (!posIgnore) {
@@ -239,39 +234,43 @@ namespace win {
         return r;
     }
 
+    int MainDock::topPadding() const {
+        // This padding is used to make moving area on top of the panel.
+        // This is needed to allow the user to move the panel with mouse.
+#ifdef QT_IS_ENABLED
+        // when QT is used and we uses legacy win GUI 
+        // we shouldn't correct it anymore
+        return 0;
+#else
+        return 10;
+#endif
+    }
+
     void MainDock::setSize(const int width, const int height) {
+        const int tPadding = topPadding();
         RECT r;
         GetWindowRect(mDock.hwnd(), &r);
 
+        // reset position, leaving only size
         r.right = r.right - r.left;
         r.left = 0;
-        r.bottom = r.bottom - r.top + 10;
-        r.top = 10;
+        r.bottom = r.bottom - r.top;
+        r.top = tPadding;
 
+        // width correction if it is specified
         if (width) {
             r.right = r.left + width;
         }
+        // height correction if it is specified
         if (height) {
             r.bottom = r.top + height;
         }
         mDock.setRect(r);
 
-        r.bottom = r.bottom - r.top;
+        // reset padding offset for child rollup area
+        r.bottom = r.bottom - r.top - tPadding;
         r.top = 0;
         mRollupArea.setRect(r);
-    }
-
-    /**************************************************************************************************/
-    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
-    /**************************************************************************************************/
-
-    void MainDock::desktopResolution(int & horizontal, int & vertical) {
-        RECT desktop;
-        memset(&desktop, 0x00, sizeof(desktop));
-        const HWND hDesktop = GetDesktopWindow();
-        GetWindowRect(hDesktop, &desktop);
-        horizontal = desktop.right;
-        vertical = desktop.bottom;
     }
 
     /**************************************************************************************************/

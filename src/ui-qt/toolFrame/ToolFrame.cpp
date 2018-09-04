@@ -39,6 +39,8 @@
 #include <Qt/QmaxMainWindow.h>
 #include <Qt/QMaxWinHost.h>
 #include <Qt/QmaxDockWidget.h>
+
+#include <QResizeEvent>
 #pragma warning(pop)
 
 #include "ui-win/MainDock.h"
@@ -47,8 +49,56 @@ namespace ui {
 namespace qt {
 
     /**************************************************************************************************/
-    ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
     /**************************************************************************************************/
+
+    class XplnDockContainer : public MaxSDK::QmaxDockWidget {
+    public:
+
+        explicit XplnDockContainer(QWidget * parent, win::MainDock * mainDock)
+            : QmaxDockWidget("X-Object-Options", "X-Object Options", parent),
+              mWinLegacyDock(mainDock) {
+            setOrientation(Qt::Vertical);
+            setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+
+            setMaximumWidth(mWinLegacyDock->getMaxWidth());
+            setMinimumWidth(mWinLegacyDock->getMaxWidth());
+            setMinimumHeight(100);
+
+            connect(this, &QDockWidget::topLevelChanged, [&](auto) {
+                // when the dock becomes floating
+                // it gets titleBarWidget and height are becomes less.
+                // so we need make legacy dock size less too.
+                auto h = height();
+                const auto * tittleBar = titleBarWidget();
+                if (tittleBar) {
+                    h -= tittleBar->height();
+                }
+                mWinLegacyDock->setSize(0, h - mBottomPadding);
+            });
+        }
+
+        void resizeEvent(QResizeEvent * event) override {
+            QmaxDockWidget::resizeEvent(event);
+            const auto * tittleBar = titleBarWidget();
+            auto height = event->size().height();
+            if (tittleBar) {
+                height -= tittleBar->height();
+            }
+
+            mWinLegacyDock->setSize(0, height - mBottomPadding);
+        }
+
+    private:
+
+        // the problem is the max dock widget has
+        // a frame around it so content has padding
+        // I don't know where I can get the correct value
+        // so I used constant.
+        const static int mBottomPadding = 10;
+        win::MainDock * mWinLegacyDock = nullptr;
+
+    };
 
     /**************************************************************************************************/
     //////////////////////////////////////////* Functions */////////////////////////////////////////////
@@ -60,23 +110,16 @@ namespace qt {
             return;
         }
 
+        mWinLegacyDock = new win::MainDock();
         auto * qtMaxWindow = GetCOREInterface()->GetQmaxMainWindow();
-        mDockContainer = new MaxSDK::QmaxDockWidget("X-Object-Options",
-                                                    "X-Object Options",
-                                                    qtMaxWindow);
+        mDockContainer = new XplnDockContainer(qtMaxWindow, mWinLegacyDock);
         auto * legacyHost = new MaxSDK::QMaxWinHost(mDockContainer);
-        mDockContainer->setOrientation(Qt::Vertical);
-        mDockContainer->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         mDockContainer->setWidget(legacyHost);
 
-        mWinLegacyDock = new win::MainDock();
         mWinLegacyDock->create(reinterpret_cast<HWND>(legacyHost->winId()));
         qtMaxWindow->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, mDockContainer);
 
         mWinLegacyDock->setActive(true);
-
-        mDockContainer->setMaximumWidth(mWinLegacyDock->getMaxWidth());
-        mDockContainer->setMinimumWidth(mWinLegacyDock->getMaxWidth());
     }
 
     /**************************************************************************************************/

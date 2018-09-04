@@ -105,6 +105,10 @@ namespace win {
 
         //---------------------------------------------
 
+        int topPadding() const;
+
+        //---------------------------------------------
+
     private:
 
         //--------------------------------------
@@ -139,10 +143,6 @@ namespace win {
         int mMinHeight;
         int mMaxWidth;
         int mMinWidth;
-
-        //--------------------------------------
-
-        void desktopResolution(int & horizontal, int & vertical);
 
         //--------------------------------------
 
