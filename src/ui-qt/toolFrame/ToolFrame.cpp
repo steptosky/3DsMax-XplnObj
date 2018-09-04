@@ -73,6 +73,8 @@ namespace qt {
         mWinLegacyDock->create(reinterpret_cast<HWND>(legacyHost->winId()));
         qtMaxWindow->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, mDockContainer);
 
+        mWinLegacyDock->setActive(true);
+
         mDockContainer->setMaximumWidth(mWinLegacyDock->getMaxWidth());
         mDockContainer->setMinimumWidth(mWinLegacyDock->getMaxWidth());
     }

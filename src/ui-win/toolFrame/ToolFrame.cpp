@@ -79,11 +79,11 @@ namespace win {
             }
             case WM_SHOWWINDOW:
                 if (wParam == FALSE) {
-                    this->mMainDockUI->becomeHidden();
+                    this->mMainDockUI->setActive(false);
                     mIsHidden = true;
                 }
                 else {
-                    this->mMainDockUI->becomeShown();
+                    this->mMainDockUI->setActive(true);
                     mIsHidden = false;
                 }
                 break;

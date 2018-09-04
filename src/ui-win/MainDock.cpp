@@ -157,12 +157,8 @@ namespace win {
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void MainDock::becomeHidden() {
-        unRegisterCallbacks();
-    }
-
-    void MainDock::becomeShown() {
-        registerCallbacks();
+    void MainDock::setActive(const bool state) {
+        state ? registerCallbacks() : unRegisterCallbacks();
     }
 
     /**************************************************************************************************/

@@ -75,8 +75,7 @@ namespace win {
 
         //---------------------------------------------
 
-        void becomeHidden();
-        void becomeShown();
+        void setActive(bool state);
 
         //---------------------------------------------
 
