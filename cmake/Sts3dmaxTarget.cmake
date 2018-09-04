@@ -118,17 +118,22 @@ function(SETUP_MAX_TERGET)
         # project files
 
         include(StsGroupFiles)
-        
+
         file(GLOB_RECURSE CM_FILES 
+            "${CMAKE_SOURCE_DIR}/include/*.h" 
+            "${CMAKE_SOURCE_DIR}/include/*.inl" 
+            "${CMAKE_SOURCE_DIR}/include/*.cpp"
+
+            
             "${CMAKE_SOURCE_DIR}/src/*.h"
             "${CMAKE_SOURCE_DIR}/src/*.hpp" 
             "${CMAKE_SOURCE_DIR}/src/*.inl" 
             "${CMAKE_SOURCE_DIR}/src/*.cpp"
             "${CMAKE_SOURCE_DIR}/src/*.rc"
             "${CMAKE_SOURCE_DIR}/src/*.txt"
-            "${CMAKE_SOURCE_DIR}/include/*.h" 
-            "${CMAKE_SOURCE_DIR}/include/*.inl" 
-            "${CMAKE_SOURCE_DIR}/include/*.cpp"
+            
+            "${CMAKE_SOURCE_DIR}/src/*.ui"
+            "${CMAKE_SOURCE_DIR}/src/*.qrc" 
 
             "${CMAKE_SOURCE_DIR}/doc/*"
         )
