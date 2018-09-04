@@ -64,7 +64,10 @@ namespace win {
                     mMainDockUI->setSize(0, (HIWORD(lParam)));
                     return TRUE;
                 }
-                break;
+                RECT frameClSize;
+                GetClientRect(mFrameHandle, &frameClSize);
+                mMainDockUI->setSize(0, frameClSize.bottom - frameClSize.top);
+                return FALSE;
             }
             case WM_SIZING: {
                 auto * rect = reinterpret_cast<RECT*>(lParam);
