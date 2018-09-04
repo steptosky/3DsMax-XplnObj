@@ -32,13 +32,6 @@
 #include "resource/ResHelper.h"
 
 #define NumElements(array) (sizeof(array) / sizeof(array[0]))
-static ActionDescription gActions[] = {
-        {MENU_ACTION_DOC, IDS_MAIN_MENU_DOC, IDS_MAIN_MENU_DOC, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
-        {MENU_ACTION_UPDATE, IDS_MAIN_MENU_UPDATE,IDS_MAIN_MENU_UPDATE, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
-        {MENU_ACTION_DONATE, IDS_MAIN_MENU_DONATE, IDS_MAIN_MENU_DONATE, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
-        {MENU_ACTION_ABOUT, IDS_MAIN_MENU_ABOUT, IDS_MAIN_MENU_ABOUT, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
-        {MENU_ACTION_SETTINGS, IDS_MAIN_MENU_SETTINGS, IDS_MAIN_MENU_SETTINGS, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY}
-};
 
 namespace ui {
 namespace win {
@@ -46,6 +39,14 @@ namespace win {
     /**************************************************************************************************/
     /////////////////////////////////////////* Static area *////////////////////////////////////////////
     /**************************************************************************************************/
+
+    static ActionDescription gActions[] = {
+            {MainMenuActions::ActionDoc, IDS_MAIN_MENU_DOC, IDS_MAIN_MENU_DOC, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
+            {MainMenuActions::ActionUpdate, IDS_MAIN_MENU_UPDATE,IDS_MAIN_MENU_UPDATE, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
+            {MainMenuActions::ActionDonate, IDS_MAIN_MENU_DONATE, IDS_MAIN_MENU_DONATE, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
+            {MainMenuActions::ActionAbout, IDS_MAIN_MENU_ABOUT, IDS_MAIN_MENU_ABOUT, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
+            {MainMenuActions::ActionSettings, IDS_MAIN_MENU_SETTINGS, IDS_MAIN_MENU_SETTINGS, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY}
+    };
 
     const TSTR & MainMenuActions::name() {
         return nameNotConst();

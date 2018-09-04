@@ -33,12 +33,6 @@
 #include <max.h>
 #pragma warning(pop)
 
-#define MENU_ACTION_DOC 1
-#define MENU_ACTION_UPDATE 2
-#define MENU_ACTION_DONATE 3
-#define MENU_ACTION_ABOUT 4
-#define MENU_ACTION_SETTINGS 5
-
 namespace ui {
 namespace win {
 
@@ -51,6 +45,14 @@ namespace win {
      */
     class MainMenuActions : public ActionTable {
     public:
+
+        enum eAction {
+            ActionDoc =1,
+            ActionUpdate =2,
+            ActionDonate= 3,
+            ActionAbout= 4,
+            ActionSettings =5,
+        };
 
         //-------------------------------------------------------------------------
 

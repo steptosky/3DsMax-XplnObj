@@ -61,8 +61,8 @@ namespace win {
 
         BOOL ExecuteAction(int id) override;
 
-        ActionTable * mActionTable;
-        Interface * mIp;
+        ActionTable * mActionTable = nullptr;
+        Interface * mIp = nullptr;
 
     };
 
