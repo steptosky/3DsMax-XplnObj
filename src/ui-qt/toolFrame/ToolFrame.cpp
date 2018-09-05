@@ -61,9 +61,16 @@ namespace qt {
             setOrientation(Qt::Vertical);
             setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
-            setMaximumWidth(mWinLegacyDock->getMaxWidth());
-            setMinimumWidth(mWinLegacyDock->getMaxWidth());
-            setMinimumHeight(100);
+            // Internal content is narrowed than the dock.
+            // So there is an unpainted area to the right side.
+            // I think there is a place whe I can read the correct value automatically
+            // but I don't want to search it now, maybe it will be found during UI 
+            // improvements later.
+            const int rightCorrection = 5;
+
+            setMaximumWidth(mWinLegacyDock->getMaxWidth() - rightCorrection);
+            setMinimumWidth(mWinLegacyDock->getMaxWidth() - rightCorrection);
+            setMinimumHeight(200);
 
             connect(this, &QDockWidget::topLevelChanged, [&](auto isFloating) {
                 // when the dock becomes floating
@@ -121,6 +128,7 @@ namespace qt {
         mWinLegacyDock = new win::MainDock();
         auto * qtMaxWindow = GetCOREInterface()->GetQmaxMainWindow();
         mDockContainer = new XplnDockContainer(qtMaxWindow, mWinLegacyDock);
+
         auto * legacyHost = new MaxSDK::QMaxWinHost(mDockContainer);
         mDockContainer->setWidget(legacyHost);
 
