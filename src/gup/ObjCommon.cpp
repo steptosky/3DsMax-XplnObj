@@ -101,10 +101,27 @@ void ObjCommon::updateCheckWinCallback(HWND hwnd, UINT /*uMsg*/, UINT_PTR idEven
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
+void ObjCommon::createMainMenu(void * param, NotifyInfo *) {
+    auto * object = reinterpret_cast<ObjCommon*>(param);
+    if (!object->mMainMenuView || !object->mMainMenuPresenter) {
+        object->mMainMenuView.reset(ui::win::Factory::createMainMenuView());
+        object->mMainMenuPresenter = std::make_unique<presenters::MainMenu>(object->mMainMenuView.get());
+#if MAX_VERSION_MAJOR == 20
+        UnRegisterNotification(createMainMenu, object, NOTIFY_TOOLBARS_POST_LOAD);
+#endif
+    }
+}
+
 DWORD ObjCommon::Start() {
-    //-- Mein Menu ---------------------------
-    mMainMenuView.reset(ui::win::Factory::createMainMenuView());
-    mMainMenuPresenter = std::make_unique<presenters::MainMenu>(mMainMenuView.get());
+    //-- Main Menu ---------------------------
+#if MAX_VERSION_MAJOR == 20
+    // There is a bug with created the main menu In 2018 max. 
+    // Max menu bar is overwritten after the call of this method.
+    // So we register creating method to create the menu later - after tool bars are created.
+    RegisterNotification(createMainMenu, this, NOTIFY_TOOLBARS_POST_LOAD);
+#else
+    createMainMenu(this, nullptr);
+#endif
     //----------------------------------------
 
     mCloneNodeChunk = new CloneNodeChunk();
@@ -122,7 +139,7 @@ DWORD ObjCommon::Start() {
 }
 
 void ObjCommon::Stop() {
-    //-- Mein Menu ---------------------------
+    //-- Main Menu ---------------------------
     mMainMenuPresenter.reset();
     mMainMenuView.reset();
     //----------------------------------------

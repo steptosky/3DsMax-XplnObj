@@ -47,6 +47,8 @@
 
 #define COMMON_CLASS_ID	Class_ID(0xf5226b9, 0x5b131ef2)
 
+struct NotifyInfo;
+
 namespace ui {
 class ToolFrame;
 }
@@ -103,6 +105,7 @@ private:
     UpdateChecker mUpdateChecker;
     SceneUpdater mSceneUpdater;
 
+    static void createMainMenu(void * param, NotifyInfo * /*info*/);
     std::unique_ptr<presenters::MainMenu::IView> mMainMenuView;
     std::unique_ptr<presenters::MainMenu> mMainMenuPresenter;
 
