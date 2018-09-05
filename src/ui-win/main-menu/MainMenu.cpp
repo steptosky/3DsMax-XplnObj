@@ -186,7 +186,7 @@ namespace win {
             // If you want the changes to be saved to the menu file
             // you can use the following. Because the menu in this example is added/removed 
             // when the context switches to the utility plug-in, this is not needed.
-            // menuManager->SaveMenuFile(menuManager->GetMenuFile());
+            menuManager->SaveMenuFile(menuManager->GetMenuFile());
             //------------------------------------------------------
             menuManager->UpdateMenuBar();
             //------------------------------------------------------
