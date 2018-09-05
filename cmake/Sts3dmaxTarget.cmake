@@ -181,9 +181,24 @@ function(SETUP_MAX_TERGET)
             PRIVATE $<$<CXX_COMPILER_ID:MSVC>:-D_WIN64>
             PRIVATE $<$<CXX_COMPILER_ID:MSVC>:-D_CRT_SECURE_NO_DEPRECATE>
             PRIVATE $<$<CXX_COMPILER_ID:MSVC>:-DISOLATION_AWARE_ENABLED=1>
-            
             PRIVATE $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<BOOL:${ARGS_QT}>>:-DQT_IS_ENABLED>
+            PRIVATE $<$<CXX_COMPILER_ID:MSVC>:-D_ADESK_3DSMAX_WINDOWS_> # it is defined in 3Ds Max SDK projects
         )
+        
+        #--------------------------------------------------------------------------#
+        #//////////////////////////////////////////////////////////////////////////#
+        #--------------------------------------------------------------------------#
+        # 3Ds Max version related issues 
+
+        if (${ARGS_3DMAX_VERSION} STREQUAL 2019)
+            target_compile_options(${PROJECT}            
+                # Text from 2019 SDK doc:
+                # In order to prevent memory access violation issues when unloading plugins using Qt, 
+                # the QT_NO_UNICODE_LITERAL was added to the PreProcessorDefinition setting in
+                # maxsdk/projectsettings/3dsmax.common.tools.settings.props
+                PRIVATE $<$<CXX_COMPILER_ID:MSVC>:-DQT_NO_UNICODE_LITERAL>
+            )
+        endif ()
 
         #--------------------------------------------------------------------------#
         #//////////////////////////////////////////////////////////////////////////#
