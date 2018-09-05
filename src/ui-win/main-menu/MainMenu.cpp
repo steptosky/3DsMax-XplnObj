@@ -34,7 +34,6 @@
 #pragma warning(push, 0)
 #include <max.h>
 #include <imenuman.h>
-#include <iparamb2.h>
 #include "classes-desc/ClassesDescriptions.h"
 #pragma warning(pop)
 
@@ -49,8 +48,7 @@ namespace win {
     /**************************************************************************************************/
 
     MainMenu::MainMenu()
-        : mActionTable(nullptr),
-          mIp(GetCOREInterface()) {
+        : mIp(GetCOREInterface()) {
         create();
     }
 
@@ -69,7 +67,7 @@ namespace win {
         mActionTable = ClassesDescriptions::commonClass()->GetActionTable(0);
 
         // Set up our actions / callbacks
-        auto * actionManager = mIp->GetActionManager();
+        auto actionManager = mIp->GetActionManager();
         if (actionManager) {
             actionManager->ActivateActionTable(this, mActionTable->GetId());
         }
@@ -120,58 +118,64 @@ namespace win {
     /**************************************************************************************************/
 
     void MainMenu::installMenu() {
-        auto * menuManager = mIp->GetMenuManager();
-        auto * mainMenuBarContext = static_cast<IMenuBarContext*>(menuManager->GetContext(kMainMenuBar));
-        if (menuManager->FindMenu(_T(MENU_NAME))) {
-            LWarning << MENU_NAME << " is already installed";
-            return;
+        auto menuManager = mIp->GetMenuManager();
+        if (menuManager->RegisterMenuBarContext(MENU_ID, _T(MENU_NAME)) || !menuManager->FindMenu(_T(MENU_NAME))) {
+            //------------------------------------------------------
+            // add the menu itself
+            auto menu = GetIMenu();
+            if (!menu) {
+                LError << "Couldn't get menu";
+                return;
+            }
+            menu->SetTitle(_T(MENU_NAME));
+            menuManager->RegisterMenu(menu, 0);
+            auto menuBarContext = static_cast<IMenuBarContext*>(menuManager->GetContext(MENU_ID));
+            menuBarContext->SetMenu(menu);
+            //------------------------------------------------------
+            DbgAssert(mActionTable);
+            if (mActionTable) {
+                //--------------------
+                const auto createMenuItem = [&](const MainMenuActions::eAction action) {
+                    auto subMenuItem = GetIMenuItem();
+                    subMenuItem->SetActionItem(mActionTable->GetAction(action));
+                    return subMenuItem;
+                };
+                //--------------------
+                menu->AddItem(createMenuItem(MainMenuActions::ActionDoc));
+                menu->AddItem(createMenuItem(MainMenuActions::ActionDonate));
+                menu->AddItem(createMenuItem(MainMenuActions::ActionUpdate));
+                menu->AddItem(createMenuItem(MainMenuActions::ActionAbout));
+                //--------------------
+            }
+            else {
+                LError << "Action table is not set";
+            }
+            //------------------------------------------------------
+            // Make a new "sub" menu item that will be installed to the menu bar
+            auto mainMenuItem = GetIMenuItem();
+            if (!mainMenuItem) {
+                LError << "Couldn't get menu item";
+                return;
+            }
+            mainMenuItem->SetSubMenu(menu);
+            //------------------------------------------------------
+            // Add the menu and update the bar to see it.
+            auto mainMenuBarContext = static_cast<IMenuBarContext*>(menuManager->GetContext(kMainMenuBar));
+            auto mainMenu = mainMenuBarContext->GetMenu();
+            if (!mainMenu) {
+                LError << "Main menu bar context returned nullptr for the main menu";
+                return;
+            }
+            mainMenu->AddItem(mainMenuItem, -1);
+            //------------------------------------------------------
+            menuManager->UpdateMenuBar();
+            //------------------------------------------------------
         }
-
-        if (!menuManager->RegisterMenuBarContext(MENU_ID, _T(MENU_NAME))) {
-            LError << MENU_NAME << " couldn't be registered";
-        }
-
-        //------------------------------------------------------
-        // add the menu itself
-        auto * menu = GetIMenu();
-        menu->SetTitle(_T(MENU_NAME));
-        menuManager->RegisterMenu(menu, 0);
-        auto * menuBarContext = static_cast<IMenuBarContext*>(menuManager->GetContext(MENU_ID));
-        menuBarContext->SetMenu(menu);
-        //------------------------------------------------------
-        DbgAssert(mActionTable);
-        if (mActionTable) {
-            //--------------------
-            const auto createMenuItem = [&](const MainMenuActions::eAction action) {
-                auto * subMenuItem = GetIMenuItem();
-                subMenuItem->SetActionItem(mActionTable->GetAction(action));
-                return subMenuItem;
-            };
-            //--------------------
-            menu->AddItem(createMenuItem(MainMenuActions::ActionDoc));
-            menu->AddItem(createMenuItem(MainMenuActions::ActionDonate));
-            menu->AddItem(createMenuItem(MainMenuActions::ActionUpdate));
-            menu->AddItem(createMenuItem(MainMenuActions::ActionAbout));
-            //--------------------
-        }
-        else {
-            LError << "Action table is not set";
-        }
-        //------------------------------------------------------
-        // Make a new "sub" menu item that will be installed to the menu bar
-        IMenuItem * itemMainEx = GetIMenuItem();
-        itemMainEx->SetSubMenu(menu);
-        //------------------------------------------------------
-        // Add the menu and update the bar to see it.
-        IMenu * mainMenu = mainMenuBarContext->GetMenu();
-        mainMenu->AddItem(itemMainEx, -1);
-        menuManager->UpdateMenuBar();
-        //------------------------------------------------------
     }
 
     void MainMenu::removeMenu() {
-        auto * menuManager = mIp->GetMenuManager();
-        auto * menu = menuManager->FindMenu(_T(MENU_NAME));
+        auto menuManager = mIp->GetMenuManager();
+        auto menu = menuManager->FindMenu(_T(MENU_NAME));
 
         if (menu) {
             while (menu->NumItems() > 0) {
@@ -179,7 +183,7 @@ namespace win {
             }
             //------------------------------------------------------
             // Remove menu from context
-            auto * menuContext = static_cast<IMenuBarContext*>(menuManager->GetContext(MENU_ID));
+            auto menuContext = static_cast<IMenuBarContext*>(menuManager->GetContext(MENU_ID));
             menuContext->SetMenu(nullptr);
             menuManager->UnRegisterMenu(menu);
             //------------------------------------------------------
