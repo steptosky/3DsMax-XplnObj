@@ -42,10 +42,11 @@ class ToolFrame : public sts::Single<ToolFrame> {
     class Private;
     friend Private;
     friend Single<ToolFrame>;
-public:
 
     ToolFrame();
     virtual ~ToolFrame() = default;
+
+public:
 
     void create();
 
