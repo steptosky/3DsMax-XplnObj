@@ -49,10 +49,6 @@
 
 struct NotifyInfo;
 
-namespace ui {
-class ToolFrame;
-}
-
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
@@ -99,7 +95,6 @@ private:
 
     void DeleteThis() override;
 
-    ui::ToolFrame * mToolFrame;
     Config * mConfig;
     CloneNodeChunk * mCloneNodeChunk;
     UpdateChecker mUpdateChecker;

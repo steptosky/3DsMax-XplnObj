@@ -30,7 +30,6 @@
 #pragma once
 
 #include <memory>
-#include "additional/utils/Single.h"
 
 namespace ui {
 
@@ -38,21 +37,22 @@ namespace ui {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-class ToolFrame : public sts::Single<ToolFrame> {
+class ToolFrame {
     class Private;
     friend Private;
-    friend Single<ToolFrame>;
 
-    ToolFrame();
+    ToolFrame() = default;
     virtual ~ToolFrame() = default;
 
 public:
 
-    void create();
+    static void recreate();
+    static void create();
+    static void destroy();
 
 private:
 
-    std::unique_ptr<Private> mPrivate;
+    static std::unique_ptr<Private> mPrivate;
 
 };
 

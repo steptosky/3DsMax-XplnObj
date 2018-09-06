@@ -47,7 +47,6 @@
 /**************************************************************************************************/
 
 ObjCommon::ObjCommon() {
-    mToolFrame = nullptr;
     mConfig = Config::instance();
     mCloneNodeChunk = nullptr;
 }
@@ -126,8 +125,7 @@ DWORD ObjCommon::Start() {
 
     mCloneNodeChunk = new CloneNodeChunk();
 
-    mToolFrame = ui::ToolFrame::instance();
-    mToolFrame->create();
+    ui::ToolFrame::create();
 
     mUpdateChecker.checkForUpdate();
     SetTimer(GetCOREInterface()->GetMAXHWnd(), UINT_PTR(WM_MY_TIMER_ID),
@@ -145,7 +143,7 @@ void ObjCommon::Stop() {
     //----------------------------------------
     UnRegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
     mUpdateChecker.freeResources();
-    mToolFrame->free();
+    ui::ToolFrame::destroy();
     delete mCloneNodeChunk;
 }
 
