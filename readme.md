@@ -4,7 +4,7 @@
   For more information read the [license](license.txt) file.
 - The X-Plane [official website](http://www.x-plane.com/).
 - The X-Plane [obj specification](http://developer.x-plane.com/?article=obj8-file-format-specification).
-- The plugin supports `9-2017` 3DsMaxs (x64 only).
+- The plugin supports `9-2019` 3DsMaxs (x64 only).
 - The plugin requires C++ 14 or higher standard.
 
 ### Warning 
