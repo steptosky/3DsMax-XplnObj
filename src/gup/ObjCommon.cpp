@@ -107,7 +107,7 @@ void ObjCommon::createMainMenu(void * param, NotifyInfo *) {
         object->mMainMenuView.reset(ui::win::Factory::createMainMenuView());
         object->mMainMenuPresenter = std::make_unique<presenters::MainMenu>(object->mMainMenuView.get());
 #if MAX_VERSION_MAJOR == 20
-        UnRegisterNotification(createMainMenu, object, NOTIFY_TOOLBARS_POST_LOAD);
+        UnRegisterNotification(createMainMenu, object, NOTIFY_CUI_MENUS_POST_LOAD);
 #endif
     }
 }
@@ -116,9 +116,9 @@ DWORD ObjCommon::Start() {
     //-- Main Menu ---------------------------
 #if MAX_VERSION_MAJOR == 20
     // There is a bug with created the main menu In 2018 max. 
-    // Max menu bar is overwritten after the call of this method.
-    // So we register creating method to create the menu later - after tool bars are created.
-    RegisterNotification(createMainMenu, this, NOTIFY_TOOLBARS_POST_LOAD);
+    // It seems max menu bar is overwritten after the call of this method.
+    // So we register creating method to create the menu later - after some GUI parts are created.
+    RegisterNotification(createMainMenu, this, NOTIFY_CUI_MENUS_POST_LOAD);
 #else
     createMainMenu(this, nullptr);
 #endif
