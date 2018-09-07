@@ -5,6 +5,11 @@ Next
 
 - Added: Supporting for 3ds max 2018 and 2019.
 
+KNOWN ISSUES:
+    New Plug-in's dock window and menu aren't good adjusted to be used with the new 3Ds Max's workspaces conception.
+    Bug in 3Ds Max 2019 with restoring plug-in's dock window. After 3Ds Max is restarted the dock appears in another place.
+        You can try to use "warkspaces: Reset To Default States" to restore dock window's position.
+
 ===============================================================================
 2.3.1 (31.08.2018)
 
