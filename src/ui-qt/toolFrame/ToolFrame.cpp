@@ -27,13 +27,12 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "resource/ResHelper.h"
 #ifdef QT_IS_ENABLED
 
 #include "ui-qt/toolFrame/ToolFrame.h"
+#include <memory>
 
 #pragma warning(push, 0)
-#include <GetCOREInterface.h>
 #include <maxicon.h>
 
 #include <Qt/QmaxMainWindow.h>
@@ -52,68 +51,112 @@ namespace qt {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     /**************************************************************************************************/
 
-    class XplnDockContainer : public MaxSDK::QmaxDockWidget {
+    class XplnLegacyDock : public MaxSDK::QMaxWinHost {
     public:
 
-        explicit XplnDockContainer(QWidget * parent, win::MainDock * mainDock)
-            : QmaxDockWidget("X-Object-Options", "X-Object Options", parent),
-              mWinLegacyDock(mainDock) {
-            setOrientation(Qt::Vertical);
-            setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-
-            // Internal content is narrowed than the dock.
-            // So there is an unpainted area to the right side.
-            // I think there is a place whe I can read the correct value automatically
-            // but I don't want to search it now, maybe it will be found during UI 
-            // improvements later.
-            const int rightCorrection = 5;
-
-            setMaximumWidth(mWinLegacyDock->getMaxWidth() - rightCorrection);
-            setMinimumWidth(mWinLegacyDock->getMaxWidth() - rightCorrection);
-            setMinimumHeight(200);
-
-            connect(this, &QDockWidget::topLevelChanged, [&](auto isFloating) {
-                // when the dock becomes floating
-                // it gets titleBarWidget and height are becomes less.
-                // so we need make legacy dock size less too.
-                auto h = height();
-                const auto * tittleBar = titleBarWidget();
-                if (tittleBar) {
-                    h -= tittleBar->height();
-                }
-                auto padding = 0;
-                if (isFloating) {
-                    padding = mBottomPadding;
-                }
-                mWinLegacyDock->setSize(0, h - padding);
-            });
+        explicit XplnLegacyDock(QWidget * parent)
+            : QMaxWinHost(parent) {
+            createLegacyWin();
         }
+
+        virtual ~XplnLegacyDock() {
+            destroyLegacyWin();
+        }
+
+        //-------------------------------------------------------------------------
+
+        void showEvent(QShowEvent * event) override {
+            if (mWinLegacyDock) {
+                mWinLegacyDock->setActive(true);
+            }
+            QMaxWinHost::showEvent(event);
+        }
+
+        void hideEvent(QHideEvent * event) override {
+            if (mWinLegacyDock) {
+                mWinLegacyDock->setActive(false);
+            }
+            QMaxWinHost::hideEvent(event);
+        }
+
+        //-------------------------------------------------------------------------
 
         void resizeEvent(QResizeEvent * event) override {
-            QmaxDockWidget::resizeEvent(event);
-            const auto * tittleBar = titleBarWidget();
-            auto height = event->size().height();
-            if (tittleBar) {
-                height -= tittleBar->height();
+            if (mWinLegacyDock) {
+                mWinLegacyDock->setSize(0, event->size().height());
             }
-
-            auto padding = 0;
-            if (isFloating()) {
-                padding = mBottomPadding;
-            }
-            mWinLegacyDock->setSize(0, height - padding);
+            QMaxWinHost::resizeEvent(event);
         }
+
+        //-------------------------------------------------------------------------
+
+        void createLegacyWin() {
+            if (!mWinLegacyDock) {
+                mWinLegacyDock = std::make_unique<win::MainDock>();
+                mWinLegacyDock->create(reinterpret_cast<HWND>(winId()));
+                setHostedWindow(mWinLegacyDock->getHwnd());
+                setMaximumWidth(mWinLegacyDock->getMaxWidth());
+                setMinimumWidth(mWinLegacyDock->getMaxWidth());
+                setMinimumHeight(300);
+            }
+        }
+
+        void destroyLegacyWin() {
+            setHostedWindow(nullptr);
+            mWinLegacyDock.reset();
+        }
+
+        //-------------------------------------------------------------------------
 
     private:
 
-        // the problem is the max dock widget has
-        // a frame around it so content has padding
-        // I don't know where I can get the correct value
-        // so I used constant.
-        const static int mBottomPadding = 10;
-        win::MainDock * mWinLegacyDock = nullptr;
+        std::unique_ptr<win::MainDock> mWinLegacyDock;
 
     };
+
+    /**************************************************************************************************/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    class XplnDockContainer : public MaxSDK::QmaxDockWidget {
+    public:
+
+        explicit XplnDockContainer(QWidget * parent)
+            : QmaxDockWidget("XObjectOptions", "X-Object Options", parent) {
+            setOrientation(Qt::Vertical);
+            setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+            mWinLegacyDock = new XplnLegacyDock(this);
+            setWidget(mWinLegacyDock);
+        }
+
+        virtual ~XplnDockContainer() = default;
+
+        //-------------------------------------------------------------------------
+
+        void createLegacyWin() const {
+            mWinLegacyDock->createLegacyWin();
+        }
+
+        void destroyLegacyWin() const {
+            mWinLegacyDock->destroyLegacyWin();
+        }
+
+        //-------------------------------------------------------------------------
+
+    private:
+
+        // QT will delete it for us while parent is being deleted.
+        XplnLegacyDock * mWinLegacyDock = nullptr;
+
+    };
+
+    /**************************************************************************************************/
+    ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+    /**************************************************************************************************/
+
+    ToolFrame::~ToolFrame() {
+        destroy();
+    }
 
     /**************************************************************************************************/
     //////////////////////////////////////////* Functions */////////////////////////////////////////////
@@ -121,21 +164,22 @@ namespace qt {
 
     void ToolFrame::create() {
         if (mDockContainer) {
+            mDockContainer->createLegacyWin();
             mDockContainer->setVisible(true);
             return;
         }
 
-        mWinLegacyDock = new win::MainDock();
         auto * qtMaxWindow = GetCOREInterface()->GetQmaxMainWindow();
-        mDockContainer = new XplnDockContainer(qtMaxWindow, mWinLegacyDock);
-
-        auto * legacyHost = new MaxSDK::QMaxWinHost(mDockContainer);
-        mDockContainer->setWidget(legacyHost);
-
-        mWinLegacyDock->create(reinterpret_cast<HWND>(legacyHost->winId()));
+        mDockContainer = new XplnDockContainer(qtMaxWindow);
         qtMaxWindow->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, mDockContainer);
+    }
 
-        mWinLegacyDock->setActive(true);
+    void ToolFrame::destroy() {
+        if (mDockContainer) {
+            // mDockContainer will delete by QT
+            // we just delete our legacy window
+            mDockContainer->destroyLegacyWin();
+        }
     }
 
     /**************************************************************************************************/

@@ -31,16 +31,10 @@
 
 #ifdef QT_IS_ENABLED
 
-namespace MaxSDK {
-class QmaxDockWidget;
-}
-
 namespace ui {
-namespace win {
-    class MainDock;
-}
-
 namespace qt {
+
+    class XplnDockContainer;
 
     /**************************************************************************************************/
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,14 +44,14 @@ namespace qt {
     public:
 
         ToolFrame() = default;
-        virtual ~ToolFrame() = default;
+        virtual ~ToolFrame();
 
         void create();
+        void destroy();
 
     private:
 
-        win::MainDock * mWinLegacyDock = nullptr;
-        MaxSDK::QmaxDockWidget * mDockContainer = nullptr;
+        XplnDockContainer * mDockContainer = nullptr;
 
     };
 
