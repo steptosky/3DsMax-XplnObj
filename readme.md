@@ -41,7 +41,8 @@ Importing is still under developing and doesn't work properly!
   You may copy that file and make necessary changes as you wish using the origin script as the example.  
   You may copy `conanfile.txt` and name it as `dev-conanfile.txt` then this file will be used during project generation. 
     It is useful when you are developing only for certaing 3Ds Max versions but you want all the versions to be built with your CI.  
-    **Don't forget to update data** in the `dev-conanfile.txt` when you have pull new changes from the repository because dependencies' versions could be changed.
+    **Don't forget to update data** in the `dev-conanfile.txt` when you pull new changes from the repository 
+    or you changed commit or branch because dependencies' versions could also be changed.
 - If you just want to build the plugins you may use the scripts inside the `ci` folder.  
   Pay attention those scripts must be run from the root repository folder `ci/build-vs2017.bat`.
     - `ci/build-release-vs2017.bat` - Builds and installs release target only. This script is usually used for making public release versions.
