@@ -27,6 +27,8 @@
 **  Contacts: www.steptosky.com
 */
 
+#include <array>
+
 #pragma warning(push, 0)
 #include <max.h>
 #pragma warning(pop)
@@ -36,11 +38,11 @@
 #include "resource/ResHelper.h"
 #include "classes-desc/ClassesDescriptions.h"
 
-#define FnExport __declspec(dllexport)
-
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
+
+#define FnExport __declspec(dllexport)
 
 #ifndef NDEBUG
 #	define CONSOLE_ENABLED
@@ -50,45 +52,51 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
+typedef ClassDesc2 *(*ClassDesc2Creators)();
+static std::array<ClassDesc2Creators, 6> gClassDesc2Array = {
+    &ClassesDescriptions::commonClass,
+    &ClassesDescriptions::mainObj,
+    &ClassesDescriptions::lodObj,
+    &ClassesDescriptions::smokeObj,
+    &ClassesDescriptions::exporter,
+    &ClassesDescriptions::importer,
+};
+
 extern "C" {
 
-/***************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
 // This function is called by Windows when the DLL is loaded.  This 
 // function may also be called many times during time critical operations
 // like rendering.  Therefore developers need to be careful what they
 // do inside this function.  In the code below, note how after the DLL is
 // loaded the first time only a few statements are executed.
-
-BOOL WINAPI DllMain(HINSTANCE hinstDLL, ULONG fdwReason, LPVOID /*lpvReserved*/) {
+BOOL WINAPI DllMain(const HINSTANCE hInstDll, const ULONG fdwReason, const LPVOID /*lpvReserved*/) {
     if (fdwReason == DLL_PROCESS_ATTACH) {
-        ResHelper::setHInstance(hinstDLL);
-        DisableThreadLibraryCalls(hinstDLL);
+        ResHelper::setHInstance(hInstDll);
+        DisableThreadLibraryCalls(hInstDll);
     }
     return TRUE;
 }
 
-/***************************************************************************************/
+//-------------------------------------------------------------------------
 
 // This function returns the number of plug-in classes this DLL
 FnExport int LibNumberClasses() {
-    return 6;
+    return static_cast<int>(gClassDesc2Array.size());
 }
 
 // This function returns the number of plug-in classes this DLL
-FnExport ClassDesc * LibClassDesc(int i) {
-    switch (i) {
-        case 0: return ClassesDescriptions::commonClass();
-        case 1: return ClassesDescriptions::mainObj();
-        case 2: return ClassesDescriptions::lodObj();
-        case 3: return ClassesDescriptions::smokeObj();
-        case 4: return ClassesDescriptions::exporter();
-        case 5: return ClassesDescriptions::importer();
-        default: return nullptr;
+FnExport ClassDesc * LibClassDesc(const int i) {
+    if (i < 0 || std::size_t(i) >= gClassDesc2Array.size()) {
+        return nullptr;
     }
+    return gClassDesc2Array[std::size_t(i)]();
 }
 
-/***************************************************************************************/
+//-------------------------------------------------------------------------
 
 // This function returns a pre-defined constant indicating the version of 
 // the system under which it was compiled.  It is used to allow the system
@@ -103,7 +111,12 @@ FnExport const TCHAR * LibDescription() {
     return _T(XIO_PROJECT_NAME);
 }
 
-/***************************************************************************************/
+// 3ds Max's defer loading mechanism
+FnExport ULONG CanAutoDefer() {
+    return TRUE;
+}
+
+//-------------------------------------------------------------------------
 
 // This function is called once, right after your plugin has been loaded by 3ds Max. 
 // Perform one-time plugin initialization in this method.
@@ -116,7 +129,6 @@ FnExport int LibInitialize(void) {
     AllocConsole();
     freopen("CONOUT$", "wb", stdout);
     freopen("CONOUT$", "wb", stderr);
-    //freopen( "CON", "w", stdout ) ;
 #endif
     Logger::instance();
     return TRUE;
@@ -136,10 +148,7 @@ FnExport int LibShutdown(void) {
     return TRUE;
 }
 
-/***************************************************************************************/
-
-}
-
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
+}
