@@ -188,7 +188,7 @@ namespace qt {
         return QString(layoutFile.c_str());
     }
 
-    inline void exit(void * param, NotifyInfo *) {
+    static void shutdown(void * param, NotifyInfo *) {
         const auto filePath = layoutFile();
         auto * qtMaxWindow = GetCOREInterface()->GetQmaxMainWindow();
 
@@ -196,7 +196,7 @@ namespace qt {
         file.open(QIODevice::WriteOnly);
         file.close();
         qtMaxWindow->saveLayout(filePath);
-        UnRegisterNotification(exit, param, NOTIFY_SYSTEM_SHUTDOWN);
+        UnRegisterNotification(shutdown, param, NOTIFY_SYSTEM_SHUTDOWN);
     }
 #endif
 
@@ -221,7 +221,7 @@ namespace qt {
         if (QFile::exists(filePath)) {
             qtMaxWindow->loadLayout(filePath);
         }
-        RegisterNotification(exit, this, NOTIFY_SYSTEM_SHUTDOWN);
+        RegisterNotification(shutdown, this, NOTIFY_SYSTEM_SHUTDOWN);
 #endif
     }
 
