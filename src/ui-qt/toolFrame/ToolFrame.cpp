@@ -127,6 +127,7 @@ namespace qt {
             setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
             mWinLegacyDock = new XplnLegacyDock(this);
             setWidget(mWinLegacyDock);
+            connect(mWinLegacyDock, &QObject::destroyed, [&]() { mWinLegacyDock = nullptr; });
         }
 
         virtual ~XplnDockContainer() = default;
@@ -134,11 +135,15 @@ namespace qt {
         //-------------------------------------------------------------------------
 
         void createLegacyWin() const {
-            mWinLegacyDock->createLegacyWin();
+            if (mWinLegacyDock) {
+                mWinLegacyDock->createLegacyWin();
+            }
         }
 
         void destroyLegacyWin() const {
-            mWinLegacyDock->destroyLegacyWin();
+            if (mWinLegacyDock) {
+                mWinLegacyDock->destroyLegacyWin();
+            }
         }
 
         //-------------------------------------------------------------------------
@@ -172,6 +177,7 @@ namespace qt {
         auto * qtMaxWindow = GetCOREInterface()->GetQmaxMainWindow();
         mDockContainer = new XplnDockContainer(qtMaxWindow);
         qtMaxWindow->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, mDockContainer);
+        QObject::connect(mDockContainer, &QObject::destroyed, [&]() { mDockContainer = nullptr; });
     }
 
     void ToolFrame::destroy() {
