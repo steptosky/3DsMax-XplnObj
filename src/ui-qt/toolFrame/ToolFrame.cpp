@@ -34,6 +34,7 @@
 
 #pragma warning(push, 0)
 #include <maxicon.h>
+#include <IPathConfigMgr.h>
 
 #include <Qt/QmaxMainWindow.h>
 #include <Qt/QMaxWinHost.h>
@@ -43,6 +44,8 @@
 #pragma warning(pop)
 
 #include "ui-win/MainDock.h"
+
+struct NotifyInfo;
 
 namespace ui {
 namespace qt {
@@ -166,6 +169,40 @@ namespace qt {
     /**************************************************************************************************/
     //////////////////////////////////////////* Functions */////////////////////////////////////////////
     /**************************************************************************************************/
+    // Actual for 2019 max only and maybe for next version but on 08.09.18 [2019] is the latest one.
+    // The problem that the 3Ds Max 2019 loads layout file before we create our dock widget, 
+    // so the dock windows can't be placed to the correct (where it was last time) place with 3Ds Max. 
+    // We save our own layout file before 3Ds Max shutdown and loads it after our widget is created.
+    // It isn't a good solution but I haven't found better one.
+    // BTW I have also tried to create the widget in GUP constructor - result the same.
+    /**************************************************************************************************/
+
+#if MAX_VERSION_MAJOR == 21 // 2019
+    inline QString layoutFile() {
+        auto layoutFile = sts::toMbString(IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR));
+        layoutFile.append("\\fix-2019.layout");
+        // todo The correct conversion like 'QString::fromWCharArray()' crashes max. 
+        // The problem also for opposite conversion like 'QString::toStdWString()'
+        // I have to learn this moment. Users can have not 
+        //      ASCII path, so the conversion bellow won't work properly.
+        return QString(layoutFile.c_str());
+    }
+
+    inline void exit(void * param, NotifyInfo *) {
+        const auto filePath = layoutFile();
+        auto * qtMaxWindow = GetCOREInterface()->GetQmaxMainWindow();
+
+        QFile file(filePath);
+        file.open(QIODevice::WriteOnly);
+        file.close();
+        qtMaxWindow->saveLayout(filePath);
+        UnRegisterNotification(exit, param, NOTIFY_SYSTEM_SHUTDOWN);
+    }
+#endif
+
+    /**************************************************************************************************/
+    //////////////////////////////////////////* Functions */////////////////////////////////////////////
+    /**************************************************************************************************/
 
     void ToolFrame::create() {
         if (mDockContainer) {
@@ -178,6 +215,14 @@ namespace qt {
         mDockContainer = new XplnDockContainer(qtMaxWindow);
         qtMaxWindow->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, mDockContainer);
         QObject::connect(mDockContainer, &QObject::destroyed, [&]() { mDockContainer = nullptr; });
+
+#if MAX_VERSION_MAJOR == 21 // 2019 // see information above
+        const auto filePath = layoutFile();
+        if (QFile::exists(filePath)) {
+            qtMaxWindow->loadLayout(filePath);
+        }
+        RegisterNotification(exit, this, NOTIFY_SYSTEM_SHUTDOWN);
+#endif
     }
 
     void ToolFrame::destroy() {
