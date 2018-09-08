@@ -29,11 +29,7 @@
 
 #pragma once
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
-
-#include "additional/utils/Single.h"
+#include <memory>
 
 namespace ui {
 
@@ -41,51 +37,22 @@ namespace ui {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-class MainDock;
+class ToolFrame {
+    class Private;
+    friend Private;
 
-class ToolFrame : public CUIFrameMsgHandler, public CUIPosData, public sts::Single<ToolFrame> {
-
-    ToolFrame(const ToolFrame &) {}
-
-    ToolFrame & operator =(const ToolFrame &) {
-        return *this;
-    }
+    ToolFrame() = default;
+    virtual ~ToolFrame() = default;
 
 public:
 
-    ToolFrame();
-    virtual ~ToolFrame();
-
-    void create();
+    static void recreate();
+    static void create();
+    static void destroy();
 
 private:
 
-    int GetWidth(int sizeType, int orient) override;
-    int GetHeight(int sizeType, int orient) override;
-
-    int ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) override;
-
-    //--------------------------------------
-
-    CUIPosData * getSize();
-
-    //--------------------------------------
-
-    void saveConfig();
-    void loadConfig();
-
-    //--------------------------------------
-
-    HWND mFrameHandle = nullptr;
-    Interface * mIp = nullptr;
-    MainDock * mMainDockUI = nullptr;
-    bool mResizing;
-    int mBorderPx;
-    int mClientWidth;
-    int mClientHeight;
-
-    DWORD mCurrFramePos;
-    bool mIsHidden;
+    static std::unique_ptr<Private> mPrivate;
 
 };
 

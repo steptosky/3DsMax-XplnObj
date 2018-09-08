@@ -1,6 +1,14 @@
 
 The 3DsMax X-Plane Obj Exporter/Importer change-log.
 ===============================================================================
+Next
+
+- Added: Supporting for 3ds max 2018 and 2019.
+
+KNOWN ISSUES:
+    New Plug-in's dock window and menu aren't good adjusted to be used with the new 3Ds Max's workspaces conception.
+
+===============================================================================
 2.3.1 (31.08.2018)
 
 - Updated: Some manipulators UI text to be shorter.
@@ -8,8 +16,8 @@ The 3DsMax X-Plane Obj Exporter/Importer change-log.
 - Fixed: LIGHT_SPILL_CUSTOM direction export.
 - Fixed: Signature printing.
 - Fixed: Printing incorrect attribute name for the
-			`ATTR_manip_command_switch_up_down` 
-			`ATTR_manip_command_switch_left_right`.
+            `ATTR_manip_command_switch_up_down` 
+            `ATTR_manip_command_switch_left_right`.
 
 ===============================================================================
 2.3.0 (05.10.2017)
@@ -27,7 +35,7 @@ The 3DsMax X-Plane Obj Exporter/Importer change-log.
 - Fixed: Opening update message for non x-plane scenes.
 - Fixed: Crashing on some objects, for example 'Biped Object'.
 - Fixed: Vertical scroll bar in the export console.
-		 
+
 ===============================================================================
 2.2.0 (10.07.2017)
 
@@ -56,10 +64,10 @@ The 3DsMax X-Plane Obj Exporter/Importer change-log.
 - Added: Tooltips for the some controls of the export window.
 - Added: Ability to enable or disable 'X-Obj' export. 
          It helps when you work with more than one 'X-Obj' in the scene. 
-		 You can export only selected ones.
+         You can export only selected ones.
 - Added: Checkbox for enabling auto-export. 
          If it is enabled then the export will be auto-started 
-		 without pressing the 'Export' button.
+         without pressing the 'Export' button.
 
 - Fixed: Link to donate. The button 'donate' leads to the correct web page now.
 - Fixed: Loop animation attribute printing.
@@ -68,7 +76,6 @@ The 3DsMax X-Plane Obj Exporter/Importer change-log.
 2.0.2-beta (23.04.2017)
 
 - Added: Changing the text of the update button if a new version is available.
-
 - Fixed: Potential unstable code.
 
 ===============================================================================

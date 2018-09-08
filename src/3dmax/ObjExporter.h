@@ -33,7 +33,7 @@
 #include <max.h>
 #pragma warning(pop)
 
-#include "ui/DlgExport.h"
+#include "ui-win/DlgExport.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ public:
 
 private:
 
-    ui::DlgExport * mDlgMain = nullptr;
+    ui::win::DlgExport * mDlgMain = nullptr;
 
 };
 

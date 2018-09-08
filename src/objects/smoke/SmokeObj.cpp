@@ -366,7 +366,7 @@ RefResult SmokeObject::NotifyRefChanged(const Interval & /*changeInt*/, RefTarge
                                         PartID & /*partID*/, RefMessage message, BOOL /*propagate*/) {
 #else
 RefResult SmokeObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /*hTarget*/,
-										PartID & /*partID*/, RefMessage message) {
+                                        PartID & /*partID*/, RefMessage message) {
 #endif
     switch (message) {
         case REFMSG_CHANGE:

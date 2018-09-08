@@ -117,6 +117,8 @@ add_custom_target("Clean-Install-Dir"
 #----------------------------------------------------------------------------------#
 # Projects
 
+message(STATUS "==============================================")
+
 include(Sts3dmaxTarget)
 SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk9" 3DMAX_VERSION "9")
 SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2008" 3DMAX_VERSION "2008")
@@ -129,6 +131,8 @@ SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2014" 3DMAX_VERSION "2014")
 SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2015" 3DMAX_VERSION "2015")
 SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2016" 3DMAX_VERSION "2016")
 SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2017" 3DMAX_VERSION "2017")
+SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2018" 3DMAX_VERSION "2018" QT)
+SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2019" 3DMAX_VERSION "2019" QT)
 
 if (BUILD_TESTING)
     enable_testing()

@@ -33,7 +33,7 @@
 #include <max.h>
 #pragma warning(pop)
 
-#include "ui/DlgImport.h"
+#include "ui-win/DlgImport.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ public:
 
 private:
 
-    ui::DlgImport * mDlgMain = nullptr;
+    ui::win::DlgImport * mDlgMain = nullptr;
 
 };
 

@@ -4,20 +4,25 @@
   For more information read the [license](license.txt) file.
 - The X-Plane [official website](http://www.x-plane.com/).
 - The X-Plane [obj specification](http://developer.x-plane.com/?article=obj8-file-format-specification).
-- The plugin supports `9-2017` 3DsMaxs (x64 only).
+- The plugin supports `9-2019` 3DsMaxs (x64 only).
 - The plugin requires C++ 14 or higher standard.
 
 ### Warning 
 Importing is still under developing and doesn't work properly!
 
 ## Dependencies
-- [CMake 3.7.0+](https://cmake.org/) building tool.
-- [Conan 1.6+](https://www.conan.io) package manager.  
-- [XplnObj 0.6.2](https://github.com/steptosky/XplnObj) is used via conan.
-- [sts-signals 0.1.2](https://github.com/steptosky/sts-signals) is used via conan.
-- [sts-semver 0.2.1](https://github.com/steptosky/sts-semver) is used via conan.
-- [jsonformoderncpp 3.1.2](https://github.com/nlohmann/json) is used via conan.
+- [CMake [3.10.0+]](https://cmake.org/) building tool.
+- [Conan [1.6+]](https://www.conan.io) package manager.  
+- [XplnObj [0.6.2]](https://github.com/steptosky/XplnObj) is used via conan.
+- [sts-signals [0.1.2]](https://github.com/steptosky/sts-signals) is used via conan.
+- [sts-semver [0.2.1]](https://github.com/steptosky/sts-semver) is used via conan.
+- [jsonformoderncpp [3.1.2]](https://github.com/nlohmann/json) is used via conan.
 - 3Ds Max SDK. Usually you can find it on 3Ds Max installation CD or image.
+- **Since 3Ds Max 2018 the plugin uses Qt for building some GUI elements.**   
+  The QT isn't used via conan so you have to install it manually.  
+    - `3Ds Max 2018` - requires [QT [5.6.2]](https://www1.qt.io/offline-installers/?hsLang=en)
+    - `3Ds Max 2019` - requires [QT [5.6.3]](https://www1.qt.io/offline-installers/?hsLang=en)
+      (is binary compatible with [QT 5.6.2])
 
 ## Memo for the library developers
 - [release-checklist](doc/release-checklist.md) see this file when you are making the release.
@@ -37,6 +42,11 @@ Importing is still under developing and doesn't work properly!
 3DsMaxSdk2010/last@steptosky/stable    is used
 ...
 ```
+- If you are going to compile the plugin for **3Ds Max version greater than 2017** you have to install certain versions of QT.
+  See `dependencies` section above.  
+  Then you have to specify environment variables with path to QT something like this `W:\Qt\Qt5.6.3\5.6.3\msvc2017_64`:
+    - `3DSMAX_2018_QT`=path to certain QT version where `bin` and `include` folders are located.
+    - `3DSMAX_2019_QT`=path to certain QT version where `bin` and `include` folders are located.
 - If you are going to develop you may generate the `Visual Studio 2017` project with the file `msvc-2017.bat` in the root repository folder.  
   You may copy that file and make necessary changes as you wish using the origin script as the example.  
   You may copy `conanfile.txt` and name it as `dev-conanfile.txt` then this file will be used during project generation. 
@@ -47,7 +57,7 @@ Importing is still under developing and doesn't work properly!
   Pay attention those scripts must be run from the root repository folder `ci/build-vs2017.bat`.
     - `ci/build-release-vs2017.bat` - Builds and installs release target only. This script is usually used for making public release versions.
     - `ci/build-vs2017.bat` - Builds and installs release and debug targets. This script is usually used in CI jobs for checking your work.
-- If you want to upload built plugins to github:
+- If you are going to upload built plugins to github:
   - You have to build and install [github-release](https://github.com/aktau/github-release). And make it accessible via your `PATH` environment variable.
   - Adjust `REPOSITORY_NAME` and `REPOSITORY_USER_NAME` variables in the file [StsUploadToGithub.cmake](cmake/StsUploadToGithub.cmake) if necessary.
   - Set the environment variable `GITHUB_TOKEN` - your access token from github account.
@@ -57,7 +67,6 @@ Importing is still under developing and doesn't work properly!
 | Variables | Type | Description |
 |----------:|:----:|:------------|
 | **ADD_3DMAXS_EXEC** | _ON/OFF_  | If enabled then the default 3DsMaxs' path to `3dsmax.exe` will be added as the command for debugging. It is adjusted to be used with the `Visual Studio 2017`, it may not work with other ones. |
-
 
 ## Copyright
 Copyright (c) 2017, StepToSky team. All rights reserved.  

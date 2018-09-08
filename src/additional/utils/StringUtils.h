@@ -611,8 +611,8 @@ typedef StringUtil<char32_t> U32StrUtils;
 typedef std::wstring Str;
 typedef WStrUtils StrUtils;
 #else
-	typedef std::string Str;
-	typedef MbStrUtils StrUtils;
+typedef std::string Str;
+typedef MbStrUtils StrUtils;
 #endif // UNICODE
 
 /**************************************************************************************************/
@@ -732,26 +732,26 @@ inline std::wstring toString(const long double v) { return toWString(v); }
 inline std::wstring toString(const double v) { return toWString(v); }
 inline std::wstring toString(const float v) { return toWString(v); }
 #else
-	inline std::string & toString(std::string & str) { return toMbString(str); }
-	inline std::string toString(const std::string & str) { return toMbString(str); }
-	inline std::string toString(const std::wstring & str) { return toMbString(str); }
-	inline std::string toString(const char * str) { return toMbString(str); }
-	inline std::string toString(const wchar_t * str) { return toMbString(str); }
+inline std::string & toString(std::string & str) { return toMbString(str); }
+inline std::string toString(const std::string & str) { return toMbString(str); }
+inline std::string toString(const std::wstring & str) { return toMbString(str); }
+inline std::string toString(const char * str) { return toMbString(str); }
+inline std::string toString(const wchar_t * str) { return toMbString(str); }
 
-	inline std::string toString(const int8_t v) { return toMbString(v); }
-	inline std::string toString(const uint8_t v) { return toMbString(v); }
-	inline std::string toString(const int16_t v) { return toMbString(v); }
-	inline std::string toString(const uint16_t v) { return toMbString(v); }
-	inline std::string toString(const int32_t v) { return toMbString(v); }
-	inline std::string toString(const uint32_t v) { return toMbString(v); }
-	inline std::string toString(const int64_t v) { return toMbString(v); }
-	inline std::string toString(const uint64_t v) { return toMbString(v); }
-	inline std::string toString(const long double v, uint8_t precision) { return toMbString(v, precision); }
-	inline std::string toString(const double v, uint8_t precision) { return toMbString(v, precision); }
-	inline std::string toString(const float v, uint8_t precision) { return toMbString(v, precision); }
-	inline std::string toString(const long double v) { return toMbString(v); }
-	inline std::string toString(const double v) { return toMbString(v); }
-	inline std::string toString(const float v) { return toMbString(v); }
+inline std::string toString(const int8_t v) { return toMbString(v); }
+inline std::string toString(const uint8_t v) { return toMbString(v); }
+inline std::string toString(const int16_t v) { return toMbString(v); }
+inline std::string toString(const uint16_t v) { return toMbString(v); }
+inline std::string toString(const int32_t v) { return toMbString(v); }
+inline std::string toString(const uint32_t v) { return toMbString(v); }
+inline std::string toString(const int64_t v) { return toMbString(v); }
+inline std::string toString(const uint64_t v) { return toMbString(v); }
+inline std::string toString(const long double v, uint8_t precision) { return toMbString(v, precision); }
+inline std::string toString(const double v, uint8_t precision) { return toMbString(v, precision); }
+inline std::string toString(const float v, uint8_t precision) { return toMbString(v, precision); }
+inline std::string toString(const long double v) { return toMbString(v); }
+inline std::string toString(const double v) { return toMbString(v); }
+inline std::string toString(const float v) { return toMbString(v); }
 #endif // UNICODE
 
 /****************************************************************************************************/

@@ -37,7 +37,7 @@
 #include "common/String.h"
 #include "SerializationId.h"
 #include "common/Logger.h"
-#include "ui/DlgMessageBox.h"
+#include "ui-win/DlgMessageBox.h"
 #include "classes-desc/ClassesDescriptions.h"
 
 namespace bcw {
@@ -189,7 +189,7 @@ bool MdObjAttrIOOld::loadFromNode(INode * node, AppDataChunk * data, xobj::AttrS
 
     std::string msg = msgStream.str();
     if (!msg.empty()) {
-        ui::DlgMessageBox::warning(nullptr, "[Backward Compatibility]", msg);
+        ui::win::DlgMessageBox::warning(nullptr, "[Backward Compatibility]", msg);
         LWarning << msg;
     }
 
