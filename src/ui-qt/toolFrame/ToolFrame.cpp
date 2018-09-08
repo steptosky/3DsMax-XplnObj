@@ -179,13 +179,8 @@ namespace qt {
 
 #if MAX_VERSION_MAJOR == 21 // 2019
     inline QString layoutFile() {
-        auto layoutFile = sts::toMbString(IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR));
-        layoutFile.append("\\fix-2019.layout");
-        // todo The correct conversion like 'QString::fromWCharArray()' crashes max. 
-        // The problem also for opposite conversion like 'QString::toStdWString()'
-        // I have to learn this moment. Users can have not 
-        //      ASCII path, so the conversion bellow won't work properly.
-        return QString(layoutFile.c_str());
+        const auto layoutFile = IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR);
+        return QString::fromWCharArray(layoutFile).append("\\fix-2019.layout");
     }
 
     static void shutdown(void * param, NotifyInfo *) {
