@@ -28,7 +28,7 @@
 */
 
 #include <xpln/obj/ObjMesh.h>
-#include "ConverterAttr.h"
+#include "ConverterATTR.h"
 #include "models/MdManip.h"
 #include "models/MdObjAttr.h"
 
@@ -67,7 +67,7 @@ private:
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-void ConverterAttr::toXpln(xobj::ObjAbstract & outXObj, INode * inNode) {
+void ConverterAttr::toXpln(xobj::ObjAbstract & outXObj, INode * inNode, const ExportParams &) {
     xobj::eObjectType xType = outXObj.objType();
     if (xType != xobj::OBJ_MESH) {
         return;
@@ -88,7 +88,7 @@ void ConverterAttr::toXpln(xobj::ObjAbstract & outXObj, INode * inNode) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void ConverterAttr::toMax(INode * inNode, const xobj::ObjAbstract & inXObj) {
+void ConverterAttr::toMax(INode * inNode, const xobj::ObjAbstract & inXObj, const ImportParams &) {
     xobj::eObjectType xType = inXObj.objType();
     if (xType != xobj::OBJ_MESH) {
         return;

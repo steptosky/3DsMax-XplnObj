@@ -29,6 +29,9 @@
 
 #pragma once
 
+#include "ExportParams.h"
+#include "ImportParams.h"
+
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
@@ -50,8 +53,8 @@ class ConverterLod {
 
 public:
 
-    static bool toXpln(INode * inNode, xobj::ObjLodGroup & outLod);
-    static INode * toMax(const xobj::ObjLodGroup & inXObj);
+    static bool toXpln(INode * inNode, xobj::ObjLodGroup & outLod, const ExportParams & params);
+    static INode * toMax(const xobj::ObjLodGroup & inXObj, const ImportParams & params);
 
 };
 

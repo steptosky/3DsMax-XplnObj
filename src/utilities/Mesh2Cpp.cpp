@@ -42,7 +42,7 @@ void Mesh2Cpp::saveSelected(const std::string & name, const std::string & folder
         return;
     }
     INode * node = ip->GetSelNode(0);
-    Mesh * m = ConverterMesh::extractMesh(node);
+    Mesh * m = ConverterMesh::extractMesh(node, ExportParams());
     if (m) {
         save(*m, name, folderPath);
     }

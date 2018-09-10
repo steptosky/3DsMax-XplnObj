@@ -28,28 +28,30 @@
 */
 
 #pragma once
+
 #pragma warning(push, 0)
 #include <max.h>
 #pragma warning(pop)
-
-#include <xpln/obj/ObjDummy.h>
-#include "ExportParams.h"
-#include "ImportParams.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-class ConverterDummy {
+/*! 
+ * \details Just holds export params like scale ... for converters.
+ */
+struct ExportParams {
 
-    ConverterDummy() = default;
-    ~ConverterDummy() = default;
+    ExportParams()
+        : mCoreInterface(GetCOREInterface()),
+          mCurrTime(GetCOREInterface()->GetTime()) {
 
-public:
+        DbgAssert(mCoreInterface);
+    }
 
-    static xobj::ObjDummy * toXpln(INode * inNode, const ExportParams & params);
-    static INode * toMax(const xobj::ObjAbstract * inXObj, const ImportParams & params);
-
+    Interface * mCoreInterface = nullptr; // 3Ds Max's core interface
+    TimeValue mCurrTime = 0;              // Current 3Ds Max's time
+    float mScale = 1.0f;                  // Scale value from X-Obj
 };
 
 /**************************************************************************************************/

@@ -34,6 +34,8 @@
 #pragma warning(pop)
 
 #include <xpln/obj/ObjLine.h>
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,16 +52,16 @@ public:
 
     typedef std::vector<xobj::ObjAbstract*> ObjLineList;
 
-    static ObjLineList toXpln(INode * inXNode, const Matrix3 & inTargetTm);
+    static ObjLineList toXpln(INode * inXNode, const Matrix3 & inTargetTm, const ExportParams & params);
 
-    static INode * toMax(const xobj::ObjAbstract * /*object*/) {
+    static INode * toMax(const xobj::ObjAbstract * /*object*/, const ImportParams & /*params*/) {
         // TODO Implementation
         return nullptr;
     }
 
 private:
 
-    static SplineShape * getShape(INode * inNode);
+    static SplineShape * getShape(INode * inNode, const ExportParams & params);
 
 };
 

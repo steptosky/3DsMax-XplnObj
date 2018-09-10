@@ -38,7 +38,7 @@
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-INode * ConverterMesh::toMax(const xobj::ObjAbstract * inXObj) {
+INode * ConverterMesh::toMax(const xobj::ObjAbstract * inXObj, const ImportParams & params) {
     if (inXObj->objType() != xobj::OBJ_MESH) {
         return nullptr;
     }
@@ -49,7 +49,7 @@ INode * ConverterMesh::toMax(const xobj::ObjAbstract * inXObj) {
         return nullptr;
     }
 
-    INode * pnode = GetCOREInterface()->CreateObjectNode(mobj);
+    INode * pnode = params.mCoreInterface->CreateObjectNode(mobj);
     if (pnode == nullptr) {
         return nullptr;
     }
@@ -119,8 +119,8 @@ INode * ConverterMesh::toMax(const xobj::ObjAbstract * inXObj) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-xobj::ObjMesh * ConverterMesh::toXpln(INode * inNode) {
-    Mesh * mesh = extractMesh(inNode);
+xobj::ObjMesh * ConverterMesh::toXpln(INode * inNode, const ExportParams & params) {
+    Mesh * mesh = extractMesh(inNode, params);
     if (mesh == nullptr) {
         return nullptr;
     }
@@ -155,8 +155,8 @@ xobj::ObjMesh * ConverterMesh::toXpln(INode * inNode) {
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool ConverterMesh::isBone(INode * inNode) {
-    ObjectState os = inNode->EvalWorldState(GetCOREInterface()->GetTime());
+bool ConverterMesh::isBone(INode * inNode, const ExportParams & params) {
+    ObjectState os = inNode->EvalWorldState(params.mCurrTime);
     if (os.obj->SuperClassID() == BONE_CLASS_ID || os.obj->ClassID() == BONE_OBJ_CLASSID) {
         return true;
     }
@@ -173,13 +173,13 @@ bool ConverterMesh::isBone(INode * inNode) {
     return false;
 }
 
-Mesh * ConverterMesh::extractMesh(INode * inNode) {
+Mesh * ConverterMesh::extractMesh(INode * inNode, const ExportParams & params) {
     assert(inNode);
-    if (isBone(inNode)) {
+    if (isBone(inNode, params)) {
         return nullptr;
     }
 
-    ObjectState os = inNode->EvalWorldState(GetCOREInterface()->GetTime());
+    ObjectState os = inNode->EvalWorldState(params.mCurrTime);
     if (os.obj->SuperClassID() == BONE_CLASS_ID || os.obj->ClassID() == BONE_OBJ_CLASSID) {
         return nullptr;
     }
@@ -192,7 +192,7 @@ Mesh * ConverterMesh::extractMesh(INode * inNode) {
         tobj = static_cast<TriObject *>(os.obj);
     }
     else if (os.obj->CanConvertToType(triObjectClassID)) {
-        tobj = static_cast<TriObject *>(os.obj->ConvertToType(GetCOREInterface()->GetTime(), triObjectClassID));
+        tobj = static_cast<TriObject *>(os.obj->ConvertToType(params.mCurrTime, triObjectClassID));
     }
 
     if (tobj == nullptr) {

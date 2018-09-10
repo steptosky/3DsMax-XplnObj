@@ -34,6 +34,8 @@
 
 #include <xpln/obj/ObjMain.h>
 #include "objects/main/MainObjParamsWrapper.h"
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 class StdMat;
 class RawExpOption;
@@ -62,16 +64,17 @@ private:
 
     //-------------------------------------------------------------------------
 
-    static bool processXTransformHierarchy(INode * parent, xobj::Transform * xTransform);
-    static void processXTransformObjects(INode * parent, xobj::Transform * xTransform);
-    static INode * processXObjects(const xobj::ObjAbstract & xObj);
+    static bool processXTransformHierarchy(INode * parent, xobj::Transform * xTransform, const ImportParams & params);
+    static void processXTransformObjects(INode * parent, xobj::Transform * xTransform, const ImportParams & params);
+    static INode * processXObjects(const xobj::ObjAbstract & xObj, const ImportParams & params);
 
     //-------------------------------------------------------------------------
 
-    bool processNode(INode * node, xobj::Transform * xTransform) const;
+    bool processNode(INode * node, xobj::Transform * xTransform, const ExportParams & params) const;
 
     typedef std::vector<xobj::ObjAbstract*> ObjAbstractList;
-    void toXpln(INode * inxNode, const Matrix3 & baseTm, ObjAbstractList & outList) const;
+    void toXpln(INode * inxNode, const Matrix3 & baseTm,
+                ObjAbstractList & outList, const ExportParams & params) const;
 
     static bool collectLods(INode * ownerNode, INode * currNode, std::vector<INode*> & outLods);
 

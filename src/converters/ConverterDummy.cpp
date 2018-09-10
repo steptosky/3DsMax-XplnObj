@@ -29,25 +29,24 @@
 
 #include "ConverterDummy.h"
 #include "ConverterUtils.h"
-#include "Common/String.h"
+#include "common/String.h"
 #include "common/Logger.h"
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-INode * ConverterDummy::toMax(const xobj::ObjAbstract * inXObj) {
+INode * ConverterDummy::toMax(const xobj::ObjAbstract * inXObj, const ImportParams & params) {
     if (inXObj->objType() != xobj::OBJ_DUMMY) {
         return nullptr;
     }
-    Interface * ip = GetCOREInterface();
-    HelperObject * pobj = reinterpret_cast<HelperObject*>(ip->CreateInstance(HELPER_CLASS_ID, Class_ID(POINTHELP_CLASS_ID, 0)));
+    HelperObject * pobj = reinterpret_cast<HelperObject*>(params.mCoreInterface->CreateInstance(HELPER_CLASS_ID, Class_ID(POINTHELP_CLASS_ID, 0)));
     if (pobj == nullptr) {
         LError << "Object couldn't be created.";
         return nullptr;
     }
 
-    INode * pnode = ip->CreateObjectNode(pobj);
+    INode * pnode = params.mCoreInterface->CreateObjectNode(pobj);
     if (pnode == nullptr) {
         LError << "Node couldn't be created.";
         return nullptr;
@@ -57,9 +56,9 @@ INode * ConverterDummy::toMax(const xobj::ObjAbstract * inXObj) {
     return pnode;
 }
 
-xobj::ObjDummy * ConverterDummy::toXpln(INode * inNode) {
+xobj::ObjDummy * ConverterDummy::toXpln(INode * inNode, const ExportParams & params) {
     assert(inNode);
-    const ObjectState & obsState = inNode->EvalWorldState(GetCOREInterface()->GetTime());
+    const ObjectState & obsState = inNode->EvalWorldState(params.mCurrTime);
     if (obsState.obj->SuperClassID() != SClass_ID(HELPER_CLASS_ID)) {
         return nullptr;
     }

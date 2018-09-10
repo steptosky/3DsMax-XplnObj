@@ -40,16 +40,16 @@
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-xobj::ObjSmoke * ConverterSmoke::toXpln(INode * inNode) {
+xobj::ObjSmoke * ConverterSmoke::toXpln(INode * inNode, const ExportParams & params) {
     if (!SmokeObjParamsWrapper::isSmokeObj(inNode)) {
         return nullptr;
     }
 
-    SmokeObjParamsWrapper params(inNode, GetCOREInterface()->GetTime(), FOREVER);
+    SmokeObjParamsWrapper paramWrapper(inNode, params.mCurrTime, FOREVER);
 
     std::unique_ptr<xobj::ObjSmoke> smoke = std::make_unique<xobj::ObjSmoke>();
-    smoke->setSmokeType(params.type());
-    smoke->setSize(params.size());
+    smoke->setSmokeType(paramWrapper.type());
+    smoke->setSize(paramWrapper.size());
     smoke->setObjectName(sts::toMbString(inNode->GetName()));
 
     Matrix3 mOffsetTm = ConverterUtils::offsetMatrix(inNode);
@@ -61,28 +61,27 @@ xobj::ObjSmoke * ConverterSmoke::toXpln(INode * inNode) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-INode * ConverterSmoke::toMax(const xobj::ObjAbstract * object) {
+INode * ConverterSmoke::toMax(const xobj::ObjAbstract * object, const ImportParams & params) {
     if (object->objType() != xobj::OBJ_SMOKE) {
         return nullptr;
     }
 
     const xobj::ObjSmoke * smoke = static_cast<const xobj::ObjSmoke*>(object);
 
-    Interface * ip = GetCOREInterface();
-    HelperObject * pobj = reinterpret_cast<SmokeObject*>(ip->CreateInstance(HELPER_CLASS_ID,
-                                                                            ClassesDescriptions::smokeObj()->ClassID()));
+    HelperObject * pobj = reinterpret_cast<SmokeObject*>(params.mCoreInterface->CreateInstance(HELPER_CLASS_ID,
+                                                                                               ClassesDescriptions::smokeObj()->ClassID()));
     if (pobj == nullptr) {
         LCritical << "Lod object <" << object->objectName() << "> couldn't be created.";
         return nullptr;
     }
 
-    INode * pnode = ip->CreateObjectNode(pobj);
+    INode * pnode = params.mCoreInterface->CreateObjectNode(pobj);
     if (pnode == nullptr) {
         LCritical << "Max node for the object <" << object->objectName() << "> couldn't be created.";
         return nullptr;
     }
 
-    SmokeObjParamsWrapper values(pnode, GetCOREInterface()->GetTime(), FOREVER);
+    SmokeObjParamsWrapper values(pnode, params.mCurrTime, FOREVER);
     values.setType(smoke->smokeType());
     values.setSize(smoke->size());
     if (!smoke->objectName().empty()) {

@@ -45,12 +45,12 @@
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool ConverterLod::toXpln(INode * inNode, xobj::ObjLodGroup & outLod) {
+bool ConverterLod::toXpln(INode * inNode, xobj::ObjLodGroup & outLod, const ExportParams & params) {
     if (!LodObjParamsWrapper::isLodObj(inNode)) {
         return false;
     }
 
-    LodObjParamsWrapper values(inNode, GetCOREInterface()->GetTime(), FOREVER);
+    LodObjParamsWrapper values(inNode, params.mCurrTime, FOREVER);
     outLod.setNearVal(values.nearValue());
     outLod.setFarVal(values.farValue());
     outLod.setObjectName(sts::toMbString(inNode->GetName()));
@@ -61,21 +61,20 @@ bool ConverterLod::toXpln(INode * inNode, xobj::ObjLodGroup & outLod) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-INode * ConverterLod::toMax(const xobj::ObjLodGroup & inXObj) {
-    auto coreInterface = GetCOREInterface();
-    const auto lodObj = reinterpret_cast<Object*>(coreInterface->CreateInstance(HELPER_CLASS_ID, ClassesDescriptions::lodObj()->ClassID()));
+INode * ConverterLod::toMax(const xobj::ObjLodGroup & inXObj, const ImportParams & params) {
+    const auto lodObj = reinterpret_cast<Object*>(params.mCoreInterface->CreateInstance(HELPER_CLASS_ID, ClassesDescriptions::lodObj()->ClassID()));
     if (lodObj == nullptr) {
         LCritical << "Lod object <" << inXObj.objectName() << "> couldn't be created.";
         return nullptr;
     }
 
-    auto node = coreInterface->CreateObjectNode(lodObj);
+    auto node = params.mCoreInterface->CreateObjectNode(lodObj);
     if (node == nullptr) {
         LCritical << "Max node for the object <" << inXObj.objectName() << "> couldn't be created.";
         return nullptr;
     }
 
-    LodObjParamsWrapper values(node, GetCOREInterface()->GetTime(), FOREVER);
+    LodObjParamsWrapper values(node, params.mCurrTime, FOREVER);
     values.setNearValue(inXObj.nearVal());
     values.setFarValue(inXObj.nearVal());
     node->SetName(toTSTR(inXObj.objectName().c_str()));

@@ -33,6 +33,8 @@
 #pragma warning(pop)
 
 #include <xpln/obj/ObjSmoke.h>
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,8 +45,8 @@ class ConverterSmoke {
     ~ConverterSmoke() = default;
 public:
 
-    static xobj::ObjSmoke * toXpln(INode * node);
-    static INode * toMax(const xobj::ObjAbstract * object);
+    static xobj::ObjSmoke * toXpln(INode * node, const ExportParams & params);
+    static INode * toMax(const xobj::ObjAbstract * object, const ImportParams & params);
 
 };
 

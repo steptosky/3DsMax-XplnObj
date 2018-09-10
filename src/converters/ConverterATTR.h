@@ -34,6 +34,8 @@
 #pragma warning(pop)
 
 #include <xpln/obj/ObjAbstract.h>
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,8 +48,8 @@ class ConverterAttr {
 
 public:
 
-    static void toXpln(xobj::ObjAbstract & outXObj, INode * inNode);
-    static void toMax(INode * inNode, const xobj::ObjAbstract & inXObj);
+    static void toXpln(xobj::ObjAbstract & outXObj, INode * inNode, const ExportParams & params);
+    static void toMax(INode * inNode, const xobj::ObjAbstract & inXObj, const ImportParams & params);
 
 };
 
