@@ -113,7 +113,7 @@ FnExport const TCHAR * LibDescription() {
 
 // 3ds Max's defer loading mechanism
 FnExport ULONG CanAutoDefer() {
-    return TRUE;
+    return FALSE;
 }
 
 //-------------------------------------------------------------------------
