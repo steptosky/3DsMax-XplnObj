@@ -37,12 +37,12 @@
 /**************************************************************************************************/
 
 void Mesh2Cpp::saveSelected(const std::string & name, const std::string & folderPath) {
-    Interface * ip = GetCOREInterface();
-    if (ip->GetSelNodeCount() == 0) {
+    ExportParams params;
+    if (params.mCoreInterface->GetSelNodeCount() == 0) {
         return;
     }
-    INode * node = ip->GetSelNode(0);
-    Mesh * m = ConverterMesh::extractMesh(node, ExportParams());
+    INode * node = params.mCoreInterface->GetSelNode(0);
+    Mesh * m = ConverterMesh::extractMesh(node, params);
     if (m) {
         save(*m, name, folderPath);
     }
@@ -67,14 +67,12 @@ void Mesh2Cpp::writeHeader(const std::string & name, const std::string & filePat
         out << std::endl;
         out << "/* Auto-generated file */" << std::endl;
         out << std::endl;
-        out << "#pragma warning(push, 0)" << std::endl;
-        out << "#include <max.h>" << std::endl;
-        out << "#pragma warning(pop)" << std::endl;
+        out << "class Mesh;" << std::endl;
         out << std::endl;
         out << "class " << name << " { " << std::endl;
         out << "public:" << std::endl;
         out << std::endl;
-        out << "    static void fillMesh(Mesh & outMesh, const float scale);" << std::endl;
+        out << "    static void fillMesh(Mesh & outMesh, float scale);" << std::endl;
         out << std::endl;
         out << "};" << std::endl;
     }
@@ -88,6 +86,10 @@ void Mesh2Cpp::writeCpp(const Mesh & mesh, const std::string & name, const std::
         out.precision(6);
 
         out << "#include \"" << name << "-gen.h\"" << std::endl;
+        out << std::endl;
+        out << "#pragma warning(push, 0)" << std::endl;
+        out << "#include <max.h>" << std::endl;
+        out << "#pragma warning(pop)" << std::endl;
         out << std::endl;
         out << "/* Auto-generated file */" << std::endl;
         out << std::endl;
