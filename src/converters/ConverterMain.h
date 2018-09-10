@@ -30,6 +30,7 @@
 #pragma once
 
 #include <string>
+#include "ExportParams.h"
 
 class INode;
 
@@ -49,8 +50,8 @@ class ConverterMain {
 
 public:
 
+    static bool toXpln(INode * inNode, xobj::ObjMain & outMain, const ExportParams & params);
     static INode * toMax(const xobj::ObjMain & inXObj);
-    static bool toXpln(INode * inNode, xobj::ObjMain & outMain);
     static INode * createBone(const xobj::Transform * xTransform);
 
 private:

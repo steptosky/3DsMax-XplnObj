@@ -44,12 +44,12 @@
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool ConverterMain::toXpln(INode * inNode, xobj::ObjMain & outMain) {
+bool ConverterMain::toXpln(INode * inNode, xobj::ObjMain & outMain, const ExportParams & params) {
     if (!MainObjParamsWrapper::isMainObj(inNode)) {
         return false;
     }
 
-    MainObjParamsWrapper attr(inNode, GetCOREInterface()->GetTime(), FOREVER);
+    MainObjParamsWrapper attr(inNode, params.mCurrTime, FOREVER);
     auto & xop = outMain.pExportOptions;
 
     xop.enable(xobj::XOBJ_EXP_APPLY_LOD_TM);

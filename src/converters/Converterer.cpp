@@ -37,7 +37,7 @@
 #include "ConverterMesh.h"
 #include "ConverterMain.h"
 #include "ConverterLight.h"
-#include "ConverterAttr.h"
+#include "ConverterATTR.h"
 #include "ConverterAnim.h"
 #include "ConverterUtils.h"
 
@@ -149,14 +149,26 @@ bool Converterer::toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMa
     mXObjMain = &xObjMain;
     mMainObj = mainNode;
 
-    ConverterMain::toXpln(mainNode->node(), xObjMain);
+    //-------------------------------------------------------------------------
+    ExportParams exportParams;
+    exportParams.mCurrTime = mainNode->timeValue();
+
+    if (mainNode->isManualScale()) {
+        // TODO Needs implementation of auto-scale value relative system units
+        exportParams.mScale = mainNode->scale();
+    }
+
+    if (exportParams.mScale < 0.00001) {
+        CLError << "<" << xObjMain.objectName() << "> has too small scale <" << exportParams.mScale << ">";
+        return false;
+    }
+    //-------------------------------------------------------------------------
+
+    ConverterMain::toXpln(mainNode->node(), xObjMain, exportParams);
     mLods.clear();
     if (!collectLods(mainNode->node(), mainNode->node(), mLods)) {
         return false;
     }
-
-    // todo set scale from main
-    const ExportParams exportParams;
 
     if (mLods.empty()) {
         mLods.emplace_back(mainNode->node());
@@ -175,18 +187,8 @@ bool Converterer::toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMa
             ConverterLod::toXpln(currLodNode, lod, exportParams);
         }
         //-------------------------------------------------------------------------
-        float scale = mainNode->scale();
-        if (!mainNode->isManualScale()) {
-            // TODO Needs implementation of auto-scale value relative system units
-            scale = 1.0f;
-        }
-        //-------------------------------------------------------------------------
-        Matrix3 ttm = Inverse(currLodNode->GetNodeTM(mainNode->timeValue()));
-        if (scale < 0.00001) {
-            CLError << "<" << xObjMain.objectName() << "> has too small scale <" << scale << ">";
-            return false;
-        }
-        ttm.Scale(Point3(scale, scale, scale), TRUE);
+        Matrix3 ttm = Inverse(currLodNode->GetNodeTM(exportParams.mCurrTime));
+        ttm.Scale(Point3(exportParams.mScale, exportParams.mScale, exportParams.mScale), TRUE);
         //-------------------------------------------------------------------------
         ConverterUtils::toXTransform(ttm, currObjTransform);
 
