@@ -1,5 +1,5 @@
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2018, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -27,38 +27,60 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
+#include "ConverterLod.h"
 
-#include <string>
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
 
-class INode;
+#include <xpln/obj/ObjLodGroup.h>
 
-namespace xobj {
-class ObjMain;
-class Transform;
+#include "common/String.h"
+#include "common/Logger.h"
+
+#include "objects/lod/LodObjParamsWrapper.h"
+#include "classes-desc/ClassesDescriptions.h"
+
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+bool ConverterLod::toXpln(INode * inNode, xobj::ObjLodGroup & outLod) {
+    if (!LodObjParamsWrapper::isLodObj(inNode)) {
+        return false;
+    }
+
+    LodObjParamsWrapper values(inNode, GetCOREInterface()->GetTime(), FOREVER);
+    outLod.setNearVal(values.nearValue());
+    outLod.setFarVal(values.farValue());
+    outLod.setObjectName(sts::toMbString(inNode->GetName()));
+    return true;
 }
 
 /**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-class ConverterMain {
+INode * ConverterLod::toMax(const xobj::ObjLodGroup & inXObj) {
+    auto coreInterface = GetCOREInterface();
+    const auto lodObj = reinterpret_cast<Object*>(coreInterface->CreateInstance(HELPER_CLASS_ID, ClassesDescriptions::lodObj()->ClassID()));
+    if (lodObj == nullptr) {
+        LCritical << "Lod object <" << inXObj.objectName() << "> couldn't be created.";
+        return nullptr;
+    }
 
-    ConverterMain() = default;
-    ~ConverterMain() = default;
+    auto node = coreInterface->CreateObjectNode(lodObj);
+    if (node == nullptr) {
+        LCritical << "Max node for the object <" << inXObj.objectName() << "> couldn't be created.";
+        return nullptr;
+    }
 
-public:
-
-    static INode * toMax(const xobj::ObjMain & inXObj);
-    static bool toXpln(INode * inNode, xobj::ObjMain & outMain);
-    static INode * createBone(const xobj::Transform * xTransform);
-
-private:
-
-    static std::string makeTexturePath(const std::string & texture, const std::string & prefix);
-    static void makeTexturePath(const std::string & texture, std::string & outTextureName, std::string & outPrefix);
-
-};
+    LodObjParamsWrapper values(node, GetCOREInterface()->GetTime(), FOREVER);
+    values.setNearValue(inXObj.nearVal());
+    values.setFarValue(inXObj.nearVal());
+    node->SetName(toTSTR(inXObj.objectName().c_str()));
+    return node;
+}
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

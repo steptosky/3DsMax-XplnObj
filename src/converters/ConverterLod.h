@@ -1,5 +1,5 @@
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2018, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -29,34 +29,29 @@
 
 #pragma once
 
-#include <string>
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
 class INode;
 
 namespace xobj {
-class ObjMain;
-class Transform;
+class ObjLodGroup;
 }
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-class ConverterMain {
+class ConverterLod {
 
-    ConverterMain() = default;
-    ~ConverterMain() = default;
+    ConverterLod() = default;
+    ~ConverterLod() = default;
 
 public:
 
-    static INode * toMax(const xobj::ObjMain & inXObj);
-    static bool toXpln(INode * inNode, xobj::ObjMain & outMain);
-    static INode * createBone(const xobj::Transform * xTransform);
-
-private:
-
-    static std::string makeTexturePath(const std::string & texture, const std::string & prefix);
-    static void makeTexturePath(const std::string & texture, std::string & outTextureName, std::string & outPrefix);
+    static bool toXpln(INode * inNode, xobj::ObjLodGroup & outLod);
+    static INode * toMax(const xobj::ObjLodGroup & inXObj);
 
 };
 

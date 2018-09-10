@@ -30,37 +30,89 @@
 #include "ConverterMain.h"
 
 #pragma warning(push, 0)
-#include <decomp.h>
+#include <max.h>
 #pragma warning(pop)
 
-#include "Common/String.h"
+#include "common/String.h"
 #include "common/Logger.h"
 
-#include "objects/lod/LodObjParamsWrapper.h"
+#include <xpln/obj/ObjMain.h>
 #include "objects/main/MainObjParamsWrapper.h"
-#include "objects/main/MainObj.h"
 #include "classes-desc/ClassesDescriptions.h"
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
+bool ConverterMain::toXpln(INode * inNode, xobj::ObjMain & outMain) {
+    if (!MainObjParamsWrapper::isMainObj(inNode)) {
+        return false;
+    }
+
+    MainObjParamsWrapper attr(inNode, GetCOREInterface()->GetTime(), FOREVER);
+    auto & xop = outMain.pExportOptions;
+
+    xop.enable(xobj::XOBJ_EXP_APPLY_LOD_TM);
+
+    attr.isOptimisation() ? xop.enable(xobj::XOBJ_EXP_OPTIMIZATION) : xop.disable(xobj::XOBJ_EXP_OPTIMIZATION);
+    attr.isInstancing() ? xop.enable(xobj::XOBJ_EXP_CHECK_INSTANCE) : xop.disable(xobj::XOBJ_EXP_CHECK_INSTANCE);
+    attr.isDebug() ? xop.enable(xobj::XOBJ_EXP_DEBUG) : xop.disable(xobj::XOBJ_EXP_DEBUG);
+    attr.isNameMesh() ? xop.enable(xobj::XOBJ_EXP_MARK_MESH) : xop.disable(xobj::XOBJ_EXP_MARK_MESH);
+    attr.isNameLines() ? xop.enable(xobj::XOBJ_EXP_MARK_LINE) : xop.disable(xobj::XOBJ_EXP_MARK_LINE);
+    attr.isNameLights() ? xop.enable(xobj::XOBJ_EXP_MARK_LIGHT) : xop.disable(xobj::XOBJ_EXP_MARK_LIGHT);
+    attr.isNameDummies() ? xop.enable(xobj::XOBJ_EXP_MARK_DUMMY) : xop.disable(xobj::XOBJ_EXP_MARK_DUMMY);
+    attr.isTreeHierarchy() ? xop.enable(xobj::XOBJ_EXP_MARK_TREE_HIERARCHY) : xop.disable(xobj::XOBJ_EXP_MARK_TREE_HIERARCHY);
+
+    outMain.pAttr.setDebug(xop.isEnabled(xobj::XOBJ_EXP_DEBUG));
+
+    const std::string prefix = attr.pathPrefix();
+    outMain.pAttr.setTexture(makeTexturePath(attr.texture(), prefix));
+    outMain.pAttr.setTextureLit(makeTexturePath(attr.textureLit(), prefix));
+    outMain.pAttr.setTextureNormal(makeTexturePath(attr.textureNormal(), prefix));
+
+    outMain.pAttr.setNoShadow(attr.isNoShadow());
+    outMain.pAttr.setTilted(attr.isTilted());
+    outMain.pAttr.setCockpitLit(attr.isCockpitLit());
+
+    outMain.pAttr.setBlendGlass(attr.isBlendGlass());
+    outMain.pAttr.setNormalMetalness(attr.isNormalMetalness());
+    outMain.pAttr.setWetDry(attr.wetDry());
+    outMain.pAttr.setBlend(attr.blend());
+    outMain.pAttr.setLayerGroup(attr.layerGroup());
+    outMain.pAttr.setLayerGroupDraped(attr.drapedLayerGroup());
+    outMain.pAttr.setLodDrap(attr.lodDrap());
+    outMain.pAttr.setSlungLoadWeight(attr.slungWeight());
+    outMain.pAttr.setSpecular(attr.specular());
+    outMain.pAttr.setTint(attr.tint());
+    outMain.pAttr.setSlopeLimit(attr.slopeLimit());
+    outMain.pAttr.setCockpitRegion(attr.cockpitRegion(xobj::AttrCockpitRegion::r1), xobj::AttrCockpitRegion::r1);
+    outMain.pAttr.setCockpitRegion(attr.cockpitRegion(xobj::AttrCockpitRegion::r2), xobj::AttrCockpitRegion::r2);
+    outMain.pAttr.setCockpitRegion(attr.cockpitRegion(xobj::AttrCockpitRegion::r3), xobj::AttrCockpitRegion::r3);
+    outMain.pAttr.setCockpitRegion(attr.cockpitRegion(xobj::AttrCockpitRegion::r4), xobj::AttrCockpitRegion::r4);
+
+    outMain.setObjectName(sts::toMbString(inNode->GetName()));
+    return true;
+}
+
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
+
 INode * ConverterMain::toMax(const xobj::ObjMain & inXObj) {
-    Interface * ip = GetCOREInterface();
-    HelperObject * pobj = reinterpret_cast<MainObject*>(ip->CreateInstance(HELPER_CLASS_ID,
-                                                                           ClassesDescriptions::mainObj()->ClassID()));
-    if (pobj == nullptr) {
+    auto coreInterface = GetCOREInterface();
+    const auto mainObj = reinterpret_cast<Object*>(coreInterface->CreateInstance(HELPER_CLASS_ID, ClassesDescriptions::mainObj()->ClassID()));
+    if (mainObj == nullptr) {
         LCritical << "Main object <" << inXObj.objectName() << "> couldn't be created.";
         return nullptr;
     }
 
-    INode * pnode = ip->CreateObjectNode(pobj);
-    if (pnode == nullptr) {
+    auto node = coreInterface->CreateObjectNode(mainObj);
+    if (node == nullptr) {
         LCritical << "Max node for the object <" << inXObj.objectName() << "> couldn't be created.";
         return nullptr;
     }
 
-    MainObjParamsWrapper attr(pnode, GetCOREInterface()->GetTime(), FOREVER);
+    MainObjParamsWrapper attr(node, GetCOREInterface()->GetTime(), FOREVER);
     auto & xop = inXObj.pExportOptions;
 
     attr.setOptimisation(xop.isEnabled(xobj::XOBJ_EXP_OPTIMIZATION));
@@ -74,8 +126,8 @@ INode * ConverterMain::toMax(const xobj::ObjMain & inXObj) {
 
     std::string resTexture;
     std::string resPrefix1;
-    std::string resPrefix2;
-    std::string resPrefix3;
+    const std::string resPrefix2;
+    const std::string resPrefix3;
 
     makeTexturePath(inXObj.pAttr.texture(), resTexture, resPrefix1);
     attr.setPathPrefix(resPrefix1);
@@ -112,99 +164,8 @@ INode * ConverterMain::toMax(const xobj::ObjMain & inXObj) {
     attr.setCockpitRegion(inXObj.pAttr.cockpitRegion(xobj::AttrCockpitRegion::r3), xobj::AttrCockpitRegion::r3);
     attr.setCockpitRegion(inXObj.pAttr.cockpitRegion(xobj::AttrCockpitRegion::r4), xobj::AttrCockpitRegion::r4);
 
-    pnode->SetName(toTSTR(inXObj.objectName().c_str()));
-    return pnode;
-}
-
-//-------------------------------------------------------------------------
-
-bool ConverterMain::toXpln(INode * inNode, xobj::ObjMain & outMain) {
-    if (!MainObjParamsWrapper::isMainObj(inNode)) {
-        return false;
-    }
-
-    MainObjParamsWrapper attr(inNode, GetCOREInterface()->GetTime(), FOREVER);
-    auto & xop = outMain.pExportOptions;
-
-    xop.enable(xobj::XOBJ_EXP_APPLY_LOD_TM);
-
-    attr.isOptimisation() ? xop.enable(xobj::XOBJ_EXP_OPTIMIZATION) : xop.disable(xobj::XOBJ_EXP_OPTIMIZATION);
-    attr.isInstancing() ? xop.enable(xobj::XOBJ_EXP_CHECK_INSTANCE) : xop.disable(xobj::XOBJ_EXP_CHECK_INSTANCE);
-    attr.isDebug() ? xop.enable(xobj::XOBJ_EXP_DEBUG) : xop.disable(xobj::XOBJ_EXP_DEBUG);
-    attr.isNameMesh() ? xop.enable(xobj::XOBJ_EXP_MARK_MESH) : xop.disable(xobj::XOBJ_EXP_MARK_MESH);
-    attr.isNameLines() ? xop.enable(xobj::XOBJ_EXP_MARK_LINE) : xop.disable(xobj::XOBJ_EXP_MARK_LINE);
-    attr.isNameLights() ? xop.enable(xobj::XOBJ_EXP_MARK_LIGHT) : xop.disable(xobj::XOBJ_EXP_MARK_LIGHT);
-    attr.isNameDummies() ? xop.enable(xobj::XOBJ_EXP_MARK_DUMMY) : xop.disable(xobj::XOBJ_EXP_MARK_DUMMY);
-    attr.isTreeHierarchy() ? xop.enable(xobj::XOBJ_EXP_MARK_TREE_HIERARCHY) : xop.disable(xobj::XOBJ_EXP_MARK_TREE_HIERARCHY);
-
-    outMain.pAttr.setDebug(xop.isEnabled(xobj::XOBJ_EXP_DEBUG));
-
-    std::string prefix = attr.pathPrefix();
-    outMain.pAttr.setTexture(makeTexturePath(attr.texture(), prefix));
-    outMain.pAttr.setTextureLit(makeTexturePath(attr.textureLit(), prefix));
-    outMain.pAttr.setTextureNormal(makeTexturePath(attr.textureNormal(), prefix));
-
-    outMain.pAttr.setNoShadow(attr.isNoShadow());
-    outMain.pAttr.setTilted(attr.isTilted());
-    outMain.pAttr.setCockpitLit(attr.isCockpitLit());
-
-    outMain.pAttr.setBlendGlass(attr.isBlendGlass());
-    outMain.pAttr.setNormalMetalness(attr.isNormalMetalness());
-    outMain.pAttr.setWetDry(attr.wetDry());
-    outMain.pAttr.setBlend(attr.blend());
-    outMain.pAttr.setLayerGroup(attr.layerGroup());
-    outMain.pAttr.setLayerGroupDraped(attr.drapedLayerGroup());
-    outMain.pAttr.setLodDrap(attr.lodDrap());
-    outMain.pAttr.setSlungLoadWeight(attr.slungWeight());
-    outMain.pAttr.setSpecular(attr.specular());
-    outMain.pAttr.setTint(attr.tint());
-    outMain.pAttr.setSlopeLimit(attr.slopeLimit());
-    outMain.pAttr.setCockpitRegion(attr.cockpitRegion(xobj::AttrCockpitRegion::r1), xobj::AttrCockpitRegion::r1);
-    outMain.pAttr.setCockpitRegion(attr.cockpitRegion(xobj::AttrCockpitRegion::r2), xobj::AttrCockpitRegion::r2);
-    outMain.pAttr.setCockpitRegion(attr.cockpitRegion(xobj::AttrCockpitRegion::r3), xobj::AttrCockpitRegion::r3);
-    outMain.pAttr.setCockpitRegion(attr.cockpitRegion(xobj::AttrCockpitRegion::r4), xobj::AttrCockpitRegion::r4);
-
-    outMain.setObjectName(sts::toMbString(inNode->GetName()));
-    return true;
-}
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Functions */////////////////////////////////////////////
-/**************************************************************************************************/
-
-INode * ConverterMain::toMax(const xobj::ObjLodGroup & inXObj) {
-    Interface * ip = GetCOREInterface();
-    HelperObject * pobj = reinterpret_cast<MainObject*>(ip->CreateInstance(HELPER_CLASS_ID, ClassesDescriptions::lodObj()->ClassID()));
-    if (pobj == nullptr) {
-        LCritical << "Lod object <" << inXObj.objectName() << "> couldn't be created.";
-        return nullptr;
-    }
-
-    INode * pnode = ip->CreateObjectNode(pobj);
-    if (pnode == nullptr) {
-        LCritical << "Max node for the object <" << inXObj.objectName() << "> couldn't be created.";
-        return nullptr;
-    }
-
-    LodObjParamsWrapper values(pnode, GetCOREInterface()->GetTime(), FOREVER);
-    values.setNearValue(inXObj.nearVal());
-    values.setFarValue(inXObj.nearVal());
-    pnode->SetName(toTSTR(inXObj.objectName().c_str()));
-    return pnode;
-}
-
-//-------------------------------------------------------------------------
-
-bool ConverterMain::toXpln(INode * inNode, xobj::ObjLodGroup & outLod) {
-    if (!LodObjParamsWrapper::isLodObj(inNode)) {
-        return false;
-    }
-
-    LodObjParamsWrapper values(inNode, GetCOREInterface()->GetTime(), FOREVER);
-    outLod.setNearVal(values.nearValue());
-    outLod.setFarVal(values.farValue());
-    outLod.setObjectName(sts::toMbString(inNode->GetName()));
-    return true;
+    node->SetName(toTSTR(inXObj.objectName().c_str()));
+    return node;
 }
 
 /**************************************************************************************************/
@@ -233,7 +194,7 @@ void ConverterMain::makeTexturePath(const std::string & texture, std::string & o
         return;
     }
 
-    size_t pos = texture.find_last_of("\\/");
+    const std::size_t pos = texture.find_last_of("\\/");
     if (pos != std::string::npos) {
         outPrefix = texture.substr(0, pos);
         outTextureName = texture.substr(pos, texture.size() - pos);
@@ -248,20 +209,20 @@ void ConverterMain::makeTexturePath(const std::string & texture, std::string & o
 /**************************************************************************************************/
 
 INode * ConverterMain::createBone(const xobj::Transform * xTransform) {
-    Interface * ip = GetCOREInterface();
-    GeomObject * bobj = reinterpret_cast<GeomObject*>(ip->CreateInstance(BONE_CLASS_ID, BONE_OBJ_CLASSID));
-    if (bobj == nullptr) {
+    auto coreInterface = GetCOREInterface();
+    const auto boneObj = reinterpret_cast<Object*>(coreInterface->CreateInstance(BONE_CLASS_ID, BONE_OBJ_CLASSID));
+    if (boneObj == nullptr) {
         LCritical << "Bone object <" << xTransform->name() << "> couldn't be created.";
         return nullptr;
     }
 
-    INode * pnode = ip->CreateObjectNode(bobj);
-    if (pnode == nullptr) {
+    auto node = coreInterface->CreateObjectNode(boneObj);
+    if (node == nullptr) {
         LCritical << "Max node for the object <" << xTransform->name() << "> couldn't be created.";
         return nullptr;
     }
-    pnode->SetBoneNodeOnOff(TRUE, GetCOREInterface()->GetTime());
-    return pnode;
+    node->SetBoneNodeOnOff(TRUE, GetCOREInterface()->GetTime());
+    return node;
 }
 
 /**************************************************************************************************/

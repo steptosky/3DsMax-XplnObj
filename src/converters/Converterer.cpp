@@ -45,6 +45,7 @@
 #include "objects/lod/LodObjParamsWrapper.h"
 #include "common/String.h"
 #include "ConverterSmoke.h"
+#include "ConverterLod.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
@@ -73,7 +74,7 @@ bool Converterer::toMax(xobj::ObjMain & xObjMain) {
 
     for (size_t i = 0; i < xObjMain.lodCount(); ++i) {
         xobj::ObjLodGroup & lod = xObjMain.lod(i);
-        INode * maxLod = ConverterMain::toMax(lod);
+        INode * maxLod = ConverterLod::toMax(lod);
         if (maxLod == nullptr) {
             return false;
         }
@@ -166,7 +167,7 @@ bool Converterer::toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMa
         xobj::Transform & currObjTransform = lod.transform();
 
         if (mainNode->node() != currLodNode) {
-            ConverterMain::toXpln(currLodNode, lod);
+            ConverterLod::toXpln(currLodNode, lod);
         }
         //-------------------------------------------------------------------------
         float scale = mainNode->scale();
