@@ -54,8 +54,8 @@ public:
 
     //-------------------------------------------------------------------------
 
-    void setNearValue(float inVal);
-    void setFarValue(float inVal);
+    void setNearValue(float val);
+    void setFarValue(float val);
 
     //-------------------------------------------------------------------------
 
