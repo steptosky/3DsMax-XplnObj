@@ -604,7 +604,7 @@ ParamBlockDesc2 MainObjParamBlocks::mAttr(MainObjAttrParams, _T("X-Obj-Attribute
                                           p_default, 0.0f,
                                           p_range, 0.0f, 999999999.9f,
                                           p_dim, &gDirectDim,
-                                          p_ui, RollGlobAttr, TYPE_SPINNER, EDITTYPE_POS_UNIVERSE, SPN_LODDRAPED_DIST_EDIT, SPN_LODDRAPED_DIST, 1.0f,
+                                          p_ui, RollGlobAttr, TYPE_SPINNER, EDITTYPE_POS_FLOAT, SPN_LODDRAPED_DIST_EDIT, SPN_LODDRAPED_DIST, 1.0f,
                                           p_end,
                                           //-------------------------------------------------------------------------
                                           MainObjAttr_LayerGroupDrapedLayer, _T("Layer-group-draped-type"), TYPE_STRING, 0, NO_IDS,
@@ -748,7 +748,35 @@ ParamBlockDesc2 MainObjParamBlocks::mDisplay(MainObjDisplay, _T("X-Obj-Display")
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void MainObjParamBlocks::postLoadAttr(IParamBlock2 * /*paramBlock*/) {}
+void MainObjParamBlocks::postLoadAttr(IParamBlock2 * paramBlock) {
+    DbgAssert(paramBlock);
+    DbgAssert(paramBlock->ID() == MainObjAttrParams);
+
+    const auto baseInterface = paramBlock->GetInterface(IPARAMBLOCK2POSTLOADINFO_ID);
+    if (!baseInterface) {
+        // block doesn't need updating.
+        return;
+    }
+
+    auto postLoadInfo = dynamic_cast<IParamBlock2PostLoadInfo*>(baseInterface);
+    if (!postLoadInfo) {
+        LError << "Invalid cast";
+        return;
+    }
+
+    if (postLoadInfo->GetVersion() == 1) {
+        LInfo << "Updating Main Obj's attributes param block 1" << "->" << PbVersionAttr;
+        //------------------------------------------------------
+        // updating from system units to abstract float units.
+
+        MainObjParamsWrapper wrapper(paramBlock, nullptr, GetCOREInterface()->GetTime(), FOREVER);
+        const auto masterScale = GetMasterScale(UNITS_METERS);
+        auto attrDrap = wrapper.lodDrap();
+        attrDrap.setDistance(float(attrDrap.distance() * masterScale));
+        wrapper.setLodDrap(attrDrap);
+        //------------------------------------------------------
+    }
+}
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////

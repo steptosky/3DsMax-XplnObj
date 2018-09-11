@@ -47,7 +47,7 @@ class LodObjParamBlocks {
 public:
 
     enum eVersions {
-        PbVersionParams = 1,
+        PbVersionParams = 2,
         PbVersionDisplay = 1,
     };
 

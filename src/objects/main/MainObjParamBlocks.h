@@ -45,7 +45,7 @@ class MainObjParamBlocks {
 public:
 
     enum eVersions {
-        PbVersionAttr = 1,
+        PbVersionAttr = 2,
         PbVersionExport = 1,
         PbVersionDisplay = 1,
     };
