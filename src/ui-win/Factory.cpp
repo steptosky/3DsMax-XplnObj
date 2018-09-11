@@ -58,10 +58,10 @@ namespace win {
     void Factory::showVersionIncompatible() {
         std::string msg = sts::MbStrUtils::joinStr("The scene you are trying to open was made with (",
                                                    ObjCommon::instance()->pSettings.sceneVersion().toString(false, false),
-                                                   ") ", XIO_PROJECT_SHORT_NAME,
+                                                   ") ", XIO_PROJECT_NAME,
                                                    " plugin version which is newer than you have installed (",
                                                    ObjCommon::instance()->pSettings.pluginVersion().toString(false, false),
-                                                   ")\r\n\r\nYou must update your ", XIO_PROJECT_SHORT_NAME,
+                                                   ")\r\n\r\nYou must update your ", XIO_PROJECT_NAME,
                                                    " plugin before open this scene. Please use X-Plane menu to get the latest plugin version.");
         MessageBoxA(GetActiveWindow(), msg.c_str(), "Incompatible Version", MB_ICONWARNING);
     }
