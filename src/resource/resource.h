@@ -25,7 +25,6 @@
 #define IDD_ROLL_LIGHT_CUST_OBJ         123
 #define IDD_ROLL_ANIM_OBJ               124
 #define IDD_TOOL_CALC_ANIM_VALUE        125
-#define IDD_HAS_NEW_VERSION_DIALOG      126
 #define ROLL_LODOBJ_DISPLAY             127
 #define DLG_EXPORT                      128
 #define DLG_ABOUT                       131
@@ -154,11 +153,8 @@
 #define IDC_BTN_OK                      1131
 #define IDC_SCALE_EDIT                  1132
 #define IDC_STATIC_CUST                 1132
-#define ID_HAS_NEW_VERSION_DOWNLOAD_BUTTON 1133
 #define SPN_FAR_EDIT                    1133
 #define IDC_SCALE_SPIN                  1134
-#define IDC_HAS_NEW_VERSION_LABEL       1134
-#define ID_HAS_NEW_VERSION_CANCEL_BUTTON 1135
 #define BTN_DONATE                      1135
 #define SPN_FAR                         1135
 #define ROLL_MAINOBJ_EXP                1135
