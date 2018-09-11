@@ -109,6 +109,10 @@ namespace win {
                 signalSettings();
                 return TRUE;
             }
+            case MainMenuActions::ActionCppMesh: {
+                signalSaveCppMesh();
+                return TRUE;
+            }
             default: return FALSE;
         }
     }
@@ -145,6 +149,9 @@ namespace win {
                 menu->AddItem(createMenuItem(MainMenuActions::ActionDonate));
                 menu->AddItem(createMenuItem(MainMenuActions::ActionUpdate));
                 menu->AddItem(createMenuItem(MainMenuActions::ActionAbout));
+#ifndef NDEBUG
+                menu->AddItem(createMenuItem(MainMenuActions::ActionCppMesh));
+#endif
                 //--------------------
             }
             else {

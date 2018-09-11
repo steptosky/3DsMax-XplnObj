@@ -45,7 +45,10 @@ namespace win {
             {MainMenuActions::ActionUpdate, IDS_MAIN_MENU_UPDATE,IDS_MAIN_MENU_UPDATE, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
             {MainMenuActions::ActionDonate, IDS_MAIN_MENU_DONATE, IDS_MAIN_MENU_DONATE, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
             {MainMenuActions::ActionAbout, IDS_MAIN_MENU_ABOUT, IDS_MAIN_MENU_ABOUT, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
-            {MainMenuActions::ActionSettings, IDS_MAIN_MENU_SETTINGS, IDS_MAIN_MENU_SETTINGS, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY}
+            {MainMenuActions::ActionSettings, IDS_MAIN_MENU_SETTINGS, IDS_MAIN_MENU_SETTINGS, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
+#ifndef NDEBUG
+            {MainMenuActions::ActionCppMesh, IDS_MAIN_MENU_CPP_MESH, IDS_MAIN_MENU_CPP_MESH, IDS_MAIN_MENU_ACTION_TABLE_CATEGORY},
+#endif
     };
 
     const TSTR & MainMenuActions::name() {

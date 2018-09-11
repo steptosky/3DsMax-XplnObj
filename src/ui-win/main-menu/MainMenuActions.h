@@ -52,6 +52,7 @@ namespace win {
             ActionDonate= 3,
             ActionAbout= 4,
             ActionSettings =5,
+            ActionCppMesh =100,
         };
 
         //-------------------------------------------------------------------------

@@ -44,7 +44,7 @@ class Mesh;
 class Mesh2Cpp {
 public:
 
-    static void saveSelected(const std::string & name, const std::string & folderPath);
+    static void saveSelected(const std::string & folderPath, const std::string & name = std::string());
     static void save(const Mesh & mesh, const std::string & name, const std::string & folderPath);
 
 private:

@@ -37,7 +37,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-void Mesh2Cpp::saveSelected(const std::string & name, const std::string & folderPath) {
+void Mesh2Cpp::saveSelected(const std::string & folderPath, const std::string & name) {
     ExportParams params;
     if (params.mCoreInterface->GetSelNodeCount() == 0) {
         return;
@@ -45,7 +45,7 @@ void Mesh2Cpp::saveSelected(const std::string & name, const std::string & folder
     INode * node = params.mCoreInterface->GetSelNode(0);
     Mesh * m = ConverterMesh::extractMesh(node, params);
     if (m) {
-        save(*m, name, folderPath);
+        save(*m, name.empty() ? sts::toMbString(node->GetName()) : name, folderPath);
     }
 }
 

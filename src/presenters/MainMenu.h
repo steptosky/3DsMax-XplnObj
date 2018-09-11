@@ -53,6 +53,7 @@ public:
         std::function<void()> signalDoc;
         std::function<void()> signalAbout;
         std::function<void()> signalSettings;
+        std::function<void()> signalSaveCppMesh;
     };
 
     //-------------------------------------------------------------------------
@@ -63,6 +64,8 @@ public:
     //-------------------------------------------------------------------------
 
 private:
+
+    static void saveCppMesh();
 
     IView * mView;
 

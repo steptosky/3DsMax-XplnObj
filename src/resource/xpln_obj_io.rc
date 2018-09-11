@@ -1246,6 +1246,7 @@ BEGIN
     IDS_MAIN_MENU_SETTINGS  "Settings"
     IDS_ROLL_SMOKE_ATTR     "Options"
     IDS_ROLL_SMOKE_DISPLY   "Display"
+    IDS_MAIN_MENU_CPP_MESH  "Cpp Mesh"
 END
 
 #endif    // Russian (Russia) resources

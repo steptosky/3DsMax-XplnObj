@@ -58,6 +58,7 @@
 #define IDS_MAIN_MENU_SETTINGS          169
 #define IDS_ROLL_SMOKE_ATTR             170
 #define IDS_ROLL_SMOKE_DISPLY           171
+#define IDS_MAIN_MENU_CPP_MESH          172
 #define ROLL_MANIP_WHEEL                200
 #define ROLL_MANIP_COMMAND_KNOB         201
 #define ROLL_MANIP_AXIS_KNOB            204
@@ -328,7 +329,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        172
+#define _APS_NEXT_RESOURCE_VALUE        173
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1256
 #define _APS_NEXT_SYMED_VALUE           101
