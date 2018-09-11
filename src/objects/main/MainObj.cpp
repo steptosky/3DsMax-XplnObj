@@ -60,6 +60,7 @@ public:
 
     void proc(ILoad *) override {
         mObj->makeIcon();
+        delete this;
     }
 
     //-------------------------------------------------------------------------
