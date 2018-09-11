@@ -31,8 +31,9 @@
 
 #pragma warning(push, 0)
 #include <max.h>
-#include <iparamb2.h>
 #pragma warning(pop)
+
+class IParamBlock2;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +45,7 @@
 class LodObjParamsWrapper {
 public:
 
-    LodObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval);
+    LodObjParamsWrapper(INode * node, TimeValue t, const Interval & interval);
     ~LodObjParamsWrapper() = default;
 
     //-------------------------------------------------------------------------
