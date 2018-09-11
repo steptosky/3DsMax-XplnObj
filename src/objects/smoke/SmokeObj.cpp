@@ -29,64 +29,16 @@
 
 #include "SmokeObj.h"
 
-#include "resource/resource.h"
 #include "SmokeObjParams.h"
-#include "objects/ScaleDim.h"
 #include "common/Logger.h"
-#include "common/String.h"
 #include "classes-desc/ClassesDescriptions.h"
 #include "SmokeIcon-gen.h"
 #include "additional/math/Compare.h"
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-#if MAX_VERSION_MAJOR < 15
-#	define p_end end
-#endif
+#include "SmokeObjParamBlocks.h"
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
-
-#define PARAMS_PB_VERSION 1
-#define DISPLAY_PB_VERSION 1
-
-enum {
-    SmokeObjParamsOrder = SmokeObjParams,
-    SmokeObjDisplayOrder = SmokeObjDisplay,
-};
-
-enum eSmokeObjDisplay : ParamID {
-    PSmokeObjIconScale,
-};
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
-
-class SmokeObjIconeSizeCallback : public PBAccessor {
-public:
-
-    virtual ~SmokeObjIconeSizeCallback() {}
-
-    void Set(PB2Value & v, ReferenceMaker * owner, ParamID id, int tabIndex, TimeValue t) override {
-        SmokeObject * u = dynamic_cast<SmokeObject*>(owner);
-        DbgAssert(u);
-        switch (id) {
-            case PSmokeObjIconScale:
-                u->makeIcon();
-                break;
-            default: break;
-        }
-        PBAccessor::Set(v, owner, id, tabIndex, t);
-    }
-};
-
-static SmokeObjIconeSizeCallback gSmokeIconeSizeCallback;
-
-//-------------------------------------------------------------------------
 
 class SmokeObjectPostLoadCallback : public PostLoadCallback {
 public:
@@ -104,100 +56,12 @@ public:
     }
 };
 
-//-------------------------------------------------------------------------
-
-class SmokeDlgProc : public ParamMap2UserDlgProc {
-public:
-
-    SmokeDlgProc() = default;
-    virtual ~SmokeDlgProc() = default;
-
-    INT_PTR DlgProc(TimeValue t, IParamMap2 * map, HWND hWnd, UINT msg, WPARAM wParam, LPARAM /*lParam*/) override {
-        IParamBlock2 * ppb = map->GetParamBlock();
-        switch (msg) {
-            case WM_INITDIALOG: {
-                HWND cbmBlend = GetDlgItem(hWnd, CMB_SMOKE_TYPE);
-                DbgAssert(cbmBlend);
-                if (cbmBlend) {
-                    //ComboBox_AddString(cbmBlend, _T("none"));
-                    ComboBox_AddString(cbmBlend, _T("White"));
-                    ComboBox_AddString(cbmBlend, _T("Black"));
-                    ComboBox_SetCurSel(cbmBlend, ppb->GetInt(PSmokeObjAttr_SmokeType) - 1);
-                }
-                return TRUE;
-            }
-            case WM_COMMAND: {
-                switch (LOWORD(wParam)) {
-                    case CMB_SMOKE_TYPE: {
-                        if (HIWORD(wParam) == CBN_SELCHANGE) {
-                            ppb->SetValue(PSmokeObjAttr_SmokeType, t, ComboBox_GetCurSel(GetDlgItem(hWnd, CMB_SMOKE_TYPE)) + 1);
-                        }
-                        break;
-                    }
-                    default: break;
-                }
-                break;
-            }
-            default: break;
-        }
-        return FALSE;
-    }
-
-    void DeleteThis() override {}
-
-};
-
 /**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
 MouseCallback SmokeObject::mMouseCallback;
 SmokeObject * SmokeObject::mEditOb = nullptr;
-static SmokeDlgProc gSmokeDlgProc;
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
-
-static ParamBlockDesc2 gSmokeParamsPb(SmokeObjParams, _T("X-Smoke"), 0, ClassesDescriptions::smokeObj(), P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
-                                      PARAMS_PB_VERSION, SmokeObjParamsOrder,
-                                      //-------------------------------------------------------------------------
-                                      // Rollouts
-                                      ROLL_SMOKEOBJ_ATTR, IDS_ROLL_SMOKE_ATTR, 0, 0, &gSmokeDlgProc,
-                                      //-------------------------------------------------------------------------
-                                      // Params									
-                                      PSmokeObjAttr_SmokeType, _T("Type"), TYPE_INT, 0, NO_IDS,
-                                      p_default, 1,
-                                      p_end,
-                                      //-------------------------------------------------------------------------
-                                      PSmokeObjAttr_Size, _T("Size"), TYPE_FLOAT, 0, NO_IDS,
-                                      p_default, 1.0f,
-                                      p_range, 0.0001f, 999999999.9f,
-                                      p_ui, TYPE_SPINNER, EDITTYPE_POS_FLOAT, SPN_SMOKE_SIZE_EDIT, SPN_SMOKE_SIZE, SPIN_AUTOSCALE,
-                                      p_end,
-                                      //-------------------------------------------------------------------------
-                                      p_end);
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
-
-static ParamBlockDesc2 gSmokeDisplayPb(SmokeObjDisplay, _T("X-Smoke-Display"), 0, ClassesDescriptions::smokeObj(), P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
-                                       DISPLAY_PB_VERSION, SmokeObjDisplayOrder,
-                                       //-------------------------------------------------------------------------
-                                       // Rollouts
-                                       ROLL_SMOKEOBJ_DISPLAY, IDS_ROLL_SMOKE_DISPLY, 0, APPENDROLL_CLOSED, NULL,
-                                       //-------------------------------------------------------------------------
-                                       // Display									
-                                       PSmokeObjIconScale, _T("IconScale"), TYPE_FLOAT, 0, IDS_SCALE,
-                                       p_default, 1.0f,
-                                       p_range, 0.01f, 1000.0f,
-                                       p_accessor, &gSmokeIconeSizeCallback,
-                                       p_dim, &gScaleDim,
-                                       p_ui, TYPE_SPINNER, EDITTYPE_POS_FLOAT, IDC_SCALE_EDIT, IDC_SCALE_SPIN, SPIN_AUTOSCALE,
-                                       p_end,
-                                       //-------------------------------------------------------------------------
-                                       p_end);
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
@@ -286,8 +150,8 @@ void SmokeObject::GetClassName(TSTR & s) { s = mDesc->ClassName(); }
 
 RefTargetHandle SmokeObject::Clone(RemapDir & remap) {
     SmokeObject * newob = new SmokeObject();
-    newob->ReplaceReference(SmokeObjParamsOrder, mParamsPb->Clone(remap));
-    newob->ReplaceReference(SmokeObjDisplayOrder, mDisplayPb->Clone(remap));
+    newob->ReplaceReference(SmokeObjParamBlocks::PbOrderParams, mParamsPb->Clone(remap));
+    newob->ReplaceReference(SmokeObjParamBlocks::PbOrderDisplay, mDisplayPb->Clone(remap));
     BaseClone(this, newob, remap);
     return newob;
 }
@@ -300,8 +164,8 @@ Animatable * SmokeObject::SubAnim(int i) { return GetParamBlock(i); }
 
 TSTR SmokeObject::SubAnimName(int i) {
     switch (i) {
-        case SmokeObjParamsOrder: return _T("Parameters");
-        case SmokeObjDisplayOrder: return _T("Display");
+        case SmokeObjParamBlocks::PbOrderParams: return _T("Parameters");
+        case SmokeObjParamBlocks::PbOrderDisplay: return _T("Display");
         default: return _T("");
     }
 }
@@ -315,8 +179,8 @@ int SmokeObject::NumParamBlocks() { return 2; }
 
 IParamBlock2 * SmokeObject::GetParamBlock(int i) {
     switch (i) {
-        case SmokeObjParamsOrder: return mParamsPb;
-        case SmokeObjDisplayOrder: return mDisplayPb;
+        case SmokeObjParamBlocks::PbOrderParams: return mParamsPb;
+        case SmokeObjParamBlocks::PbOrderDisplay: return mDisplayPb;
         default: return nullptr;
     }
 }
@@ -337,19 +201,19 @@ int SmokeObject::NumRefs() { return 2; }
 
 RefTargetHandle SmokeObject::GetReference(int i) {
     switch (i) {
-        case SmokeObjParamsOrder: return mParamsPb;
-        case SmokeObjDisplayOrder: return mDisplayPb;
+        case SmokeObjParamBlocks::PbOrderParams: return mParamsPb;
+        case SmokeObjParamBlocks::PbOrderDisplay: return mDisplayPb;
         default: return nullptr;
     }
 }
 
 void SmokeObject::SetReference(int i, RefTargetHandle rtarg) {
     switch (i) {
-        case SmokeObjParamsOrder: {
+        case SmokeObjParamBlocks::PbOrderParams: {
             mParamsPb = static_cast<IParamBlock2*>(rtarg);
             break;
         }
-        case SmokeObjDisplayOrder: {
+        case SmokeObjParamBlocks::PbOrderDisplay: {
             mDisplayPb = static_cast<IParamBlock2*>(rtarg);
             break;
         }
@@ -371,8 +235,8 @@ RefResult SmokeObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle 
     switch (message) {
         case REFMSG_CHANGE:
             if (mEditOb == this) {
-                gSmokeParamsPb.InvalidateUI(mParamsPb->LastNotifyParamID());
-                gSmokeDisplayPb.InvalidateUI(mDisplayPb->LastNotifyParamID());
+                SmokeObjParamBlocks::mParams.InvalidateUI(mParamsPb->LastNotifyParamID());
+                SmokeObjParamBlocks::mDisplay.InvalidateUI(mDisplayPb->LastNotifyParamID());
             }
             break;
         default: break;

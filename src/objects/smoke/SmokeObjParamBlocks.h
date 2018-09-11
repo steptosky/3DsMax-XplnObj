@@ -30,35 +30,33 @@
 #pragma once
 
 #pragma warning(push, 0)
-#include <max.h>
 #include <iparamb2.h>
 #pragma warning(pop)
+
+#include "SmokeObjParams.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-/*!
- * \details Parameter blocks of the X-Smoke object
- */
-enum eSmokeObjParamsBlocks : BlockID {
-    SmokeObjParams = 0,
-    //! For internal using
-    SmokeObjDisplay,
-};
+class SmokeObjParamBlocks {
+    SmokeObjParamBlocks() = default;
+    virtual ~SmokeObjParamBlocks() = default;
+public:
 
-/*!
- * \details Values of the \link eSmokeObjParamsBlocks::SmokeObjParams \endlink parameters block.
- */
-enum eSmokeParams : ParamID {
-    //! int 
-    PSmokeObjAttr_SmokeType = 25,
-    //! Float
-    PSmokeObjAttr_Size = 50,
-};
+    enum eVersions {
+        PbVersionParams = 1,
+        PbVersionDisplay = 1,
+    };
 
-enum eSmokeObjDisplayParams : ParamID {
-    PSmokeObjIconScale,
+    enum eOrder {
+        PbOrderParams = eSmokeObjParamsBlocks::SmokeObjParams,
+        PbOrderDisplay = eSmokeObjParamsBlocks::SmokeObjDisplay,
+    };
+
+    static ParamBlockDesc2 mParams;
+    static ParamBlockDesc2 mDisplay;
+
 };
 
 /**************************************************************************************************/
