@@ -28,15 +28,20 @@
 */
 
 #pragma once
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
 
-#include <xpln/obj/ObjMain.h>
-#include "objects/main/MainObjParamsWrapper.h"
-#include "ExportParams.h"
-#include "ImportParams.h"
+#include <vector>
 
+namespace xobj {
+class ObjAbstract;
+class ObjMain;
+class Transform;
+}
+
+class MainObjParamsWrapper;
+
+class INode;
+class Interface;
+class Matrix3;
 class StdMat;
 class RawExpOption;
 class Log;
@@ -47,6 +52,9 @@ class ConverterDummy;
 class ConverterLight;
 class ConverterAttr;
 class ConverterAnim;
+
+class ExportParams;
+class ImportParams;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -28,13 +28,19 @@
 */
 
 #include "ConverterSmoke.h"
-#include <memory>
+
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
+
 #include "common/String.h"
 #include "ConverterUtils.h"
 #include "objects/smoke/SmokeObjParamsWrapper.h"
 #include "objects/smoke/SmokeObj.h"
 #include "common/Logger.h"
 #include "classes-desc/ClassesDescriptions.h"
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////

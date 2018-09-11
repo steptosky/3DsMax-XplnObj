@@ -40,12 +40,21 @@
 #include "ConverterATTR.h"
 #include "ConverterAnim.h"
 #include "ConverterUtils.h"
-
-#include <xpln/obj/ObjSmoke.h>
-#include "objects/lod/LodObjParamsWrapper.h"
-#include "common/String.h"
 #include "ConverterSmoke.h"
 #include "ConverterLod.h"
+
+#include <xpln/obj/ObjMain.h>
+#include <xpln/obj/ObjMesh.h>
+#include <xpln/obj/ObjAbstractLight.h>
+#include <xpln/obj/ObjDummy.h>
+#include <xpln/obj/ObjSmoke.h>
+
+#include "objects/lod/LodObjParamsWrapper.h"
+#include "objects/main/MainObjParamsWrapper.h"
+#include "common/String.h"
+
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////

@@ -39,6 +39,8 @@
 #include "models/io/AnimIO.h"
 #include "additional/math/Compare.h"
 #include "additional/math/Rad.h"
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /********************************************************************************************************/
 //////////////////////////////////////////////* Functions *///////////////////////////////////////////////

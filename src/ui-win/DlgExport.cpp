@@ -36,6 +36,8 @@
 #include <windows.h>
 #include <commctrl.h>
 
+#include <xpln/obj/ObjMain.h>
+
 #include "common/String.h"
 #include "resource/resource.h"
 #include "Info.h"

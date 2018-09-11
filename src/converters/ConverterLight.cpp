@@ -27,14 +27,27 @@
 **  Contacts: www.steptosky.com
 */
 
-#include <xpln/obj/Transform.h>
 #include "ConverterLight.h"
+
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
+
+#include <xpln/obj/ObjLightNamed.h>
+#include <xpln/obj/ObjLightParam.h>
+#include <xpln/obj/ObjLightCustom.h>
+#include <xpln/obj/ObjLightSpillCust.h>
+#include <xpln/obj/ObjLightPoint.h>
+#include <xpln/obj/Transform.h>
+
 #include "common/String.h"
 #include "common/Logger.h"
 #include "models/MdLight.h"
 #include "ConverterUtils.h"
 #include "additional/math/Rad.h"
 #include "additional/math/Deg.h"
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////

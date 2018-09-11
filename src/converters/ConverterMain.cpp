@@ -39,6 +39,8 @@
 #include <xpln/obj/ObjMain.h>
 #include "objects/main/MainObjParamsWrapper.h"
 #include "classes-desc/ClassesDescriptions.h"
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////

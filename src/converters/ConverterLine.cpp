@@ -30,12 +30,16 @@
 #include "ConverterLine.h"
 
 #pragma warning(push, 0)
+#include <max.h>
 #include <splshape.h>
 #pragma warning(pop)
 
+#include <xpln/obj/ObjLine.h>
 #include <cassert>
 #include "common/String.h"
 #include "ConverterUtils.h"
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////

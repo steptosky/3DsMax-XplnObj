@@ -37,8 +37,9 @@
 #include "additional/utils/Single.h"
 #include "models/MdAnimRot.h"
 #include "xpln/common/EulerXyzHelper.h"
-#include "ExportParams.h"
-#include "ImportParams.h"
+
+class ExportParams;
+class ImportParams;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

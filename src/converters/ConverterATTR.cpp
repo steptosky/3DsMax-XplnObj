@@ -27,10 +27,18 @@
 **  Contacts: www.steptosky.com
 */
 
-#include <xpln/obj/ObjMesh.h>
 #include "ConverterATTR.h"
+
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
+
+#include <xpln/obj/ObjAbstract.h>
+#include <xpln/obj/ObjMesh.h>
 #include "models/MdManip.h"
 #include "models/MdObjAttr.h"
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////

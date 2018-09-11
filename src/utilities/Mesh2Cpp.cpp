@@ -30,6 +30,7 @@
 #include "Mesh2Cpp.h"
 #include <fstream>
 #include "converters/ConverterMesh.h"
+#include "converters/ExportParams.h"
 #include "additional/utils/StringUtils.h"
 
 /**************************************************************************************************/

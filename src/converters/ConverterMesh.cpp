@@ -27,12 +27,19 @@
 **  Contacts: www.steptosky.com
 */
 
-#include <cassert>
-
 #include "ConverterMesh.h"
+
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
+
+#include <cassert>
+#include <xpln/obj/ObjMesh.h>
 #include "MeshNormalSpec.h"
 #include "common/String.h"
 #include "ConverterUtils.h"
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////

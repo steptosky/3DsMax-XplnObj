@@ -32,13 +32,20 @@
 #include <max.h>
 #pragma warning(pop)
 
-#include <xpln/obj/ObjLightNamed.h>
-#include <xpln/obj/ObjLightParam.h>
-#include <xpln/obj/ObjLightCustom.h>
-#include <xpln/obj/ObjLightSpillCust.h>
-#include <xpln/obj/ObjLightPoint.h>
-#include "ExportParams.h"
-#include "ImportParams.h"
+namespace xobj {
+class ObjAbstract;
+class ObjAbstractLight;
+class ObjLightNamed;
+class ObjLightParam;
+class ObjLightCustom;
+class ObjLightSpillCust;
+class ObjLightPoint;
+class Point3;
+class TMatrix;
+}
+
+class ExportParams;
+class ImportParams;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

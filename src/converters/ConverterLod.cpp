@@ -40,6 +40,8 @@
 
 #include "objects/lod/LodObjParamsWrapper.h"
 #include "classes-desc/ClassesDescriptions.h"
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////

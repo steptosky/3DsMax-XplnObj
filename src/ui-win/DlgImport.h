@@ -29,6 +29,10 @@
 
 #pragma once
 
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
+
 #include "ui-win/controls/Base.h"
 #include "Converters/Converterer.h"
 #include "ui-win/controls/Edit.h"

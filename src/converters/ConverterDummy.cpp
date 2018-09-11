@@ -28,9 +28,16 @@
 */
 
 #include "ConverterDummy.h"
-#include "ConverterUtils.h"
+
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
+
+#include <xpln/obj/ObjDummy.h>
 #include "common/String.h"
 #include "common/Logger.h"
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////

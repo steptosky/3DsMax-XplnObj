@@ -29,13 +29,13 @@
 
 #pragma once
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
+namespace xobj {
+class ObjAbstract;
+}
 
-#include <xpln/obj/ObjAbstract.h>
-#include "ExportParams.h"
-#include "ImportParams.h"
+class INode;
+class ExportParams;
+class ImportParams;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

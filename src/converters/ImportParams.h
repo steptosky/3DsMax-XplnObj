@@ -40,7 +40,8 @@
 /*! 
  * \details Just holds import params for converters.
  */
-struct ImportParams {
+class ImportParams {
+public:
 
     ImportParams()
         : mCoreInterface(GetCOREInterface()),

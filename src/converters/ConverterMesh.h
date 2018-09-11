@@ -29,13 +29,19 @@
 
 #pragma once
 
+#include <vector>
+
 #pragma warning(push, 0)
 #include <max.h>
 #pragma warning(pop)
 
-#include <xpln/obj/ObjMesh.h>
-#include "ExportParams.h"
-#include "ImportParams.h"
+namespace xobj {
+class ObjAbstract;
+class ObjMesh;
+}
+
+class ExportParams;
+class ImportParams;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

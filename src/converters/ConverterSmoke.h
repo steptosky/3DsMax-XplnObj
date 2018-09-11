@@ -28,13 +28,15 @@
 */
 
 #pragma once
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
 
-#include <xpln/obj/ObjSmoke.h>
-#include "ExportParams.h"
-#include "ImportParams.h"
+namespace xobj {
+class ObjAbstract;
+class ObjSmoke;
+}
+
+class INode;
+class ExportParams;
+class ImportParams;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

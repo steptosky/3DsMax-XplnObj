@@ -40,7 +40,8 @@
 /*! 
  * \details Just holds export params like scale ... for converters.
  */
-struct ExportParams {
+class ExportParams {
+public:
 
     ExportParams()
         : mCoreInterface(GetCOREInterface()),

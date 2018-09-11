@@ -30,9 +30,10 @@
 #pragma once
 
 #include <string>
-#include "ExportParams.h"
 
 class INode;
+class ExportParams;
+class ImportParams;
 
 namespace xobj {
 class ObjMain;
