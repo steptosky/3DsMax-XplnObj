@@ -29,15 +29,14 @@
 
 #include "LodObj.h"
 
-#include "resource/resource.h"
 #include "models/bwc/SerializationId.h"
 #include "LodObjParams.h"
 #include <vector>
-#include "objects/ScaleDim.h"
 #include "common/Logger.h"
 #include "common/String.h"
 #include "classes-desc/ClassesDescriptions.h"
 #include "additional/math/Compare.h"
+#include "LodObjParamBlocks.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,28 +66,6 @@ enum eLodObjDisplay : ParamID {
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
-class LodObjIconeSizeCallback : public PBAccessor {
-public:
-
-    virtual ~LodObjIconeSizeCallback() {}
-
-    void Set(PB2Value & v, ReferenceMaker * owner, ParamID id, int tabIndex, TimeValue t) override {
-        LodObject * u = dynamic_cast<LodObject*>(owner);
-        DbgAssert(u);
-        switch (id) {
-            case PLodObjIconScale:
-                u->makeIcon();
-                break;
-            default: break;
-        }
-        PBAccessor::Set(v, owner, id, tabIndex, t);
-    }
-};
-
-static LodObjIconeSizeCallback gLodIconeSizeCallback;
-
-//-------------------------------------------------------------------------
-
 class LodObjectPostLoadCallback : public PostLoadCallback {
 public:
 
@@ -111,52 +88,6 @@ public:
 
 MouseCallback LodObject::mMouseCallback;
 LodObject * LodObject::mEditOb = nullptr;
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
-
-static ParamBlockDesc2 gLodParamsPb(LodObjParams, _T("X-Lod"), 0, ClassesDescriptions::lodObj(), P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
-                                    PARAMS_PB_VERSION, LodObjParamsOrder,
-                                    //-------------------------------------------------------------------------
-                                    // Rollouts
-                                    ROLL_LODOBJ, IDS_ROLL_LOD, 0, 0, NULL,
-                                    //-------------------------------------------------------------------------
-                                    // Params									
-                                    PLodObjNear, _T("Near"), TYPE_FLOAT, 0, IDS_NEAR,
-                                    p_default, 0.0f,
-                                    p_range, 0.0f, 999999999.9f,
-                                    p_ui, TYPE_SPINNER, EDITTYPE_POS_UNIVERSE, SPN_NEAR_EDIT, SPN_NEAR, 1.0f,
-                                    p_end,
-                                    //-------------------------------------------------------------------------
-                                    PLodObjFar, _T("Far"), TYPE_FLOAT, 0, IDS_FAR,
-                                    p_default, 0.0f,
-                                    p_range, 0.0f, 999999999.9f,
-                                    p_ui, TYPE_SPINNER, EDITTYPE_POS_UNIVERSE, SPN_FAR_EDIT, SPN_FAR, 1.0f,
-                                    p_end,
-                                    //-------------------------------------------------------------------------
-                                    p_end);
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
-
-static ParamBlockDesc2 gLodDisplayPb(LodObjDisplay, _T("X-Lod-Display"), 0, ClassesDescriptions::lodObj(), P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
-                                     DISPLAY_PB_VERSION, LodObjDisplayOrder,
-                                     //-------------------------------------------------------------------------
-                                     // Rollouts
-                                     ROLL_LODOBJ_DISPLAY, IDS_ROLL_LOD_DISPLAY, 0, APPENDROLL_CLOSED, NULL,
-                                     //-------------------------------------------------------------------------
-                                     // Display									
-                                     PLodObjIconScale, _T("IconScale"), TYPE_FLOAT, 0, IDS_SCALE,
-                                     p_default, 1.0f,
-                                     p_range, 0.01f, 1000.0f,
-                                     p_accessor, &gLodIconeSizeCallback,
-                                     p_dim, &gScaleDim,
-                                     p_ui, TYPE_SPINNER, EDITTYPE_POS_FLOAT, IDC_SCALE_EDIT, IDC_SCALE_SPIN, SPIN_AUTOSCALE,
-                                     p_end,
-                                     //-------------------------------------------------------------------------
-                                     p_end);
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
@@ -444,8 +375,8 @@ RefResult LodObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /*
     switch (message) {
         case REFMSG_CHANGE:
             if (mEditOb == this) {
-                gLodParamsPb.InvalidateUI(mParamsPb->LastNotifyParamID());
-                gLodDisplayPb.InvalidateUI(mDisplayPb->LastNotifyParamID());
+                LodObjParamBlocks::mParams.InvalidateUI(mParamsPb->LastNotifyParamID());
+                LodObjParamBlocks::mDisplay.InvalidateUI(mDisplayPb->LastNotifyParamID());
             }
             break;
         default: break;
@@ -810,6 +741,7 @@ void LodObject::makeIcon() {
     mIconMesh.InvalidateGeomCache();
 }
 
-/*************************************************************************************************
+/**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
+
