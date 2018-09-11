@@ -42,12 +42,12 @@
  * \details Parameter blocks of the X-Obj object
  */
 enum eMainObjParamsBlocks : BlockID {
+    //! Attribute params
     MainObjAttrParams,
-    //<! Attribute params
+    //! Export params
     MainObjExpParams,
-    //<! Export params
-    MainObjDisplay,
     //!< For internal using
+    MainObjDisplay,
 };
 
 /*!
@@ -74,105 +74,105 @@ enum eMainObjAttrParams : ParamID {
     //-------------------------------------
     // multi-states
 
+    //! int 
     MainObjAttr_DryWet = 20,
-    //<! int 
 
     //-------------------------------------
     // multi-values
 
+    //! int 
     MainObjAttr_BlendingType = 25,
-    //<! int 
+    //! float 
     MainObjAttr_BlendingRatio,
-    //<! float 
 
+    //! string 
     MainObjAttr_LayerGroupLayer = 30,
-    //<! string 
+    //! int 
     MainObjAttr_LayerGroupOffset,
-    //<! int 
 
+    //! string 
     MainObjAttr_LayerGroupDrapedLayer = 35,
-    //<! string 
+    //! int 
     MainObjAttr_LayerGroupDrapedOffset,
-    //<! int 
 
+    //! bool 
     MainObjAttr_LodDrapEnable = 40,
-    //<! bool 
+    //! float 
     MainObjAttr_LodDrapDistance,
-    //<! float 
 
+    //! bool 
     MainObjAttr_SlungLoadWeightEnable = 45,
-    //<! bool 
+    //! float 
     MainObjAttr_SlungLoadWeight,
-    //<! float 
 
+    //! bool 
     MainObjAttr_SpecularEnable = 50,
-    //<! bool 
+    //! float 
     MainObjAttr_SpecularRatio,
-    //<! float 
 
+    //! bool 
     MainObjAttr_TintEnable = 55,
-    //<! bool 
+    //! float 
     MainObjAttr_TintAlbedo,
-    //<! float 
+    //! float 
     MainObjAttr_TintEmissive,
-    //<! float 
 
+    //! bool 
     MainObjAttr_SlopeLimitEnable = 60,
-    //<! bool 
+    //! float 
     MainObjAttr_SlopeLimitMinPitch,
-    //<! float 
+    //! float 
     MainObjAttr_SlopeLimitMaxPitch,
-    //<! float 
+    //! float 
     MainObjAttr_SlopeLimitMinRoll,
-    //<! float 
+    //! float 
     MainObjAttr_SlopeLimitMaxRoll,
-    //<! float 
 
     //-------------------------------------
 
+    //! bool 
     MainObjAttr_CockpitRegion_1 = 70,
-    //<! bool 
+    //! int 
     MainObjAttr_CockpitRegion_1_L,
-    //<! int 
+    //! int 
     MainObjAttr_CockpitRegion_1_B,
-    //<! int 
+    //! int 
     MainObjAttr_CockpitRegion_1_R,
-    //<! int 
+    //! int 
     MainObjAttr_CockpitRegion_1_T,
-    //<! int 
 
+    //! bool 
     MainObjAttr_CockpitRegion_2 = 80,
-    //<! bool 
+    //! int 
     MainObjAttr_CockpitRegion_2_L,
-    //<! int 
+    //! int 
     MainObjAttr_CockpitRegion_2_B,
-    //<! int 
+    //! int 
     MainObjAttr_CockpitRegion_2_R,
-    //<! int 
+    //! int 
     MainObjAttr_CockpitRegion_2_T,
-    //<! int 
 
+    //! bool 
     MainObjAttr_CockpitRegion_3 = 90,
-    //<! bool 
+    //! int 
     MainObjAttr_CockpitRegion_3_L,
-    //<! int 
+    //! int 
     MainObjAttr_CockpitRegion_3_B,
-    //<! int 
+    //! int 
     MainObjAttr_CockpitRegion_3_R,
-    //<! int 
+    //! int 
     MainObjAttr_CockpitRegion_3_T,
-    //<! int 
 
+    //! bool 
     MainObjAttr_CockpitRegion_4 = 100,
-    //<! bool 
+    //! int 
     MainObjAttr_CockpitRegion_4_L,
-    //<! int 
+    //! int 
     MainObjAttr_CockpitRegion_4_B,
-    //<! int 
+    //! int 
     MainObjAttr_CockpitRegion_4_R,
-    //<! int 
+    //! int 
     MainObjAttr_CockpitRegion_4_T,
-    //<! int 
 
     //-------------------------------------
 };
@@ -191,8 +191,8 @@ enum eMainObjExpParams : ParamID {
 
     //-------------------------------------
 
+    //! bool
     MainObj_ScaleEnabled = 15,
-    //!< bool
     MainObj_ScaleValue,
 
     //-------------------------------------
@@ -206,6 +206,10 @@ enum eMainObjExpParams : ParamID {
     MainObjAttr_ExportEnable = 50,
 
     //-------------------------------------
+};
+
+enum eMainObjDisplayParams : ParamID {
+    MainObjDisp_IconScale,
 };
 
 /**************************************************************************************************/
