@@ -28,6 +28,11 @@
 */
 
 #include "SmokeObjParamsWrapper.h"
+
+#pragma warning(push, 0)
+#include <iparamb2.h>
+#pragma warning(pop)
+
 #include "common/Logger.h"
 #include "SmokeObjParams.h"
 #include "common/String.h"
