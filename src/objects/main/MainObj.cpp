@@ -29,7 +29,6 @@
 
 #include "MainObj.h "
 
-#include <Windows.h>
 #include <xpln/enums/ELayer.h>
 #include <xpln/obj/attributes/AttrBlend.h>
 #include <xpln/obj/attributes/AttrWetDry.h>
@@ -52,17 +51,20 @@
 class MainObjectPostLoadCallback : public PostLoadCallback {
 public:
 
-    virtual ~MainObjectPostLoadCallback() {}
+    explicit MainObjectPostLoadCallback(MainObject * obj)
+        : mObj(obj) { }
 
-    MainObject * pobj;
+    virtual ~MainObjectPostLoadCallback() = default;
 
-    explicit MainObjectPostLoadCallback(MainObject * p) {
-        pobj = p;
+    //-------------------------------------------------------------------------
+
+    void proc(ILoad *) override {
+        mObj->makeIcon();
     }
 
-    void proc(ILoad * /*iload*/) override {
-        pobj->makeIcon();
-    }
+    //-------------------------------------------------------------------------
+
+    MainObject * mObj;
 };
 
 /**************************************************************************************************/
@@ -83,8 +85,6 @@ MainObject::MainObject() {
     makeIcon();
 }
 
-MainObject::~MainObject() {}
-
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
@@ -104,18 +104,18 @@ void MainObject::updateTexturesButtons() const {
     updateButtonText(mAttrParamsPb, MainObjAttr_TextureNormal, sts::toString(wrapper.textureNormal()).c_str());
 }
 
-void MainObject::updateButtonText(IParamBlock2 * pblock, ParamID param, const MCHAR * value) {
-    IParamMap2 * map = pblock->GetMap(MainObjParamBlocks::RollGlobShading);
+void MainObject::updateButtonText(IParamBlock2 * pBlock, const ParamID param, const MCHAR * value) {
+    IParamMap2 * map = pBlock->GetMap(MainObjParamBlocks::RollGlobShading);
     //DbgAssert(map);
     if (map) {
         TSTR p, f, e, name;
-        ParamDef & mapdef = pblock->GetParamDef(param);
-        static TCHAR cubemapFile[MAX_PATH];
-        _tcscpy(cubemapFile, value ? value : _M("none"));
-        TSTR tooltip = cubemapFile;
-        mapdef.init_file = cubemapFile;
-        TSTR tstr(cubemapFile);
-        SplitFilename(tstr, &p, &f, &e);
+        ParamDef & mapDef = pBlock->GetParamDef(param);
+        static TCHAR cubeMapFile[MAX_PATH];
+        _tcscpy(cubeMapFile, value ? value : _M("none"));
+        TSTR tooltip = cubeMapFile;
+        mapDef.init_file = cubeMapFile;
+        TSTR tStr(cubeMapFile);
+        SplitFilename(tStr, &p, &f, &e);
         name = f + e;
         map->SetText(param, name);
         map->SetTooltip(param, true, tooltip);
@@ -135,7 +135,7 @@ void MainObject::updateBlendSpinEnabling() const {
 
 //-------------------------------------------------------------------------
 
-void MainObject::updateLyerGroupSpinEnabling() const {
+void MainObject::updateLayerGroupSpinEnabling() const {
     IParamMap2 * map = mAttrParamsPb->GetMap(MainObjParamBlocks::RollGlobAttr);
     //DbgAssert(map);
     if (map) {
@@ -196,15 +196,15 @@ void MainObject::loadRawGlobAttr(sts_bwc::DataStream & stream) const {
         double slopePitchMax;
         double slopePitchMin;
         double slopeRollMax;
-        double slopeRollhMin;
+        double slopeRollMin;
 
         double slungLoad;
         int layerGroup;
         double lodDrapedDist;
         int drapedLayerGroup;
 
-        std::wstring strLayerGrpup;
-        std::wstring strDrapedLayerGrpup;
+        std::wstring strLayerGroup;
+        std::wstring strDrapedLayerGroup;
 
         bool chkNoShadow;
         bool chkTilted;
@@ -238,15 +238,15 @@ void MainObject::loadRawGlobAttr(sts_bwc::DataStream & stream) const {
     stream >> data.slopePitchMax;
     stream >> data.slopePitchMin;
     stream >> data.slopeRollMax;
-    stream >> data.slopeRollhMin;
+    stream >> data.slopeRollMin;
 
     stream >> data.slungLoad;
     stream >> data.layerGroup;
     stream >> data.lodDrapedDist;
     stream >> data.drapedLayerGroup;
 
-    stream >> data.strLayerGrpup;
-    stream >> data.strDrapedLayerGrpup;
+    stream >> data.strLayerGroup;
+    stream >> data.strDrapedLayerGroup;
 
     stream >> data.chkNoShadow;
     stream >> data.chkTilted;
@@ -302,7 +302,7 @@ void MainObject::loadRawGlobAttr(sts_bwc::DataStream & stream) const {
     //-------------------------------------------------------------------------
     if (data.chkSlopeLimit) {
         wrapper.setSlopeLimit(xobj::AttrSlopeLimit(float(data.slopePitchMin), float(data.slopePitchMax),
-                                                   float(data.slopeRollhMin), float(data.slopeRollMax)));
+                                                   float(data.slopeRollMin), float(data.slopeRollMax)));
     }
     else {
         wrapper.setSlopeLimit(xobj::AttrSlopeLimit());
@@ -323,7 +323,7 @@ void MainObject::loadRawGlobAttr(sts_bwc::DataStream & stream) const {
     }
     //-------------------------------------------------------------------------
     if (data.chkLayerGroup) {
-        wrapper.setLayerGroup(xobj::AttrLayerGroup(xobj::ELayer::fromString(sts::toMbString(data.strLayerGrpup).c_str()),
+        wrapper.setLayerGroup(xobj::AttrLayerGroup(xobj::ELayer::fromString(sts::toMbString(data.strLayerGroup).c_str()),
                                                    int(data.layerGroup)));
     }
     else {
@@ -331,7 +331,7 @@ void MainObject::loadRawGlobAttr(sts_bwc::DataStream & stream) const {
     }
     //-------------------------------------------------------------------------
     if (data.chkDrapedLayerGroup) {
-        wrapper.setDrapedLayerGroup(xobj::AttrDrapedLayerGroup(xobj::ELayer::fromString(sts::toMbString(data.strDrapedLayerGrpup).c_str()),
+        wrapper.setDrapedLayerGroup(xobj::AttrDrapedLayerGroup(xobj::ELayer::fromString(sts::toMbString(data.strDrapedLayerGroup).c_str()),
                                                                int(data.drapedLayerGroup)));
     }
     else {
@@ -385,8 +385,8 @@ void MainObject::loadRawExpOption(sts_bwc::DataStream & stream) const {
             LError << "Unexpected data input: " << idx.toString();
             return;
         }
-        unsigned char verx;
-        stream >> verx;
+        unsigned char ver;
+        stream >> ver;
         if (version != 1) {
             LError << "Unexpected data version: " << version;
             return;
@@ -447,7 +447,7 @@ void MainObject::load186(std::vector<char> & inByteArray) {
     std::stringbuf buf(std::string(reinterpret_cast<char*>(inByteArray.data()), inByteArray.size()));
     sts_bwc::DataStream stream(buf);
 
-    std::streampos pos = stream.getStdStream().tellg();
+    const auto pos = stream.getStdStream().tellg();
     uint8_t version;
     stream >> version; // 64 >= when incorrect version
     stream.getStdStream().seekg(pos);
@@ -456,34 +456,34 @@ void MainObject::load186(std::vector<char> & inByteArray) {
         loadRawGlobAttr(stream);
     }
     else {
-        uint8_t verx;
-        stream >> verx;
+        uint8_t ver;
+        stream >> ver;
         loadRawExpOption(stream);
         loadRawGlobAttr(stream);
         loadMdDisplayObj(stream);
     }
 }
 
-IOResult MainObject::Load(ILoad * iload) {
+IOResult MainObject::Load(ILoad * load) {
     ULONG temp;
     uint32_t dataSize = 0;
     IOResult res;
     std::vector<char> ba;
-    while ((res = iload->OpenChunk()) == IO_OK) {
-        switch (iload->CurChunkID()) {
+    while ((res = load->OpenChunk()) == IO_OK) {
+        switch (load->CurChunkID()) {
             case 0:
-                iload->Read(&dataSize, sizeof(dataSize), &temp);
+                load->Read(&dataSize, sizeof(dataSize), &temp);
                 break;
             case 1: {
                 if (dataSize != 0) {
                     ba.resize(dataSize);
-                    iload->Read(ba.data(), dataSize, &temp);
+                    load->Read(ba.data(), dataSize, &temp);
                 }
                 break;
             }
             default: break;
         }
-        iload->CloseChunk();
+        load->CloseChunk();
         if (res != IO_OK)
             return res;
     }
@@ -503,11 +503,11 @@ IOResult MainObject::Load(ILoad * iload) {
         }
     }
 
-    iload->RegisterPostLoadCallback(new MainObjectPostLoadCallback(this));
+    load->RegisterPostLoadCallback(new MainObjectPostLoadCallback(this));
     return IO_OK;
 }
 
-IOResult MainObject::Save(ISave * /*isave*/) {
+IOResult MainObject::Save(ISave *) {
     return IO_OK;
 }
 
@@ -515,16 +515,16 @@ IOResult MainObject::Save(ISave * /*isave*/) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void MainObject::BeginEditParams(IObjParam * ip, ULONG flags, Animatable * prev) {
+void MainObject::BeginEditParams(IObjParam * ip, const ULONG flags, Animatable * prev) {
     mIp = ip;
     mEditOb = this;
     mDesc->BeginEditParams(ip, this, flags, prev);
     updateTexturesButtons();
     updateBlendSpinEnabling();
-    updateLyerGroupSpinEnabling();
+    updateLayerGroupSpinEnabling();
 }
 
-void MainObject::EndEditParams(IObjParam * ip, ULONG flags, Animatable * next) {
+void MainObject::EndEditParams(IObjParam * ip, const ULONG flags, Animatable * next) {
     mEditOb = nullptr;
     mIp = nullptr;
     mDesc->EndEditParams(ip, this, flags, next);
@@ -535,16 +535,24 @@ void MainObject::EndEditParams(IObjParam * ip, ULONG flags, Animatable * next) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-ObjectState MainObject::Eval(TimeValue) { return ObjectState(this); }
-Object * MainObject::ConvertToType(TimeValue, Class_ID) { return nullptr; }
-int MainObject::CanConvertToType(Class_ID) { return FALSE; }
+ObjectState MainObject::Eval(TimeValue) {
+    return ObjectState(this);
+}
+
+Object * MainObject::ConvertToType(TimeValue, Class_ID) {
+    return nullptr;
+}
+
+int MainObject::CanConvertToType(Class_ID) {
+    return FALSE;
+}
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void MainObject::GetWorldBoundBox(TimeValue, INode * inode, ViewExp *, Box3 & box) {
-    Matrix3 tm = inode->GetObjectTM(GetCOREInterface()->GetTime());
+void MainObject::GetWorldBoundBox(TimeValue, INode * node, ViewExp *, Box3 & box) {
+    const Matrix3 tm = node->GetObjectTM(GetCOREInterface()->GetTime());
     box = mIconMesh.getBoundingBox() * tm;
 }
 
@@ -566,26 +574,36 @@ void MainObject::InitNodeName(TSTR & s) { s = _T("X-Obj-"); }
 
 //-------------------------------------------------------------------------
 
-Class_ID MainObject::ClassID() { return mDesc->ClassID(); }
-SClass_ID MainObject::SuperClassID() { return mDesc->SuperClassID(); }
-void MainObject::GetClassName(TSTR & s) { s = mDesc->ClassName(); }
+Class_ID MainObject::ClassID() {
+    return mDesc->ClassID();
+}
+
+SClass_ID MainObject::SuperClassID() {
+    return mDesc->SuperClassID();
+}
+
+void MainObject::GetClassName(TSTR & s) {
+    s = mDesc->ClassName();
+}
 
 RefTargetHandle MainObject::Clone(RemapDir & remap) {
-    MainObject * newob = new MainObject();
-    newob->ReplaceReference(MainObjParamBlocks::PbOrderAttr, mAttrParamsPb->Clone(remap));
-    newob->ReplaceReference(MainObjParamBlocks::PbOrderExport, mExpPb->Clone(remap));
-    newob->ReplaceReference(MainObjParamBlocks::PbOrderDisplay, mDisplayPb->Clone(remap));
-    BaseClone(this, newob, remap);
-    return (newob);
+    auto newObj = new MainObject();
+    newObj->ReplaceReference(MainObjParamBlocks::PbOrderAttr, mAttrParamsPb->Clone(remap));
+    newObj->ReplaceReference(MainObjParamBlocks::PbOrderExport, mExpPb->Clone(remap));
+    newObj->ReplaceReference(MainObjParamBlocks::PbOrderDisplay, mDisplayPb->Clone(remap));
+    BaseClone(this, newObj, remap);
+    return (newObj);
 }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-Animatable * MainObject::SubAnim(int i) { return GetParamBlock(i); }
+Animatable * MainObject::SubAnim(const int i) {
+    return GetParamBlock(i);
+}
 
-TSTR MainObject::SubAnimName(int i) {
+TSTR MainObject::SubAnimName(const int i) {
     switch (i) {
         case MainObjParamBlocks::PbOrderAttr: return _T("Attributes");
         case MainObjParamBlocks::PbOrderExport: return _T("Options");
@@ -598,10 +616,15 @@ TSTR MainObject::SubAnimName(int i) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-int MainObject::GetParamBlockIndex(int id) { return id; }
-int MainObject::NumParamBlocks() { return 3; }
+int MainObject::GetParamBlockIndex(const int id) {
+    return id;
+}
 
-IParamBlock2 * MainObject::GetParamBlock(int i) {
+int MainObject::NumParamBlocks() {
+    return 3;
+}
+
+IParamBlock2 * MainObject::GetParamBlock(const int i) {
     switch (i) {
         case MainObjParamBlocks::PbOrderAttr: return mAttrParamsPb;
         case MainObjParamBlocks::PbOrderExport: return mExpPb;
@@ -610,7 +633,7 @@ IParamBlock2 * MainObject::GetParamBlock(int i) {
     }
 }
 
-IParamBlock2 * MainObject::GetParamBlockByID(BlockID id) {
+IParamBlock2 * MainObject::GetParamBlockByID(const BlockID id) {
     switch (id) {
         case MainObjAttrParams: return mAttrParamsPb;
         case MainObjExpParams: return mExpPb;
@@ -623,9 +646,11 @@ IParamBlock2 * MainObject::GetParamBlockByID(BlockID id) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-int MainObject::NumRefs() { return 3; }
+int MainObject::NumRefs() {
+    return 3;
+}
 
-RefTargetHandle MainObject::GetReference(int i) {
+RefTargetHandle MainObject::GetReference(const int i) {
     switch (i) {
         case MainObjParamBlocks::PbOrderAttr: return mAttrParamsPb;
         case MainObjParamBlocks::PbOrderExport: return mExpPb;
@@ -634,18 +659,18 @@ RefTargetHandle MainObject::GetReference(int i) {
     }
 }
 
-void MainObject::SetReference(int i, RefTargetHandle rtarg) {
+void MainObject::SetReference(const int i, RefTargetHandle target) {
     switch (i) {
         case MainObjParamBlocks::PbOrderAttr: {
-            mAttrParamsPb = static_cast<IParamBlock2*>(rtarg);
+            mAttrParamsPb = static_cast<IParamBlock2*>(target);
             break;
         }
         case MainObjParamBlocks::PbOrderExport: {
-            mExpPb = static_cast<IParamBlock2*>(rtarg);
+            mExpPb = static_cast<IParamBlock2*>(target);
             break;
         }
         case MainObjParamBlocks::PbOrderDisplay: {
-            mDisplayPb = static_cast<IParamBlock2*>(rtarg);
+            mDisplayPb = static_cast<IParamBlock2*>(target);
             break;
         }
         default: break;
@@ -658,10 +683,10 @@ void MainObject::SetReference(int i, RefTargetHandle rtarg) {
 
 #if MAX_VERSION_MAJOR > 16
 RefResult MainObject::NotifyRefChanged(const Interval & /*changeInt*/, RefTargetHandle /*hTarget*/,
-                                       PartID & /*partID*/, RefMessage message, BOOL /*propagate*/) {
+                                       PartID & /*partId*/, RefMessage message, BOOL /*propagate*/) {
 #else
 RefResult MainObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /*hTarget*/,
-                                       PartID & /*partID*/, RefMessage message) {
+                                       PartID & /*partId*/, const RefMessage message) {
 #endif
     switch (message) {
         case REFMSG_CHANGE:
@@ -680,15 +705,15 @@ RefResult MainObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-int MainObject::HitTest(TimeValue t, INode * inode, int type, int crossing, int flags, IPoint2 * p, ViewExp * vpt) {
+int MainObject::HitTest(const TimeValue t, INode * node, const int type, const int crossing, const int flags, IPoint2 * p, ViewExp * vpt) {
     HitRegion hitRegion;
     DWORD savedLimits;
-    int res = 0;
+    const int res = 0;
     GraphicsWindow * gw = vpt->getGW();
     Material * mtl = gw->getMaterial();
     MakeHitRegion(hitRegion, type, crossing, 4, p);
     gw->setRndLimits(((savedLimits = gw->getRndLimits()) | GW_PICK) & ~GW_ILLUM);
-    Matrix3 m = inode->GetObjectTM(t);
+    const Matrix3 m = node->GetObjectTM(t);
     gw->setTransform(m);
     gw->clearHitCode();
     if (mIconMesh.select(gw, mtl, &hitRegion, flags & HIT_ABORTONHIT)) {
@@ -701,30 +726,32 @@ int MainObject::HitTest(TimeValue t, INode * inode, int type, int crossing, int 
 
 //-------------------------------------------------------------------------
 
-int MainObject::UsesWireColor() { return TRUE; }
+int MainObject::UsesWireColor() {
+    return TRUE;
+}
 
 //-------------------------------------------------------------------------
 
-int MainObject::Display(TimeValue t, INode * inode, ViewExp * vpt, int /*flags*/) {
+int MainObject::Display(const TimeValue t, INode * node, ViewExp * vpt, int /*flags*/) {
     GraphicsWindow * gw = vpt->getGW();
     Material * mtl = gw->getMaterial();
-    Color color(inode->GetWireColor());
+    const Color color(node->GetWireColor());
     mObjColor.x = color.r;
     mObjColor.y = color.g;
     mObjColor.z = color.b;
-    gw->setTransform(inode->GetNodeTM(t));
+    gw->setTransform(node->GetNodeTM(t));
     //-------------------------------------------------------------------------
-    DWORD rlim = gw->getRndLimits();
-    gw->setRndLimits(GW_WIREFRAME | GW_EDGES_ONLY | GW_BACKCULL | (rlim & GW_Z_BUFFER));
+    const DWORD limits = gw->getRndLimits();
+    gw->setRndLimits(GW_WIREFRAME | GW_EDGES_ONLY | GW_BACKCULL | (limits & GW_Z_BUFFER));
 
-    if (inode->Selected()) {
+    if (node->Selected()) {
         gw->setColor(LINE_COLOR, GetSelColor());
     }
-    else if (!inode->IsFrozen() && !inode->Dependent()) {
+    else if (!node->IsFrozen() && !node->Dependent()) {
         gw->setColor(LINE_COLOR, mObjColor);
     }
     mIconMesh.render(gw, mtl, nullptr, COMP_ALL);
-    gw->setRndLimits(rlim);
+    gw->setRndLimits(limits);
     //-------------------------------------------------------------------------
     return 0;
 }
@@ -742,7 +769,7 @@ void MainObject::makeIcon() {
         return;
     }
 
-    float masterScale = static_cast<float>(GetMasterScale(UNITS_METERS));
+    auto masterScale = static_cast<float>(GetMasterScale(UNITS_METERS));
     if (masterScale != -1.0f) {
         masterScale = 1.0f / masterScale;
         size = size * masterScale;

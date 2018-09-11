@@ -96,10 +96,10 @@ public:
                 u->updateBlendSpinEnabling();
                 break;
             case MainObjAttr_LayerGroupLayer:
-                u->updateLyerGroupSpinEnabling();
+                u->updateLayerGroupSpinEnabling();
                 break;
             case MainObjAttr_LayerGroupDrapedLayer:
-                u->updateLyerGroupSpinEnabling();
+                u->updateLayerGroupSpinEnabling();
                 break;
             default: break;
         }
