@@ -31,13 +31,13 @@
 
 #pragma warning(push, 0)
 #include <max.h>
-#include <iparamb2.h>
-#include <iparamm2.h>
 #pragma warning(pop)
 
 #include "objects/MouseCallback.h"
 #include "models/bwc/stsu_data_stream.h"
 #include <vector>
+
+class IParamBlock2;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +47,7 @@ class LodObject : public HelperObject {
 public:
 
     LodObject();
-    virtual ~LodObject();
+    virtual ~LodObject() = default;
 
     void DeleteThis() override { delete this; }
 
@@ -57,8 +57,8 @@ public:
 
     //-------------------------------------------------------------------------
 
-    IOResult Load(ILoad * iload) override;
-    IOResult Save(ISave * isave) override;
+    IOResult Load(ILoad * load) override;
+    IOResult Save(ISave * save) override;
 
     //-------------------------------------------------------------------------
 
@@ -67,19 +67,19 @@ public:
 
     //-------------------------------------------------------------------------
 
-    ObjectState Eval(TimeValue /*t*/) override;
-    Object * ConvertToType(TimeValue t, Class_ID obtype) override;
-    int CanConvertToType(Class_ID obtype) override;
+    ObjectState Eval(TimeValue) override;
+    Object * ConvertToType(TimeValue t, Class_ID obType) override;
+    int CanConvertToType(Class_ID obType) override;
 
     //-------------------------------------------------------------------------
 
-    int Display(TimeValue t, INode * inode, ViewExp * vpt, int flags) override;
-    static void GetMat(TimeValue t, INode * inode, ViewExp * /*vpt*/, Matrix3 & tm);
-    int HitTest(TimeValue t, INode * inode, int type, int crossing, int flags, IPoint2 * p, ViewExp * vpt) override;
+    int Display(TimeValue t, INode * node, ViewExp * vpt, int flags) override;
+    static void GetMat(TimeValue t, INode * node, ViewExp *, Matrix3 & tm);
+    int HitTest(TimeValue t, INode * node, int type, int crossing, int flags, IPoint2 * p, ViewExp * vpt) override;
     int UsesWireColor() override;
 
-    void GetLocalBoundBox(TimeValue t, INode * inode, ViewExp * vpt, Box3 & box) override;
-    void GetWorldBoundBox(TimeValue t, INode * inode, ViewExp * vpt, Box3 & box) override;
+    void GetLocalBoundBox(TimeValue t, INode * node, ViewExp * vpt, Box3 & box) override;
+    void GetWorldBoundBox(TimeValue t, INode * node, ViewExp * vpt, Box3 & box) override;
 
     Animatable * SubAnim(int i) override;
     TSTR SubAnimName(int i) override;
@@ -109,7 +109,7 @@ public:
 
     int NumRefs() override;
     RefTargetHandle GetReference(int i) override;
-    void SetReference(int i, RefTargetHandle rtarg) override;
+    void SetReference(int i, RefTargetHandle target) override;
 
     //-------------------------------------------------------------------------
 

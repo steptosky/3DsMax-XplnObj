@@ -31,7 +31,6 @@
 
 #include "models/bwc/SerializationId.h"
 #include "LodObjParams.h"
-#include <vector>
 #include "common/Logger.h"
 #include "common/String.h"
 #include "classes-desc/ClassesDescriptions.h"
@@ -70,17 +69,20 @@ enum eLodObjDisplay : ParamID {
 class LodObjectPostLoadCallback : public PostLoadCallback {
 public:
 
-    virtual ~LodObjectPostLoadCallback() {}
+    explicit LodObjectPostLoadCallback(LodObject * obj)
+        : mObj(obj) { }
 
-    LodObject * pobj;
+    virtual ~LodObjectPostLoadCallback() = default;
 
-    explicit LodObjectPostLoadCallback(LodObject * p) {
-        pobj = p;
+    //-------------------------------------------------------------------------
+
+    void proc(ILoad *) override {
+        mObj->makeIcon();
     }
 
-    void proc(ILoad * /*iload*/) override {
-        pobj->makeIcon();
-    }
+    //-------------------------------------------------------------------------
+
+    LodObject * mObj = nullptr;
 };
 
 /**************************************************************************************************/
@@ -100,8 +102,6 @@ LodObject::LodObject() {
     mObjColor = Point3(1.0, 0.7, 0.4);
     makeIcon();
 }
-
-LodObject::~LodObject() {}
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
@@ -151,19 +151,19 @@ void LodObject::loadRawLod(sts_bwc::DataStream & stream) const {
         return;
     }
 
-    float mVals[2];
-    bool mIgnoreTransform;
+    float values[2];
+    bool ignoreTransform;
 
-    stream >> mVals[0];
-    stream >> mVals[1];
-    stream >> mIgnoreTransform;
+    stream >> values[0];
+    stream >> values[1];
+    stream >> ignoreTransform;
 
-    if (!mParamsPb->SetValue(PLodObjNear, mIp ? mIp->GetTime() : 0, mVals[0])) {
+    if (!mParamsPb->SetValue(PLodObjNear, mIp ? mIp->GetTime() : 0, values[0])) {
         DLError << "Can't save " << TOTEXT(PLodObjNear) << " value to the param block";
         return;
     }
 
-    if (!mParamsPb->SetValue(PLodObjFar, mIp ? mIp->GetTime() : 0, mVals[1])) {
+    if (!mParamsPb->SetValue(PLodObjFar, mIp ? mIp->GetTime() : 0, values[1])) {
         DLError << "Can't save " << TOTEXT(PLodObjFar) << " value to the param block";
     }
 }
@@ -188,27 +188,27 @@ void LodObject::load186(std::vector<char> & inByteArray) {
     }
 }
 
-IOResult LodObject::Load(ILoad * iload) {
+IOResult LodObject::Load(ILoad * load) {
     ULONG temp;
     uint32_t dataSize = 0;
     IOResult res;
     std::vector<char> ba;
-    while ((res = iload->OpenChunk()) == IO_OK) {
+    while ((res = load->OpenChunk()) == IO_OK) {
         if (res == IO_ERROR)
             return res;
-        switch (iload->CurChunkID()) {
+        switch (load->CurChunkID()) {
             case 0:
-                iload->Read(&dataSize, sizeof(dataSize), &temp);
+                load->Read(&dataSize, sizeof(dataSize), &temp);
                 break;
             case 1:
                 if (dataSize != 0) {
                     ba.resize(dataSize);
-                    iload->Read(ba.data(), dataSize, &temp);
+                    load->Read(ba.data(), dataSize, &temp);
                 }
                 break;
             default: break;
         }
-        iload->CloseChunk();
+        load->CloseChunk();
     }
     if (!ba.empty()) {
         try {
@@ -225,11 +225,11 @@ IOResult LodObject::Load(ILoad * iload) {
             DLError << msg;
         }
     }
-    iload->RegisterPostLoadCallback(new LodObjectPostLoadCallback(this));
+    load->RegisterPostLoadCallback(new LodObjectPostLoadCallback(this));
     return IO_OK;
 }
 
-IOResult LodObject::Save(ISave * /*isave*/) {
+IOResult LodObject::Save(ISave *) {
     return IO_OK;
 }
 
@@ -237,13 +237,13 @@ IOResult LodObject::Save(ISave * /*isave*/) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void LodObject::BeginEditParams(IObjParam * ip, ULONG flags, Animatable * prev) {
+void LodObject::BeginEditParams(IObjParam * ip, const ULONG flags, Animatable * prev) {
     mIp = ip;
     mEditOb = this;
     mDesc->BeginEditParams(ip, this, flags, prev);
 }
 
-void LodObject::EndEditParams(IObjParam * ip, ULONG flags, Animatable * next) {
+void LodObject::EndEditParams(IObjParam * ip, const ULONG flags, Animatable * next) {
     mEditOb = nullptr;
     mIp = nullptr;
     mDesc->EndEditParams(ip, this, flags, next);
@@ -254,16 +254,24 @@ void LodObject::EndEditParams(IObjParam * ip, ULONG flags, Animatable * next) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-ObjectState LodObject::Eval(TimeValue) { return ObjectState(this); }
-Object * LodObject::ConvertToType(TimeValue, Class_ID) { return nullptr; }
-int LodObject::CanConvertToType(Class_ID) { return FALSE; }
+ObjectState LodObject::Eval(TimeValue) {
+    return ObjectState(this);
+}
+
+Object * LodObject::ConvertToType(TimeValue, Class_ID) {
+    return nullptr;
+}
+
+int LodObject::CanConvertToType(Class_ID) {
+    return FALSE;
+}
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void LodObject::GetWorldBoundBox(TimeValue, INode * inode, ViewExp *, Box3 & box) {
-    Matrix3 tm = inode->GetObjectTM(GetCOREInterface()->GetTime());
+void LodObject::GetWorldBoundBox(TimeValue, INode * node, ViewExp *, Box3 & box) {
+    const Matrix3 tm = node->GetObjectTM(GetCOREInterface()->GetTime());
     box = mIconMesh.getBoundingBox() * tm;
 }
 
@@ -290,20 +298,22 @@ SClass_ID LodObject::SuperClassID() { return mDesc->SuperClassID(); }
 void LodObject::GetClassName(TSTR & s) { s = mDesc->ClassName(); }
 
 RefTargetHandle LodObject::Clone(RemapDir & remap) {
-    LodObject * newob = new LodObject();
-    newob->ReplaceReference(LodObjParamsOrder, mParamsPb->Clone(remap));
-    newob->ReplaceReference(LodObjDisplayOrder, mDisplayPb->Clone(remap));
-    BaseClone(this, newob, remap);
-    return (newob);
+    auto newObj = new LodObject();
+    newObj->ReplaceReference(LodObjParamsOrder, mParamsPb->Clone(remap));
+    newObj->ReplaceReference(LodObjDisplayOrder, mDisplayPb->Clone(remap));
+    BaseClone(this, newObj, remap);
+    return newObj;
 }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-Animatable * LodObject::SubAnim(int i) { return GetParamBlock(i); }
+Animatable * LodObject::SubAnim(const int i) {
+    return GetParamBlock(i);
+}
 
-TSTR LodObject::SubAnimName(int i) {
+TSTR LodObject::SubAnimName(const int i) {
     switch (i) {
         case LodObjParamsOrder: return _T("Parameters");
         case LodObjDisplayOrder: return _T("Display");
@@ -315,10 +325,15 @@ TSTR LodObject::SubAnimName(int i) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-int LodObject::GetParamBlockIndex(int id) { return id; }
-int LodObject::NumParamBlocks() { return 2; }
+int LodObject::GetParamBlockIndex(const int id) {
+    return id;
+}
 
-IParamBlock2 * LodObject::GetParamBlock(int i) {
+int LodObject::NumParamBlocks() {
+    return 2;
+}
+
+IParamBlock2 * LodObject::GetParamBlock(const int i) {
     switch (i) {
         case LodObjParamsOrder: return mParamsPb;
         case LodObjDisplayOrder: return mDisplayPb;
@@ -326,7 +341,7 @@ IParamBlock2 * LodObject::GetParamBlock(int i) {
     }
 }
 
-IParamBlock2 * LodObject::GetParamBlockByID(BlockID id) {
+IParamBlock2 * LodObject::GetParamBlockByID(const BlockID id) {
     switch (id) {
         case LodObjParams: return mParamsPb;
         case LodObjDisplay: return mDisplayPb;
@@ -338,9 +353,11 @@ IParamBlock2 * LodObject::GetParamBlockByID(BlockID id) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-int LodObject::NumRefs() { return 2; }
+int LodObject::NumRefs() {
+    return 2;
+}
 
-RefTargetHandle LodObject::GetReference(int i) {
+RefTargetHandle LodObject::GetReference(const int i) {
     switch (i) {
         case LodObjParamsOrder: return mParamsPb;
         case LodObjDisplayOrder: return mDisplayPb;
@@ -348,14 +365,14 @@ RefTargetHandle LodObject::GetReference(int i) {
     }
 }
 
-void LodObject::SetReference(int i, RefTargetHandle rtarg) {
+void LodObject::SetReference(const int i, const RefTargetHandle target) {
     switch (i) {
         case LodObjParamsOrder: {
-            mParamsPb = static_cast<IParamBlock2*>(rtarg);
+            mParamsPb = static_cast<IParamBlock2*>(target);
             break;
         }
         case LodObjDisplayOrder: {
-            mDisplayPb = static_cast<IParamBlock2*>(rtarg);
+            mDisplayPb = static_cast<IParamBlock2*>(target);
             break;
         }
         default: break;
@@ -371,7 +388,7 @@ RefResult LodObject::NotifyRefChanged(const Interval & /*changeInt*/, RefTargetH
                                       PartID & /*partID*/, RefMessage message, BOOL /*propagate*/) {
 #else
 RefResult LodObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /*hTarget*/,
-                                      PartID & /*partID*/, RefMessage message) {
+                                      PartID & /*partID*/, const RefMessage message) {
 #endif
     switch (message) {
         case REFMSG_CHANGE:
@@ -389,21 +406,21 @@ RefResult LodObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /*
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void LodObject::GetMat(TimeValue t, INode * inode, ViewExp *, Matrix3 & tm) {
-    tm = inode->GetObjectTM(t);
+void LodObject::GetMat(const TimeValue t, INode * node, ViewExp *, Matrix3 & tm) {
+    tm = node->GetObjectTM(t);
     tm.NoScale();
 }
 
-int LodObject::HitTest(TimeValue t, INode * inode, int type, int crossing, int flags, IPoint2 * p, ViewExp * vpt) {
+int LodObject::HitTest(const TimeValue t, INode * node, const int type, const int crossing, const int flags, IPoint2 * p, ViewExp * vpt) {
     HitRegion hitRegion;
     DWORD savedLimits;
-    int res = 0;
+    const int res = 0;
     Matrix3 m;
     GraphicsWindow * gw = vpt->getGW();
     Material * mtl = gw->getMaterial();
     MakeHitRegion(hitRegion, type, crossing, 4, p);
     gw->setRndLimits(((savedLimits = gw->getRndLimits()) | GW_PICK) & ~GW_ILLUM);
-    GetMat(t, inode, vpt, m);
+    GetMat(t, node, vpt, m);
     gw->setTransform(m);
     // if we get a hit on the mIconMesh, we're done
     gw->clearHitCode();
@@ -417,30 +434,32 @@ int LodObject::HitTest(TimeValue t, INode * inode, int type, int crossing, int f
 
 //-------------------------------------------------------------------------
 
-int LodObject::UsesWireColor() { return TRUE; }
+int LodObject::UsesWireColor() {
+    return TRUE;
+}
 
 //-------------------------------------------------------------------------
 
-int LodObject::Display(TimeValue t, INode * inode, ViewExp * vpt, int /*flags*/) {
+int LodObject::Display(const TimeValue t, INode * node, ViewExp * vpt, int /*flags*/) {
     GraphicsWindow * gw = vpt->getGW();
     Material * mtl = gw->getMaterial();
-    Color color(inode->GetWireColor());
+    const Color color(node->GetWireColor());
     mObjColor.x = color.r;
     mObjColor.y = color.g;
     mObjColor.z = color.b;
-    gw->setTransform(inode->GetNodeTM(t));
+    gw->setTransform(node->GetNodeTM(t));
     //-------------------------------------------------------------------------
-    DWORD rlim = gw->getRndLimits();
-    gw->setRndLimits(GW_WIREFRAME | GW_EDGES_ONLY | GW_BACKCULL | (rlim & GW_Z_BUFFER));
+    const DWORD limits = gw->getRndLimits();
+    gw->setRndLimits(GW_WIREFRAME | GW_EDGES_ONLY | GW_BACKCULL | (limits & GW_Z_BUFFER));
 
-    if (inode->Selected()) {
+    if (node->Selected()) {
         gw->setColor(LINE_COLOR, GetSelColor());
     }
-    else if (!inode->IsFrozen() && !inode->Dependent()) {
+    else if (!node->IsFrozen() && !node->Dependent()) {
         gw->setColor(LINE_COLOR, mObjColor);
     }
     mIconMesh.render(gw, mtl, nullptr, COMP_ALL);
-    gw->setRndLimits(rlim);
+    gw->setRndLimits(limits);
     //-------------------------------------------------------------------------
     return 0;
 }
@@ -458,7 +477,7 @@ void LodObject::makeIcon() {
         return;
     }
 
-    float masterScale = static_cast<float>(GetMasterScale(UNITS_METERS));
+    auto masterScale = static_cast<float>(GetMasterScale(UNITS_METERS));
     if (masterScale != -1.0f) {
         masterScale = 1.0f / masterScale;
         size = size * masterScale;
@@ -475,4 +494,3 @@ void LodObject::makeIcon() {
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
-
