@@ -462,7 +462,7 @@ void LodObject::makeIcon() {
             LError << "The icon scale is too small";
         }
     }
-    // todo make icon with the Mesh2Cpp
+
     mLastIconScale = size;
     LodIcon::fillMesh(mIconMesh, size);
 }
