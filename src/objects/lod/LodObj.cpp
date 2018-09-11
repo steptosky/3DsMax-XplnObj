@@ -39,30 +39,6 @@
 #include "LodIcon-gen.h"
 
 /**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-#if MAX_VERSION_MAJOR < 15
-#	define p_end end
-#endif
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
-
-#define PARAMS_PB_VERSION 1
-#define DISPLAY_PB_VERSION 1
-
-enum {
-    LodObjParamsOrder = LodObjParams,
-    LodObjDisplayOrder = LodObjDisplay,
-};
-
-enum eLodObjDisplay : ParamID {
-    PLodObjIconScale,
-};
-
-/**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
@@ -299,8 +275,8 @@ void LodObject::GetClassName(TSTR & s) { s = mDesc->ClassName(); }
 
 RefTargetHandle LodObject::Clone(RemapDir & remap) {
     auto newObj = new LodObject();
-    newObj->ReplaceReference(LodObjParamsOrder, mParamsPb->Clone(remap));
-    newObj->ReplaceReference(LodObjDisplayOrder, mDisplayPb->Clone(remap));
+    newObj->ReplaceReference(LodObjParamBlocks::PbOrderParams, mParamsPb->Clone(remap));
+    newObj->ReplaceReference(LodObjParamBlocks::PbOrderDisplay, mDisplayPb->Clone(remap));
     BaseClone(this, newObj, remap);
     return newObj;
 }
@@ -315,8 +291,8 @@ Animatable * LodObject::SubAnim(const int i) {
 
 TSTR LodObject::SubAnimName(const int i) {
     switch (i) {
-        case LodObjParamsOrder: return _T("Parameters");
-        case LodObjDisplayOrder: return _T("Display");
+        case LodObjParamBlocks::PbOrderParams: return _T("Parameters");
+        case LodObjParamBlocks::PbOrderDisplay: return _T("Display");
         default: return _T("");
     }
 }
@@ -335,8 +311,8 @@ int LodObject::NumParamBlocks() {
 
 IParamBlock2 * LodObject::GetParamBlock(const int i) {
     switch (i) {
-        case LodObjParamsOrder: return mParamsPb;
-        case LodObjDisplayOrder: return mDisplayPb;
+        case LodObjParamBlocks::PbOrderParams: return mParamsPb;
+        case LodObjParamBlocks::PbOrderDisplay: return mDisplayPb;
         default: return nullptr;
     }
 }
@@ -359,19 +335,19 @@ int LodObject::NumRefs() {
 
 RefTargetHandle LodObject::GetReference(const int i) {
     switch (i) {
-        case LodObjParamsOrder: return mParamsPb;
-        case LodObjDisplayOrder: return mDisplayPb;
+        case LodObjParamBlocks::PbOrderParams: return mParamsPb;
+        case LodObjParamBlocks::PbOrderDisplay: return mDisplayPb;
         default: return nullptr;
     }
 }
 
 void LodObject::SetReference(const int i, const RefTargetHandle target) {
     switch (i) {
-        case LodObjParamsOrder: {
+        case LodObjParamBlocks::PbOrderParams: {
             mParamsPb = static_cast<IParamBlock2*>(target);
             break;
         }
-        case LodObjDisplayOrder: {
+        case LodObjParamBlocks::PbOrderDisplay: {
             mDisplayPb = static_cast<IParamBlock2*>(target);
             break;
         }

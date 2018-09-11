@@ -43,18 +43,22 @@
  */
 enum eLodObjParamsBlocks : BlockID {
     LodObjParams = 0,
+    //! For internal using
     LodObjDisplay,
-    //!< For internal using
 };
 
 /*!
  * \details Values of the \link eLodObjParamsBlocks::LodObjParams \endlink parameters block.
  */
 enum eLodParams : ParamID {
+    //! Float
     PLodObjNear,
-    //!< Float
+    //! Float
     PLodObjFar,
-    //!< Float
+};
+
+enum eLodObjDisplayParams : ParamID {
+    PLodObjIconScale,
 };
 
 /**************************************************************************************************/

@@ -33,6 +33,8 @@
 #include <iparamb2.h>
 #pragma warning(pop)
 
+#include "LodObjParams.h"
+
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
@@ -41,6 +43,16 @@ class LodObjParamBlocks {
     LodObjParamBlocks() = default;
     virtual ~LodObjParamBlocks() = default;
 public:
+
+    enum eVersions {
+        PbVersionParams = 1,
+        PbVersionDisplay = 1,
+    };
+
+    enum eOrder {
+        PbOrderParams = eLodObjParamsBlocks::LodObjParams,
+        PbOrderDisplay = eLodObjParamsBlocks::LodObjDisplay,
+    };
 
     static ParamBlockDesc2 mParams;
     static ParamBlockDesc2 mDisplay;
