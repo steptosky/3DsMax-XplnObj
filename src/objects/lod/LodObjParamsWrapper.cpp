@@ -53,6 +53,13 @@ LodObjParamsWrapper::LodObjParamsWrapper(INode * node, const TimeValue t, const 
     DbgAssert(mPb2);
 }
 
+LodObjParamsWrapper::LodObjParamsWrapper(IParamBlock2 * paramBlock, const TimeValue t, const Interval & interval)
+    : mInterval(interval),
+      mT(t),
+      mPb2(paramBlock) {
+    DbgAssert(mPb2);
+}
+
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/

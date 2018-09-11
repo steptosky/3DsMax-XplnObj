@@ -38,11 +38,14 @@
 #include "objects/MouseCallback.h"
 #include "models/bwc/stsu_data_stream.h"
 
+class MainObjectPostLoadCallback;
+
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
 class MainObject : public HelperObject {
+    friend MainObjectPostLoadCallback;
 public:
 
     MainObject();

@@ -46,6 +46,7 @@ class LodObjParamsWrapper {
 public:
 
     LodObjParamsWrapper(INode * node, TimeValue t, const Interval & interval);
+    LodObjParamsWrapper(IParamBlock2 * paramBlock, TimeValue t, const Interval & interval);
     ~LodObjParamsWrapper() = default;
 
     //-------------------------------------------------------------------------

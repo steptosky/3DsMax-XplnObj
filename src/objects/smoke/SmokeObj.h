@@ -36,11 +36,14 @@
 
 #include "objects/MouseCallback.h"
 
+class SmokeObjectPostLoadCallback;
+
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
 class SmokeObject : public HelperObject {
+    friend SmokeObjectPostLoadCallback;
 public:
 
     SmokeObject();

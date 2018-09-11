@@ -60,6 +60,9 @@ public:
 
     void proc(ILoad *) override {
         mObj->makeIcon();
+        MainObjParamBlocks::postLoadAttr(mObj->mAttrParamsPb);
+        MainObjParamBlocks::postLoadExport(mObj->mExpPb);
+        MainObjParamBlocks::postLoadDisplay(mObj->mDisplayPb);
         delete this;
     }
 

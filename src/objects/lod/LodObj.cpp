@@ -54,6 +54,9 @@ public:
 
     void proc(ILoad *) override {
         mObj->makeIcon();
+        LodObjParamBlocks::postLoadParams(mObj->mParamsPb);
+        LodObjParamBlocks::postLoadDisplay(mObj->mDisplayPb);
+        delete this;
     }
 
     //-------------------------------------------------------------------------

@@ -35,6 +35,8 @@
 
 #include "LodObjParams.h"
 
+class INode;
+
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
@@ -45,7 +47,7 @@ class LodObjParamBlocks {
 public:
 
     enum eVersions {
-        PbVersionParams = 1,
+        PbVersionParams = 2,
         PbVersionDisplay = 1,
     };
 
@@ -56,6 +58,9 @@ public:
 
     static ParamBlockDesc2 mParams;
     static ParamBlockDesc2 mDisplay;
+
+    static void postLoadParams(IParamBlock2 * paramBlock);
+    static void postLoadDisplay(IParamBlock2 * paramBlock);
 
 };
 

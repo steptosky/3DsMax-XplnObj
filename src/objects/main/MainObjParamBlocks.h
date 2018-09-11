@@ -69,6 +69,10 @@ public:
     static ParamBlockDesc2 mExport;
     static ParamBlockDesc2 mDisplay;
 
+    static void postLoadAttr(IParamBlock2 * paramBlock);
+    static void postLoadExport(IParamBlock2 * paramBlock);
+    static void postLoadDisplay(IParamBlock2 * paramBlock);
+
 };
 
 /**************************************************************************************************/

@@ -33,6 +33,7 @@
 #include "objects/ScaleDim.h"
 #include "classes-desc/ClassesDescriptions.h"
 #include "LodObj.h"
+#include "LodObjParamsWrapper.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,6 +65,10 @@ public:
     }
 };
 
+/**************************************************************************************************/
+//////////////////////////////////////////* Static area *///////////////////////////////////////////
+/**************************************************************************************************/
+
 static LodObjIconSizeCallback gLodIconSizeCallback;
 
 /**************************************************************************************************/
@@ -81,13 +86,13 @@ ParamBlockDesc2 LodObjParamBlocks::mParams(LodObjParams, _T("X-Lod"), 0, Classes
                                            PLodObjNear, _T("Near"), TYPE_FLOAT, 0, IDS_NEAR,
                                            p_default, 0.0f,
                                            p_range, 0.0f, 999999999.9f,
-                                           p_ui, TYPE_SPINNER, EDITTYPE_POS_UNIVERSE, SPN_NEAR_EDIT, SPN_NEAR, 1.0f,
+                                           p_ui, TYPE_SPINNER, EDITTYPE_POS_FLOAT, SPN_NEAR_EDIT, SPN_NEAR, 1.0f,
                                            p_end,
                                            //-------------------------------------------------------------------------
                                            PLodObjFar, _T("Far"), TYPE_FLOAT, 0, IDS_FAR,
                                            p_default, 0.0f,
                                            p_range, 0.0f, 999999999.9f,
-                                           p_ui, TYPE_SPINNER, EDITTYPE_POS_UNIVERSE, SPN_FAR_EDIT, SPN_FAR, 1.0f,
+                                           p_ui, TYPE_SPINNER, EDITTYPE_POS_FLOAT, SPN_FAR_EDIT, SPN_FAR, 1.0f,
                                            p_end,
                                            //-------------------------------------------------------------------------
                                            p_end);
@@ -113,6 +118,33 @@ ParamBlockDesc2 LodObjParamBlocks::mDisplay(LodObjDisplay, _T("X-Lod-Display"), 
                                             p_end,
                                             //-------------------------------------------------------------------------
                                             p_end);
+
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+void LodObjParamBlocks::postLoadParams(IParamBlock2 * paramBlock) {
+    DbgAssert(paramBlock);
+    DbgAssert(paramBlock->ID() == LodObjParams);
+    const auto postLoadInfo = dynamic_cast<IParamBlock2PostLoadInfo*>(paramBlock->GetInterface(IPARAMBLOCK2POSTLOADINFO_ID));
+    if (postLoadInfo) {
+        if (postLoadInfo->GetVersion() < PbVersionParams) {
+            LInfo << "Updating LOD's parameters param block " << postLoadInfo->GetVersion() << "->" << PbVersionParams;
+            //------------------------------------------------
+            // updating from system units to abstract float units.            
+            //------------------------------------------------
+        }
+    }
+    else {
+        LError << "Invalid cast";
+    }
+}
+
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+void LodObjParamBlocks::postLoadDisplay(IParamBlock2 * /*paramBlock*/) {}
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

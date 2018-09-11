@@ -51,6 +51,8 @@ public:
 
     void proc(ILoad *) override {
         mObj->makeIcon();
+        SmokeObjParamBlocks::postLoadParams(mObj->mParamsPb);
+        SmokeObjParamBlocks::postLoadDisplay(mObj->mDisplayPb);
         delete this;
     }
 
