@@ -1,10 +1,11 @@
 
 The 3DsMax X-Plane Obj Exporter/Importer change-log.
 ===============================================================================
-Next
+2.4.0-beta (12.09.2018)
 
 - Added: Supporting for 3ds max 2018 and 2019.
-- Fixed: LODs' values exporting.
+- Improved: Some GUI elements/windows/dialogs.
+- Fixed: LODs' values exporting. It isn't scaled anymore if you use system units other than 'meters'.
 
 KNOWN ISSUES:
     New Plug-in's dock window and menu aren't good adjusted to be used with the new 3Ds Max's workspaces conception.

@@ -22,10 +22,10 @@ Importing is still under developing and doesn't work properly!
   The QT isn't used via conan so you have to install it manually.  
     - `3Ds Max 2018` - requires [QT [5.6.2]](https://www1.qt.io/offline-installers/?hsLang=en)
     - `3Ds Max 2019` - requires [QT [5.6.3]](https://www1.qt.io/offline-installers/?hsLang=en)
-      (is binary compatible with [QT 5.6.2])
+      (which is binary compatible with [QT 5.6.2])
 
 ## Memo for the library developers
-- [release-checklist](doc/release-checklist.md) see this file when you are making the release.
+- [release-checklist](doc/release-checklist.md) see this file when you are making a release.
 - [change log](doc/changelog.txt) this file has to be filled during the release process and contains information about changes.
 
 ## Developing and Building
@@ -44,7 +44,7 @@ Importing is still under developing and doesn't work properly!
 ```
 - If you are going to compile the plugin for **3Ds Max version greater than 2017** you have to install certain versions of QT.
   See `dependencies` section above.  
-  Then you have to specify environment variables with path to QT something like this `W:\Qt\Qt5.6.3\5.6.3\msvc2017_64`:
+  Then you have to specify environment variables with path to QT something like this `C:\Qt\Qt5.6.3\5.6.3\msvc2017_64`:
     - `3DSMAX_2018_QT`=path to certain QT version where `bin` and `include` folders are located.
     - `3DSMAX_2019_QT`=path to certain QT version where `bin` and `include` folders are located.
 - If you are going to develop you may generate the `Visual Studio 2017` project with the file `msvc-2017.bat` in the root repository folder.  
@@ -61,7 +61,8 @@ Importing is still under developing and doesn't work properly!
   - You have to build and install [github-release](https://github.com/aktau/github-release). And make it accessible via your `PATH` environment variable.
   - Adjust `REPOSITORY_NAME` and `REPOSITORY_USER_NAME` variables in the file [StsUploadToGithub.cmake](cmake/StsUploadToGithub.cmake) if necessary.
   - Set the environment variable `GITHUB_TOKEN` - your access token from github account.
-  - Run `ci/upload-to-github.bat` the release targets of the project must be built and installed for all supported 3DsMax versions.
+  - Run `ci/upload-to-github.bat` the release targets of the project must be built and installed for all supported 3DsMax versions.  
+    Release tag must not exist in github repository otherwise the script stops with the error that the tag already exists.
 
 #### Cmake variables
 | Variables | Type | Description |
@@ -69,5 +70,5 @@ Importing is still under developing and doesn't work properly!
 | **ADD_3DMAXS_EXEC** | _ON/OFF_  | If enabled then the default 3DsMaxs' path to `3dsmax.exe` will be added as the command for debugging. It is adjusted to be used with the `Visual Studio 2017`, it may not work with other ones. |
 
 ## Copyright
-Copyright (c) 2017, StepToSky team. All rights reserved.  
+Copyright (c) 2018, StepToSky team. All rights reserved.  
 [www.steptosky.com](http://www.steptosky.com/)
