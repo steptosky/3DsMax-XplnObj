@@ -21,6 +21,9 @@ cd %dir%
 call cmake -G "Visual Studio 15 Win64" ../ ^
         -DCMAKE_INSTALL_PREFIX=../output ^
         -DADD_3DMAXS_EXEC=ON
+
+:: Read information inside this file what this call is for.
+call cmake -DBINARY_DIR="%cd%" -P ../cmake/StsFixQtLibrariesType.cmake
 ::==========================================================
 :: Building
 :: Keep it commented if you want to generate VS project only

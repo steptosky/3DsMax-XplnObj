@@ -29,80 +29,39 @@
 
 #include "LodObj.h"
 
-#include "resource/resource.h"
 #include "models/bwc/SerializationId.h"
 #include "LodObjParams.h"
-#include <vector>
-#include "objects/ScaleDim.h"
 #include "common/Logger.h"
 #include "common/String.h"
 #include "classes-desc/ClassesDescriptions.h"
 #include "additional/math/Compare.h"
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-#if MAX_VERSION_MAJOR < 15
-#	define p_end end
-#endif
+#include "LodObjParamBlocks.h"
+#include "LodIcon-gen.h"
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
-
-#define PARAMS_PB_VERSION 1
-#define DISPLAY_PB_VERSION 1
-
-enum {
-    LodObjParamsOrder = LodObjParams,
-    LodObjDisplayOrder = LodObjDisplay,
-};
-
-enum eLodObjDisplay : ParamID {
-    PLodObjIconScale,
-};
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
-
-class LodObjIconeSizeCallback : public PBAccessor {
-public:
-
-    virtual ~LodObjIconeSizeCallback() {}
-
-    void Set(PB2Value & v, ReferenceMaker * owner, ParamID id, int tabIndex, TimeValue t) override {
-        LodObject * u = dynamic_cast<LodObject*>(owner);
-        DbgAssert(u);
-        switch (id) {
-            case PLodObjIconScale:
-                u->makeIcon();
-                break;
-            default: break;
-        }
-        PBAccessor::Set(v, owner, id, tabIndex, t);
-    }
-};
-
-static LodObjIconeSizeCallback gLodIconeSizeCallback;
-
-//-------------------------------------------------------------------------
 
 class LodObjectPostLoadCallback : public PostLoadCallback {
 public:
 
-    virtual ~LodObjectPostLoadCallback() {}
+    explicit LodObjectPostLoadCallback(LodObject * obj)
+        : mObj(obj) { }
 
-    LodObject * pobj;
+    virtual ~LodObjectPostLoadCallback() = default;
 
-    explicit LodObjectPostLoadCallback(LodObject * p) {
-        pobj = p;
+    //-------------------------------------------------------------------------
+
+    void proc(ILoad *) override {
+        mObj->makeIcon();
+        LodObjParamBlocks::postLoadParams(mObj->mParamsPb);
+        LodObjParamBlocks::postLoadDisplay(mObj->mDisplayPb);
+        delete this;
     }
 
-    void proc(ILoad * /*iload*/) override {
-        pobj->makeIcon();
-    }
+    //-------------------------------------------------------------------------
+
+    LodObject * mObj = nullptr;
 };
 
 /**************************************************************************************************/
@@ -111,52 +70,6 @@ public:
 
 MouseCallback LodObject::mMouseCallback;
 LodObject * LodObject::mEditOb = nullptr;
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
-
-static ParamBlockDesc2 gLodParamsPb(LodObjParams, _T("X-Lod"), 0, ClassesDescriptions::lodObj(), P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
-                                    PARAMS_PB_VERSION, LodObjParamsOrder,
-                                    //-------------------------------------------------------------------------
-                                    // Rollouts
-                                    ROLL_LODOBJ, IDS_ROLL_LOD, 0, 0, NULL,
-                                    //-------------------------------------------------------------------------
-                                    // Params									
-                                    PLodObjNear, _T("Near"), TYPE_FLOAT, 0, IDS_NEAR,
-                                    p_default, 0.0f,
-                                    p_range, 0.0f, 999999999.9f,
-                                    p_ui, TYPE_SPINNER, EDITTYPE_POS_UNIVERSE, SPN_NEAR_EDIT, SPN_NEAR, 1.0f,
-                                    p_end,
-                                    //-------------------------------------------------------------------------
-                                    PLodObjFar, _T("Far"), TYPE_FLOAT, 0, IDS_FAR,
-                                    p_default, 0.0f,
-                                    p_range, 0.0f, 999999999.9f,
-                                    p_ui, TYPE_SPINNER, EDITTYPE_POS_UNIVERSE, SPN_FAR_EDIT, SPN_FAR, 1.0f,
-                                    p_end,
-                                    //-------------------------------------------------------------------------
-                                    p_end);
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
-
-static ParamBlockDesc2 gLodDisplayPb(LodObjDisplay, _T("X-Lod-Display"), 0, ClassesDescriptions::lodObj(), P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
-                                     DISPLAY_PB_VERSION, LodObjDisplayOrder,
-                                     //-------------------------------------------------------------------------
-                                     // Rollouts
-                                     ROLL_LODOBJ_DISPLAY, IDS_ROLL_LOD_DISPLAY, 0, APPENDROLL_CLOSED, NULL,
-                                     //-------------------------------------------------------------------------
-                                     // Display									
-                                     PLodObjIconScale, _T("IconScale"), TYPE_FLOAT, 0, IDS_SCALE,
-                                     p_default, 1.0f,
-                                     p_range, 0.01f, 1000.0f,
-                                     p_accessor, &gLodIconeSizeCallback,
-                                     p_dim, &gScaleDim,
-                                     p_ui, TYPE_SPINNER, EDITTYPE_POS_FLOAT, IDC_SCALE_EDIT, IDC_SCALE_SPIN, SPIN_AUTOSCALE,
-                                     p_end,
-                                     //-------------------------------------------------------------------------
-                                     p_end);
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
@@ -168,8 +81,6 @@ LodObject::LodObject() {
     mObjColor = Point3(1.0, 0.7, 0.4);
     makeIcon();
 }
-
-LodObject::~LodObject() {}
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
@@ -219,19 +130,19 @@ void LodObject::loadRawLod(sts_bwc::DataStream & stream) const {
         return;
     }
 
-    float mVals[2];
-    bool mIgnoreTransform;
+    float values[2];
+    bool ignoreTransform;
 
-    stream >> mVals[0];
-    stream >> mVals[1];
-    stream >> mIgnoreTransform;
+    stream >> values[0];
+    stream >> values[1];
+    stream >> ignoreTransform;
 
-    if (!mParamsPb->SetValue(PLodObjNear, mIp ? mIp->GetTime() : 0, mVals[0])) {
+    if (!mParamsPb->SetValue(PLodObjNear, mIp ? mIp->GetTime() : 0, values[0])) {
         DLError << "Can't save " << TOTEXT(PLodObjNear) << " value to the param block";
         return;
     }
 
-    if (!mParamsPb->SetValue(PLodObjFar, mIp ? mIp->GetTime() : 0, mVals[1])) {
+    if (!mParamsPb->SetValue(PLodObjFar, mIp ? mIp->GetTime() : 0, values[1])) {
         DLError << "Can't save " << TOTEXT(PLodObjFar) << " value to the param block";
     }
 }
@@ -256,27 +167,27 @@ void LodObject::load186(std::vector<char> & inByteArray) {
     }
 }
 
-IOResult LodObject::Load(ILoad * iload) {
+IOResult LodObject::Load(ILoad * load) {
     ULONG temp;
     uint32_t dataSize = 0;
     IOResult res;
     std::vector<char> ba;
-    while ((res = iload->OpenChunk()) == IO_OK) {
+    while ((res = load->OpenChunk()) == IO_OK) {
         if (res == IO_ERROR)
             return res;
-        switch (iload->CurChunkID()) {
+        switch (load->CurChunkID()) {
             case 0:
-                iload->Read(&dataSize, sizeof(dataSize), &temp);
+                load->Read(&dataSize, sizeof(dataSize), &temp);
                 break;
             case 1:
                 if (dataSize != 0) {
                     ba.resize(dataSize);
-                    iload->Read(ba.data(), dataSize, &temp);
+                    load->Read(ba.data(), dataSize, &temp);
                 }
                 break;
             default: break;
         }
-        iload->CloseChunk();
+        load->CloseChunk();
     }
     if (!ba.empty()) {
         try {
@@ -293,11 +204,11 @@ IOResult LodObject::Load(ILoad * iload) {
             DLError << msg;
         }
     }
-    iload->RegisterPostLoadCallback(new LodObjectPostLoadCallback(this));
+    load->RegisterPostLoadCallback(new LodObjectPostLoadCallback(this));
     return IO_OK;
 }
 
-IOResult LodObject::Save(ISave * /*isave*/) {
+IOResult LodObject::Save(ISave *) {
     return IO_OK;
 }
 
@@ -305,13 +216,13 @@ IOResult LodObject::Save(ISave * /*isave*/) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void LodObject::BeginEditParams(IObjParam * ip, ULONG flags, Animatable * prev) {
+void LodObject::BeginEditParams(IObjParam * ip, const ULONG flags, Animatable * prev) {
     mIp = ip;
     mEditOb = this;
     mDesc->BeginEditParams(ip, this, flags, prev);
 }
 
-void LodObject::EndEditParams(IObjParam * ip, ULONG flags, Animatable * next) {
+void LodObject::EndEditParams(IObjParam * ip, const ULONG flags, Animatable * next) {
     mEditOb = nullptr;
     mIp = nullptr;
     mDesc->EndEditParams(ip, this, flags, next);
@@ -322,16 +233,24 @@ void LodObject::EndEditParams(IObjParam * ip, ULONG flags, Animatable * next) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-ObjectState LodObject::Eval(TimeValue) { return ObjectState(this); }
-Object * LodObject::ConvertToType(TimeValue, Class_ID) { return nullptr; }
-int LodObject::CanConvertToType(Class_ID) { return FALSE; }
+ObjectState LodObject::Eval(TimeValue) {
+    return ObjectState(this);
+}
+
+Object * LodObject::ConvertToType(TimeValue, Class_ID) {
+    return nullptr;
+}
+
+int LodObject::CanConvertToType(Class_ID) {
+    return FALSE;
+}
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void LodObject::GetWorldBoundBox(TimeValue, INode * inode, ViewExp *, Box3 & box) {
-    Matrix3 tm = inode->GetObjectTM(GetCOREInterface()->GetTime());
+void LodObject::GetWorldBoundBox(TimeValue, INode * node, ViewExp *, Box3 & box) {
+    const Matrix3 tm = node->GetObjectTM(GetCOREInterface()->GetTime());
     box = mIconMesh.getBoundingBox() * tm;
 }
 
@@ -358,23 +277,25 @@ SClass_ID LodObject::SuperClassID() { return mDesc->SuperClassID(); }
 void LodObject::GetClassName(TSTR & s) { s = mDesc->ClassName(); }
 
 RefTargetHandle LodObject::Clone(RemapDir & remap) {
-    LodObject * newob = new LodObject();
-    newob->ReplaceReference(LodObjParamsOrder, mParamsPb->Clone(remap));
-    newob->ReplaceReference(LodObjDisplayOrder, mDisplayPb->Clone(remap));
-    BaseClone(this, newob, remap);
-    return (newob);
+    auto newObj = new LodObject();
+    newObj->ReplaceReference(LodObjParamBlocks::PbOrderParams, mParamsPb->Clone(remap));
+    newObj->ReplaceReference(LodObjParamBlocks::PbOrderDisplay, mDisplayPb->Clone(remap));
+    BaseClone(this, newObj, remap);
+    return newObj;
 }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-Animatable * LodObject::SubAnim(int i) { return GetParamBlock(i); }
+Animatable * LodObject::SubAnim(const int i) {
+    return GetParamBlock(i);
+}
 
-TSTR LodObject::SubAnimName(int i) {
+TSTR LodObject::SubAnimName(const int i) {
     switch (i) {
-        case LodObjParamsOrder: return _T("Parameters");
-        case LodObjDisplayOrder: return _T("Display");
+        case LodObjParamBlocks::PbOrderParams: return _T("Parameters");
+        case LodObjParamBlocks::PbOrderDisplay: return _T("Display");
         default: return _T("");
     }
 }
@@ -383,18 +304,23 @@ TSTR LodObject::SubAnimName(int i) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-int LodObject::GetParamBlockIndex(int id) { return id; }
-int LodObject::NumParamBlocks() { return 2; }
+int LodObject::GetParamBlockIndex(const int id) {
+    return id;
+}
 
-IParamBlock2 * LodObject::GetParamBlock(int i) {
+int LodObject::NumParamBlocks() {
+    return 2;
+}
+
+IParamBlock2 * LodObject::GetParamBlock(const int i) {
     switch (i) {
-        case LodObjParamsOrder: return mParamsPb;
-        case LodObjDisplayOrder: return mDisplayPb;
+        case LodObjParamBlocks::PbOrderParams: return mParamsPb;
+        case LodObjParamBlocks::PbOrderDisplay: return mDisplayPb;
         default: return nullptr;
     }
 }
 
-IParamBlock2 * LodObject::GetParamBlockByID(BlockID id) {
+IParamBlock2 * LodObject::GetParamBlockByID(const BlockID id) {
     switch (id) {
         case LodObjParams: return mParamsPb;
         case LodObjDisplay: return mDisplayPb;
@@ -406,24 +332,26 @@ IParamBlock2 * LodObject::GetParamBlockByID(BlockID id) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-int LodObject::NumRefs() { return 2; }
+int LodObject::NumRefs() {
+    return 2;
+}
 
-RefTargetHandle LodObject::GetReference(int i) {
+RefTargetHandle LodObject::GetReference(const int i) {
     switch (i) {
-        case LodObjParamsOrder: return mParamsPb;
-        case LodObjDisplayOrder: return mDisplayPb;
+        case LodObjParamBlocks::PbOrderParams: return mParamsPb;
+        case LodObjParamBlocks::PbOrderDisplay: return mDisplayPb;
         default: return nullptr;
     }
 }
 
-void LodObject::SetReference(int i, RefTargetHandle rtarg) {
+void LodObject::SetReference(const int i, const RefTargetHandle target) {
     switch (i) {
-        case LodObjParamsOrder: {
-            mParamsPb = static_cast<IParamBlock2*>(rtarg);
+        case LodObjParamBlocks::PbOrderParams: {
+            mParamsPb = static_cast<IParamBlock2*>(target);
             break;
         }
-        case LodObjDisplayOrder: {
-            mDisplayPb = static_cast<IParamBlock2*>(rtarg);
+        case LodObjParamBlocks::PbOrderDisplay: {
+            mDisplayPb = static_cast<IParamBlock2*>(target);
             break;
         }
         default: break;
@@ -439,13 +367,13 @@ RefResult LodObject::NotifyRefChanged(const Interval & /*changeInt*/, RefTargetH
                                       PartID & /*partID*/, RefMessage message, BOOL /*propagate*/) {
 #else
 RefResult LodObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /*hTarget*/,
-									PartID & /*partID*/, RefMessage message) {
+                                      PartID & /*partID*/, const RefMessage message) {
 #endif
     switch (message) {
         case REFMSG_CHANGE:
             if (mEditOb == this) {
-                gLodParamsPb.InvalidateUI(mParamsPb->LastNotifyParamID());
-                gLodDisplayPb.InvalidateUI(mDisplayPb->LastNotifyParamID());
+                LodObjParamBlocks::mParams.InvalidateUI(mParamsPb->LastNotifyParamID());
+                LodObjParamBlocks::mDisplay.InvalidateUI(mDisplayPb->LastNotifyParamID());
             }
             break;
         default: break;
@@ -457,21 +385,21 @@ RefResult LodObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /*
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void LodObject::GetMat(TimeValue t, INode * inode, ViewExp *, Matrix3 & tm) {
-    tm = inode->GetObjectTM(t);
+void LodObject::GetMat(const TimeValue t, INode * node, ViewExp *, Matrix3 & tm) {
+    tm = node->GetObjectTM(t);
     tm.NoScale();
 }
 
-int LodObject::HitTest(TimeValue t, INode * inode, int type, int crossing, int flags, IPoint2 * p, ViewExp * vpt) {
+int LodObject::HitTest(const TimeValue t, INode * node, const int type, const int crossing, const int flags, IPoint2 * p, ViewExp * vpt) {
     HitRegion hitRegion;
     DWORD savedLimits;
-    int res = 0;
+    const int res = 0;
     Matrix3 m;
     GraphicsWindow * gw = vpt->getGW();
     Material * mtl = gw->getMaterial();
     MakeHitRegion(hitRegion, type, crossing, 4, p);
     gw->setRndLimits(((savedLimits = gw->getRndLimits()) | GW_PICK) & ~GW_ILLUM);
-    GetMat(t, inode, vpt, m);
+    GetMat(t, node, vpt, m);
     gw->setTransform(m);
     // if we get a hit on the mIconMesh, we're done
     gw->clearHitCode();
@@ -485,30 +413,32 @@ int LodObject::HitTest(TimeValue t, INode * inode, int type, int crossing, int f
 
 //-------------------------------------------------------------------------
 
-int LodObject::UsesWireColor() { return TRUE; }
+int LodObject::UsesWireColor() {
+    return TRUE;
+}
 
 //-------------------------------------------------------------------------
 
-int LodObject::Display(TimeValue t, INode * inode, ViewExp * vpt, int /*flags*/) {
+int LodObject::Display(const TimeValue t, INode * node, ViewExp * vpt, int /*flags*/) {
     GraphicsWindow * gw = vpt->getGW();
     Material * mtl = gw->getMaterial();
-    Color color(inode->GetWireColor());
+    const Color color(node->GetWireColor());
     mObjColor.x = color.r;
     mObjColor.y = color.g;
     mObjColor.z = color.b;
-    gw->setTransform(inode->GetNodeTM(t));
+    gw->setTransform(node->GetNodeTM(t));
     //-------------------------------------------------------------------------
-    DWORD rlim = gw->getRndLimits();
-    gw->setRndLimits(GW_WIREFRAME | GW_EDGES_ONLY | GW_BACKCULL | (rlim & GW_Z_BUFFER));
+    const DWORD limits = gw->getRndLimits();
+    gw->setRndLimits(GW_WIREFRAME | GW_EDGES_ONLY | GW_BACKCULL | (limits & GW_Z_BUFFER));
 
-    if (inode->Selected()) {
+    if (node->Selected()) {
         gw->setColor(LINE_COLOR, GetSelColor());
     }
-    else if (!inode->IsFrozen() && !inode->Dependent()) {
+    else if (!node->IsFrozen() && !node->Dependent()) {
         gw->setColor(LINE_COLOR, mObjColor);
     }
     mIconMesh.render(gw, mtl, nullptr, COMP_ALL);
-    gw->setRndLimits(rlim);
+    gw->setRndLimits(limits);
     //-------------------------------------------------------------------------
     return 0;
 }
@@ -526,10 +456,7 @@ void LodObject::makeIcon() {
         return;
     }
 
-    // Because the box size is 2 meters we make it 1 meter, if the icon is changed the scale must be corrected.
-    size *= 0.5f;
-
-    float masterScale = static_cast<float>(GetMasterScale(UNITS_METERS));
+    auto masterScale = static_cast<float>(GetMasterScale(UNITS_METERS));
     if (masterScale != -1.0f) {
         masterScale = 1.0f / masterScale;
         size = size * masterScale;
@@ -538,278 +465,11 @@ void LodObject::makeIcon() {
             LError << "The icon scale is too small";
         }
     }
-    // todo make icon with the Mesh2Cpp
+
     mLastIconScale = size;
-
-    mIconMesh = Mesh();
-    mIconMesh.setNumVerts(68);
-    mIconMesh.setNumFaces(64);
-    mIconMesh.setVert(0, size * Point3(-1.0, -0.5, -0.5));
-    mIconMesh.setVert(1, size * Point3(1.0, -0.5, -0.5));
-    mIconMesh.setVert(2, size * Point3(-1.0, 0.5, -0.5));
-    mIconMesh.setVert(3, size * Point3(1.0, 0.5, -0.5));
-    mIconMesh.setVert(4, size * Point3(-1.0, -0.5, 0.5));
-    mIconMesh.setVert(5, size * Point3(1.0, -0.5, 0.5));
-    mIconMesh.setVert(6, size * Point3(-1.0, 0.5, 0.5));
-    mIconMesh.setVert(7, size * Point3(1.0, 0.5, 0.5));
-    mIconMesh.setVert(8, size * Point3(0.213615, 0.187986, 0.5));
-    mIconMesh.setVert(9, size * Point3(0.107339, 0.303623, 0.5));
-    mIconMesh.setVert(10, size * Point3(0.0632985, 0.242289, 0.5));
-    mIconMesh.setVert(11, size * Point3(0.139152, 0.153872, 0.5));
-    mIconMesh.setVert(12, size * Point3(0.250182, 0.0197559, 0.5));
-    mIconMesh.setVert(13, size * Point3(0.213615, -0.148474, 0.5));
-    mIconMesh.setVert(14, size * Point3(0.139152, -0.11436, 0.5));
-    mIconMesh.setVert(15, size * Point3(0.165081, 0.0197559, 0.5));
-    mIconMesh.setVert(16, size * Point3(0.107339, -0.264111, 0.5));
-    mIconMesh.setVert(17, size * Point3(0.0632985, -0.202777, 0.5));
-    mIconMesh.setVert(18, size * Point3(-0.0491985, -0.305577, 0.5));
-    mIconMesh.setVert(19, size * Point3(-0.312012, 0.187986, 0.5));
-    mIconMesh.setVert(20, size * Point3(-0.237549, 0.153872, 0.5));
-    mIconMesh.setVert(21, size * Point3(-0.205736, 0.303623, 0.5));
-    mIconMesh.setVert(22, size * Point3(-0.161695, 0.242289, 0.5));
-    mIconMesh.setVert(23, size * Point3(-0.0491985, 0.345088, 0.5));
-    mIconMesh.setVert(24, size * Point3(-0.0491985, 0.273682, 0.5));
-    mIconMesh.setVert(25, size * Point3(-0.348579, 0.0197559, 0.5));
-    mIconMesh.setVert(26, size * Point3(-0.263478, 0.0197559, 0.5));
-    mIconMesh.setVert(27, size * Point3(-0.237549, -0.11436, 0.5));
-    mIconMesh.setVert(28, size * Point3(-0.312012, -0.148474, 0.5));
-    mIconMesh.setVert(29, size * Point3(-0.161695, -0.202777, 0.5));
-    mIconMesh.setVert(30, size * Point3(-0.205736, -0.264111, 0.5));
-    mIconMesh.setVert(31, size * Point3(-0.0491985, -0.23417, 0.5));
-    mIconMesh.setVert(32, size * Point3(-0.422797, -0.284415, 0.5));
-    mIconMesh.setVert(33, size * Point3(-0.422797, -0.210074, 0.5));
-    mIconMesh.setVert(34, size * Point3(-0.73092, -0.210074, 0.5));
-    mIconMesh.setVert(35, size * Point3(-0.73092, 0.34259, 0.5));
-    mIconMesh.setVert(36, size * Point3(-0.814065, 0.34259, 0.5));
-    mIconMesh.setVert(37, size * Point3(-0.814065, -0.284415, 0.5));
-    mIconMesh.setVert(38, size * Point3(0.582652, -0.284415, 0.5));
-    mIconMesh.setVert(39, size * Point3(0.683197, -0.273724, 0.5));
-    mIconMesh.setVert(40, size * Point3(0.757912, -0.242285, 0.5));
-    mIconMesh.setVert(41, size * Point3(0.814906, -0.185399, 0.5));
-    mIconMesh.setVert(42, size * Point3(0.857601, -0.0940851, 0.5));
-    mIconMesh.setVert(43, size * Point3(0.356802, 0.34259, 0.5));
-    mIconMesh.setVert(44, size * Point3(0.356802, -0.284415, 0.5));
-    mIconMesh.setVert(45, size * Point3(0.439947, 0.26825, 0.5));
-    mIconMesh.setVert(46, size * Point3(0.571434, 0.26825, 0.5));
-    mIconMesh.setVert(47, size * Point3(0.781658, -0.070883, 0.5));
-    mIconMesh.setVert(48, size * Point3(0.737107, -0.152644, 0.5));
-    mIconMesh.setVert(49, size * Point3(0.670687, -0.198543, 0.5));
-    mIconMesh.setVert(50, size * Point3(0.573574, -0.210074, 0.5));
-    mIconMesh.setVert(51, size * Point3(0.439947, -0.210074, 0.5));
-    mIconMesh.setVert(52, size * Point3(0.781658, 0.120177, 0.5));
-    mIconMesh.setVert(53, size * Point3(0.857601, 0.143379, 0.5));
-    mIconMesh.setVert(54, size * Point3(0.670687, 0.247837, 0.5));
-    mIconMesh.setVert(55, size * Point3(0.572412, 0.34259, 0.5));
-    mIconMesh.setVert(56, size * Point3(0.683197, 0.323018, 0.5));
-    mIconMesh.setVert(57, size * Point3(0.737107, 0.201939, 0.5));
-    mIconMesh.setVert(58, size * Point3(0.814906, 0.234693, 0.5));
-    mIconMesh.setVert(59, size * Point3(0.757912, 0.29158, 0.5));
-    mIconMesh.setVert(60, size * Point3(1.0, -0.5, 0.5));
-    mIconMesh.setVert(61, size * Point3(-1.0, -0.5, 0.5));
-    mIconMesh.setVert(62, size * Point3(-1.0, -0.853553, 0.146447));
-    mIconMesh.setVert(63, size * Point3(1.0, -0.853554, 0.146447));
-    mIconMesh.setVert(64, size * Point3(-1.0, 0.5, 0.5));
-    mIconMesh.setVert(65, size * Point3(1.0, 0.5, 0.5));
-    mIconMesh.setVert(66, size * Point3(1.0, 0.853554, 0.146447));
-    mIconMesh.setVert(67, size * Point3(-1.0, 0.853554, 0.146447));
-    mIconMesh.faces[0].setVerts(5, 4, 0);
-    mIconMesh.faces[0].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[0].setSmGroup(8);
-    mIconMesh.faces[1].setVerts(0, 1, 5);
-    mIconMesh.faces[1].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[1].setSmGroup(8);
-    mIconMesh.faces[2].setVerts(7, 5, 1);
-    mIconMesh.faces[2].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[2].setSmGroup(16);
-    mIconMesh.faces[3].setVerts(1, 3, 7);
-    mIconMesh.faces[3].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[3].setSmGroup(16);
-    mIconMesh.faces[4].setVerts(6, 7, 3);
-    mIconMesh.faces[4].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[4].setSmGroup(32);
-    mIconMesh.faces[5].setVerts(3, 2, 6);
-    mIconMesh.faces[5].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[5].setSmGroup(32);
-    mIconMesh.faces[6].setVerts(4, 6, 2);
-    mIconMesh.faces[6].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[6].setSmGroup(64);
-    mIconMesh.faces[7].setVerts(2, 0, 4);
-    mIconMesh.faces[7].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[7].setSmGroup(64);
-    mIconMesh.faces[8].setVerts(15, 12, 8);
-    mIconMesh.faces[8].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[8].setSmGroup(1);
-    mIconMesh.faces[9].setVerts(8, 11, 15);
-    mIconMesh.faces[9].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[9].setSmGroup(1);
-    mIconMesh.faces[10].setVerts(11, 8, 9);
-    mIconMesh.faces[10].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[10].setSmGroup(1);
-    mIconMesh.faces[11].setVerts(9, 10, 11);
-    mIconMesh.faces[11].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[11].setSmGroup(1);
-    mIconMesh.faces[12].setVerts(24, 10, 9);
-    mIconMesh.faces[12].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[12].setSmGroup(1);
-    mIconMesh.faces[13].setVerts(9, 23, 24);
-    mIconMesh.faces[13].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[13].setSmGroup(1);
-    mIconMesh.faces[14].setVerts(15, 14, 13);
-    mIconMesh.faces[14].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[14].setSmGroup(1);
-    mIconMesh.faces[15].setVerts(13, 12, 15);
-    mIconMesh.faces[15].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[15].setSmGroup(1);
-    mIconMesh.faces[16].setVerts(14, 17, 16);
-    mIconMesh.faces[16].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[16].setSmGroup(1);
-    mIconMesh.faces[17].setVerts(16, 13, 14);
-    mIconMesh.faces[17].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[17].setSmGroup(1);
-    mIconMesh.faces[18].setVerts(31, 18, 16);
-    mIconMesh.faces[18].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[18].setSmGroup(1);
-    mIconMesh.faces[19].setVerts(16, 17, 31);
-    mIconMesh.faces[19].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[19].setSmGroup(1);
-    mIconMesh.faces[20].setVerts(26, 20, 19);
-    mIconMesh.faces[20].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[20].setSmGroup(1);
-    mIconMesh.faces[21].setVerts(19, 25, 26);
-    mIconMesh.faces[21].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[21].setSmGroup(1);
-    mIconMesh.faces[22].setVerts(20, 22, 21);
-    mIconMesh.faces[22].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[22].setSmGroup(1);
-    mIconMesh.faces[23].setVerts(21, 19, 20);
-    mIconMesh.faces[23].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[23].setSmGroup(1);
-    mIconMesh.faces[24].setVerts(24, 23, 21);
-    mIconMesh.faces[24].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[24].setSmGroup(1);
-    mIconMesh.faces[25].setVerts(21, 22, 24);
-    mIconMesh.faces[25].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[25].setSmGroup(1);
-    mIconMesh.faces[26].setVerts(26, 25, 28);
-    mIconMesh.faces[26].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[26].setSmGroup(1);
-    mIconMesh.faces[27].setVerts(28, 27, 26);
-    mIconMesh.faces[27].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[27].setSmGroup(1);
-    mIconMesh.faces[28].setVerts(27, 28, 30);
-    mIconMesh.faces[28].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[28].setSmGroup(1);
-    mIconMesh.faces[29].setVerts(30, 29, 27);
-    mIconMesh.faces[29].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[29].setSmGroup(1);
-    mIconMesh.faces[30].setVerts(31, 29, 30);
-    mIconMesh.faces[30].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[30].setSmGroup(1);
-    mIconMesh.faces[31].setVerts(30, 18, 31);
-    mIconMesh.faces[31].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[31].setSmGroup(1);
-    mIconMesh.faces[32].setVerts(37, 34, 35);
-    mIconMesh.faces[32].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[32].setSmGroup(1);
-    mIconMesh.faces[33].setVerts(35, 36, 37);
-    mIconMesh.faces[33].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[33].setSmGroup(1);
-    mIconMesh.faces[34].setVerts(45, 46, 55);
-    mIconMesh.faces[34].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[34].setSmGroup(1);
-    mIconMesh.faces[35].setVerts(45, 55, 43);
-    mIconMesh.faces[35].setEdgeVisFlags(0, 1, 0);
-    mIconMesh.faces[35].setSmGroup(1);
-    mIconMesh.faces[36].setVerts(44, 38, 50);
-    mIconMesh.faces[36].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[36].setSmGroup(1);
-    mIconMesh.faces[37].setVerts(44, 50, 51);
-    mIconMesh.faces[37].setEdgeVisFlags(0, 1, 0);
-    mIconMesh.faces[37].setSmGroup(1);
-    mIconMesh.faces[38].setVerts(43, 44, 51);
-    mIconMesh.faces[38].setEdgeVisFlags(1, 0, 0);
-    mIconMesh.faces[38].setSmGroup(1);
-    mIconMesh.faces[39].setVerts(45, 43, 51);
-    mIconMesh.faces[39].setEdgeVisFlags(0, 0, 1);
-    mIconMesh.faces[39].setSmGroup(1);
-    mIconMesh.faces[40].setVerts(34, 37, 32);
-    mIconMesh.faces[40].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[40].setSmGroup(1);
-    mIconMesh.faces[41].setVerts(32, 33, 34);
-    mIconMesh.faces[41].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[41].setSmGroup(1);
-    mIconMesh.faces[42].setVerts(38, 39, 49);
-    mIconMesh.faces[42].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[42].setSmGroup(1);
-    mIconMesh.faces[43].setVerts(49, 50, 38);
-    mIconMesh.faces[43].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[43].setSmGroup(1);
-    mIconMesh.faces[44].setVerts(41, 42, 47);
-    mIconMesh.faces[44].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[44].setSmGroup(1);
-    mIconMesh.faces[45].setVerts(47, 48, 41);
-    mIconMesh.faces[45].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[45].setSmGroup(1);
-    mIconMesh.faces[46].setVerts(48, 40, 41);
-    mIconMesh.faces[46].setEdgeVisFlags(1, 1, 1);
-    mIconMesh.faces[46].setSmGroup(1);
-    mIconMesh.faces[47].setVerts(40, 48, 49);
-    mIconMesh.faces[47].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[47].setSmGroup(1);
-    mIconMesh.faces[48].setVerts(49, 39, 40);
-    mIconMesh.faces[48].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[48].setSmGroup(1);
-    mIconMesh.faces[49].setVerts(53, 52, 47);
-    mIconMesh.faces[49].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[49].setSmGroup(1);
-    mIconMesh.faces[50].setVerts(47, 42, 53);
-    mIconMesh.faces[50].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[50].setSmGroup(1);
-    mIconMesh.faces[51].setVerts(55, 46, 54);
-    mIconMesh.faces[51].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[51].setSmGroup(1);
-    mIconMesh.faces[52].setVerts(54, 56, 55);
-    mIconMesh.faces[52].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[52].setSmGroup(1);
-    mIconMesh.faces[53].setVerts(58, 57, 52);
-    mIconMesh.faces[53].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[53].setSmGroup(1);
-    mIconMesh.faces[54].setVerts(52, 53, 58);
-    mIconMesh.faces[54].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[54].setSmGroup(1);
-    mIconMesh.faces[55].setVerts(57, 58, 59);
-    mIconMesh.faces[55].setEdgeVisFlags(1, 1, 1);
-    mIconMesh.faces[55].setSmGroup(1);
-    mIconMesh.faces[56].setVerts(59, 56, 54);
-    mIconMesh.faces[56].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[56].setSmGroup(1);
-    mIconMesh.faces[57].setVerts(54, 57, 59);
-    mIconMesh.faces[57].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[57].setSmGroup(1);
-    mIconMesh.faces[58].setVerts(63, 60, 61);
-    mIconMesh.faces[58].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[58].setSmGroup(0);
-    mIconMesh.faces[59].setVerts(61, 62, 63);
-    mIconMesh.faces[59].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[59].setSmGroup(0);
-    mIconMesh.faces[60].setVerts(67, 64, 65);
-    mIconMesh.faces[60].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[60].setSmGroup(0);
-    mIconMesh.faces[61].setVerts(65, 66, 67);
-    mIconMesh.faces[61].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[61].setSmGroup(0);
-    mIconMesh.faces[62].setVerts(3, 1, 0);
-    mIconMesh.faces[62].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[62].setSmGroup(0);
-    mIconMesh.faces[63].setVerts(0, 2, 3);
-    mIconMesh.faces[63].setEdgeVisFlags(1, 1, 0);
-    mIconMesh.faces[63].setSmGroup(0);
-
-    //--------------------------------
-
-    mIconMesh.InvalidateGeomCache();
+    LodIcon::fillMesh(mIconMesh, size);
 }
 
-/*************************************************************************************************
+/**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/

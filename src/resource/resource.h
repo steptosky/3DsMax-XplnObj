@@ -25,7 +25,6 @@
 #define IDD_ROLL_LIGHT_CUST_OBJ         123
 #define IDD_ROLL_ANIM_OBJ               124
 #define IDD_TOOL_CALC_ANIM_VALUE        125
-#define IDD_HAS_NEW_VERSION_DIALOG      126
 #define ROLL_LODOBJ_DISPLAY             127
 #define DLG_EXPORT                      128
 #define DLG_ABOUT                       131
@@ -58,6 +57,7 @@
 #define IDS_MAIN_MENU_SETTINGS          169
 #define IDS_ROLL_SMOKE_ATTR             170
 #define IDS_ROLL_SMOKE_DISPLY           171
+#define IDS_MAIN_MENU_CPP_MESH          172
 #define ROLL_MANIP_WHEEL                200
 #define ROLL_MANIP_COMMAND_KNOB         201
 #define ROLL_MANIP_AXIS_KNOB            204
@@ -153,11 +153,8 @@
 #define IDC_BTN_OK                      1131
 #define IDC_SCALE_EDIT                  1132
 #define IDC_STATIC_CUST                 1132
-#define ID_HAS_NEW_VERSION_DOWNLOAD_BUTTON 1133
 #define SPN_FAR_EDIT                    1133
 #define IDC_SCALE_SPIN                  1134
-#define IDC_HAS_NEW_VERSION_LABEL       1134
-#define ID_HAS_NEW_VERSION_CANCEL_BUTTON 1135
 #define BTN_DONATE                      1135
 #define SPN_FAR                         1135
 #define ROLL_MAINOBJ_EXP                1135
@@ -323,14 +320,19 @@
 #define SPN_SMOKE_SIZE                  1250
 #define EDT_INFO                        1252
 #define EDT_OBJECTS                     1255
+#define SPN_LIGHTLEVEL_V1_LABEL         1256
+#define SPN_LIGHTLEVEL_V2_LABEL         1257
+#define SPN_POLYOFFSET_DIST_LABEL       1258
+#define SPN_BLEND_LABEL                 1259
+#define SPN_SHINY_LABEL                 1260
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        172
+#define _APS_NEXT_RESOURCE_VALUE        173
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1256
+#define _APS_NEXT_CONTROL_VALUE         1261
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

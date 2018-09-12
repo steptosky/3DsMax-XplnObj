@@ -28,6 +28,11 @@
 */
 
 #include "MainObjParamsWrapper.h"
+
+#pragma warning(push, 0)
+#include <iparamb2.h>
+#pragma warning(pop)
+
 #include "MainObjectParams.h"
 #include "common/Logger.h"
 #include "common/String.h"
@@ -182,9 +187,9 @@ bool MainObjParamsWrapper::isDebug() {
 
 //-------------------------------------------------------------------------
 
-void MainObjParamsWrapper::setExportEnable(bool inState) {
+void MainObjParamsWrapper::setExportEnable(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjAttr_ExportEnable, mT, int(inState))) {
+        if (!mPbExp->SetValue(MainObjAttr_ExportEnable, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_ExportEnable);
         }
     }
@@ -193,9 +198,9 @@ void MainObjParamsWrapper::setExportEnable(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setMeshExport(bool inState) {
+void MainObjParamsWrapper::setMeshExport(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_Meshes, mT, int(inState))) {
+        if (!mPbExp->SetValue(MainObjExp_Meshes, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Meshes);
         }
     }
@@ -204,9 +209,9 @@ void MainObjParamsWrapper::setMeshExport(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setLinesExport(bool inState) {
+void MainObjParamsWrapper::setLinesExport(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_Lines, mT, int(inState))) {
+        if (!mPbExp->SetValue(MainObjExp_Lines, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Lines);
         }
     }
@@ -215,9 +220,9 @@ void MainObjParamsWrapper::setLinesExport(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setLightsExport(bool inState) {
+void MainObjParamsWrapper::setLightsExport(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_Lights, mT, int(inState))) {
+        if (!mPbExp->SetValue(MainObjExp_Lights, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Lights);
         }
     }
@@ -226,9 +231,9 @@ void MainObjParamsWrapper::setLightsExport(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setAnimationExport(bool inState) {
+void MainObjParamsWrapper::setAnimationExport(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_Animation, mT, int(inState))) {
+        if (!mPbExp->SetValue(MainObjExp_Animation, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Animation);
         }
     }
@@ -237,9 +242,9 @@ void MainObjParamsWrapper::setAnimationExport(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setOptimisation(bool inState) {
+void MainObjParamsWrapper::setOptimisation(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_Optimisation, mT, int(inState))) {
+        if (!mPbExp->SetValue(MainObjExp_Optimisation, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Optimisation);
         }
     }
@@ -248,9 +253,9 @@ void MainObjParamsWrapper::setOptimisation(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setInstancing(bool inState) {
+void MainObjParamsWrapper::setInstancing(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_Instancing, mT, int(inState))) {
+        if (!mPbExp->SetValue(MainObjExp_Instancing, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Instancing);
         }
     }
@@ -259,9 +264,9 @@ void MainObjParamsWrapper::setInstancing(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setDebug(bool inState) {
+void MainObjParamsWrapper::setDebug(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_Debug, mT, int(inState))) {
+        if (!mPbExp->SetValue(MainObjExp_Debug, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Debug);
         }
     }
@@ -341,9 +346,9 @@ bool MainObjParamsWrapper::isTreeHierarchy() {
 
 //-------------------------------------------------------------------------
 
-void MainObjParamsWrapper::setNameMesh(bool inState) {
+void MainObjParamsWrapper::setNameMesh(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_NameMeshes, mT, int(inState))) {
+        if (!mPbExp->SetValue(MainObjExp_NameMeshes, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameMeshes);
         }
     }
@@ -352,9 +357,9 @@ void MainObjParamsWrapper::setNameMesh(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setNameLines(bool inState) {
+void MainObjParamsWrapper::setNameLines(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_NameLines, mT, int(inState))) {
+        if (!mPbExp->SetValue(MainObjExp_NameLines, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameLines);
         }
     }
@@ -363,9 +368,9 @@ void MainObjParamsWrapper::setNameLines(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setNameLights(bool inState) {
+void MainObjParamsWrapper::setNameLights(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_NameLights, mT, int(inState))) {
+        if (!mPbExp->SetValue(MainObjExp_NameLights, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameLights);
         }
     }
@@ -374,9 +379,9 @@ void MainObjParamsWrapper::setNameLights(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setNameDummies(bool inState) {
+void MainObjParamsWrapper::setNameDummies(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_NameDummies, mT, int(inState))) {
+        if (!mPbExp->SetValue(MainObjExp_NameDummies, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameDummies);
         }
     }
@@ -385,9 +390,9 @@ void MainObjParamsWrapper::setNameDummies(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setTreeHierarchy(bool inState) {
+void MainObjParamsWrapper::setTreeHierarchy(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_TreeHierarchy, mT, int(inState))) {
+        if (!mPbExp->SetValue(MainObjExp_TreeHierarchy, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_TreeHierarchy);
         }
     }
@@ -428,12 +433,12 @@ float MainObjParamsWrapper::scale() {
 
 //-------------------------------------------------------------------------
 
-void MainObjParamsWrapper::setScale(bool inManual, float inValue) {
+void MainObjParamsWrapper::setScale(const bool manual, const float value) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObj_ScaleEnabled, mT, int(inManual))) {
+        if (!mPbExp->SetValue(MainObj_ScaleEnabled, mT, int(manual))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObj_ScaleEnabled);
         }
-        if (!mPbExp->SetValue(MainObj_ScaleValue, mT, inValue)) {
+        if (!mPbExp->SetValue(MainObj_ScaleValue, mT, value)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObj_ScaleValue);
         }
     }
@@ -448,7 +453,7 @@ void MainObjParamsWrapper::setScale(bool inManual, float inValue) {
 
 std::string MainObjParamsWrapper::pathPrefix() {
 #if MAX_VERSION_MAJOR < 12
-	TCHAR * val = nullptr;
+    TCHAR * val = nullptr;
 #else
     const MCHAR * val = nullptr;
 #endif
@@ -466,7 +471,7 @@ std::string MainObjParamsWrapper::pathPrefix() {
 
 std::string MainObjParamsWrapper::texture() {
 #if MAX_VERSION_MAJOR < 12
-	TCHAR * val = nullptr;
+    TCHAR * val = nullptr;
 #else
     const MCHAR * val = nullptr;
 #endif
@@ -484,7 +489,7 @@ std::string MainObjParamsWrapper::texture() {
 
 std::string MainObjParamsWrapper::textureLit() {
 #if MAX_VERSION_MAJOR < 12
-	TCHAR * val = nullptr;
+    TCHAR * val = nullptr;
 #else
     const MCHAR * val = nullptr;
 #endif
@@ -502,7 +507,7 @@ std::string MainObjParamsWrapper::textureLit() {
 
 std::string MainObjParamsWrapper::textureNormal() {
 #if MAX_VERSION_MAJOR < 12
-	TCHAR * val = nullptr;
+    TCHAR * val = nullptr;
 #else
     const MCHAR * val = nullptr;
 #endif
@@ -520,13 +525,13 @@ std::string MainObjParamsWrapper::textureNormal() {
 
 //-------------------------------------------------------------------------
 
-void MainObjParamsWrapper::setPathPrefix(const std::string & inStr) {
+void MainObjParamsWrapper::setPathPrefix(const std::string & str) {
     if (mPbAttr) {
-        sts::Str str = sts::toString(inStr);
+        sts::Str convertedStr = sts::toString(str);
 #if MAX_VERSION_MAJOR < 12
-		TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
+        const auto strVal = const_cast<TCHAR*>(convertedStr.c_str());
 #else
-        const MCHAR * strVal = str.c_str();
+        const auto strVal = convertedStr.c_str();
 #endif
 
         if (!mPbAttr->SetValue(MainObjAttr_PathPrefix, mT, strVal)) {
@@ -538,13 +543,13 @@ void MainObjParamsWrapper::setPathPrefix(const std::string & inStr) {
     }
 }
 
-void MainObjParamsWrapper::setTexture(const std::string & inStr) {
+void MainObjParamsWrapper::setTexture(const std::string & str) {
     if (mPbAttr) {
-        sts::Str str = sts::toString(inStr);
+        sts::Str convertedStr = sts::toString(str);
 #if MAX_VERSION_MAJOR < 12
-		TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
+        const auto strVal = const_cast<TCHAR*>(convertedStr.c_str());
 #else
-        const MCHAR * strVal = str.c_str();
+        const auto strVal = convertedStr.c_str();
 #endif
 
         if (!mPbAttr->SetValue(MainObjAttr_Texture, mT, strVal)) {
@@ -556,13 +561,13 @@ void MainObjParamsWrapper::setTexture(const std::string & inStr) {
     }
 }
 
-void MainObjParamsWrapper::setTextureLit(const std::string & inStr) {
+void MainObjParamsWrapper::setTextureLit(const std::string & str) {
     if (mPbAttr) {
-        sts::Str str = sts::toString(inStr);
+        sts::Str convertedStr = sts::toString(str);
 #if MAX_VERSION_MAJOR < 12
-		TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
+        const auto strVal = const_cast<TCHAR*>(convertedStr.c_str());
 #else
-        const MCHAR * strVal = str.c_str();
+        const auto strVal = convertedStr.c_str();
 #endif
 
         if (!mPbAttr->SetValue(MainObjAttr_TextureLit, mT, strVal)) {
@@ -574,13 +579,13 @@ void MainObjParamsWrapper::setTextureLit(const std::string & inStr) {
     }
 }
 
-void MainObjParamsWrapper::setTextureNormal(const std::string & inStr) {
+void MainObjParamsWrapper::setTextureNormal(const std::string & str) {
     if (mPbAttr) {
-        sts::Str str = sts::toString(inStr);
+        sts::Str convertedStr = sts::toString(str);
 #if MAX_VERSION_MAJOR < 12
-		TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
+        const auto strVal = const_cast<TCHAR*>(convertedStr.c_str());
 #else
-        const MCHAR * strVal = str.c_str();
+        const auto strVal = convertedStr.c_str();
 #endif
 
         if (!mPbAttr->SetValue(MainObjAttr_TextureNormal, mT, strVal)) {
@@ -663,9 +668,9 @@ bool MainObjParamsWrapper::isCockpitLit() {
 
 //-------------------------------------------------------------------------
 
-void MainObjParamsWrapper::setBlendGlass(bool inState) {
+void MainObjParamsWrapper::setBlendGlass(const bool state) {
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(MainObjAttr_BlendGlass, mT, int(inState))) {
+        if (!mPbAttr->SetValue(MainObjAttr_BlendGlass, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_BlendGlass);
         }
     }
@@ -674,9 +679,9 @@ void MainObjParamsWrapper::setBlendGlass(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setNormalMetalness(bool inState) {
+void MainObjParamsWrapper::setNormalMetalness(const bool state) {
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(MainObjAttr_NormalMetalness, mT, int(inState))) {
+        if (!mPbAttr->SetValue(MainObjAttr_NormalMetalness, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_NormalMetalness);
         }
     }
@@ -685,9 +690,9 @@ void MainObjParamsWrapper::setNormalMetalness(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setNoShadow(bool inState) {
+void MainObjParamsWrapper::setNoShadow(const bool state) {
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(MainObjAttr_NoShadow, mT, int(inState))) {
+        if (!mPbAttr->SetValue(MainObjAttr_NoShadow, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_NoShadow);
         }
     }
@@ -696,9 +701,9 @@ void MainObjParamsWrapper::setNoShadow(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setTilted(bool inState) {
+void MainObjParamsWrapper::setTilted(const bool state) {
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(MainObjAttr_Tilted, mT, int(inState))) {
+        if (!mPbAttr->SetValue(MainObjAttr_Tilted, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_Tilted);
         }
     }
@@ -707,9 +712,9 @@ void MainObjParamsWrapper::setTilted(bool inState) {
     }
 }
 
-void MainObjParamsWrapper::setCockpitLit(bool inState) {
+void MainObjParamsWrapper::setCockpitLit(const bool state) {
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(MainObjAttr_CockpitLit, mT, int(inState))) {
+        if (!mPbAttr->SetValue(MainObjAttr_CockpitLit, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_CockpitLit);
         }
     }
@@ -758,7 +763,7 @@ xobj::AttrBlend MainObjParamsWrapper::blend() {
 
 xobj::AttrLayerGroup MainObjParamsWrapper::layerGroup() {
 #if MAX_VERSION_MAJOR < 12
-	TCHAR * layer = nullptr;
+    TCHAR * layer = nullptr;
 #else
     const MCHAR * layer = nullptr;
 #endif
@@ -785,7 +790,7 @@ xobj::AttrLayerGroup MainObjParamsWrapper::layerGroup() {
 
 xobj::AttrDrapedLayerGroup MainObjParamsWrapper::drapedLayerGroup() {
 #if MAX_VERSION_MAJOR < 12
-	TCHAR * layer = nullptr;
+    TCHAR * layer = nullptr;
 #else
     const MCHAR * layer = nullptr;
 #endif
@@ -926,18 +931,18 @@ xobj::AttrSlopeLimit MainObjParamsWrapper::slopeLimit() {
     return out;
 }
 
-xobj::AttrCockpitRegion MainObjParamsWrapper::cockpitRegion(xobj::AttrCockpitRegion::eNum inIdx) {
+xobj::AttrCockpitRegion MainObjParamsWrapper::cockpitRegion(xobj::AttrCockpitRegion::eNum idx) {
     ParamID pEnabled = 0;
     ParamID pLeft = 0;
     ParamID pBottom = 0;
     ParamID pRight = 0;
     ParamID pTop = 0;
 
-    if (inIdx > 3) {
+    if (idx > 3) {
         LError << "Cockpit region index must be between 0-3 inclusive";
     }
 
-    switch (inIdx) {
+    switch (idx) {
         case xobj::AttrCockpitRegion::eNum::r1: {
             pEnabled = MainObjAttr_CockpitRegion_1;
             pLeft = MainObjAttr_CockpitRegion_1_L;
@@ -1006,9 +1011,9 @@ xobj::AttrCockpitRegion MainObjParamsWrapper::cockpitRegion(xobj::AttrCockpitReg
 
 //-------------------------------------------------------------------------
 
-void MainObjParamsWrapper::setWetDry(const xobj::AttrWetDry & inAttr) {
+void MainObjParamsWrapper::setWetDry(const xobj::AttrWetDry & attr) {
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(MainObjAttr_DryWet, mT, inAttr ? int(inAttr.state()) : FALSE)) {
+        if (!mPbAttr->SetValue(MainObjAttr_DryWet, mT, attr ? int(attr.state()) : FALSE)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_DryWet);
         }
     }
@@ -1017,12 +1022,12 @@ void MainObjParamsWrapper::setWetDry(const xobj::AttrWetDry & inAttr) {
     }
 }
 
-void MainObjParamsWrapper::setBlend(const xobj::AttrBlend & inAttr) {
+void MainObjParamsWrapper::setBlend(const xobj::AttrBlend & attr) {
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(MainObjAttr_BlendingType, mT, inAttr ? int(inAttr.type()) : FALSE)) {
+        if (!mPbAttr->SetValue(MainObjAttr_BlendingType, mT, attr ? int(attr.type()) : FALSE)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_BlendingType);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_BlendingRatio, mT, inAttr.ratio())) {
+        if (!mPbAttr->SetValue(MainObjAttr_BlendingRatio, mT, attr.ratio())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_BlendingRatio);
         }
     }
@@ -1031,12 +1036,12 @@ void MainObjParamsWrapper::setBlend(const xobj::AttrBlend & inAttr) {
     }
 }
 
-void MainObjParamsWrapper::setLayerGroup(const xobj::AttrLayerGroup & inAttr) {
+void MainObjParamsWrapper::setLayerGroup(const xobj::AttrLayerGroup & attr) {
     if (mPbAttr) {
 
-        sts::Str str = sts::toString(inAttr.layer().toString());
+        sts::Str str = sts::toString(attr.layer().toString());
 #if MAX_VERSION_MAJOR < 12
-		TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
+        TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
 #else
         const MCHAR * strVal = str.c_str();
 #endif
@@ -1044,7 +1049,7 @@ void MainObjParamsWrapper::setLayerGroup(const xobj::AttrLayerGroup & inAttr) {
         if (!mPbAttr->SetValue(MainObjAttr_LayerGroupLayer, mT, strVal)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupLayer);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_LayerGroupOffset, mT, inAttr.offset())) {
+        if (!mPbAttr->SetValue(MainObjAttr_LayerGroupOffset, mT, attr.offset())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupOffset);
         }
     }
@@ -1053,12 +1058,12 @@ void MainObjParamsWrapper::setLayerGroup(const xobj::AttrLayerGroup & inAttr) {
     }
 }
 
-void MainObjParamsWrapper::setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup & inAttr) {
+void MainObjParamsWrapper::setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup & attr) {
     if (mPbAttr) {
 
-        sts::Str str = sts::toString(inAttr.layer().toString());
+        sts::Str str = sts::toString(attr.layer().toString());
 #if MAX_VERSION_MAJOR < 12
-		TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
+        TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
 #else
         const MCHAR * strVal = str.c_str();
 #endif
@@ -1066,7 +1071,7 @@ void MainObjParamsWrapper::setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup 
         if (!mPbAttr->SetValue(MainObjAttr_LayerGroupDrapedLayer, mT, strVal)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupDrapedLayer);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_LayerGroupDrapedOffset, mT, inAttr.offset())) {
+        if (!mPbAttr->SetValue(MainObjAttr_LayerGroupDrapedOffset, mT, attr.offset())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupDrapedOffset);
         }
     }
@@ -1075,12 +1080,12 @@ void MainObjParamsWrapper::setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup 
     }
 }
 
-void MainObjParamsWrapper::setLodDrap(const xobj::AttrLodDrap & inAttr) {
+void MainObjParamsWrapper::setLodDrap(const xobj::AttrLodDrap & attr) {
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(MainObjAttr_LodDrapEnable, mT, int(static_cast<bool>(inAttr)))) {
+        if (!mPbAttr->SetValue(MainObjAttr_LodDrapEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LodDrapEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_LodDrapDistance, mT, inAttr.distance())) {
+        if (!mPbAttr->SetValue(MainObjAttr_LodDrapDistance, mT, attr.distance())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LodDrapDistance);
         }
     }
@@ -1089,12 +1094,12 @@ void MainObjParamsWrapper::setLodDrap(const xobj::AttrLodDrap & inAttr) {
     }
 }
 
-void MainObjParamsWrapper::setSlungWeight(const xobj::AttrSlungLoadWeight & inAttr) {
+void MainObjParamsWrapper::setSlungWeight(const xobj::AttrSlungLoadWeight & attr) {
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(MainObjAttr_SlungLoadWeightEnable, mT, int(static_cast<bool>(inAttr)))) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlungLoadWeightEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlungLoadWeightEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlungLoadWeight, mT, inAttr.weight())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlungLoadWeight, mT, attr.weight())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlungLoadWeight);
         }
     }
@@ -1103,12 +1108,12 @@ void MainObjParamsWrapper::setSlungWeight(const xobj::AttrSlungLoadWeight & inAt
     }
 }
 
-void MainObjParamsWrapper::setSpecular(const xobj::AttrSpecular & inAttr) {
+void MainObjParamsWrapper::setSpecular(const xobj::AttrSpecular & attr) {
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(MainObjAttr_SpecularEnable, mT, int(static_cast<bool>(inAttr)))) {
+        if (!mPbAttr->SetValue(MainObjAttr_SpecularEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SpecularEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SpecularRatio, mT, inAttr.ratio())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SpecularRatio, mT, attr.ratio())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SpecularRatio);
         }
     }
@@ -1117,15 +1122,15 @@ void MainObjParamsWrapper::setSpecular(const xobj::AttrSpecular & inAttr) {
     }
 }
 
-void MainObjParamsWrapper::setTint(const xobj::AttrTint & inAttr) {
+void MainObjParamsWrapper::setTint(const xobj::AttrTint & attr) {
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(MainObjAttr_TintEnable, mT, int(static_cast<bool>(inAttr)))) {
+        if (!mPbAttr->SetValue(MainObjAttr_TintEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_TintAlbedo, mT, inAttr.albedo())) {
+        if (!mPbAttr->SetValue(MainObjAttr_TintAlbedo, mT, attr.albedo())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintAlbedo);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_TintEmissive, mT, inAttr.emissive())) {
+        if (!mPbAttr->SetValue(MainObjAttr_TintEmissive, mT, attr.emissive())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintEmissive);
         }
     }
@@ -1134,21 +1139,21 @@ void MainObjParamsWrapper::setTint(const xobj::AttrTint & inAttr) {
     }
 }
 
-void MainObjParamsWrapper::setSlopeLimit(const xobj::AttrSlopeLimit & inAttr) {
+void MainObjParamsWrapper::setSlopeLimit(const xobj::AttrSlopeLimit & attr) {
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitEnable, mT, int(static_cast<bool>(inAttr)))) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMinPitch, mT, inAttr.minPitch())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMinPitch, mT, attr.minPitch())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMinPitch);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMaxPitch, mT, inAttr.maxPitch())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMaxPitch, mT, attr.maxPitch())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMaxPitch);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMinRoll, mT, inAttr.minRoll())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMinRoll, mT, attr.minRoll())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMinRoll);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMaxRoll, mT, inAttr.maxRoll())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMaxRoll, mT, attr.maxRoll())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMaxRoll);
         }
     }
@@ -1157,18 +1162,18 @@ void MainObjParamsWrapper::setSlopeLimit(const xobj::AttrSlopeLimit & inAttr) {
     }
 }
 
-void MainObjParamsWrapper::setCockpitRegion(const xobj::AttrCockpitRegion & inAttr, xobj::AttrCockpitRegion::eNum inIdx) {
+void MainObjParamsWrapper::setCockpitRegion(const xobj::AttrCockpitRegion & attr, const xobj::AttrCockpitRegion::eNum idx) {
     ParamID pEnabled = 0;
     ParamID pLeft = 0;
     ParamID pBottom = 0;
     ParamID pRight = 0;
     ParamID pTop = 0;
 
-    if (inIdx > 3) {
+    if (idx > 3) {
         LError << "Cockpit region index must be between 0-3 inclusive";
     }
 
-    switch (inIdx) {
+    switch (idx) {
         case xobj::AttrCockpitRegion::eNum::r1: {
             pEnabled = MainObjAttr_CockpitRegion_1;
             pLeft = MainObjAttr_CockpitRegion_1_L;
@@ -1204,19 +1209,19 @@ void MainObjParamsWrapper::setCockpitRegion(const xobj::AttrCockpitRegion & inAt
         default: return;
     }
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(pEnabled, mT, int(static_cast<bool>(inAttr)))) {
+        if (!mPbAttr->SetValue(pEnabled, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pEnabled);
         }
-        if (!mPbAttr->SetValue(pLeft, mT, int(inAttr.left()))) {
+        if (!mPbAttr->SetValue(pLeft, mT, int(attr.left()))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pLeft);
         }
-        if (!mPbAttr->SetValue(pBottom, mT, int(inAttr.bottom()))) {
+        if (!mPbAttr->SetValue(pBottom, mT, int(attr.bottom()))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pBottom);
         }
-        if (!mPbAttr->SetValue(pRight, mT, int(inAttr.right()))) {
+        if (!mPbAttr->SetValue(pRight, mT, int(attr.right()))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pRight);
         }
-        if (!mPbAttr->SetValue(pTop, mT, int(inAttr.top()))) {
+        if (!mPbAttr->SetValue(pTop, mT, int(attr.top()))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pTop);
         }
     }

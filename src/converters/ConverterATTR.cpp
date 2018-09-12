@@ -27,10 +27,18 @@
 **  Contacts: www.steptosky.com
 */
 
+#include "ConverterATTR.h"
+
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
+
+#include <xpln/obj/ObjAbstract.h>
 #include <xpln/obj/ObjMesh.h>
-#include "ConverterAttr.h"
 #include "models/MdManip.h"
 #include "models/MdObjAttr.h"
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
@@ -67,7 +75,7 @@ private:
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-void ConverterAttr::toXpln(xobj::ObjAbstract & outXObj, INode * inNode) {
+void ConverterAttr::toXpln(xobj::ObjAbstract & outXObj, INode * inNode, const ExportParams &) {
     xobj::eObjectType xType = outXObj.objType();
     if (xType != xobj::OBJ_MESH) {
         return;
@@ -88,7 +96,7 @@ void ConverterAttr::toXpln(xobj::ObjAbstract & outXObj, INode * inNode) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void ConverterAttr::toMax(INode * inNode, const xobj::ObjAbstract & inXObj) {
+void ConverterAttr::toMax(INode * inNode, const xobj::ObjAbstract & inXObj, const ImportParams &) {
     xobj::eObjectType xType = inXObj.objType();
     if (xType != xobj::OBJ_MESH) {
         return;

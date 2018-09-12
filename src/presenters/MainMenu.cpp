@@ -33,7 +33,8 @@
 
 #include "MainMenu.h"
 #include "models/MdLinks.h"
-#include "ui/Factory.h"
+#include "ui-win/Factory.h"
+#include "utilities/Mesh2Cpp.h"
 
 namespace presenters {
 
@@ -48,8 +49,18 @@ MainMenu::MainMenu(IView * view)
     mView->signalDonate = &MdLinks::openDonate;
     mView->signalUpdate = &MdLinks::openPluginBinary;
     mView->signalDoc = &MdLinks::openDocBinary;
-    mView->signalAbout = &ui::Factory::showAboutWindow;
-    mView->signalSettings = &ui::Factory::showSettingsWindow;
+    mView->signalAbout = &ui::win::Factory::showAboutWindow;
+    mView->signalSettings = &ui::win::Factory::showSettingsWindow;
+    mView->signalSaveCppMesh = &MainMenu::saveCppMesh;
+}
+
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+void MainMenu::saveCppMesh() {
+    // todo selecting the path from GUI
+    Mesh2Cpp::saveSelected("W:/Programs/3DsMax-XplnObj/src/objects");
 }
 
 /**************************************************************************************************/

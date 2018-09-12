@@ -29,11 +29,16 @@
 
 #pragma once
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
+#include <string>
 
-#include <xpln/obj/ObjMain.h>
+class INode;
+class ExportParams;
+class ImportParams;
+
+namespace xobj {
+class ObjMain;
+class Transform;
+}
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,11 +51,8 @@ class ConverterMain {
 
 public:
 
+    static bool toXpln(INode * inNode, xobj::ObjMain & outMain, const ExportParams & params);
     static INode * toMax(const xobj::ObjMain & inXObj);
-    static INode * toMax(const xobj::ObjLodGroup & inXObj);
-    static bool toXpln(INode * inNode, xobj::ObjMain & outMain);
-    static bool toXpln(INode * inNode, xobj::ObjLodGroup & outLod);
-
     static INode * createBone(const xobj::Transform * xTransform);
 
 private:

@@ -30,8 +30,7 @@
 #include "ObjCommon.h"
 #include "ui/toolFrame/ToolFrame.h"
 #include "common/Logger.h"
-#include "ui/Factory.h"
-#include "ui/main-menu/MainMenuActions.h"
+#include "ui-win/Factory.h"
 #include "resource/ResHelper.h"
 #include "common/NodeVisitor.h"
 
@@ -48,7 +47,6 @@
 /**************************************************************************************************/
 
 ObjCommon::ObjCommon() {
-    mToolFrame = nullptr;
     mConfig = Config::instance();
     mCloneNodeChunk = nullptr;
 }
@@ -102,15 +100,32 @@ void ObjCommon::updateCheckWinCallback(HWND hwnd, UINT /*uMsg*/, UINT_PTR idEven
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
+void ObjCommon::createMainMenu(void * param, NotifyInfo *) {
+    auto * object = reinterpret_cast<ObjCommon*>(param);
+    if (!object->mMainMenuView || !object->mMainMenuPresenter) {
+        object->mMainMenuView.reset(ui::win::Factory::createMainMenuView());
+        object->mMainMenuPresenter = std::make_unique<presenters::MainMenu>(object->mMainMenuView.get());
+#if MAX_VERSION_MAJOR == 20
+        UnRegisterNotification(createMainMenu, object, NOTIFY_CUI_MENUS_POST_LOAD);
+#endif
+    }
+}
+
 DWORD ObjCommon::Start() {
-    //-- Mein Menu ---------------------------
-    mMainMenuView.reset(ui::Factory::createMainMenuView());
-    mMainMenuPresenter = std::make_unique<presenters::MainMenu>(mMainMenuView.get());
+    //-- Main Menu ---------------------------
+#if MAX_VERSION_MAJOR == 20
+    // There is a bug with created the main menu In 2018 max. 
+    // It seems max menu bar is overwritten after the call of this method.
+    // So we register creating method to create the menu later - after some GUI parts are created.
+    RegisterNotification(createMainMenu, this, NOTIFY_CUI_MENUS_POST_LOAD);
+#else
+    createMainMenu(this, nullptr);
+#endif
     //----------------------------------------
 
     mCloneNodeChunk = new CloneNodeChunk();
-    mToolFrame = ui::ToolFrame::instance();
-    mToolFrame->create();
+
+    ui::ToolFrame::create();
 
     mUpdateChecker.checkForUpdate();
     SetTimer(GetCOREInterface()->GetMAXHWnd(), UINT_PTR(WM_MY_TIMER_ID),
@@ -122,13 +137,13 @@ DWORD ObjCommon::Start() {
 }
 
 void ObjCommon::Stop() {
-    //-- Mein Menu ---------------------------
+    //-- Main Menu ---------------------------
     mMainMenuPresenter.reset();
     mMainMenuView.reset();
     //----------------------------------------
     UnRegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
     mUpdateChecker.freeResources();
-    mToolFrame->free();
+    ui::ToolFrame::destroy();
     delete mCloneNodeChunk;
 }
 
@@ -213,7 +228,7 @@ IOResult ObjCommon::Load(ILoad * iload) {
                     delete[] str;
                     pSettings.fromString(stdstr);
                     if (pSettings.isSavedAsXplnScene() && pSettings.pluginVersion() < pSettings.sceneVersion()) {
-                        ui::Factory::showVersionIncompatible();
+                        ui::win::Factory::showVersionIncompatible();
                         return IO_ERROR;
                     }
                     break;

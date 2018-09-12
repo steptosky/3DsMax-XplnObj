@@ -28,6 +28,11 @@
 */
 
 #include "LodObjParamsWrapper.h"
+
+#pragma warning(push, 0)
+#include <iparamb2.h>
+#pragma warning(pop)
+
 #include "common/Logger.h"
 #include "LodObjParams.h"
 #include "common/String.h"
@@ -48,6 +53,13 @@ LodObjParamsWrapper::LodObjParamsWrapper(INode * node, const TimeValue t, const 
     DbgAssert(mPb2);
 }
 
+LodObjParamsWrapper::LodObjParamsWrapper(IParamBlock2 * paramBlock, const TimeValue t, const Interval & interval)
+    : mInterval(interval),
+      mT(t),
+      mPb2(paramBlock) {
+    DbgAssert(mPb2);
+}
+
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
@@ -64,9 +76,9 @@ bool LodObjParamsWrapper::isLodObj(INode * inNode) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void LodObjParamsWrapper::setNearValue(float inVal) {
+void LodObjParamsWrapper::setNearValue(const float val) {
     if (mPb2) {
-        if (!mPb2->SetValue(PLodObjNear, mT, inVal)) {
+        if (!mPb2->SetValue(PLodObjNear, mT, val)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
         }
     }
@@ -75,9 +87,9 @@ void LodObjParamsWrapper::setNearValue(float inVal) {
     }
 }
 
-void LodObjParamsWrapper::setFarValue(float inVal) {
+void LodObjParamsWrapper::setFarValue(const float val) {
     if (mPb2) {
-        if (!mPb2->SetValue(PLodObjFar, mT, inVal)) {
+        if (!mPb2->SetValue(PLodObjFar, mT, val)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjFar);
         }
     }

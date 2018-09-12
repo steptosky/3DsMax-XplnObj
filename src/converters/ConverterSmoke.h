@@ -28,11 +28,15 @@
 */
 
 #pragma once
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
 
-#include <xpln/obj/ObjSmoke.h>
+namespace xobj {
+class ObjAbstract;
+class ObjSmoke;
+}
+
+class INode;
+class ExportParams;
+class ImportParams;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,8 +47,8 @@ class ConverterSmoke {
     ~ConverterSmoke() = default;
 public:
 
-    static xobj::ObjSmoke * toXpln(INode * node);
-    static INode * toMax(const xobj::ObjAbstract * object);
+    static xobj::ObjSmoke * toXpln(INode * node, const ExportParams & params);
+    static INode * toMax(const xobj::ObjAbstract * object, const ImportParams & params);
 
 };
 

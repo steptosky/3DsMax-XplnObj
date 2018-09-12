@@ -44,7 +44,7 @@ ObjImporter::~ObjImporter() {}
 /**************************************************************************************************/
 
 int ObjImporter::DoImport(const TCHAR * name, ImpInterface * /*ei*/, Interface * ip, BOOL suppressPrompts) {
-    mDlgMain = new ui::DlgImport();
+    mDlgMain = new ui::win::DlgImport();
     ip->SetTime(TimeValue(0), TRUE);
     mDlgMain->show(name, ip, suppressPrompts == TRUE);
     delete mDlgMain;

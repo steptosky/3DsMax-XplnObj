@@ -32,27 +32,29 @@
 
 #include "ConverterAnim.h"
 #include "ConverterUtils.h"
-#include "Common/String.h"
+#include "common/String.h"
 #include "common/Logger.h"
 #include "models/MdAnimTrans.h"
 #include "models/MdAnimVis.h"
 #include "models/io/AnimIO.h"
 #include "additional/math/Compare.h"
 #include "additional/math/Rad.h"
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /********************************************************************************************************/
 //////////////////////////////////////////////* Functions *///////////////////////////////////////////////
 /********************************************************************************************************/
 
-bool ConverterAnim::toXPLN(INode * node, xobj::Transform * transform) {
+bool ConverterAnim::toXPLN(INode * node, xobj::Transform * transform, const ExportParams & params) {
     assert(node && transform);
 
     if (!AnimIO::canApply(node))
         return false;
 
-    objAnimTrans(node, *transform);
-    objAnimRotate(node, *transform);
-    visibilityToXPLN(node, *transform);
+    objAnimTrans(node, *transform, params);
+    objAnimRotate(node, *transform, params);
+    visibilityToXPLN(node, *transform, params);
     return true;
 }
 
@@ -60,7 +62,7 @@ bool ConverterAnim::toXPLN(INode * node, xobj::Transform * transform) {
 //////////////////////////////////////////////* Functions *///////////////////////////////////////////////
 /********************************************************************************************************/
 
-void ConverterAnim::visibilityToXPLN(INode * node, xobj::Transform & transform) {
+void ConverterAnim::visibilityToXPLN(INode * node, xobj::Transform & transform, const ExportParams &) {
     MdAnimVis mdAnimVis;
     if (!mdAnimVis.linkNode(node, true)) {
         return;
@@ -83,13 +85,13 @@ float ConverterAnim::rotateValue(Control * inAxis, TimeValue t) {
     return q.x;
 }
 
-xobj::AnimRotate::KeyList * ConverterAnim::getRotateAxisAnimation(Control * inAxis,
-                                                                  const MdAnimRot::KeyValueList & inVals, int inIsReversed) {
+xobj::AnimRotate::KeyList * ConverterAnim::getRotateAxisAnimation(Control * inAxis, const MdAnimRot::KeyValueList & inVals,
+                                                                  int inIsReversed, const ExportParams & params) {
     int rotateKeyCount = inAxis->NumKeys();
     xobj::AnimRotate::KeyList * xAnim = new xobj::AnimRotate::KeyList(static_cast<size_t>(rotateKeyCount));
     //------------------------------------------------------------
 
-    float shift = rotateValue(inAxis, GetCOREInterface()->GetTime());
+    float shift = rotateValue(inAxis, params.mCurrTime);
     for (int currentKey = 0; currentKey < rotateKeyCount; ++currentKey) {
         float value = rotateValue(inAxis, inAxis->GetKeyTime(currentKey));
         value -= shift;
@@ -106,7 +108,8 @@ xobj::AnimRotate::KeyList * ConverterAnim::getRotateAxisAnimation(Control * inAx
 
 //-------------------------------------------------------------------------
 
-void ConverterAnim::objAnimRotateAxis(INode * node, Control * control, char axis, xobj::AnimRotate & outXAnim) {
+void ConverterAnim::objAnimRotateAxis(INode * node, Control * control, char axis,
+                                      xobj::AnimRotate & outXAnim, const ExportParams & params) {
     Control * rotateConrol = nullptr;
     std::unique_ptr<MdAnimRot> mdAnimRot = nullptr;
     switch (axis) {
@@ -150,7 +153,7 @@ void ConverterAnim::objAnimRotateAxis(INode * node, Control * control, char axis
             CLError << LogNode(node) << "has enabled the \"" << axis
                     << "\" rotate animation export but the object does not have any animation keys.";
         }
-        float value = rotateValue(rotateConrol, GetCOREInterface()->GetTime());
+        float value = rotateValue(rotateConrol, params.mCurrTime);
         outXAnim.pKeys.emplace_back(xobj::AnimRotate::Key(stsff::math::radToDeg(value), 0.0f));
         return;
     }
@@ -162,7 +165,7 @@ void ConverterAnim::objAnimRotateAxis(INode * node, Control * control, char axis
         return;
     }
 
-    xobj::AnimRotate::KeyList * keyList = getRotateAxisAnimation(rotateConrol, mdAnimRot->mKeyList, mdAnimRot->mReverse);
+    xobj::AnimRotate::KeyList * keyList = getRotateAxisAnimation(rotateConrol, mdAnimRot->mKeyList, mdAnimRot->mReverse, params);
     if (keyList) {
         outXAnim.pDrf = sts::toMbString(mdAnimRot->mDataref);
         outXAnim.pHasLoop = mdAnimRot->mLoopEnable;
@@ -175,7 +178,7 @@ void ConverterAnim::objAnimRotateAxis(INode * node, Control * control, char axis
 
 //-------------------------------------------------------------------------
 
-void ConverterAnim::objAnimRotate(INode * node, xobj::Transform & transform) {
+void ConverterAnim::objAnimRotate(INode * node, xobj::Transform & transform, const ExportParams & params) {
     assert(node);
 
     Control * tmConrol = node->GetTMController();
@@ -188,9 +191,9 @@ void ConverterAnim::objAnimRotate(INode * node, xobj::Transform & transform) {
 
     xobj::EulerXyzHelper xEuler;
 
-    objAnimRotateAxis(node, rotateConrol, 'x', xEuler.pX);
-    objAnimRotateAxis(node, rotateConrol, 'y', xEuler.pY);
-    objAnimRotateAxis(node, rotateConrol, 'z', xEuler.pZ);
+    objAnimRotateAxis(node, rotateConrol, 'x', xEuler.pX, params);
+    objAnimRotateAxis(node, rotateConrol, 'y', xEuler.pY, params);
+    objAnimRotateAxis(node, rotateConrol, 'z', xEuler.pZ, params);
 
     size_t animCount = 0;
     if (xEuler.pX.pKeys.size() > 1) {
@@ -229,7 +232,7 @@ Point3 ConverterAnim::translateValue(Control * xCtrl, Control * yCtrl, Control *
 
 //-------------------------------------------------------------------------
 
-void ConverterAnim::objAnimTrans(INode * node, xobj::Transform & transform) {
+void ConverterAnim::objAnimTrans(INode * node, xobj::Transform & transform, const ExportParams & params) {
     assert(node);
     //----------------------------------------------
 
@@ -292,7 +295,7 @@ void ConverterAnim::objAnimTrans(INode * node, xobj::Transform & transform) {
 
     transform.pAnimTrans.emplace_back();
     xobj::AnimTrans & anim = transform.pAnimTrans.back();
-    Point3 shift = translateValue(xCtrl, yCtrl, zCtrl, GetCOREInterface()->GetTime());
+    Point3 shift = translateValue(xCtrl, yCtrl, zCtrl, params.mCurrTime);
 
     anim.pKeys.resize(static_cast<size_t>(posControlKeyNum));
     for (int keyNum = 0; keyNum < posControlKeyNum; ++keyNum) {

@@ -29,11 +29,19 @@
 
 #pragma once
 
+#include <vector>
+
 #pragma warning(push, 0)
 #include <max.h>
 #pragma warning(pop)
 
-#include <xpln/obj/ObjMesh.h>
+namespace xobj {
+class ObjAbstract;
+class ObjMesh;
+}
+
+class ExportParams;
+class ImportParams;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,10 +50,10 @@
 class ConverterMesh {
 public:
 
-    static INode * toMax(const xobj::ObjAbstract * xObj);
-    static xobj::ObjMesh * toXpln(INode * node);
+    static xobj::ObjMesh * toXpln(INode * node, const ExportParams & params);
+    static INode * toMax(const xobj::ObjAbstract * xObj, const ImportParams & params);
 
-    static Mesh * extractMesh(INode * inNode);
+    static Mesh * extractMesh(INode * inNode, const ExportParams & params);
 
     ConverterMesh() = default;
     ~ConverterMesh() = default;
@@ -84,7 +92,7 @@ private:
     static void saveVerts(VertList & vertices, xobj::ObjMesh * inXMesh, Mesh * inMesh);
     static void saveFaces(FaceList & faces, xobj::ObjMesh * objMesh);
 
-    static bool isBone(INode * node);
+    static bool isBone(INode * node, const ExportParams & params);
 
 };
 

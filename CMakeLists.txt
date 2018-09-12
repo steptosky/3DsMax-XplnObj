@@ -92,13 +92,20 @@ message(STATUS "==============================================")
 # conan.io this must be after options.
 
 include(StsConan)
-conan_cmake_run(CONANFILE conanfile.txt
+set(INTERNAL_CONAN_FILE conanfile.txt)
+set(INTERNAL_CONAN_DEV_FILE dev-conanfile.txt)
+if (EXISTS "${CMAKE_SOURCE_DIR}/${INTERNAL_CONAN_DEV_FILE}")
+    set(INTERNAL_CONAN_FILE ${INTERNAL_CONAN_DEV_FILE})
+    message(STATUS "Used Conan dev file = ${INTERNAL_CONAN_FILE}")
+    message(STATUS "==============================================")    
+endif()
+conan_cmake_run(CONANFILE ${INTERNAL_CONAN_FILE}
                 BASIC_SETUP CMAKE_TARGETS KEEP_RPATHS
                 BUILD outdated)
 
 #----------------------------------------------------------------------------------#
 #//////////////////////////////////////////////////////////////////////////////////#
-#----------------------------------------------------------------------------------#		
+#----------------------------------------------------------------------------------#
 # help targets
 
 add_custom_target("Clean-Install-Dir"
@@ -109,6 +116,8 @@ add_custom_target("Clean-Install-Dir"
 #//////////////////////////////////////////////////////////////////////////////////#
 #----------------------------------------------------------------------------------#
 # Projects
+
+message(STATUS "==============================================")
 
 include(Sts3dmaxTarget)
 SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk9" 3DMAX_VERSION "9")
@@ -122,6 +131,8 @@ SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2014" 3DMAX_VERSION "2014")
 SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2015" 3DMAX_VERSION "2015")
 SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2016" 3DMAX_VERSION "2016")
 SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2017" 3DMAX_VERSION "2017")
+SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2018" 3DMAX_VERSION "2018" QT)
+SETUP_MAX_TERGET(SDK_TARGET "3DsMaxSdk2019" 3DMAX_VERSION "2019" QT)
 
 if (BUILD_TESTING)
     enable_testing()

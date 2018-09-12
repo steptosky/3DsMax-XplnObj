@@ -30,31 +30,40 @@
 #include "ConverterLine.h"
 
 #pragma warning(push, 0)
+#include <max.h>
 #include <splshape.h>
 #pragma warning(pop)
 
+#include <xpln/obj/ObjLine.h>
 #include <cassert>
-#include "Common/String.h"
+#include "common/String.h"
 #include "ConverterUtils.h"
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-ConverterLine::ObjLineList ConverterLine::toXpln(INode * inNode, const Matrix3 & inTargetTm) {
+ConverterLine::ObjLineList ConverterLine::toXpln(INode * inNode, const Matrix3 & inTargetTm, const ExportParams & params) {
     assert(inNode);
 
     ObjLineList linelist;
 
-    SplineShape * shape = getShape(inNode);
+    SplineShape * shape = getShape(inNode, params);
     if (shape == nullptr)
         return linelist;
 
-    Matrix3 tm = inNode->GetNodeTM(GetCOREInterface()->GetTime());
+    const auto currTime = params.mCurrTime;
+    Matrix3 tm = inNode->GetNodeTM(currTime);
     Matrix3 offsetTm = ConverterUtils::offsetMatrix(inNode);
 
     // collect lines to line container... 
-    int numCurves = shape->NumberOfCurves();
+#if MAX_VERSION_MAJOR < 20 // 2018
+    const int numCurves = shape->NumberOfCurves();
+#else
+    const int numCurves = shape->NumberOfCurves(currTime);
+#endif
     for (int idx = 0; idx < numCurves; idx++) {
         Spline3D * spline = shape->shape.GetSpline(idx);
         int numKnots = spline->KnotCount();
@@ -85,14 +94,14 @@ ConverterLine::ObjLineList ConverterLine::toXpln(INode * inNode, const Matrix3 &
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-SplineShape * ConverterLine::getShape(INode * inNode) {
+SplineShape * ConverterLine::getShape(INode * inNode, const ExportParams & params) {
     SplineShape * shape = nullptr;
-    ObjectState os = inNode->EvalWorldState(GetCOREInterface()->GetTime());
+    ObjectState os = inNode->EvalWorldState(params.mCurrTime);
     if (os.obj->IsSubClassOf(splineShapeClassID)) {
         shape = static_cast<SplineShape *>(os.obj);
     }
     else if (os.obj->CanConvertToType(splineShapeClassID)) {
-        shape = static_cast<SplineShape *>(os.obj->ConvertToType(GetCOREInterface()->GetTime(), splineShapeClassID));
+        shape = static_cast<SplineShape *>(os.obj->ConvertToType(params.mCurrTime, splineShapeClassID));
     }
     if (shape == nullptr)
         return nullptr;

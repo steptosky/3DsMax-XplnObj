@@ -28,13 +28,20 @@
 */
 
 #pragma once
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
 
-#include <xpln/obj/ObjMain.h>
-#include "objects/main/MainObjParamsWrapper.h"
+#include <vector>
 
+namespace xobj {
+class ObjAbstract;
+class ObjMain;
+class Transform;
+}
+
+class MainObjParamsWrapper;
+
+class INode;
+class Interface;
+class Matrix3;
 class StdMat;
 class RawExpOption;
 class Log;
@@ -45,6 +52,9 @@ class ConverterDummy;
 class ConverterLight;
 class ConverterAttr;
 class ConverterAnim;
+
+class ExportParams;
+class ImportParams;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,16 +72,17 @@ private:
 
     //-------------------------------------------------------------------------
 
-    static bool processXTransformHierarchy(INode * parent, xobj::Transform * xTransform);
-    static void processXTransformObjects(INode * parent, xobj::Transform * xTransform);
-    static INode * processXObjects(const xobj::ObjAbstract & xObj);
+    static bool processXTransformHierarchy(INode * parent, xobj::Transform * xTransform, const ImportParams & params);
+    static void processXTransformObjects(INode * parent, xobj::Transform * xTransform, const ImportParams & params);
+    static INode * processXObjects(const xobj::ObjAbstract & xObj, const ImportParams & params);
 
     //-------------------------------------------------------------------------
 
-    bool processNode(INode * node, xobj::Transform * xTransform) const;
+    bool processNode(INode * node, xobj::Transform * xTransform, const ExportParams & params) const;
 
     typedef std::vector<xobj::ObjAbstract*> ObjAbstractList;
-    void toXpln(INode * inxNode, const Matrix3 & baseTm, ObjAbstractList & outList) const;
+    void toXpln(INode * inxNode, const Matrix3 & baseTm,
+                ObjAbstractList & outList, const ExportParams & params) const;
 
     static bool collectLods(INode * ownerNode, INode * currNode, std::vector<INode*> & outLods);
 

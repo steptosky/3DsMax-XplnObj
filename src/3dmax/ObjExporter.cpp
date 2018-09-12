@@ -44,7 +44,7 @@ ObjExporter::~ObjExporter() {}
 /**************************************************************************************************/
 
 int ObjExporter::DoExport(const TCHAR * name, ExpInterface * /*ei*/, Interface * ip, BOOL suppressPrompts, DWORD options) {
-    mDlgMain = new ui::DlgExport();
+    mDlgMain = new ui::win::DlgExport();
     //ip->SetTime(TimeValue(0), TRUE);
     mDlgMain->show(name, ip, suppressPrompts == TRUE, options == SCENE_EXPORT_SELECTED ? true : false);
     delete mDlgMain;

@@ -38,6 +38,9 @@
 #include "models/MdAnimRot.h"
 #include "xpln/common/EulerXyzHelper.h"
 
+class ExportParams;
+class ImportParams;
+
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
@@ -51,9 +54,9 @@ public:
 
     //------------------------------------------------------------------
 
-    static bool toXPLN(INode * node, xobj::Transform * transform);
+    static bool toXPLN(INode * node, xobj::Transform * transform, const ExportParams & params);
 
-    static bool toMax(INode * /*node*/, xobj::Transform * /*transform*/) {
+    static bool toMax(INode * /*node*/, xobj::Transform * /*transform*/, const ImportParams & /*params*/) {
         // TODO Implementation
         return true;
     }
@@ -62,16 +65,17 @@ public:
 
 private:
 
-    static void visibilityToXPLN(INode * node, xobj::Transform & transform);
+    static void visibilityToXPLN(INode * node, xobj::Transform & transform, const ExportParams & params);
 
-    static void objAnimRotate(INode * node, xobj::Transform & transform);
-    static void objAnimRotateAxis(INode * node, Control * control, char axis, xobj::AnimRotate & outXAnim);
-    static xobj::AnimRotate::KeyList * getRotateAxisAnimation(Control * inAxis,
-                                                              const MdAnimRot::KeyValueList & inVals, int inIsReversed);
+    static void objAnimRotate(INode * node, xobj::Transform & transform, const ExportParams & params);
+    static void objAnimRotateAxis(INode * node, Control * control, char axis,
+                                  xobj::AnimRotate & outXAnim, const ExportParams & params);
+    static xobj::AnimRotate::KeyList * getRotateAxisAnimation(Control * inAxis, const MdAnimRot::KeyValueList & inVals,
+                                                              int inIsReversed, const ExportParams & params);
 
     //------------------------------------------------------------------
 
-    static void objAnimTrans(INode * node, xobj::Transform & transform);
+    static void objAnimTrans(INode * node, xobj::Transform & transform, const ExportParams & params);
     static Point3 translateValue(Control * inXCtrl, Control * inYCtrl, Control * inZCtrl, TimeValue time);
 
     //------------------------------------------------------------------

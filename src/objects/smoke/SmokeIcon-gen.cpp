@@ -1,5 +1,9 @@
 #include "SmokeIcon-gen.h"
 
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
+
 /* Auto-generated file */
 
 void SmokeIcon::fillMesh(Mesh & outMesh, const float scale) {
@@ -237,5 +241,4 @@ void SmokeIcon::fillMesh(Mesh & outMesh, const float scale) {
     outMesh.faces[41].setEdgeVisFlags(0, 2, 4);
 
     outMesh.InvalidateGeomCache();
-
 }

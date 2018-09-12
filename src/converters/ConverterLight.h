@@ -32,11 +32,20 @@
 #include <max.h>
 #pragma warning(pop)
 
-#include <xpln/obj/ObjLightNamed.h>
-#include <xpln/obj/ObjLightParam.h>
-#include <xpln/obj/ObjLightCustom.h>
-#include <xpln/obj/ObjLightSpillCust.h>
-#include <xpln/obj/ObjLightPoint.h>
+namespace xobj {
+class ObjAbstract;
+class ObjAbstractLight;
+class ObjLightNamed;
+class ObjLightParam;
+class ObjLightCustom;
+class ObjLightSpillCust;
+class ObjLightPoint;
+class Point3;
+class TMatrix;
+}
+
+class ExportParams;
+class ImportParams;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,17 +56,17 @@ class ConverterLight {
     ~ConverterLight() = default;
 public:
 
-    static xobj::ObjAbstractLight * toXpln(INode * node);
-    static INode * toMax(const xobj::ObjAbstract * object);
+    static xobj::ObjAbstractLight * toXpln(INode * node, const ExportParams & params);
+    static INode * toMax(const xobj::ObjAbstract * object, const ImportParams & params);
 
 private:
 
     // to MAX
-    static INode * toMaxLightNamed(const xobj::ObjLightNamed * inObjLight);
-    static INode * toMaxLightParam(const xobj::ObjLightParam * inObjLight);
-    static INode * toMaxLightCustom(const xobj::ObjLightCustom * inObjLight);
-    static INode * toMaxLightSpillCust(const xobj::ObjLightSpillCust * inObjLight);
-    static INode * toMaxLightPoint(const xobj::ObjLightPoint * inObjLight);
+    static INode * toMaxLightNamed(const xobj::ObjLightNamed * inObjLight, const ImportParams & params);
+    static INode * toMaxLightParam(const xobj::ObjLightParam * inObjLight, const ImportParams & params);
+    static INode * toMaxLightCustom(const xobj::ObjLightCustom * inObjLight, const ImportParams & params);
+    static INode * toMaxLightSpillCust(const xobj::ObjLightSpillCust * inObjLight, const ImportParams & params);
+    static INode * toMaxLightPoint(const xobj::ObjLightPoint * inObjLight, const ImportParams & params);
 
     static void setPosition(TimeValue t, INode * mode,
                             const xobj::TMatrix & targetTm, const xobj::Point3 & pos);

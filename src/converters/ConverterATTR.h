@@ -29,11 +29,13 @@
 
 #pragma once
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
+namespace xobj {
+class ObjAbstract;
+}
 
-#include <xpln/obj/ObjAbstract.h>
+class INode;
+class ExportParams;
+class ImportParams;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,8 +48,8 @@ class ConverterAttr {
 
 public:
 
-    static void toXpln(xobj::ObjAbstract & outXObj, INode * inNode);
-    static void toMax(INode * inNode, const xobj::ObjAbstract & inXObj);
+    static void toXpln(xobj::ObjAbstract & outXObj, INode * inNode, const ExportParams & params);
+    static void toMax(INode * inNode, const xobj::ObjAbstract & inXObj, const ImportParams & params);
 
 };
 

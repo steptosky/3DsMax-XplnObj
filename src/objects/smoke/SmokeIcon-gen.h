@@ -2,13 +2,11 @@
 
 /* Auto-generated file */
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
+class Mesh;
 
 class SmokeIcon {
 public:
 
-    static void fillMesh(Mesh & outMesh, const float scale);
+    static void fillMesh(Mesh & outMesh, float scale);
 
 };

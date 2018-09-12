@@ -29,7 +29,7 @@
 
 #include "CommonClassDesc.h"
 #include "resource/ResHelper.h"
-#include "ui/main-menu/MainMenuActions.h"
+#include "ui-win/main-menu/MainMenuActions.h"
 #include "gup/ObjCommon.h"
 
 #define COMMON_CLASS_ID	Class_ID(0xf5226b9, 0x5b131ef2)
@@ -65,7 +65,7 @@ int CommonClassDesc::NumActionTables() { return 1; }
 
 ActionTable * CommonClassDesc::GetActionTable(int) {
     if (mActionTable == nullptr) {
-        mActionTable = new ui::MainMenuActions();
+        mActionTable = new ui::win::MainMenuActions();
     }
     return mActionTable;
 }

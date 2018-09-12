@@ -31,7 +31,6 @@
 
 #pragma warning(push, 0)
 #include <max.h>
-#include <iparamb2.h>
 #pragma warning(pop)
 
 #include <xpln/obj/attributes/AttrWetDry.h>
@@ -45,6 +44,8 @@
 #include <xpln/obj/attributes/AttrSlopeLimit.h>
 #include <xpln/obj/attributes/AttrCockpitRegion.h>
 
+class IParamBlock2;
+
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
@@ -55,8 +56,8 @@
 class MainObjParamsWrapper {
 public:
 
-    MainObjParamsWrapper(IParamBlock2 * pbAttr, IParamBlock2 * pbExp, const TimeValue t, const Interval & interval);
-    MainObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval);
+    MainObjParamsWrapper(IParamBlock2 * pbAttr, IParamBlock2 * pbExp, TimeValue t, const Interval & interval);
+    MainObjParamsWrapper(INode * node, TimeValue t, const Interval & interval);
     ~MainObjParamsWrapper() = default;
 
     //-------------------------------------------------------------------------
@@ -65,14 +66,14 @@ public:
 
     /***************************************************************************************/
 
-    void setExportEnable(bool inState);
-    void setMeshExport(bool inState);
-    void setLinesExport(bool inState);
-    void setLightsExport(bool inState);
-    void setAnimationExport(bool inState);
-    void setOptimisation(bool inState);
-    void setInstancing(bool inState);
-    void setDebug(bool inState);
+    void setExportEnable(bool state);
+    void setMeshExport(bool state);
+    void setLinesExport(bool state);
+    void setLightsExport(bool state);
+    void setAnimationExport(bool state);
+    void setOptimisation(bool state);
+    void setInstancing(bool state);
+    void setDebug(bool state);
 
     bool isExportEnable();
     bool isMeshExport();
@@ -84,11 +85,11 @@ public:
     bool isDebug();
     //-------------------------------------------------------------------------
 
-    void setNameMesh(bool inState);
-    void setNameLines(bool inState);
-    void setNameLights(bool inState);
-    void setNameDummies(bool inState);
-    void setTreeHierarchy(bool inState);
+    void setNameMesh(bool state);
+    void setNameLines(bool state);
+    void setNameLights(bool state);
+    void setNameDummies(bool state);
+    void setTreeHierarchy(bool state);
 
     bool isNameMesh();
     bool isNameLines();
@@ -98,16 +99,16 @@ public:
 
     //-------------------------------------------------------------------------
 
-    void setScale(bool inManual, float inValue);
+    void setScale(bool manual, float value);
     bool isManualScale();
     float scale();
 
     /***************************************************************************************/
 
-    void setPathPrefix(const std::string & inStr);
-    void setTexture(const std::string & inStr);
-    void setTextureLit(const std::string & inStr);
-    void setTextureNormal(const std::string & inStr);
+    void setPathPrefix(const std::string & str);
+    void setTexture(const std::string & str);
+    void setTextureLit(const std::string & str);
+    void setTextureNormal(const std::string & str);
 
     std::string pathPrefix();
     std::string texture();
@@ -116,11 +117,11 @@ public:
 
     //-------------------------------------------------------------------------
 
-    void setBlendGlass(bool inState);
-    void setNormalMetalness(bool inState);
-    void setNoShadow(bool inState);
-    void setTilted(bool inState);
-    void setCockpitLit(bool inState);
+    void setBlendGlass(bool state);
+    void setNormalMetalness(bool state);
+    void setNoShadow(bool state);
+    void setTilted(bool state);
+    void setCockpitLit(bool state);
 
     bool isBlendGlass();
     bool isNormalMetalness();
@@ -130,16 +131,16 @@ public:
 
     //-------------------------------------------------------------------------
 
-    void setWetDry(const xobj::AttrWetDry & inAttr);
-    void setBlend(const xobj::AttrBlend & inAttr);
-    void setLayerGroup(const xobj::AttrLayerGroup & inAttr);
-    void setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup & inAttr);
-    void setLodDrap(const xobj::AttrLodDrap & inAttr);
-    void setSlungWeight(const xobj::AttrSlungLoadWeight & inAttr);
-    void setSpecular(const xobj::AttrSpecular & inAttr);
-    void setTint(const xobj::AttrTint & inAttr);
-    void setSlopeLimit(const xobj::AttrSlopeLimit & inAttr);
-    void setCockpitRegion(const xobj::AttrCockpitRegion & inAttr, xobj::AttrCockpitRegion::eNum inIdx);
+    void setWetDry(const xobj::AttrWetDry & attr);
+    void setBlend(const xobj::AttrBlend & attr);
+    void setLayerGroup(const xobj::AttrLayerGroup & attr);
+    void setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup & attr);
+    void setLodDrap(const xobj::AttrLodDrap & attr);
+    void setSlungWeight(const xobj::AttrSlungLoadWeight & attr);
+    void setSpecular(const xobj::AttrSpecular & attr);
+    void setTint(const xobj::AttrTint & attr);
+    void setSlopeLimit(const xobj::AttrSlopeLimit & attr);
+    void setCockpitRegion(const xobj::AttrCockpitRegion & attr, xobj::AttrCockpitRegion::eNum idx);
 
     xobj::AttrWetDry wetDry();
     xobj::AttrBlend blend();
@@ -150,7 +151,7 @@ public:
     xobj::AttrSpecular specular();
     xobj::AttrTint tint();
     xobj::AttrSlopeLimit slopeLimit();
-    xobj::AttrCockpitRegion cockpitRegion(xobj::AttrCockpitRegion::eNum inIdx);
+    xobj::AttrCockpitRegion cockpitRegion(xobj::AttrCockpitRegion::eNum idx);
 
     /***************************************************************************************/
 

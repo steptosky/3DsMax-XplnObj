@@ -31,10 +31,11 @@
 
 #pragma warning(push, 0)
 #include <max.h>
-#include <iparamb2.h>
 #pragma warning(pop)
 
 #include <xpln/obj/ObjSmoke.h>
+
+class IParamBlock2;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +47,7 @@
 class SmokeObjParamsWrapper {
 public:
 
-    SmokeObjParamsWrapper(INode * node, const TimeValue t, const Interval & interval);
+    SmokeObjParamsWrapper(INode * node, TimeValue t, const Interval & interval);
     ~SmokeObjParamsWrapper() = default;
 
     //-------------------------------------------------------------------------
@@ -55,8 +56,8 @@ public:
 
     //-------------------------------------------------------------------------
 
-    void setType(const xobj::ObjSmoke::eSmokeType val);
-    void setSize(const float val);
+    void setType(xobj::ObjSmoke::eSmokeType val);
+    void setSize(float val);
 
     //-------------------------------------------------------------------------
 

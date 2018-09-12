@@ -29,122 +29,36 @@
 
 #include "SmokeObj.h"
 
-#include "resource/resource.h"
-#include "SmokeObjParams.h"
-#include "objects/ScaleDim.h"
 #include "common/Logger.h"
-#include "common/String.h"
 #include "classes-desc/ClassesDescriptions.h"
 #include "SmokeIcon-gen.h"
 #include "additional/math/Compare.h"
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-#if MAX_VERSION_MAJOR < 15
-#	define p_end end
-#endif
+#include "SmokeObjParamBlocks.h"
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
-
-#define PARAMS_PB_VERSION 1
-#define DISPLAY_PB_VERSION 1
-
-enum {
-    SmokeObjParamsOrder = SmokeObjParams,
-    SmokeObjDisplayOrder = SmokeObjDisplay,
-};
-
-enum eSmokeObjDisplay : ParamID {
-    PSmokeObjIconScale,
-};
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
-
-class SmokeObjIconeSizeCallback : public PBAccessor {
-public:
-
-    virtual ~SmokeObjIconeSizeCallback() {}
-
-    void Set(PB2Value & v, ReferenceMaker * owner, ParamID id, int tabIndex, TimeValue t) override {
-        SmokeObject * u = dynamic_cast<SmokeObject*>(owner);
-        DbgAssert(u);
-        switch (id) {
-            case PSmokeObjIconScale:
-                u->makeIcon();
-                break;
-            default: break;
-        }
-        PBAccessor::Set(v, owner, id, tabIndex, t);
-    }
-};
-
-static SmokeObjIconeSizeCallback gSmokeIconeSizeCallback;
-
-//-------------------------------------------------------------------------
 
 class SmokeObjectPostLoadCallback : public PostLoadCallback {
 public:
 
-    virtual ~SmokeObjectPostLoadCallback() {}
+    explicit SmokeObjectPostLoadCallback(SmokeObject * obj)
+        : mObj(obj) {}
 
-    SmokeObject * pobj;
+    virtual ~SmokeObjectPostLoadCallback() = default;
 
-    explicit SmokeObjectPostLoadCallback(SmokeObject * p) {
-        pobj = p;
+    //-------------------------------------------------------------------------
+
+    void proc(ILoad *) override {
+        mObj->makeIcon();
+        SmokeObjParamBlocks::postLoadParams(mObj->mParamsPb);
+        SmokeObjParamBlocks::postLoadDisplay(mObj->mDisplayPb);
+        delete this;
     }
 
-    void proc(ILoad * /*iload*/) override {
-        pobj->makeIcon();
-    }
-};
+    //-------------------------------------------------------------------------
 
-//-------------------------------------------------------------------------
-
-class SmokeDlgProc : public ParamMap2UserDlgProc {
-public:
-
-    SmokeDlgProc() = default;
-    virtual ~SmokeDlgProc() = default;
-
-    INT_PTR DlgProc(TimeValue t, IParamMap2 * map, HWND hWnd, UINT msg, WPARAM wParam, LPARAM /*lParam*/) override {
-        IParamBlock2 * ppb = map->GetParamBlock();
-        switch (msg) {
-            case WM_INITDIALOG: {
-                HWND cbmBlend = GetDlgItem(hWnd, CMB_SMOKE_TYPE);
-                DbgAssert(cbmBlend);
-                if (cbmBlend) {
-                    //ComboBox_AddString(cbmBlend, _T("none"));
-                    ComboBox_AddString(cbmBlend, _T("White"));
-                    ComboBox_AddString(cbmBlend, _T("Black"));
-                    ComboBox_SetCurSel(cbmBlend, ppb->GetInt(PSmokeObjAttr_SmokeType) - 1);
-                }
-                return TRUE;
-            }
-            case WM_COMMAND: {
-                switch (LOWORD(wParam)) {
-                    case CMB_SMOKE_TYPE: {
-                        if (HIWORD(wParam) == CBN_SELCHANGE) {
-                            ppb->SetValue(PSmokeObjAttr_SmokeType, t, ComboBox_GetCurSel(GetDlgItem(hWnd, CMB_SMOKE_TYPE)) + 1);
-                        }
-                        break;
-                    }
-                    default: break;
-                }
-                break;
-            }
-            default: break;
-        }
-        return FALSE;
-    }
-
-    void DeleteThis() override {}
-
+    SmokeObject * mObj;
 };
 
 /**************************************************************************************************/
@@ -153,51 +67,6 @@ public:
 
 MouseCallback SmokeObject::mMouseCallback;
 SmokeObject * SmokeObject::mEditOb = nullptr;
-static SmokeDlgProc gSmokeDlgProc;
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
-
-static ParamBlockDesc2 gSmokeParamsPb(SmokeObjParams, _T("X-Smoke"), 0, ClassesDescriptions::smokeObj(), P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
-                                      PARAMS_PB_VERSION, SmokeObjParamsOrder,
-                                      //-------------------------------------------------------------------------
-                                      // Rollouts
-                                      ROLL_SMOKEOBJ_ATTR, IDS_ROLL_SMOKE_ATTR, 0, 0, &gSmokeDlgProc,
-                                      //-------------------------------------------------------------------------
-                                      // Params									
-                                      PSmokeObjAttr_SmokeType, _T("Type"), TYPE_INT, 0, NO_IDS,
-                                      p_default, 1,
-                                      p_end,
-                                      //-------------------------------------------------------------------------
-                                      PSmokeObjAttr_Size, _T("Size"), TYPE_FLOAT, 0, NO_IDS,
-                                      p_default, 1.0f,
-                                      p_range, 0.0001f, 999999999.9f,
-                                      p_ui, TYPE_SPINNER, EDITTYPE_POS_FLOAT, SPN_SMOKE_SIZE_EDIT, SPN_SMOKE_SIZE, SPIN_AUTOSCALE,
-                                      p_end,
-                                      //-------------------------------------------------------------------------
-                                      p_end);
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
-
-static ParamBlockDesc2 gSmokeDisplayPb(SmokeObjDisplay, _T("X-Smoke-Display"), 0, ClassesDescriptions::smokeObj(), P_AUTO_CONSTRUCT + P_AUTO_UI + P_VERSION,
-                                       DISPLAY_PB_VERSION, SmokeObjDisplayOrder,
-                                       //-------------------------------------------------------------------------
-                                       // Rollouts
-                                       ROLL_SMOKEOBJ_DISPLAY, IDS_ROLL_SMOKE_DISPLY, 0, APPENDROLL_CLOSED, NULL,
-                                       //-------------------------------------------------------------------------
-                                       // Display									
-                                       PSmokeObjIconScale, _T("IconScale"), TYPE_FLOAT, 0, IDS_SCALE,
-                                       p_default, 1.0f,
-                                       p_range, 0.01f, 1000.0f,
-                                       p_accessor, &gSmokeIconeSizeCallback,
-                                       p_dim, &gScaleDim,
-                                       p_ui, TYPE_SPINNER, EDITTYPE_POS_FLOAT, IDC_SCALE_EDIT, IDC_SCALE_SPIN, SPIN_AUTOSCALE,
-                                       p_end,
-                                       //-------------------------------------------------------------------------
-                                       p_end);
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
@@ -211,8 +80,6 @@ SmokeObject::SmokeObject() {
     makeIcon();
 }
 
-SmokeObject::~SmokeObject() {}
-
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
@@ -223,8 +90,8 @@ CreateMouseCallBack * SmokeObject::GetCreateMouseCallBack() { return &mMouseCall
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-IOResult SmokeObject::Load(ILoad * iload) {
-    iload->RegisterPostLoadCallback(new SmokeObjectPostLoadCallback(this));
+IOResult SmokeObject::Load(ILoad * load) {
+    load->RegisterPostLoadCallback(new SmokeObjectPostLoadCallback(this));
     return IO_OK;
 }
 
@@ -232,13 +99,13 @@ IOResult SmokeObject::Load(ILoad * iload) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void SmokeObject::BeginEditParams(IObjParam * ip, ULONG flags, Animatable * prev) {
+void SmokeObject::BeginEditParams(IObjParam * ip, const ULONG flags, Animatable * prev) {
     mIp = ip;
     mEditOb = this;
     mDesc->BeginEditParams(ip, this, flags, prev);
 }
 
-void SmokeObject::EndEditParams(IObjParam * ip, ULONG flags, Animatable * next) {
+void SmokeObject::EndEditParams(IObjParam * ip, const ULONG flags, Animatable * next) {
     mEditOb = nullptr;
     mIp = nullptr;
     mDesc->EndEditParams(ip, this, flags, next);
@@ -249,16 +116,24 @@ void SmokeObject::EndEditParams(IObjParam * ip, ULONG flags, Animatable * next) 
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-ObjectState SmokeObject::Eval(TimeValue) { return ObjectState(this); }
-Object * SmokeObject::ConvertToType(TimeValue, Class_ID) { return nullptr; }
-int SmokeObject::CanConvertToType(Class_ID) { return FALSE; }
+ObjectState SmokeObject::Eval(TimeValue) {
+    return ObjectState(this);
+}
+
+Object * SmokeObject::ConvertToType(TimeValue, Class_ID) {
+    return nullptr;
+}
+
+int SmokeObject::CanConvertToType(Class_ID) {
+    return FALSE;
+}
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void SmokeObject::GetWorldBoundBox(TimeValue, INode * inode, ViewExp *, Box3 & box) {
-    Matrix3 tm = inode->GetObjectTM(GetCOREInterface()->GetTime());
+void SmokeObject::GetWorldBoundBox(TimeValue, INode * node, ViewExp *, Box3 & box) {
+    const Matrix3 tm = node->GetObjectTM(GetCOREInterface()->GetTime());
     box = mIconMesh.getBoundingBox() * tm;
 }
 
@@ -280,28 +155,38 @@ void SmokeObject::InitNodeName(TSTR & s) { s = _T("X-Smoke-"); }
 
 //-------------------------------------------------------------------------
 
-Class_ID SmokeObject::ClassID() { return mDesc->ClassID(); }
-SClass_ID SmokeObject::SuperClassID() { return mDesc->SuperClassID(); }
-void SmokeObject::GetClassName(TSTR & s) { s = mDesc->ClassName(); }
+Class_ID SmokeObject::ClassID() {
+    return mDesc->ClassID();
+}
+
+SClass_ID SmokeObject::SuperClassID() {
+    return mDesc->SuperClassID();
+}
+
+void SmokeObject::GetClassName(TSTR & s) {
+    s = mDesc->ClassName();
+}
 
 RefTargetHandle SmokeObject::Clone(RemapDir & remap) {
-    SmokeObject * newob = new SmokeObject();
-    newob->ReplaceReference(SmokeObjParamsOrder, mParamsPb->Clone(remap));
-    newob->ReplaceReference(SmokeObjDisplayOrder, mDisplayPb->Clone(remap));
-    BaseClone(this, newob, remap);
-    return newob;
+    auto newObj = new SmokeObject();
+    newObj->ReplaceReference(SmokeObjParamBlocks::PbOrderParams, mParamsPb->Clone(remap));
+    newObj->ReplaceReference(SmokeObjParamBlocks::PbOrderDisplay, mDisplayPb->Clone(remap));
+    BaseClone(this, newObj, remap);
+    return newObj;
 }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-Animatable * SmokeObject::SubAnim(int i) { return GetParamBlock(i); }
+Animatable * SmokeObject::SubAnim(const int i) {
+    return GetParamBlock(i);
+}
 
-TSTR SmokeObject::SubAnimName(int i) {
+TSTR SmokeObject::SubAnimName(const int i) {
     switch (i) {
-        case SmokeObjParamsOrder: return _T("Parameters");
-        case SmokeObjDisplayOrder: return _T("Display");
+        case SmokeObjParamBlocks::PbOrderParams: return _T("Parameters");
+        case SmokeObjParamBlocks::PbOrderDisplay: return _T("Display");
         default: return _T("");
     }
 }
@@ -310,18 +195,23 @@ TSTR SmokeObject::SubAnimName(int i) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-int SmokeObject::GetParamBlockIndex(int id) { return id; }
-int SmokeObject::NumParamBlocks() { return 2; }
+int SmokeObject::GetParamBlockIndex(const int id) {
+    return id;
+}
 
-IParamBlock2 * SmokeObject::GetParamBlock(int i) {
+int SmokeObject::NumParamBlocks() {
+    return 2;
+}
+
+IParamBlock2 * SmokeObject::GetParamBlock(const int i) {
     switch (i) {
-        case SmokeObjParamsOrder: return mParamsPb;
-        case SmokeObjDisplayOrder: return mDisplayPb;
+        case SmokeObjParamBlocks::PbOrderParams: return mParamsPb;
+        case SmokeObjParamBlocks::PbOrderDisplay: return mDisplayPb;
         default: return nullptr;
     }
 }
 
-IParamBlock2 * SmokeObject::GetParamBlockByID(BlockID id) {
+IParamBlock2 * SmokeObject::GetParamBlockByID(const BlockID id) {
     switch (id) {
         case SmokeObjParams: return mParamsPb;
         case SmokeObjDisplay: return mDisplayPb;
@@ -333,24 +223,26 @@ IParamBlock2 * SmokeObject::GetParamBlockByID(BlockID id) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-int SmokeObject::NumRefs() { return 2; }
+int SmokeObject::NumRefs() {
+    return 2;
+}
 
-RefTargetHandle SmokeObject::GetReference(int i) {
+RefTargetHandle SmokeObject::GetReference(const int i) {
     switch (i) {
-        case SmokeObjParamsOrder: return mParamsPb;
-        case SmokeObjDisplayOrder: return mDisplayPb;
+        case SmokeObjParamBlocks::PbOrderParams: return mParamsPb;
+        case SmokeObjParamBlocks::PbOrderDisplay: return mDisplayPb;
         default: return nullptr;
     }
 }
 
-void SmokeObject::SetReference(int i, RefTargetHandle rtarg) {
+void SmokeObject::SetReference(const int i, const RefTargetHandle target) {
     switch (i) {
-        case SmokeObjParamsOrder: {
-            mParamsPb = static_cast<IParamBlock2*>(rtarg);
+        case SmokeObjParamBlocks::PbOrderParams: {
+            mParamsPb = static_cast<IParamBlock2*>(target);
             break;
         }
-        case SmokeObjDisplayOrder: {
-            mDisplayPb = static_cast<IParamBlock2*>(rtarg);
+        case SmokeObjParamBlocks::PbOrderDisplay: {
+            mDisplayPb = static_cast<IParamBlock2*>(target);
             break;
         }
         default: break;
@@ -363,16 +255,16 @@ void SmokeObject::SetReference(int i, RefTargetHandle rtarg) {
 
 #if MAX_VERSION_MAJOR > 16
 RefResult SmokeObject::NotifyRefChanged(const Interval & /*changeInt*/, RefTargetHandle /*hTarget*/,
-                                        PartID & /*partID*/, RefMessage message, BOOL /*propagate*/) {
+                                        PartID & /*partId*/, RefMessage message, BOOL /*propagate*/) {
 #else
 RefResult SmokeObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /*hTarget*/,
-										PartID & /*partID*/, RefMessage message) {
+                                        PartID & /*partId*/, const RefMessage message) {
 #endif
     switch (message) {
         case REFMSG_CHANGE:
             if (mEditOb == this) {
-                gSmokeParamsPb.InvalidateUI(mParamsPb->LastNotifyParamID());
-                gSmokeDisplayPb.InvalidateUI(mDisplayPb->LastNotifyParamID());
+                SmokeObjParamBlocks::mParams.InvalidateUI(mParamsPb->LastNotifyParamID());
+                SmokeObjParamBlocks::mDisplay.InvalidateUI(mDisplayPb->LastNotifyParamID());
             }
             break;
         default: break;
@@ -384,21 +276,21 @@ RefResult SmokeObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle 
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void SmokeObject::GetMat(TimeValue t, INode * inode, ViewExp *, Matrix3 & tm) {
-    tm = inode->GetObjectTM(t);
+void SmokeObject::GetMat(const TimeValue t, INode * node, ViewExp *, Matrix3 & tm) {
+    tm = node->GetObjectTM(t);
     tm.NoScale();
 }
 
-int SmokeObject::HitTest(TimeValue t, INode * inode, int type, int crossing, int flags, IPoint2 * p, ViewExp * vpt) {
+int SmokeObject::HitTest(const TimeValue t, INode * node, const int type, const int crossing, const int flags, IPoint2 * p, ViewExp * vpt) {
     HitRegion hitRegion;
     DWORD savedLimits;
-    int res = 0;
+    const int res = 0;
     Matrix3 m;
     GraphicsWindow * gw = vpt->getGW();
     Material * mtl = gw->getMaterial();
     MakeHitRegion(hitRegion, type, crossing, 4, p);
     gw->setRndLimits(((savedLimits = gw->getRndLimits()) | GW_PICK) & ~GW_ILLUM);
-    GetMat(t, inode, vpt, m);
+    GetMat(t, node, vpt, m);
     gw->setTransform(m);
     // if we get a hit on the mIconMesh, we're done
     gw->clearHitCode();
@@ -418,26 +310,26 @@ int SmokeObject::UsesWireColor() {
 
 //-------------------------------------------------------------------------
 
-int SmokeObject::Display(TimeValue t, INode * inode, ViewExp * vpt, int /*flags*/) {
+int SmokeObject::Display(const TimeValue t, INode * node, ViewExp * vpt, int /*flags*/) {
     GraphicsWindow * gw = vpt->getGW();
     Material * mtl = gw->getMaterial();
-    Color color(inode->GetWireColor());
+    const Color color(node->GetWireColor());
     mObjColor.x = color.r;
     mObjColor.y = color.g;
     mObjColor.z = color.b;
-    gw->setTransform(inode->GetObjectTM(t));
+    gw->setTransform(node->GetObjectTM(t));
     //-------------------------------------------------------------------------
-    DWORD rlim = gw->getRndLimits();
-    gw->setRndLimits(GW_WIREFRAME | GW_EDGES_ONLY | GW_BACKCULL | (rlim & GW_Z_BUFFER));
+    const DWORD limits = gw->getRndLimits();
+    gw->setRndLimits(GW_WIREFRAME | GW_EDGES_ONLY | GW_BACKCULL | (limits & GW_Z_BUFFER));
 
-    if (inode->Selected()) {
+    if (node->Selected()) {
         gw->setColor(LINE_COLOR, GetSelColor());
     }
-    else if (!inode->IsFrozen() && !inode->Dependent()) {
+    else if (!node->IsFrozen() && !node->Dependent()) {
         gw->setColor(LINE_COLOR, mObjColor);
     }
     mIconMesh.render(gw, mtl, nullptr, COMP_ALL);
-    gw->setRndLimits(rlim);
+    gw->setRndLimits(limits);
     //-------------------------------------------------------------------------
     return 0;
 }
@@ -455,7 +347,7 @@ void SmokeObject::makeIcon() {
         return;
     }
 
-    float masterScale = static_cast<float>(GetMasterScale(UNITS_METERS));
+    auto masterScale = static_cast<float>(GetMasterScale(UNITS_METERS));
     if (masterScale != -1.0f) {
         masterScale = 1.0f / masterScale;
         size = size * masterScale;
@@ -469,6 +361,6 @@ void SmokeObject::makeIcon() {
     SmokeIcon::fillMesh(mIconMesh, size);
 }
 
-/*************************************************************************************************
+/**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/

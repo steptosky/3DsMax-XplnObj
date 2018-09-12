@@ -28,11 +28,15 @@
 */
 
 #pragma once
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
 
-#include <xpln/obj/ObjDummy.h>
+namespace xobj {
+class ObjAbstract;
+class ObjDummy;
+}
+
+class INode;
+class ExportParams;
+class ImportParams;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,8 +49,8 @@ class ConverterDummy {
 
 public:
 
-    static INode * toMax(const xobj::ObjAbstract * inXObj);
-    static xobj::ObjDummy * toXpln(INode * inNode);
+    static xobj::ObjDummy * toXpln(INode * inNode, const ExportParams & params);
+    static INode * toMax(const xobj::ObjAbstract * inXObj, const ImportParams & params);
 
 };
 
