@@ -320,6 +320,11 @@
 #define SPN_SMOKE_SIZE                  1250
 #define EDT_INFO                        1252
 #define EDT_OBJECTS                     1255
+#define SPN_LIGHTLEVEL_V1_LABEL         1256
+#define SPN_LIGHTLEVEL_V2_LABEL         1257
+#define SPN_POLYOFFSET_DIST_LABEL       1258
+#define SPN_BLEND_LABEL                 1259
+#define SPN_SHINY_LABEL                 1260
 
 // Next default values for new objects
 // 
@@ -327,7 +332,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        173
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1256
+#define _APS_NEXT_CONTROL_VALUE         1261
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

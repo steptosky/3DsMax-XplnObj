@@ -88,6 +88,7 @@ namespace win {
         //-------------------------------------------------------------------------
 
         win::CheckBox cChkShiny;
+        win::Base cLblShinyRatio;
         ISpinnerControl * cSpnShinyRatio = nullptr;
 
         void enableShiny(bool state);
@@ -116,6 +117,7 @@ namespace win {
         //-------------------------------------------------------------------------
 
         win::Combo cCmbBlend;
+        win::Base cLblBlendRatio;
         ISpinnerControl * cSpnBlendRatio = nullptr;
 
         void enableBlend(bool state);
@@ -125,6 +127,7 @@ namespace win {
         //-------------------------------------------------------------------------
 
         win::CheckBox cChkPolyOffset;
+        win::Base cLblPolyOstDist;
         ISpinnerControl * cSpnPolyOstDist = nullptr;
 
         void enablePolyOffset(bool state);
@@ -133,9 +136,11 @@ namespace win {
 
         //-------------------------------------------------------------------------
 
-        win::CheckBox cChkLightLevel;
         ICustEdit * cEdtLightLevelDrf = nullptr;
+        win::CheckBox cChkLightLevel;
         win::Base cBtnLightLevelDrf;
+        win::Base cLblLightLevelVal1;
+        win::Base cLblLightLevelVal2;
         ISpinnerControl * cSpnLightLevelVal1 = nullptr;
         ISpinnerControl * cSpnLightLevelVal2 = nullptr;
 

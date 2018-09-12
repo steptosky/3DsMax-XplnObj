@@ -226,6 +226,7 @@ namespace win {
         cChkDraw.setup(hWnd, CHK_DRAW);
 
         cChkShiny.setup(hWnd, CHK_SHINY);
+        cLblShinyRatio.setup(hWnd, SPN_SHINY_LABEL);
         cSpnShinyRatio = SetupFloatSpinner(hWnd, SPN_SHINY, SPN_SHINY_EDIT, 0.0f, 1.0f, 0.5f, 0.01f);
 
         cChkCockpit.setup(hWnd, CHK_COCKPIT);
@@ -236,12 +237,16 @@ namespace win {
         cCmbHard.setup(hWnd, CMB_HARD);
 
         cCmbBlend.setup(hWnd, CMB_BLEND);
+        cLblBlendRatio.setup(hWnd, SPN_BLEND_LABEL);
         cSpnBlendRatio = SetupFloatSpinner(hWnd, SPN_BLEND, SPN_BLEND_EDIT, 0.0f, 1.0f, 0.5f, 0.01f);
 
         cChkPolyOffset.setup(hWnd, CHK_POLYOFFSET);
+        cLblPolyOstDist.setup(hWnd, SPN_POLYOFFSET_DIST_LABEL);
         cSpnPolyOstDist = SetupFloatSpinner(hWnd, SPN_POLYOFFSET_DIST, SPN_POLYOFFSET_DIST_EDIT, 0.0f, 999999.9f, 0.0f, 0.5f);
 
         cChkLightLevel.setup(hWnd, CHK_LIGHTLEVEL);
+        cLblLightLevelVal1.setup(hWnd, SPN_LIGHTLEVEL_V1_LABEL);
+        cLblLightLevelVal2.setup(hWnd, SPN_LIGHTLEVEL_V2_LABEL);
         cSpnLightLevelVal1 = SetupFloatSpinner(hWnd, SPN_LIGHTLEVEL_V1, SPN_LIGHTLEVEL_V1_EDIT, 0.0f, 999999.9f, 1.0f, 0.01f);
         cSpnLightLevelVal2 = SetupFloatSpinner(hWnd, SPN_LIGHTLEVEL_V2, SPN_LIGHTLEVEL_V2_EDIT, 0.0f, 999999.9f, 1.0f, 0.01f);
         cEdtLightLevelDrf = GetICustEdit(GetDlgItem(hWnd, EDT_LIGHTLEVEL_DRF));
@@ -273,6 +278,7 @@ namespace win {
         cChkDraw.release();
 
         cChkShiny.release();
+        cLblShinyRatio.release();
         ReleaseISpinner(cSpnShinyRatio);
 
         cChkCockpit.release();
@@ -283,12 +289,16 @@ namespace win {
         cCmbHard.release();
 
         cCmbBlend.release();
+        cLblBlendRatio.release();
         ReleaseISpinner(cSpnBlendRatio);
 
         cChkPolyOffset.release();
+        cLblPolyOstDist.release();
         ReleaseISpinner(cSpnPolyOstDist);
 
         cChkLightLevel.release();
+        cLblLightLevelVal1.release();
+        cLblLightLevelVal2.release();
         ReleaseISpinner(cSpnLightLevelVal1);
         ReleaseISpinner(cSpnLightLevelVal2);
         ReleaseICustEdit(cEdtLightLevelDrf);
@@ -377,10 +387,13 @@ namespace win {
     void ObjAttr::enableShiny(bool state) {
         if (!state) {
             cChkShiny.disable();
+            cLblShinyRatio.disable();
             cSpnShinyRatio->Disable();
         }
         else {
+            const auto isChecked = cChkShiny.isChecked();
             cChkShiny.enable();
+            cLblShinyRatio.enable(isChecked);
             cSpnShinyRatio->Enable(mData.shiny());
         }
     }
@@ -461,11 +474,14 @@ namespace win {
     void ObjAttr::enableBlend(bool state) {
         if (!state) {
             cCmbBlend.disable();
+            cLblBlendRatio.disable();
             cSpnBlendRatio->Disable();
         }
         else {
+            const auto isChecked = mData.blend();
             cCmbBlend.enable();
-            cSpnBlendRatio->Enable(mData.blend());
+            cLblBlendRatio.enable(isChecked);
+            cSpnBlendRatio->Enable(isChecked);
         }
     }
 
@@ -490,10 +506,13 @@ namespace win {
     void ObjAttr::enablePolyOffset(bool state) {
         if (!state) {
             cChkPolyOffset.disable();
+            cLblPolyOstDist.disable();
             cSpnPolyOstDist->Disable();
         }
         else {
+            const auto isChecked = cChkPolyOffset.isChecked();
             cChkPolyOffset.enable();
+            cLblPolyOstDist.enable(isChecked);
             cSpnPolyOstDist->Enable(mData.polyOffset());
         }
     }
@@ -517,13 +536,18 @@ namespace win {
     void ObjAttr::enableLightLevel(bool state) {
         if (!state) {
             cChkLightLevel.disable();
+            cLblLightLevelVal1.disable();
+            cLblLightLevelVal2.disable();
             cSpnLightLevelVal1->Disable();
             cSpnLightLevelVal2->Disable();
             cEdtLightLevelDrf->Disable();
             cBtnLightLevelDrf.disable();
         }
         else {
+            const auto isChecked = cChkLightLevel.isChecked();
             cChkLightLevel.enable();
+            cLblLightLevelVal1.enable(isChecked);
+            cLblLightLevelVal2.enable(isChecked);
             cSpnLightLevelVal1->Enable(mData.lightLevel());
             cSpnLightLevelVal2->Enable(mData.lightLevel());
             cEdtLightLevelDrf->Enable(mData.lightLevel());
