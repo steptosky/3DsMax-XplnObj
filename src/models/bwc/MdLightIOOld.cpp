@@ -166,7 +166,7 @@ struct ObjLightNamed {
         }
         std::string mName;
         stream >> mName;
-        mLight.setLightId(xobj::ELightNamed::fromString(mName.c_str()));
+        mLight.setName(mName);
         return true;
     }
 
@@ -207,15 +207,8 @@ struct ObjLightParam {
         stream >> mName;
         stream >> mAdditional;
 
-        // TODO is it correct?
-        if (mIsCustom) {
-            mLight.setLightId(xobj::ELightParams(xobj::ELightParams::light_params_custom));
-        }
-        else {
-            mLight.setLightId(xobj::ELightParams::fromString(mName.c_str()));
-        }
-        mLight.setAdditionalParams(mAdditional);
-        mLight.setLightName(mName);
+        mLight.setName(mName);
+        mLight.setParams(mAdditional);
         return true;
     }
 
