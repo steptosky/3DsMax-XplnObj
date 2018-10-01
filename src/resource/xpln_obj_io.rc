@@ -56,16 +56,17 @@ BEGIN
     LTEXT           "Name",IDC_STATIC,6,88,37,8
 END
 
-IDD_ROLL_LIGHT_PARAM_OBJ DIALOGEX 0, 0, 108, 80
+IDD_ROLL_LIGHT_PARAM_OBJ DIALOGEX 0, 0, 108, 152
 STYLE DS_SETFONT | WS_CHILD | WS_VISIBLE
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    COMBOBOX        IDC_CMB_LIGHTNAMED,5,12,97,200,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    GROUPBOX        "Light Param",IDC_STATIC,2,2,104,76
-    CONTROL         "",IDC_EDIT_PARAMS,"CustEdit",WS_TABSTOP,10,59,87,12
-    CTEXT           "additional ",IDC_STATIC,17,49,75,8
-    CONTROL         "",IDC_EDIT_CUSTOM,"CustEdit",WS_TABSTOP,10,35,87,12
-    CTEXT           "Custom name",IDC_STATIC_CUST,18,26,75,8
+    COMBOBOX        IDC_CMB_LIGHTNAMED,5,70,97,200,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Light Param",IDC_STATIC,2,2,104,145
+    CONTROL         "",IDC_EDIT_PARAMS,"CustEdit",WS_TABSTOP,5,126,97,12
+    LTEXT           "Parameters",IDC_STATIC,5,115,75,8
+    CONTROL         "",IDC_EDIT_NAME,"CustEdit",WS_TABSTOP,5,99,97,12
+    LTEXT           "Name",IDC_STATIC_CUST,5,89,75,8
+    LTEXT           "Pre-defined lights:\r\nThis list may be incomplete. See plug-in's documentation for information where you can obtain all the available lights.",IDC_STATIC,6,12,94,53
 END
 
 IDD_ROLL_LIGHT_CUST_OBJ DIALOGEX 0, 0, 108, 98
@@ -796,6 +797,7 @@ BEGIN
 
     IDD_ROLL_LIGHT_PARAM_OBJ, DIALOG
     BEGIN
+        BOTTOMMARGIN, 151
     END
 
     ROLL_MANIP_MAIN, DIALOG

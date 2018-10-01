@@ -142,6 +142,7 @@
 #define IDC_EDIT_PARAMS                 1123
 #define IDC_S1_EDIT                     1124
 #define IDC_EDIT_CUSTOM                 1124
+#define IDC_EDIT_NAME                   1124
 #define IDC_S1_SPIN                     1125
 #define IDC_T1_EDIT                     1126
 #define IDC_T1_SPIN                     1127
