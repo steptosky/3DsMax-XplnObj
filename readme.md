@@ -1,11 +1,10 @@
-
 # The X-Plane .obj exporter for the 3DsMax.
-- The plugin is distributed under [BSD (3-Clause)](http://opensource.org/licenses/BSD-3-Clause) license.
+- The plug-in is distributed under [BSD (3-Clause)](http://opensource.org/licenses/BSD-3-Clause) license.
   For more information read the [license](license.txt) file.
 - The X-Plane [official website](http://www.x-plane.com/).
 - The X-Plane [obj specification](http://developer.x-plane.com/?article=obj8-file-format-specification).
-- The plugin supports `9-2019` 3DsMaxs (x64 only).
-- The plugin requires C++ 14 or higher standard.
+- The plug-in supports `9-2019` 3DsMaxs (x64 only).
+- The plug-in requires C++ 14 or higher standard.
 
 ### Warning 
 Importing is still under developing and doesn't work properly!
@@ -13,12 +12,12 @@ Importing is still under developing and doesn't work properly!
 ## Dependencies
 - [CMake [3.10.0+]](https://cmake.org/) building tool.
 - [Conan [1.6+]](https://www.conan.io) package manager.  
-- [XplnObj [0.6.2]](https://github.com/steptosky/XplnObj) is used via conan.
-- [sts-signals [0.1.2]](https://github.com/steptosky/sts-signals) is used via conan.
-- [sts-semver [0.2.1]](https://github.com/steptosky/sts-semver) is used via conan.
-- [jsonformoderncpp [3.1.2]](https://github.com/nlohmann/json) is used via conan.
+- [XplnObj](https://github.com/steptosky/XplnObj) is used via conan.
+- [sts-signals](https://github.com/steptosky/sts-signals) is used via conan.
+- [sts-semver](https://github.com/steptosky/sts-semver) is used via conan.
+- [jsonformoderncpp](https://github.com/nlohmann/json) is used via conan.
 - 3Ds Max SDK. Usually you can find it on 3Ds Max installation CD or image.
-- **Since 3Ds Max 2018 the plugin uses Qt for building some GUI elements.**   
+- **Since 3Ds Max 2018 the plug-in uses Qt for building some GUI elements.**   
   The QT isn't used via conan so you have to install it manually.  
     - `3Ds Max 2018` - requires [QT [5.6.2]](https://www1.qt.io/offline-installers/?hsLang=en)
     - `3Ds Max 2019` - requires [QT [5.6.3]](https://www1.qt.io/offline-installers/?hsLang=en)
@@ -42,7 +41,7 @@ Importing is still under developing and doesn't work properly!
 3DsMaxSdk2010/last@steptosky/stable    is used
 ...
 ```
-- If you are going to compile the plugin for **3Ds Max version greater than 2017** you have to install certain versions of QT.
+- If you are going to compile the plug-in for **3Ds Max version greater than 2017** you have to install certain versions of QT.
   See `dependencies` section above.  
   Then you have to specify environment variables with path to QT something like this `C:\Qt\Qt5.6.3\5.6.3\msvc2017_64`:
     - `3DSMAX_2018_QT`=path to certain QT version where `bin` and `include` folders are located.
@@ -50,7 +49,7 @@ Importing is still under developing and doesn't work properly!
 - If you are going to develop you may generate the `Visual Studio 2017` project with the file `msvc-2017.bat` in the root repository folder.  
   You may copy that file and make necessary changes as you wish using the origin script as the example.  
   You may copy `conanfile.txt` and name it as `dev-conanfile.txt` then this file will be used during project generation. 
-    It is useful when you are developing only for certaing 3Ds Max versions but you want all the versions to be built with your CI.  
+    It is useful when you are developing only for certain 3Ds Max versions but you want all the versions to be built with your CI.  
     **Don't forget to update data** in the `dev-conanfile.txt` when you pull new changes from the repository 
     or you changed commit or branch because dependencies' versions could also be changed.
 - If you just want to build the plugins you may use the scripts inside the `ci` folder.  
