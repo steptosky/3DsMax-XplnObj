@@ -74,7 +74,7 @@ namespace win {
                             DbgAssert(iter != theDlg->mPreDefinedList.end());
 
                             theDlg->mData->setName(sts::toMbString(iter->first));
-                            theDlg->mData->setParams(sts::toMbString(iter->second));
+                            theDlg->mData->setRawParams(sts::toMbString(iter->second));
                             UiUtilities::setText(theDlg->cEdtCustomName, sts::toString(iter->first));
                             UiUtilities::setText(theDlg->cEdtAdditional, sts::toString(iter->second));
                             theDlg->eventParamChanged(true);
@@ -88,7 +88,7 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case IDC_EDIT_PARAMS: {
-                        theDlg->mData->setParams(sts::toMbString(UiUtilities::getText(theDlg->cEdtAdditional)));
+                        theDlg->mData->setRawParams(sts::toMbString(UiUtilities::getText(theDlg->cEdtAdditional)));
                         theDlg->eventParamChanged(true);
                         break;
                     }

@@ -157,7 +157,7 @@ bool LightIO::load(INode * node, sts::DataStreamI & stream, xobj::ObjLightParam 
     const std::uint8_t version = stream.value<std::uint8_t>();
     if (version == 2) {
         outLight.setName(stream.value<std::string>());
-        outLight.setParams(stream.value<std::string>());
+        outLight.setRawParams(stream.value<std::string>());
         return true;
     }
 
@@ -172,7 +172,7 @@ bool LightIO::load(INode * node, sts::DataStreamI & stream, xobj::ObjLightParam 
         lightName = lightId;
     }
     outLight.setName(lightName);
-    outLight.setParams(stream.value<std::string>());
+    outLight.setRawParams(stream.value<std::string>());
     return true;
 }
 

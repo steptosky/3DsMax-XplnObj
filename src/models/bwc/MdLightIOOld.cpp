@@ -208,7 +208,7 @@ struct ObjLightParam {
         stream >> mAdditional;
 
         mLight.setName(mName);
-        mLight.setParams(mAdditional);
+        mLight.setRawParams(mAdditional);
         return true;
     }
 
