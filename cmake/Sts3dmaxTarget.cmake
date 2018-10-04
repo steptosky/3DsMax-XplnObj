@@ -160,8 +160,8 @@ function(SETUP_MAX_TERGET)
         #--------------------------------------------------------------------------#
         # cxx standard 
 
-        set_target_properties(${PROJECT} PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQUIRED YES)
-        target_compile_features(${PROJECT} PUBLIC cxx_std_14)
+        set_target_properties(${PROJECT} PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES)
+        target_compile_features(${PROJECT} PUBLIC cxx_std_17)
 
         #--------------------------------------------------------------------------#
         # compile options

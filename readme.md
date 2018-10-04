@@ -4,7 +4,7 @@
 - The X-Plane [official website](http://www.x-plane.com/).
 - The X-Plane [obj specification](http://developer.x-plane.com/?article=obj8-file-format-specification).
 - The plug-in supports `9-2019` 3DsMaxs (x64 only).
-- The plug-in requires C++ 14 or higher standard.
+- The plug-in requires C++ 17 or higher standard.
 
 ### Warning 
 Importing is still under developing and doesn't work properly!
