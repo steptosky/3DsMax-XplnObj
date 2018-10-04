@@ -33,6 +33,8 @@
 #include <max.h>
 #pragma warning(pop)
 
+#include <memory>
+
 #include <xpln/obj/ObjLightNamed.h>
 #include <xpln/obj/ObjLightParam.h>
 #include <xpln/obj/ObjLightCustom.h>
@@ -53,87 +55,61 @@
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
-struct LightGetter : LightIO::ILightIO {
+class LightGetter : public LightIO::ILightIO {
+public:
 
     explicit LightGetter(INode * node, const ExportParams * params)
         : mExportParams(params),
           mNode(node) {
 
-        assert(node);
-        assert(params);
+        DbgAssert(node);
+        DbgAssert(params);
         mOffsetTm = ConverterUtils::offsetMatrix(node);
     }
 
     //-------------------------------------------------------------------------
 
-    virtual ~LightGetter() { delete pLight; }
+    virtual ~LightGetter() = default;
 
     //-------------------------------------------------------------------------
 
-    void gotLight(const xobj::ObjLightCustom & inLight) override {
-        pLight = static_cast<xobj::ObjAbstractLight *>(inLight.clone());
-        pLight->setObjectName(sts::toMbString(mNode->GetName()));
-        pLight->applyTransform(ConverterUtils::toXTMatrix(mOffsetTm));
-        pIsValid = true;
+    void gotLight(const xobj::ObjLightPoint & light) override {
+        pLight.reset(static_cast<xobj::ObjAbstractLight *>(light.clone()));
+        prepare(pLight.get());
     }
 
-    void gotLight(const xobj::ObjLightNamed & inLight) override {
-        pLight = static_cast<xobj::ObjAbstractLight *>(inLight.clone());
-        pLight->setObjectName(sts::toMbString(mNode->GetName()));
-        pLight->applyTransform(ConverterUtils::toXTMatrix(mOffsetTm));
-        pIsValid = true;
+    void gotLight(const xobj::ObjLightNamed & light) override {
+        pLight.reset(static_cast<xobj::ObjAbstractLight *>(light.clone()));
+        prepare(pLight.get());
     }
 
-    void gotLight(const xobj::ObjLightParam & inLight) override {
-        pLight = static_cast<xobj::ObjAbstractLight *>(inLight.clone());
-        pLight->setObjectName(sts::toMbString(mNode->GetName()));
-        pLight->applyTransform(ConverterUtils::toXTMatrix(mOffsetTm));
-        pIsValid = true;
+    void gotLight(const xobj::ObjLightCustom & light) override {
+        pLight.reset(static_cast<xobj::ObjAbstractLight *>(light.clone()));
+        prepare(pLight.get());
     }
 
-    void gotLight(const xobj::ObjLightPoint & inLight) override {
-        pLight = static_cast<xobj::ObjAbstractLight *>(inLight.clone());
-        pLight->setObjectName(sts::toMbString(mNode->GetName()));
-        pLight->applyTransform(ConverterUtils::toXTMatrix(mOffsetTm));
-        pIsValid = true;
+    void gotLight(const xobj::ObjLightParam & light) override {
+        pLight.reset(static_cast<xobj::ObjAbstractLight *>(light.clone()));
+        prepare(pLight.get());
     }
 
-    void gotLight(const xobj::ObjLightSpillCust & inLight) override {
-        pLight = static_cast<xobj::ObjAbstractLight *>(inLight.clone());
+    void gotLight(const xobj::ObjLightSpillCust & light) override {
+        pLight.reset(static_cast<xobj::ObjAbstractLight *>(light.clone()));
         //-----------------------------------
-        auto * lobj = static_cast<xobj::ObjLightSpillCust *>(pLight);
-        Object * obj = mNode->GetObjectRef();
-
-        // Omni
-        if (obj->ClassID() != Class_ID(SPOT_LIGHT_CLASS_ID, 0)) {
-            lobj->setSemiRaw(1.0f);
-            lobj->setDirection(xobj::Point3(0.0f, 0.0f, 0.0f));
+        auto xLight = static_cast<xobj::ObjLightSpillCust *>(pLight.get());
+        if (ConverterLight::isSpotLight(mNode)) {
+            xLight->setSemiAngle(stsff::math::degToRad(ConverterLight::coneAngle(mNode, mExportParams->mCurrTime)));
+            xLight->setDirection(ConverterLight::direction(mNode, mExportParams->mCurrTime));
         }
-        // Spot
-        if (obj->ClassID() == Class_ID(SPOT_LIGHT_CLASS_ID, 0)) {
-            // get/check target
-            INode * targetNode = mNode->GetTarget();
-            DbgAssert(targetNode);
-            if (targetNode) {
-                // Get vector
-                const TimeValue currTime = mExportParams->mCurrTime;
-                const Matrix3 targetNodeTm = targetNode->GetNodeTM(currTime);
-                const Matrix3 nodeTm = mNode->GetObjectTM(currTime);
-                const Point3 targetPosition = Inverse(nodeTm * Inverse(targetNodeTm)).GetRow(3);
-                lobj->setDirection(xobj::Point3(targetPosition.x, targetPosition.y, targetPosition.z));
-                //Get cone
-                GenLight * light = dynamic_cast<GenLight*>(obj);
-                lobj->setSemiAngle(stsff::math::degToRad(light->GetFallsize(currTime)));
-            }
+        else {
+            xLight->setSemiRaw(1.0f);
+            xLight->setDirection(xobj::Point3(0.0f));
         }
-
-        pLight->setObjectName(sts::toMbString(mNode->GetName()));
-        pLight->applyTransform(ConverterUtils::toXTMatrix(mOffsetTm));
-        pIsValid = true;
+        prepare(pLight.get());
     }
 
     void gotNoLight() override {
-        delete pLight;
+        pLight.reset();
         pIsValid = false;
         pLight = nullptr;
     }
@@ -141,11 +117,18 @@ struct LightGetter : LightIO::ILightIO {
     //-------------------------------------------------------------------------
 
     bool pIsValid = false;
-    xobj::ObjAbstractLight * pLight = nullptr;
+    std::unique_ptr<xobj::ObjAbstractLight> pLight;
 
     //-------------------------------------------------------------------------
 
 private:
+
+    void prepare(xobj::ObjAbstract * inOutLight) {
+        inOutLight->setObjectName(sts::toMbString(mNode->GetName()));
+        inOutLight->applyTransform(ConverterUtils::toXTMatrix(mOffsetTm));
+        pIsValid = true;
+    }
+
     const ExportParams * mExportParams = nullptr;
     INode * mNode = nullptr;
     Matrix3 mOffsetTm;
@@ -157,7 +140,7 @@ private:
 /**************************************************************************************************/
 
 xobj::ObjAbstractLight * ConverterLight::toXpln(INode * node, const ExportParams & params) {
-    assert(node);
+    DbgAssert(node);
 
     MdLight mdLight;
     if (!mdLight.linkNode(node)) {
@@ -173,6 +156,48 @@ xobj::ObjAbstractLight * ConverterLight::toXpln(INode * node, const ExportParams
     }
     return static_cast<xobj::ObjAbstractLight *>(getter.pLight->clone());
 }
+
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
+
+bool ConverterLight::isSpotLight(INode * mode) {
+    auto object = mode->GetObjectRef();
+    DbgAssert(object);
+    return object->ClassID() == Class_ID(SPOT_LIGHT_CLASS_ID, 0);
+}
+
+xobj::Point3 ConverterLight::direction(INode * mode, const TimeValue time) {
+    // Spot
+    if (isSpotLight(mode)) {
+        auto targetNode = mode->GetTarget();
+        if (targetNode) {
+            const Matrix3 targetNodeTm = targetNode->GetNodeTM(time);
+            const Matrix3 objectTm = mode->GetObjectTM(time);
+            const Point3 targetPosition = Inverse(objectTm * Inverse(targetNodeTm)).GetRow(3);
+            return xobj::Point3(targetPosition.x, targetPosition.y, targetPosition.z);
+        }
+    }
+    // Omni
+    return xobj::Point3(0.0f, 0.0f, 0.0f);
+}
+
+float ConverterLight::coneAngle(INode * mode, const TimeValue time) {
+    // Spot
+    if (isSpotLight(mode)) {
+        const auto object = mode->GetObjectRef();
+        auto genLight = dynamic_cast<GenLight*>(object);
+        if (genLight) {
+            return genLight->GetFallsize(time);
+        }
+    }
+    // Omni
+    return 1.0f;
+}
+
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
 INode * ConverterLight::toMax(const xobj::ObjAbstract * object, const ImportParams & params) {
     switch (object->objType()) {
@@ -190,134 +215,143 @@ INode * ConverterLight::toMax(const xobj::ObjAbstract * object, const ImportPara
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-INode * ConverterLight::toMaxLightNamed(const xobj::ObjLightNamed * inObjLight, const ImportParams & params) {
-    if (inObjLight) {
-        GenLight * mLight = params.mCoreInterface->CreateLightObject(OMNI_LIGHT);
-        if (mLight == nullptr)
-            return nullptr;
-        INode * pnode = params.mCoreInterface->CreateObjectNode(mLight);
-        if (pnode == nullptr)
-            return nullptr;
-
-        MdLight mdLight;
-        if (!mdLight.linkNode(pnode)) {
-            LError << "Internal logic error.";
-            params.mCoreInterface->DeleteNode(pnode);
+INode * ConverterLight::toMaxLightNamed(const xobj::ObjLightNamed * xLight, const ImportParams & params) {
+    if (xLight) {
+        const auto genLight = params.mCoreInterface->CreateLightObject(OMNI_LIGHT);
+        if (genLight == nullptr) {
             return nullptr;
         }
-        mdLight.saveToNode(*inObjLight);
-        setPosition(params.mCurrTime, pnode, inObjLight->transform()->pMatrix, inObjLight->position());
-        return pnode;
+        const auto node = params.mCoreInterface->CreateObjectNode(genLight);
+        if (node == nullptr) {
+            return nullptr;
+        }
+        MdLight mdLight;
+        if (!mdLight.linkNode(node)) {
+            LError << "Internal logic error.";
+            params.mCoreInterface->DeleteNode(node);
+            return nullptr;
+        }
+        mdLight.saveToNode(*xLight);
+        setPosition(params.mCurrTime, node, xLight->transform()->pMatrix, xLight->position());
+        return node;
     }
     return nullptr;
 }
 
 //-------------------------------------------------------------------------
 
-INode * ConverterLight::toMaxLightParam(const xobj::ObjLightParam * inObjLight, const ImportParams & params) {
-    if (inObjLight) {
-        GenLight * mLight = params.mCoreInterface->CreateLightObject(OMNI_LIGHT);
-        if (mLight == nullptr)
-            return nullptr;
-        INode * pnode = params.mCoreInterface->CreateObjectNode(mLight);
-        if (pnode == nullptr)
-            return nullptr;
-
-        MdLight mdLight;
-        if (!mdLight.linkNode(pnode)) {
-            LError << "Internal logic error.";
-            params.mCoreInterface->DeleteNode(pnode);
+INode * ConverterLight::toMaxLightParam(const xobj::ObjLightParam * xLight, const ImportParams & params) {
+    if (xLight) {
+        const auto genLight = params.mCoreInterface->CreateLightObject(OMNI_LIGHT);
+        if (genLight == nullptr) {
             return nullptr;
         }
-        mdLight.saveToNode(*inObjLight);
-        setPosition(params.mCurrTime, pnode, inObjLight->transform()->pMatrix, inObjLight->position());
-        return pnode;
+        const auto node = params.mCoreInterface->CreateObjectNode(genLight);
+        if (node == nullptr) {
+            return nullptr;
+        }
+
+        MdLight mdLight;
+        if (!mdLight.linkNode(node)) {
+            LError << "Internal logic error.";
+            params.mCoreInterface->DeleteNode(node);
+            return nullptr;
+        }
+        mdLight.saveToNode(*xLight);
+        setPosition(params.mCurrTime, node, xLight->transform()->pMatrix, xLight->position());
+        return node;
     }
     return nullptr;
 }
 
 //-------------------------------------------------------------------------
 
-INode * ConverterLight::toMaxLightCustom(const xobj::ObjLightCustom * inObjLight, const ImportParams & params) {
-    if (inObjLight) {
-        GenLight * light = params.mCoreInterface->CreateLightObject(OMNI_LIGHT);
-        if (light == nullptr)
-            return nullptr;
-        INode * pnode = params.mCoreInterface->CreateObjectNode(light);
-        if (pnode == nullptr)
-            return nullptr;
-
-        MdLight mdLight;
-        if (!mdLight.linkNode(pnode)) {
-            LError << "Internal logic error.";
-            params.mCoreInterface->DeleteNode(pnode);
+INode * ConverterLight::toMaxLightCustom(const xobj::ObjLightCustom * xLight, const ImportParams & params) {
+    if (xLight) {
+        const auto genLight = params.mCoreInterface->CreateLightObject(OMNI_LIGHT);
+        if (genLight == nullptr) {
             return nullptr;
         }
-        mdLight.saveToNode(*inObjLight);
-        setPosition(params.mCurrTime, pnode, inObjLight->transform()->pMatrix, inObjLight->position());
-        return pnode;
+        const auto node = params.mCoreInterface->CreateObjectNode(genLight);
+        if (node == nullptr) {
+            return nullptr;
+        }
+
+        MdLight mdLight;
+        if (!mdLight.linkNode(node)) {
+            LError << "Internal logic error.";
+            params.mCoreInterface->DeleteNode(node);
+            return nullptr;
+        }
+        mdLight.saveToNode(*xLight);
+        setPosition(params.mCurrTime, node, xLight->transform()->pMatrix, xLight->position());
+        return node;
     }
     return nullptr;
 }
 
 //-------------------------------------------------------------------------
 
-INode * ConverterLight::toMaxLightSpillCust(const xobj::ObjLightSpillCust * inObjLight, const ImportParams & params) {
-    if (inObjLight) {
-        const xobj::Point3 & xpoint = inObjLight->direction();
-        GenLight * light = params.mCoreInterface->CreateLightObject(xpoint.isEmpty() ? OMNI_LIGHT : TSPOT_LIGHT);
-        if (light == nullptr)
-            return nullptr;
-        INode * pnode = params.mCoreInterface->CreateObjectNode(light);
-        if (pnode == nullptr)
-            return nullptr;
-
-        MdLight mdLight;
-        if (!mdLight.linkNode(pnode)) {
-            LError << "Internal logic error.";
-            params.mCoreInterface->DeleteNode(pnode);
+INode * ConverterLight::toMaxLightSpillCust(const xobj::ObjLightSpillCust * xLight, const ImportParams & params) {
+    if (xLight) {
+        const xobj::Point3 & xPoint = xLight->direction();
+        const auto genLight = params.mCoreInterface->CreateLightObject(xPoint.isEmpty() ? OMNI_LIGHT : TSPOT_LIGHT);
+        if (genLight == nullptr) {
             return nullptr;
         }
-        mdLight.saveToNode(*inObjLight);
-        setPosition(params.mCurrTime, pnode, inObjLight->transform()->pMatrix, inObjLight->position());
+        const auto node = params.mCoreInterface->CreateObjectNode(genLight);
+        if (node == nullptr) {
+            return nullptr;
+        }
 
-        if (!xpoint.isEmpty()) {
-            INode * targetNode = pnode->GetTarget();
+        MdLight mdLight;
+        if (!mdLight.linkNode(node)) {
+            LError << "Internal logic error.";
+            params.mCoreInterface->DeleteNode(node);
+            return nullptr;
+        }
+        mdLight.saveToNode(*xLight);
+        setPosition(params.mCurrTime, node, xLight->transform()->pMatrix, xLight->position());
+
+        if (!xPoint.isEmpty()) {
+            INode * targetNode = node->GetTarget();
             DbgAssert(targetNode);
             if (targetNode) {
                 // Get vector
                 const TimeValue currTime = params.mCoreInterface->GetTime();
-                Matrix3 nodeTm = pnode->GetObjectTM(currTime);
-                nodeTm.Translate(Point3(xpoint.x, xpoint.y, xpoint.z));
+                Matrix3 nodeTm = node->GetObjectTM(currTime);
+                nodeTm.Translate(Point3(xPoint.x, xPoint.y, xPoint.z));
                 targetNode->SetNodeTM(currTime, nodeTm);
-                light->SetFallsize(currTime, stsff::math::radToDeg(inObjLight->semiAngle()));
+                genLight->SetFallsize(currTime, stsff::math::radToDeg(xLight->semiAngle()));
             }
         }
-        return pnode;
+        return node;
     }
     return nullptr;
 }
 
 //-------------------------------------------------------------------------
 
-INode * ConverterLight::toMaxLightPoint(const xobj::ObjLightPoint * inObjLight, const ImportParams & params) {
-    if (inObjLight) {
-        GenLight * light = params.mCoreInterface->CreateLightObject(OMNI_LIGHT);
-        if (light == nullptr)
-            return nullptr;
-        INode * pnode = params.mCoreInterface->CreateObjectNode(light);
-        if (pnode == nullptr)
-            return nullptr;
-
-        MdLight mdLight;
-        if (!mdLight.linkNode(pnode)) {
-            LError << "Internal logic error.";
-            params.mCoreInterface->DeleteNode(pnode);
+INode * ConverterLight::toMaxLightPoint(const xobj::ObjLightPoint * xLight, const ImportParams & params) {
+    if (xLight) {
+        const auto genLight = params.mCoreInterface->CreateLightObject(OMNI_LIGHT);
+        if (genLight == nullptr) {
             return nullptr;
         }
-        mdLight.saveToNode(*inObjLight);
-        setPosition(params.mCurrTime, pnode, inObjLight->transform()->pMatrix, inObjLight->position());
-        return pnode;
+        const auto node = params.mCoreInterface->CreateObjectNode(genLight);
+        if (node == nullptr) {
+            return nullptr;
+        }
+
+        MdLight mdLight;
+        if (!mdLight.linkNode(node)) {
+            LError << "Internal logic error.";
+            params.mCoreInterface->DeleteNode(node);
+            return nullptr;
+        }
+        mdLight.saveToNode(*xLight);
+        setPosition(params.mCurrTime, node, xLight->transform()->pMatrix, xLight->position());
+        return node;
     }
     return nullptr;
 }
