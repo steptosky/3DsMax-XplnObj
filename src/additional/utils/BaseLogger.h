@@ -31,19 +31,55 @@
 
 #include <iostream>
 #include <sstream>
-#include <mutex>
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-#ifndef __STS_FUNC_NAME__
-#	ifdef _MSC_VER
-#		define __STS_FUNC_NAME__ __FUNCTION__
-#	else
-#		define __STS_FUNC_NAME__ __PRETTY_FUNCTION__
-#	endif
+#ifdef _MSC_VER
+#	define __STS_FUNC_NAME__ __FUNCTION__
+#else
+#	define __STS_FUNC_NAME__ __PRETTY_FUNCTION__
 #endif
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+
+#ifndef NDEBUG
+#   define STSFF_LOGGER_USE_FULL_SOURCES_PATH
+#endif
+
+namespace stsff {
+namespace logging {
+    namespace internal {
+
+#ifdef STSFF_LOGGER_USE_FULL_SOURCES_PATH
+        constexpr const char * fileName(const char * str) {
+            return str;
+        }
+#else
+        constexpr const char * strEnd(const char * str) {
+            return *str ? strEnd(str + 1) : str;
+        }
+
+        constexpr bool strSlant(const char * str, const char sep) {
+            return *str == sep ? true : (*str ? strSlant(str + 1, sep) : false);
+        }
+
+        constexpr const char * rSlant(const char * str, const char sep) {
+            return *str == sep ? (str + 1) : rSlant(str - 1, sep);
+        }
+
+        constexpr const char * fileName(const char * str) {
+            const char * res1 = strSlant(str, '\\') ? rSlant(strEnd(str), '\\') : str;
+            const char * res2 = strSlant(res1, '/') ? rSlant(strEnd(res1), '/') : res1;
+            return res2;
+        }
+#endif
+    }
+}
+}
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,14 +89,11 @@ namespace sts {
 
 /*! 
  * \details This is a base logger interface. By default it prints all messages to std::cout.
- * \pre Before you will be able to use this logger you must create its variable somewhere,
- *      this logger implements the pattern singleton.
+ * \pre Before you will be able to use this logger you must create its variable somewhere, this logger implements pattern singlton.
  * \code sts::BaseLogger * sts::BaseLogger::mInstance = nullptr; \endcode
  * \details Default log level is \"Debug\".
- * \details Default thread safe is \"false\".
- * \details The logger supports categories.
+ * \note The logger supports categories.
  * \code CategoryMessage("my category") << "my message"; \endcode
- * \note You can define log printing for your own types. \see \link LogMessage \endlink
  */
 class BaseLogger {
 public:
@@ -75,6 +108,13 @@ public:
         Debug = 6,
     };
 
+    //-------------------------------------------------------------------------
+
+    BaseLogger(const BaseLogger &) = delete;
+    BaseLogger & operator=(const BaseLogger &) = delete;
+
+    //-------------------------------------------------------------------------
+
     /*!
      * \warning Don't forget to check the parameters for nullptr.
      */
@@ -82,53 +122,29 @@ public:
                              const char * file, int line, const char * function,
                              const char * category);
 
-    //---------------------------------------------------------------
-    // @{
+    //-------------------------------------------------------------------------
 
     static BaseLogger & instance() {
         if (mInstance == nullptr) {
-            mInstance = new BaseLogger();
+            mInstance = new BaseLogger;
         }
         return *mInstance;
     }
 
-    // @}
-    //---------------------------------------------------------------
-    // @{
+    //-------------------------------------------------------------------------
 
     void log(eType inType, const char * inMsg,
-             const char * inFile, int inLine, const char * inFunction,
+             const char * inFile, const int inLine, const char * inFunction,
              const char * inCategory) const {
-        if (mThreadSafe) {
-            std::lock_guard<std::mutex> lock(mMutex);
-        }
+
         if (inType <= mLevel) {
             mCallBack(inType, inMsg, inFile, inLine, inFunction, inCategory);
         }
     }
 
-    // @}
-    //---------------------------------------------------------------
-    // @{
+    //-------------------------------------------------------------------------
 
-    /*! 
-     * \details Sets the thread safe logging. Default is false.
-     * \warning It is strongly recommended to set this parameter once when your program is run
-     *          otherwise in some cases it can lead to undefined behavior.
-     */
-    void setThreadSafe(bool state) {
-        mThreadSafe = state;
-    }
-
-    bool isThreadSafe() const {
-        return mThreadSafe;
-    }
-
-    // @}
-    //---------------------------------------------------------------
-    // @{
-
-    void setLevel(eType inLevel) {
+    void setLevel(const eType inLevel) {
         mLevel = inLevel;
     }
 
@@ -136,11 +152,9 @@ public:
         return mLevel;
     }
 
-    // @}
-    //---------------------------------------------------------------
-    // @{
+    //-------------------------------------------------------------------------
 
-    void setCallBack(CallBack inCallBack) {
+    void setCallBack(const CallBack inCallBack) {
         mCallBack = inCallBack;
     }
 
@@ -148,11 +162,7 @@ public:
         mCallBack = defaultCallBack;
     }
 
-    // @}
-    //---------------------------------------------------------------
-    // @{
-
-    static const char * typeAsString(eType inType) {
+    static const char * typeAsString(const eType inType) {
         switch (inType) {
             case Msg: return "";
             case Info: return "INF";
@@ -165,15 +175,12 @@ public:
         }
     }
 
-    // @}
-    //---------------------------------------------------------------
-
 private:
 
-    static void defaultCallBack(eType inType,
+    static void defaultCallBack(const eType inType,
                                 const char * inMsg,
                                 const char * inFile,
-                                int inLine,
+                                const int inLine,
                                 const char * inFunction,
                                 const char * inCategory) {
 
@@ -192,13 +199,9 @@ private:
 
     BaseLogger() = default;
     ~BaseLogger() = default;
-    BaseLogger(const BaseLogger &) = delete;
-    BaseLogger & operator=(const BaseLogger &) = delete;
 
     eType mLevel = Debug;
     CallBack mCallBack = defaultCallBack;
-    bool mThreadSafe = false;
-    mutable std::mutex mMutex;
     static BaseLogger * mInstance;
 
 };
@@ -209,32 +212,19 @@ private:
 
 /*!
  * \details Represents one log message.
- * \note In normal way you should not use this class directly use the macros instead.
- * \code LWarning << "My warning"; \endcode
+ * \note In normal way you should not use this class directly use macros instead.
+ * \code LWarning << "My warning";
  * \note The message will be printed when destructor is called 
- *       or if you manually force printing with the method LogMessage::push() 
- *       or operator << with LogMessage::CmdPush param. 
- *       Also you can use the macro LPush.
+ * or if you manually force printing with the method LogMessage::push() or operator << with LogMessage::CmdPush param.
  * \code LWarning << "My warning" << LPush; \endcode
- *       It can be needed when you process the exceptions.
- * \note As the class has template operator operator<< you can define log printing for your own types. 
- * \code 
- * // define somewhere
- * template<>
- * inline sts::LogMessage & sts::LogMessage::operator<<<MyType>(const MyType & msg) {
- *     this->operator<< msg; // fix it for your type
- *     return *this;
- * }
- * \endcode
+ * It can be needed when you process exceptions.
  */
 class LogMessage {
 public:
 
     struct CmdPush {};
 
-    // @}
-    //---------------------------------------------------------------
-    // @{
+    //-------------------------------------------------------------------------
 
     LogMessage()
         : mLog(&BaseLogger::instance()),
@@ -243,10 +233,10 @@ public:
     explicit LogMessage(const char * category)
         : LogMessage(nullptr, 0, nullptr, category) {}
 
-    LogMessage(const char * file, int line, const char * function)
+    LogMessage(const char * file, const int line, const char * function)
         : LogMessage(file, line, function, nullptr) {}
 
-    LogMessage(const char * file, int line, const char * function, const char * category)
+    LogMessage(const char * file, const int line, const char * function, const char * category)
         : mLog(&BaseLogger::instance()),
           mFile(file),
           mFunction(function),
@@ -258,9 +248,7 @@ public:
         push();
     }
 
-    // @}
-    //---------------------------------------------------------------
-    // @{
+    //-------------------------------------------------------------------------
 
     template<class T>
     LogMessage & operator<<(const T & msg) {
@@ -275,9 +263,7 @@ public:
         return *this;
     }
 
-    // @}
-    //---------------------------------------------------------------
-    // @{
+    //-------------------------------------------------------------------------
 
     LogMessage & debug() {
         mType = BaseLogger::Debug;
@@ -314,9 +300,7 @@ public:
         return *this;
     }
 
-    // @}
-    //---------------------------------------------------------------
-    // @{
+    //-------------------------------------------------------------------------
 
     void push() {
         if (!mPushed) {
@@ -324,9 +308,6 @@ public:
             mPushed = true;
         }
     }
-
-    // @}
-    //---------------------------------------------------------------
 
 private:
 
@@ -347,22 +328,22 @@ private:
 /**************************************************************************************************/
 
 // Log messages
-#define LMessage    sts::LogMessage(__FILE__, __LINE__, __STS_FUNC_NAME__).message()
-#define LInfo       sts::LogMessage(__FILE__, __LINE__, __STS_FUNC_NAME__).info()
-#define LDebug      sts::LogMessage(__FILE__, __LINE__, __STS_FUNC_NAME__).debug()
-#define LFatal      sts::LogMessage(__FILE__, __LINE__, __STS_FUNC_NAME__).fatal()
-#define LCritical   sts::LogMessage(__FILE__, __LINE__, __STS_FUNC_NAME__).critical()
-#define LError      sts::LogMessage(__FILE__, __LINE__, __STS_FUNC_NAME__).error()
-#define LWarning    sts::LogMessage(__FILE__, __LINE__, __STS_FUNC_NAME__).warning()
+#define LMessage    sts::LogMessage(stsff::logging::internal::fileName(__FILE__), __LINE__, __STS_FUNC_NAME__).message()
+#define LInfo       sts::LogMessage(stsff::logging::internal::fileName(__FILE__), __LINE__, __STS_FUNC_NAME__).info()
+#define LDebug      sts::LogMessage(stsff::logging::internal::fileName(__FILE__), __LINE__, __STS_FUNC_NAME__).debug()
+#define LFatal      sts::LogMessage(stsff::logging::internal::fileName(__FILE__), __LINE__, __STS_FUNC_NAME__).fatal()
+#define LCritical   sts::LogMessage(stsff::logging::internal::fileName(__FILE__), __LINE__, __STS_FUNC_NAME__).critical()
+#define LError      sts::LogMessage(stsff::logging::internal::fileName(__FILE__), __LINE__, __STS_FUNC_NAME__).error()
+#define LWarning    sts::LogMessage(stsff::logging::internal::fileName(__FILE__), __LINE__, __STS_FUNC_NAME__).warning()
 
 // Category messages
-#define CategoryMessage(X)    sts::LogMessage(__FILE__, __LINE__, __STS_FUNC_NAME__, X).message()
-#define CategoryInfo(X)       sts::LogMessage(__FILE__, __LINE__, __STS_FUNC_NAME__, X).info()
-#define CategoryDebug(X)      sts::LogMessage(__FILE__, __LINE__, __STS_FUNC_NAME__, X).debug()
-#define CategoryFatal(X)      sts::LogMessage(__FILE__, __LINE__, __STS_FUNC_NAME__, X).fatal()
-#define CategoryCritical(X)   sts::LogMessage(__FILE__, __LINE__, __STS_FUNC_NAME__, X).critical()
-#define CategoryError(X)      sts::LogMessage(__FILE__, __LINE__, __STS_FUNC_NAME__, X).error()
-#define CategoryWarning(X)    sts::LogMessage(__FILE__, __LINE__, __STS_FUNC_NAME__, X).warning()
+#define CategoryMessage(X)    sts::LogMessage(stsff::logging::internal::fileName(__FILE__), __LINE__, __STS_FUNC_NAME__, X).message()
+#define CategoryInfo(X)       sts::LogMessage(stsff::logging::internal::fileName(__FILE__), __LINE__, __STS_FUNC_NAME__, X).info()
+#define CategoryDebug(X)      sts::LogMessage(stsff::logging::internal::fileName(__FILE__), __LINE__, __STS_FUNC_NAME__, X).debug()
+#define CategoryFatal(X)      sts::LogMessage(stsff::logging::internal::fileName(__FILE__), __LINE__, __STS_FUNC_NAME__, X).fatal()
+#define CategoryCritical(X)   sts::LogMessage(stsff::logging::internal::fileName(__FILE__), __LINE__, __STS_FUNC_NAME__, X).critical()
+#define CategoryError(X)      sts::LogMessage(stsff::logging::internal::fileName(__FILE__), __LINE__, __STS_FUNC_NAME__, X).error()
+#define CategoryWarning(X)    sts::LogMessage(stsff::logging::internal::fileName(__FILE__), __LINE__, __STS_FUNC_NAME__, X).warning()
 
 // Force push
 #define LPush sts::LogMessage::CmdPush()
