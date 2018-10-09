@@ -34,6 +34,7 @@
 #pragma warning(pop)
 
 #include <memory>
+#include <regex>
 
 #include <xpln/obj/ObjLightNamed.h>
 #include <xpln/obj/ObjLightParam.h>
@@ -89,8 +90,74 @@ public:
     }
 
     void gotLight(const xobj::ObjLightParam & light) override {
+        using namespace std::string_literals;
         pLight.reset(static_cast<xobj::ObjAbstractLight *>(light.clone()));
-        prepare(pLight.get());
+        //-----------------------------------
+        auto xLight = static_cast<xobj::ObjLightParam *>(pLight.get());
+        auto params = xLight->rawParams();
+        xobj::Point3 directionVector(0.0f);
+        float falloffAngle = 1.0f;
+
+        const bool isSpotLight = ConverterLight::isSpotLight(mNode);
+        if (isSpotLight) {
+            falloffAngle = std::get<0>(ConverterLight::coneAngle(mNode, mExportParams->mCurrTime));
+            directionVector = ConverterLight::direction(mNode, mExportParams->mCurrTime);
+        }
+
+        try {
+            const bool isSpill = sts::MbStrUtils::endsWith(xLight->name(), "_sp");
+            if (isSpill) {
+                params = std::regex_replace(params, std::regex(R"(\$direction)"), "$direction_sp");
+            }
+            else {
+                params = std::regex_replace(params, std::regex(R"(\$direction_sp)"), "$direction");
+                auto vars = sts::MbStrUtils::splitToVector(params, " ");
+                const auto directionVar = std::find_if(vars.begin(), vars.end(), [](const auto & val) {
+                    return sts::MbStrUtils::startsWith(val, "$direction");
+                });
+                if (directionVar != vars.end()) {
+                    auto correctedResult = xobj::LightUtils::billboardCorrectConeAngle(*directionVar, falloffAngle);
+                    *directionVar = std::get<0>(correctedResult);
+                    falloffAngle = std::get<1>(correctedResult);
+                }
+                params = sts::MbStrUtils::joinContainer(vars, " ");
+            }
+
+            auto directionFn = [&]() {
+                const auto dirScaleVal = xobj::LightUtils::billboardDirectionScaleFromAngle(stsff::math::degToRad(falloffAngle));
+                return directionVector.toString().append(" ").append(std::to_string(dirScaleVal));
+            };
+            auto directionSpillFn = [&]() {
+                return directionVector.toString();
+            };
+            auto falloffFn = [&]() {
+                if (isSpotLight) {
+                    return std::to_string(xobj::LightUtils::spillConeWidthFromAngle(stsff::math::degToRad(falloffAngle)));
+                }
+                return std::to_string(falloffAngle);
+            };
+            auto rgbFn = [&]() {
+                auto color = ConverterLight::lightColor(mNode, mExportParams->mCurrTime);
+                std::string rgb;
+                rgb.append(std::to_string(color.red())).append(" ");
+                rgb.append(std::to_string(color.green())).append(" ");
+                rgb.append(std::to_string(color.blue()));
+                return rgb;
+            };
+
+            xLight->setParams(params, {
+                    {"direction", directionFn},
+                    {"direction_sp", directionSpillFn},
+                    {"width", falloffFn},
+                    {"rgb", rgbFn},
+            });
+
+            prepare(pLight.get());
+        }
+        catch (const std::exception & e) {
+            CLError << LogNode(mNode) << " has incorrect light name parameters: " << e.what();
+            pLight.reset();
+        }
     }
 
     void gotLight(const xobj::ObjLightSpillCust & light) override {
@@ -98,7 +165,8 @@ public:
         //-----------------------------------
         auto xLight = static_cast<xobj::ObjLightSpillCust *>(pLight.get());
         if (ConverterLight::isSpotLight(mNode)) {
-            xLight->setSemiAngle(stsff::math::degToRad(ConverterLight::coneAngle(mNode, mExportParams->mCurrTime)));
+            auto cone = ConverterLight::coneAngle(mNode, mExportParams->mCurrTime);
+            xLight->setSemiAngle(stsff::math::degToRad(std::get<0>(cone)));
             xLight->setDirection(ConverterLight::direction(mNode, mExportParams->mCurrTime));
         }
         else {
@@ -161,19 +229,32 @@ xobj::ObjAbstractLight * ConverterLight::toXpln(INode * node, const ExportParams
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool ConverterLight::isSpotLight(INode * mode) {
-    auto object = mode->GetObjectRef();
+bool ConverterLight::isSpotLight(INode * node) {
+    auto object = node->GetObjectRef();
     DbgAssert(object);
     return object->ClassID() == Class_ID(SPOT_LIGHT_CLASS_ID, 0);
 }
 
-xobj::Point3 ConverterLight::direction(INode * mode, const TimeValue time) {
+xobj::Color ConverterLight::lightColor(INode * node, const TimeValue time) {
+    const auto object = node->GetObjectRef();
+    if (object->SuperClassID() == SClass_ID(LIGHT_CLASS_ID)) {
+        auto genLight = dynamic_cast<GenLight*>(object);
+        if (genLight) {
+            const auto rgb = genLight->GetRGBColor(time);
+            return xobj::Color(rgb.x, rgb.y, rgb.z);
+        }
+        LError << LogNode(node) << "couldn't get GenLight";
+    }
+    return xobj::Color(1.0f, 1.0f, 1.0f);
+}
+
+xobj::Point3 ConverterLight::direction(INode * node, const TimeValue time) {
     // Spot
-    if (isSpotLight(mode)) {
-        auto targetNode = mode->GetTarget();
+    if (isSpotLight(node)) {
+        auto targetNode = node->GetTarget();
         if (targetNode) {
             const Matrix3 targetNodeTm = targetNode->GetNodeTM(time);
-            const Matrix3 objectTm = mode->GetObjectTM(time);
+            const Matrix3 objectTm = node->GetObjectTM(time);
             const Point3 targetPosition = Inverse(objectTm * Inverse(targetNodeTm)).GetRow(3);
             return xobj::Point3(targetPosition.x, targetPosition.y, targetPosition.z);
         }
@@ -182,17 +263,17 @@ xobj::Point3 ConverterLight::direction(INode * mode, const TimeValue time) {
     return xobj::Point3(0.0f, 0.0f, 0.0f);
 }
 
-float ConverterLight::coneAngle(INode * mode, const TimeValue time) {
+std::tuple<float, float> ConverterLight::coneAngle(INode * node, const TimeValue time) {
     // Spot
-    if (isSpotLight(mode)) {
-        const auto object = mode->GetObjectRef();
+    if (isSpotLight(node)) {
+        const auto object = node->GetObjectRef();
         auto genLight = dynamic_cast<GenLight*>(object);
         if (genLight) {
-            return genLight->GetFallsize(time);
+            return std::make_tuple(genLight->GetFallsize(time), genLight->GetHotspot(time));
         }
     }
     // Omni
-    return 1.0f;
+    return std::make_tuple(1.0f, 1.0f);
 }
 
 /**************************************************************************************************/

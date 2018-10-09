@@ -32,7 +32,9 @@
 #include <max.h>
 #pragma warning(pop)
 
+#include <tuple>
 #include <xpln/common/Point3.h>
+#include <xpln/common/Color.h>
 
 namespace xobj {
 class ObjAbstract;
@@ -75,10 +77,11 @@ private:
     static void setPosition(TimeValue t, INode * mode,
                             const xobj::TMatrix & targetTm, const xobj::Point3 & pos);
 
-    static xobj::Point3 direction(INode * mode, TimeValue time);
-    static bool isSpotLight(INode * mode);
-    static float coneAngle(INode * mode, TimeValue time);
-
+    static xobj::Point3 direction(INode * node, TimeValue time);
+    static xobj::Color lightColor(INode * node, TimeValue time);
+    static bool isSpotLight(INode * node);
+    // [falloff, hotspot]
+    static std::tuple<float, float> coneAngle(INode * node, TimeValue time);
 };
 
 /**************************************************************************************************/
