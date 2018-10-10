@@ -34,6 +34,8 @@
 #
 # This module uses the StsProjectDesc module for generate ".h" file with information
 #
+# Version 1.3.1 (26.09.2018)
+#   - Improved logic for getting git branch and revision
 # Version 1.3.0 (30.08.2018)
 #   - Reading GIT_COMMIT and GIT_BRANCH environment variables
 #     if data isn't retrieved from the git directly.
@@ -107,7 +109,10 @@ function(genInfoFile descriptionFile destinationFile)
 
     set(CONTENT "${CONTENT}/* Project info */\n")
     set(CONTENT "${CONTENT}#define ${__prfix__}PROJECT_NAME \"${ProjectName}\"\n")
-    set(CONTENT "${CONTENT}#define ${__prfix__}PROJECT_SHORT_NAME \"deprecated\"\n")
+    if(ProjectShortName)
+        set(CONTENT "${CONTENT}#define ${__prfix__}PROJECT_SHORT_NAME \"deprecated\"\n")
+        message(WARNING "ProjectShortName is depricated use ProjectName and ProjectFullName instead")
+    endif()
     set(CONTENT "${CONTENT}#define ${__prfix__}PROJECT_FULL_NAME \"${ProjectFullName}\"\n")
     set(CONTENT "${CONTENT}#define ${__prfix__}PROJECT_DESCRIPTION \"${ProjectDescription}\"\n")
     set(CONTENT "${CONTENT}#define ${__prfix__}PROJECT_WEBLINK \"${ProjectWebLink}\"\n")
@@ -246,46 +251,56 @@ function(genInfoFile descriptionFile destinationFile)
     set(CONTENT "${CONTENT}#define ${__prfix__}COMPILER_NAME \"${CMAKE_CXX_COMPILER_ID}\" \n")
     set(CONTENT "${CONTENT}#define ${__prfix__}COMPILER_VERSION \"${CMAKE_CXX_COMPILER_VERSION}\" \n\n")
 
-    if (${ProjectVcsType} STREQUAL git)
-        if (NOT vcs_revision)
-            execute_process(
-                    COMMAND "git" "log" "-1" "--pretty=format:%h"
-                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-                    RESULT_VARIABLE vcs_result
-                    OUTPUT_VARIABLE vcs_revision
-            )
-        endif()
-        if (NOT vcs_branch)
-            execute_process(
-                    COMMAND "git" "rev-parse" "--abbrev-ref" "HEAD"
-                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-                    RESULT_VARIABLE vcs_result
-                    OUTPUT_VARIABLE vcs_branch
-            )
-            if(vcs_branch)
-                string(STRIP ${vcs_branch} vcs_branch)
-                set(CONTENT "${CONTENT}/* git */\n")
+    if(NOT vcs_revision OR NOT vcs_branch)
+        if (${ProjectVcsType} STREQUAL git)
+            if (EXISTS "${CMAKE_SOURCE_DIR}/.git")
+                if (NOT vcs_revision)
+                    execute_process(
+                            COMMAND "git" "log" "-1" "--pretty=format:%h"
+                            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                            RESULT_VARIABLE vcs_result
+                            OUTPUT_VARIABLE vcs_revision
+                    )
+                endif()
+                if (NOT vcs_branch)
+                    execute_process(
+                            COMMAND "git" "rev-parse" "--abbrev-ref" "HEAD"
+                            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                            RESULT_VARIABLE vcs_result
+                            OUTPUT_VARIABLE vcs_branch
+                    )
+                    if(vcs_branch)
+                        string(STRIP ${vcs_branch} vcs_branch)
+                        set(CONTENT "${CONTENT}/* git */\n")
+                    endif()
+                endif()
+            else()
+                message(WARNING "<${CMAKE_SOURCE_DIR}> isn't a git repository")
             endif()
+        else()
+            message(STATUS "VCS <ProjectVcsType> variable isn't specified")
         endif()
     else()
-        message(STATUS "VCS is not specified")
+        message(STATUS "<vcs_revision> and <vcs_branch> has already been set from outside")
     endif()
-
     #-------------------------------#
     if(NOT vcs_revision)
         if (NOT $ENV{GIT_COMMIT} STREQUAL "")
             set(vcs_revision $ENV{GIT_COMMIT})
-            message(STATUS "Got GIT commit/revision '$ENV{GIT_COMMIT}' from 'GIT_COMMIT' environment variable")
+            message(STATUS "Got GIT commit/revision <$ENV{GIT_COMMIT}> from <GIT_COMMIT> environment variable")
         else()
             set(vcs_revision "undefined")
         endif()
     endif()
     if(NOT vcs_branch OR "${vcs_branch}" STREQUAL "HEAD")
         if (NOT $ENV{GIT_BRANCH} STREQUAL "")
-                set(vcs_branch $ENV{GIT_BRANCH})
-                message(STATUS "Got GIT branch name '$ENV{GIT_BRANCH}' from 'GIT_BRANCH' environment variable")
+            set(vcs_branch $ENV{GIT_BRANCH})
+            message(STATUS "Got GIT branch name <$ENV{GIT_BRANCH}> from <GIT_BRANCH> environment variable")
         else()
-            set(vcs_branch "undefined")
+            if(NOT vcs_branch)
+                set(vcs_branch "undefined")
+            endif()
+            message(WARNING "Current branch name is <${vcs_branch}> and <GIT_BRANCH> env variable isn't set.")
         endif()
     endif()
 
