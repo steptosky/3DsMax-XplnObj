@@ -25,7 +25,7 @@ Importing is still under developing and doesn't work properly!
 
 ## Memo for the library developers
 - [release-checklist](doc/release-checklist.md) see this file when you are making a release.
-- [change log](doc/changelog.txt) this file has to be filled during the release process and contains information about changes.
+- [change log](doc/changelog.rst) this file has to be filled during the release process and contains information about changes. It is in the reStructuredText format.
 
 ## Developing and Building
 - You have to install `conan` and [add](https://docs.conan.io/en/latest/reference/commands/misc/remote.html):  

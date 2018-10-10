@@ -108,14 +108,14 @@ function (create_tag)
     check_result("${RESULT_VAR}" "${ERROR_VAR}" "${OUTPUT_VAR}")
 endfunction ()
 
-function (upload_doc DOC_FILE)
+function (upload_doc DOC_FILE DOC_FILE_NAME)
     message(STATUS "Running 'github-release upload' uploading '${DOC_FILE}'")
     execute_process(
         COMMAND github-release upload 
                     --user ${REPOSITORY_USER_NAME}  
                     --repo ${REPOSITORY_NAME} 
                     --tag ${ProjectVersionTag} 
-                    --name "${DOC_FILE}" 
+                    --name "${DOC_FILE_NAME}" 
                     --file "${WORKING_DIR}/doc/${DOC_FILE}"
             RESULT_VARIABLE RESULT_VAR
             OUTPUT_VARIABLE OUTPUT_VAR
@@ -143,8 +143,8 @@ endfunction ()
 #----------------------------------------------------------------------------------#
 
 create_tag()
-upload_doc("changelog.txt")
-upload_doc("install.txt")
+upload_doc("changelog.rst" "changelog.txt")
+upload_doc("install.txt" "install.txt")
 upload_plugin("3DsMax9-XplnObj-x64.dlu")
 upload_plugin("3DsMax2008-XplnObj-x64.dlu")
 upload_plugin("3DsMax2009-XplnObj-x64.dlu")
