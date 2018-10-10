@@ -29,7 +29,7 @@
 
 #include <cassert>
 
-#include "Converterer.h"
+#include "Converter.h"
 #include "common/Logger.h"
 
 #include "ConverterDummy.h"
@@ -60,7 +60,7 @@
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
 /**************************************************************************************************/
 
-Converterer::Converterer() {
+Converter::Converter() {
     mIp = GetCOREInterface();
 
     mXObjMain = nullptr;
@@ -69,13 +69,13 @@ Converterer::Converterer() {
 
 //-------------------------------------------------------------------------
 
-Converterer::~Converterer() {}
+Converter::~Converter() {}
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool Converterer::toMax(xobj::ObjMain & xObjMain) {
+bool Converter::toMax(xobj::ObjMain & xObjMain) {
     INode * main = ConverterMain::toMax(xObjMain);
     if (!main) {
         return false;
@@ -97,7 +97,7 @@ bool Converterer::toMax(xobj::ObjMain & xObjMain) {
     return false;
 }
 
-bool Converterer::processXTransformHierarchy(INode * parent, xobj::Transform * xTransform, const ImportParams & params) {
+bool Converter::processXTransformHierarchy(INode * parent, xobj::Transform * xTransform, const ImportParams & params) {
     ConverterUtils::toMaxTransform(*xTransform, parent);
     if (xTransform->hasAnimRotate() || xTransform->hasAnimTrans()) {
         INode * animNode = ConverterMain::createBone(xTransform);
@@ -122,7 +122,7 @@ bool Converterer::processXTransformHierarchy(INode * parent, xobj::Transform * x
     return true;
 }
 
-void Converterer::processXTransformObjects(INode * parent, xobj::Transform * xTransform, const ImportParams & params) {
+void Converter::processXTransformObjects(INode * parent, xobj::Transform * xTransform, const ImportParams & params) {
     for (auto & obj : xTransform->objList()) {
         INode * node = processXObjects(*obj, params);
         if (node) {
@@ -132,7 +132,7 @@ void Converterer::processXTransformObjects(INode * parent, xobj::Transform * xTr
     }
 }
 
-INode * Converterer::processXObjects(const xobj::ObjAbstract & xObj, const ImportParams & params) {
+INode * Converter::processXObjects(const xobj::ObjAbstract & xObj, const ImportParams & params) {
     INode * node = ConverterMesh::toMax(&xObj, params);
     if (!node) {
         node = ConverterLight::toMax(&xObj, params);
@@ -153,7 +153,7 @@ INode * Converterer::processXObjects(const xobj::ObjAbstract & xObj, const Impor
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool Converterer::toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMain) {
+bool Converter::toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMain) {
     assert(mainNode);
     mXObjMain = &xObjMain;
     mMainObj = mainNode;
@@ -216,7 +216,7 @@ bool Converterer::toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMa
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool Converterer::processNode(INode * node, xobj::Transform * xTransform, const ExportParams & params) const {
+bool Converter::processNode(INode * node, xobj::Transform * xTransform, const ExportParams & params) const {
     xobj::Transform & tr = xTransform->newChild(sts::toMbString(node->GetName()).c_str());
     ConverterUtils::toXTransform(node->GetNodeTM(mMainObj->timeValue()), tr);
     //-------------------------------------------------------------------------
@@ -245,7 +245,7 @@ bool Converterer::processNode(INode * node, xobj::Transform * xTransform, const 
 
 //-------------------------------------------------------------------------
 
-void Converterer::toXpln(INode * inNode, const Matrix3 & baseTm,
+void Converter::toXpln(INode * inNode, const Matrix3 & baseTm,
                          ObjAbstractList & outList, const ExportParams & params) const {
     outList.clear();
 
@@ -290,7 +290,7 @@ void Converterer::toXpln(INode * inNode, const Matrix3 & baseTm,
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool Converterer::collectLods(INode * ownerNode, INode * currNode, std::vector<INode*> & outLods) {
+bool Converter::collectLods(INode * ownerNode, INode * currNode, std::vector<INode*> & outLods) {
     if (LodObjParamsWrapper::isLodObj(currNode)) {
         if (currNode->GetParentNode() != ownerNode) {
             CLError << "The lod object <"

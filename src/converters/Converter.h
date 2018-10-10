@@ -60,14 +60,14 @@ class ImportParams;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-class Converterer {
+class Converter {
 public:
 
     bool toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMain);
     static bool toMax(xobj::ObjMain & xObjMain);
 
-    Converterer();
-    ~Converterer();
+    Converter();
+    ~Converter();
 private:
 
     //-------------------------------------------------------------------------
