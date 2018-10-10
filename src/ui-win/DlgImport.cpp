@@ -227,7 +227,7 @@ namespace win {
             return false;
         }
 
-        if (!Converter::toMax(xMain)) {
+        if (!ConverterToMax::toMax(xMain)) {
             finish(true);
             return false;
         }

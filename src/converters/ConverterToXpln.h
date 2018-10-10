@@ -60,28 +60,21 @@ class ImportParams;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-class Converter {
+class ConverterToXpln {
 public:
 
     bool toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMain);
-    static bool toMax(xobj::ObjMain & xObjMain);
 
-    Converter();
-    ~Converter();
+    ConverterToXpln();
+    ~ConverterToXpln() = default;
 private:
-
-    //-------------------------------------------------------------------------
-
-    static bool processXTransformHierarchy(INode * parent, xobj::Transform * xTransform, const ImportParams & params);
-    static void processXTransformObjects(INode * parent, xobj::Transform * xTransform, const ImportParams & params);
-    static INode * processXObjects(const xobj::ObjAbstract & xObj, const ImportParams & params);
 
     //-------------------------------------------------------------------------
 
     bool processNode(INode * node, xobj::Transform * xTransform, const ExportParams & params) const;
 
     typedef std::vector<xobj::ObjAbstract*> ObjAbstractList;
-    void toXpln(INode * inxNode, const Matrix3 & baseTm,
+    void toXpln(INode * inNode, const Matrix3 & baseTm,
                 ObjAbstractList & outList, const ExportParams & params) const;
 
     static bool collectLods(INode * ownerNode, INode * currNode, std::vector<INode*> & outLods);

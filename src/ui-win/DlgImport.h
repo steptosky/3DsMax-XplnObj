@@ -34,7 +34,7 @@
 #pragma warning(pop)
 
 #include "ui-win/controls/Base.h"
-#include "converters/Converter.h"
+#include "converters/ConverterToMax.h"
 #include "ui-win/controls/Edit.h"
 #include "common/Logger.h"
 
@@ -84,7 +84,7 @@ namespace win {
         int startImport();
         void finish(bool falied);
 
-        Converter mConverterer;
+        ConverterToMax mConverterer;
         TimeValue mTime = 0;
         std::string mLogText;
 

@@ -39,7 +39,7 @@
 #include "ui-win/controls/Base.h"
 #include "ui-win/controls/CheckBox.h"
 #include "ui-win/controls/Edit.h"
-#include "Converters/Converter.h"
+#include "Converters/ConverterToXpln.h"
 #include "common/Logger.h"
 #include "controls/ExportObjList.h"
 
@@ -100,7 +100,7 @@ namespace win {
         size_t selectedNodeCount();
         void slotSelObjChanged(int idx);
 
-        Converter mConverterer;
+        ConverterToXpln mConverterer;
         TimeValue mTime = 0;
         std::string mLogText;
 
