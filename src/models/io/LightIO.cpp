@@ -148,15 +148,20 @@ bool LightIO::load(INode * node, sts::DataStreamI & stream, xobj::ObjLightNamed 
 /***************************************************************************************/
 
 void LightIO::save(sts::DataStreamO & stream, const xobj::ObjLightParam & inLight) {
-    stream.setValue<uint8_t>(uint8_t(2)); // io version
+    stream.setValue<std::uint8_t>(std::uint8_t(2)); // io version
+    // script version
+    // It may be needed when syntax of script should be updated or correctly read.
     stream.setValue<std::string>(inLight.name());
+    stream.setValue<std::uint8_t>(std::uint8_t(1));
     stream.setValue<std::string>(inLight.params());
 }
 
 bool LightIO::load(INode * node, sts::DataStreamI & stream, xobj::ObjLightParam & outLight) {
-    const std::uint8_t version = stream.value<std::uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version == 2) {
+        // script version
         outLight.setName(stream.value<std::string>());
+        stream.value<std::uint8_t>();
         outLight.setRawParams(stream.value<std::string>());
         return true;
     }
