@@ -6,6 +6,7 @@ Next
 -------------------------
 - Added: Ability to use tool-tip for ``ATTR_manip_noop``.
 - Added: Ability to use text variables in the param light's parameters string.
+- Updated: Link to the help. It is on-line now.
 - Updated: Named and param light name list. Full list you can find here ``X-Plane Root/Resources/bitmaps/world/lites/lights.txt``
 
 
