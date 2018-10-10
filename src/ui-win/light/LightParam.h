@@ -29,6 +29,8 @@
 
 #pragma once
 
+#include <map>
+#include <string>
 #include <xpln/obj/ObjLightParam.h>
 #include "common/String.h"
 #include "AbstractLight.h"
@@ -49,8 +51,8 @@ namespace win {
             return mHwnd;
         }
 
-        void create(HWND inParent) override;
-        void show(xobj::ObjLightParam * inData);
+        void create(HWND parent) override;
+        void show(xobj::ObjLightParam * data);
         void hide();
         void destroy() override;
 
@@ -69,9 +71,6 @@ namespace win {
         void enableControls();
         void disableControls();
 
-        void setCustFieldEnable(bool status);
-        bool isUiCustom() const;
-
         xobj::ObjLightParam * mData = nullptr;
         win::Base mHwnd;
 
@@ -79,6 +78,8 @@ namespace win {
         win::Base cStcCust;
         ICustEdit * cEdtCustomName = nullptr;
         ICustEdit * cEdtAdditional = nullptr;
+
+        static std::map<std::string, std::string> mPreDefinedList;
 
     };
 

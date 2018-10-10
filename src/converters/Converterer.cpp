@@ -83,14 +83,14 @@ bool Converterer::toMax(xobj::ObjMain & xObjMain) {
 
     const ImportParams importPrams;
 
-    for (size_t i = 0; i < xObjMain.lodCount(); ++i) {
-        xobj::ObjLodGroup & lod = xObjMain.lod(i);
-        INode * maxLod = ConverterLod::toMax(lod, importPrams);
+    for (size_t i = 0; i < xObjMain.lods().size(); ++i) {
+        auto & lod = xObjMain.lods().at(i);
+        INode * maxLod = ConverterLod::toMax(*lod, importPrams);
         if (maxLod == nullptr) {
             return false;
         }
         main->AttachChild(maxLod);
-        if (!processXTransformHierarchy(maxLod, &lod.transform(), importPrams)) {
+        if (!processXTransformHierarchy(maxLod, &lod->transform(), importPrams)) {
             return false;
         }
     }
@@ -114,7 +114,7 @@ bool Converterer::processXTransformHierarchy(INode * parent, xobj::Transform * x
     //---------------------------
     processXTransformObjects(parent, xTransform, params);
     //---------------------------
-    for (size_t i = 0; i < xTransform->childrenCount(); ++i) {
+    for (size_t i = 0; i < xTransform->childrenNum(); ++i) {
         if (!processXTransformHierarchy(parent, xTransform->childAt(i), params)) {
             return false;
         }
@@ -217,7 +217,7 @@ bool Converterer::toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMa
 /**************************************************************************************************/
 
 bool Converterer::processNode(INode * node, xobj::Transform * xTransform, const ExportParams & params) const {
-    xobj::Transform & tr = xTransform->createChild(sts::toMbString(node->GetName()).c_str());
+    xobj::Transform & tr = xTransform->newChild(sts::toMbString(node->GetName()).c_str());
     ConverterUtils::toXTransform(node->GetNodeTM(mMainObj->timeValue()), tr);
     //-------------------------------------------------------------------------
     // animation

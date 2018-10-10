@@ -33,7 +33,6 @@
 #include <3dsmaxport.h>
 #pragma warning(pop)
 
-#include <xpln/enums/ELightParams.h>
 #include "resource/resource.h"
 #include "ui-win/UiUtilities.h"
 #include "resource/ResHelper.h"
@@ -45,7 +44,7 @@ namespace win {
     //////////////////////////////////////////* Static area *///////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR LightParam::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    INT_PTR CALLBACK LightParam::panelProc(const HWND hWnd, const UINT msg, const WPARAM wParam, const LPARAM lParam) {
         LightParam * theDlg;
         if (msg == WM_INITDIALOG) {
             theDlg = reinterpret_cast<LightParam*>(lParam);
@@ -70,16 +69,15 @@ namespace win {
                 switch (LOWORD(wParam)) {
                     case IDC_CMB_LIGHTNAMED: {
                         if (HIWORD(wParam) == CBN_SELCHANGE) {
-                            if (theDlg->isUiCustom()) {
-                                theDlg->setCustFieldEnable(true);
-                                theDlg->mData->setLightId(xobj::ELightParams(xobj::ELightParams::light_params_custom));
-                                theDlg->eventParamChanged(true);
-                            }
-                            else {
-                                theDlg->setCustFieldEnable(false);
-                                theDlg->mData->setLightId(xobj::ELightParams::fromUiString(sts::toMbString(theDlg->cCmbName.currSelectedText()).c_str()));
-                                theDlg->eventParamChanged(true);
-                            }
+                            auto text = theDlg->cCmbName.currSelectedText();
+                            const auto iter = theDlg->mPreDefinedList.find(sts::toMbString(text));
+                            DbgAssert(iter != theDlg->mPreDefinedList.end());
+
+                            theDlg->mData->setName(sts::toMbString(iter->first));
+                            theDlg->mData->setRawParams(sts::toMbString(iter->second));
+                            UiUtilities::setText(theDlg->cEdtCustomName, sts::toString(iter->first));
+                            UiUtilities::setText(theDlg->cEdtAdditional, sts::toString(iter->second));
+                            theDlg->eventParamChanged(true);
                         }
                         break;
                     }
@@ -90,12 +88,12 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case IDC_EDIT_PARAMS: {
-                        theDlg->mData->setAdditionalParams(sts::toMbString(UiUtilities::getText(theDlg->cEdtAdditional)));
+                        theDlg->mData->setRawParams(sts::toMbString(UiUtilities::getText(theDlg->cEdtAdditional)));
                         theDlg->eventParamChanged(true);
                         break;
                     }
                     case IDC_EDIT_CUSTOM: {
-                        theDlg->mData->setLightName(sts::toMbString(UiUtilities::getText(theDlg->cEdtCustomName)));
+                        theDlg->mData->setName(sts::toMbString(UiUtilities::getText(theDlg->cEdtCustomName)));
                         theDlg->eventParamChanged(true);
                         break;
                     }
@@ -107,6 +105,51 @@ namespace win {
         }
         return FALSE;
     }
+
+    /**************************************************************************************************/
+    /////////////////////////////////////////* Static area *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    // https://developer.x-plane.com/?article=airplane-parameterized-light-guide
+    std::map<std::string, std::string> LightParam::mPreDefinedList{
+            {"airplane_landing_core", "$direction:a+10.0 index size"},
+            {"airplane_landing_glow", "$direction:a+10.0 index size"},
+            {"airplane_landing_flare", "$direction:a+10.0 index size"},
+            {"airplane_landing_sp", "$rgb index size $width"},
+
+            {"airplane_taxi_core", "$direction:a+10.0 index"},
+            {"airplane_taxi_glow", "$direction:a+10.0 index size"},
+            {"airplane_taxi_flare", "$direction:a+10.0 index size"},
+            {"airplane_taxi_sp", "$rgb index size $width"},
+
+            {"airplane_spot_core", "$direction:a+10.0 index size"},
+            {"airplane_spot_glow", "$direction:a+10.0 index size"},
+            {"airplane_spot_flare", "$direction:a+10.0 index size"},
+            {"airplane_spot_sp", "$rgb index size $width"},
+
+            {"airplane_generic_core", "$direction:a+10.0 index size"},
+            {"airplane_generic_glow", "$direction:a+10.0 index size"},
+            {"airplane_generic_flare", "$direction:a+10.0 index size"},
+            {"airplane_generic_sp", "$rgb index size $width"},
+
+            {"airplane_beacon_rotate", "period phase"},
+            {"airplane_beacon_rotate_sp", "period phase size $width"},
+
+            {"airplane_beacon_strobe", "size index"},
+            {"airplane_beacon_strobe_sp", "size index"},
+
+            {"airplane_strobe_omni", "0 0 0 index size"},
+            {"airplane_strobe_dir", "0 0 0 index size $direction 1"},
+            {"airplane_strobe_sp", "$rgb index size $direction $width"},
+
+            {"airplane_nav_tail_size", "size focus"},
+            {"airplane_nav_left_size", "size focus"},
+            {"airplane_nav_right_size", "size focus"},
+            {"airplane_nav_sp", "$rgb index size $direction $width"},
+
+            {"airplane_panel_sp", "$rgb index size $direction $width"},
+            {"airplane_inst_sp", "$rgb index size $direction $width"},
+    };
 
     /**************************************************************************************************/
     ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
@@ -124,8 +167,8 @@ namespace win {
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void LightParam::show(xobj::ObjLightParam * inData) {
-        mData = inData;
+    void LightParam::show(xobj::ObjLightParam * data) {
+        mData = data;
         toWindow();
         mHwnd.show();
     }
@@ -134,12 +177,11 @@ namespace win {
         mHwnd.hide();
     }
 
-    void LightParam::create(HWND inParent) {
-        assert(inParent);
+    void LightParam::create(const HWND parent) {
+        assert(parent);
         mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
                                       MAKEINTRESOURCE(IDD_ROLL_LIGHT_PARAM_OBJ),
-                                      inParent,
-                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      parent, panelProc,
                                       reinterpret_cast<LPARAM>(this)));
         assert(mHwnd);
     }
@@ -155,22 +197,21 @@ namespace win {
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void LightParam::initWindow(HWND hWnd) {
+    void LightParam::initWindow(const HWND hWnd) {
         cCmbName.setup(hWnd, IDC_CMB_LIGHTNAMED);
         cStcCust.setup(hWnd, IDC_STATIC_CUST);
         cEdtAdditional = GetICustEdit(GetDlgItem(hWnd, IDC_EDIT_PARAMS));
-        cEdtCustomName = GetICustEdit(GetDlgItem(hWnd, IDC_EDIT_CUSTOM));
+        cEdtCustomName = GetICustEdit(GetDlgItem(hWnd, IDC_EDIT_NAME));
 
         assert(cEdtAdditional);
         assert(cCmbName);
 
-        for (auto & curr : xobj::ELightParams::list()) {
-            cCmbName.addItem(sts::toString(curr.toUiString()));
+        for (auto & curr : mPreDefinedList) {
+            cCmbName.addItem(sts::toString(curr.first));
         }
-        cCmbName.setCurrSelected(0);
     }
 
-    void LightParam::destroyWindow(HWND /*hWnd*/) {
+    void LightParam::destroyWindow(const HWND /*hWnd*/) {
         cCmbName.release();
         ReleaseICustEdit(cEdtCustomName);
         ReleaseICustEdit(cEdtAdditional);
@@ -180,15 +221,15 @@ namespace win {
         if (mData) {
             enableControls();
 
-            if (mData->lightId() == xobj::ELightParams(xobj::ELightParams::light_params_custom)) {
-                setCustFieldEnable(true);
-                UiUtilities::setText(cEdtCustomName, sts::toString(mData->lightName()));
+            UiUtilities::setText(cEdtCustomName, sts::toString(mData->name()));
+            UiUtilities::setText(cEdtAdditional, sts::toString(mData->params()));
+            const auto iter = mPreDefinedList.find(mData->name());
+            if (iter != mPreDefinedList.end()) {
+                cCmbName.setCurrSelected(sts::toString(iter->first));
             }
             else {
-                setCustFieldEnable(false);
+                cCmbName.setCurrSelected(-1);
             }
-            cCmbName.setCurrSelected(sts::toString(mData->lightId().toUiString()));
-            UiUtilities::setText(cEdtAdditional, sts::toString(mData->additionalParams()));
         }
         else {
             disableControls();
@@ -201,27 +242,14 @@ namespace win {
 
     void LightParam::enableControls() {
         cCmbName.enable();
-        setCustFieldEnable(true);
+        cEdtCustomName->Enable();
         cEdtAdditional->Enable();
     }
 
-    /**************************************************************************************************/
-    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
-    /**************************************************************************************************/
-
     void LightParam::disableControls() {
         cCmbName.disable();
-        setCustFieldEnable(false);
+        cEdtCustomName->Disable();
         cEdtAdditional->Disable();
-    }
-
-    void LightParam::setCustFieldEnable(bool status) {
-        cEdtCustomName->Enable(status);
-        cStcCust.enable(status);
-    }
-
-    bool LightParam::isUiCustom() const {
-        return cCmbName.currSelectedText() == sts::toString(xobj::ELightParams(xobj::ELightParams::light_params_custom).toUiString());
     }
 
     /**************************************************************************************************/

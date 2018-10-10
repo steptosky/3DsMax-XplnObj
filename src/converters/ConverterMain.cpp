@@ -81,8 +81,8 @@ bool ConverterMain::toXpln(INode * inNode, xobj::ObjMain & outMain, const Export
     outMain.pAttr.setWetDry(attr.wetDry());
     outMain.pAttr.setBlend(attr.blend());
     outMain.pAttr.setLayerGroup(attr.layerGroup());
-    outMain.pAttr.setLayerGroupDraped(attr.drapedLayerGroup());
-    outMain.pAttr.setLodDrap(attr.lodDrap());
+    outMain.pDraped.pAttr.setLayerGroup(attr.drapedLayerGroup());
+    outMain.pDraped.pAttr.setLod(attr.lodDrap());
     outMain.pAttr.setSlungLoadWeight(attr.slungWeight());
     outMain.pAttr.setSpecular(attr.specular());
     outMain.pAttr.setTint(attr.tint());
@@ -155,8 +155,8 @@ INode * ConverterMain::toMax(const xobj::ObjMain & inXObj) {
     attr.setWetDry(inXObj.pAttr.wetDry());
     attr.setBlend(inXObj.pAttr.blend());
     attr.setLayerGroup(inXObj.pAttr.layerGroup());
-    attr.setDrapedLayerGroup(inXObj.pAttr.layerGroupDraped());
-    attr.setLodDrap(inXObj.pAttr.lodDrap());
+    attr.setDrapedLayerGroup(inXObj.pDraped.pAttr.layerGroup());
+    attr.setLodDrap(inXObj.pDraped.pAttr.lod());
     attr.setSlungWeight(inXObj.pAttr.slungLoadWeight());
     attr.setSpecular(inXObj.pAttr.specular());
     attr.setTint(inXObj.pAttr.tint());

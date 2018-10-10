@@ -142,6 +142,7 @@
 #define IDC_EDIT_PARAMS                 1123
 #define IDC_S1_EDIT                     1124
 #define IDC_EDIT_CUSTOM                 1124
+#define IDC_EDIT_NAME                   1124
 #define IDC_S1_SPIN                     1125
 #define IDC_T1_EDIT                     1126
 #define IDC_T1_SPIN                     1127
@@ -325,6 +326,7 @@
 #define SPN_POLYOFFSET_DIST_LABEL       1258
 #define SPN_BLEND_LABEL                 1259
 #define SPN_SHINY_LABEL                 1260
+#define IDC_NAME_LIGHTNAMED             1261
 
 // Next default values for new objects
 // 
@@ -332,7 +334,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        173
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1261
+#define _APS_NEXT_CONTROL_VALUE         1262
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
