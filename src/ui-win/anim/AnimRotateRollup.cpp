@@ -39,7 +39,7 @@ namespace win {
     /////////////////////////////////////////* Static area *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR AnimRotateRollup::panelProc(HWND /*hWnd*/, UINT /*msg*/, WPARAM /*wParam*/, LPARAM /*lParam*/) {
+    INT_PTR CALLBACK AnimRotateRollup::panelProc(HWND /*hWnd*/, UINT /*msg*/, WPARAM /*wParam*/, LPARAM /*lParam*/) {
         return 0;
     }
 

@@ -47,7 +47,7 @@ namespace win {
     //////////////////////////////////////////* Static area *///////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR ManipAttrRadio::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    INT_PTR CALLBACK ManipAttrRadio::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         ManipAttrRadio * theDlg;
         if (msg == WM_INITDIALOG) {
             theDlg = reinterpret_cast<ManipAttrRadio*>(lParam);
@@ -138,8 +138,7 @@ namespace win {
         assert(inParent);
         mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
                                       MAKEINTRESOURCE(ROLL_MANIP_RADIO),
-                                      inParent,
-                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      inParent, panelProc,
                                       reinterpret_cast<LPARAM>(this)));
         assert(mHwnd);
         if (mHwnd) {

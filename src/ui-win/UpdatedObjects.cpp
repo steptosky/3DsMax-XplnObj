@@ -43,7 +43,7 @@ namespace win {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR UpdatedObjects::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    INT_PTR CALLBACK UpdatedObjects::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         UpdatedObjects * theDlg;
         if (msg == WM_INITDIALOG) {
             theDlg = reinterpret_cast<UpdatedObjects*>(lParam);
@@ -109,8 +109,7 @@ namespace win {
         mParent = parent;
         return DialogBoxParam(ResHelper::hInstance,
                               MAKEINTRESOURCE(IDD_UPDATED_OBJECTS),
-                              parent,
-                              reinterpret_cast<DLGPROC>(panelProc),
+                              parent, panelProc,
                               reinterpret_cast<LPARAM>(this)) ? true : false;
     }
 

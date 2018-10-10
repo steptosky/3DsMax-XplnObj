@@ -47,7 +47,7 @@ namespace win {
     //////////////////////////////////////////* Static area *///////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR ManipAttrDragXy::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    INT_PTR CALLBACK ManipAttrDragXy::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         ManipAttrDragXy * theDlg;
         if (msg == WM_INITDIALOG) {
             theDlg = reinterpret_cast<ManipAttrDragXy*>(lParam);
@@ -172,8 +172,7 @@ namespace win {
         assert(inParent);
         mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
                                       MAKEINTRESOURCE(ROLL_MANIP_DRAGXY),
-                                      inParent,
-                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      inParent, panelProc,
                                       reinterpret_cast<LPARAM>(this)));
         assert(mHwnd);
         if (mHwnd) {

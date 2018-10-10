@@ -42,7 +42,7 @@ namespace win {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR AnimRotateAxisView::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
+    INT_PTR CALLBACK AnimRotateAxisView::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
         switch (msg) {
             case WM_COMMAND: {
                 switch (LOWORD(wParam)) {
@@ -167,8 +167,8 @@ namespace win {
     bool AnimRotateAxisView::create(HWND parent) {
         HWND res = CreateDialogParam(ResHelper::hInstance,
                                      MAKEINTRESOURCE(DLG_ANIM),
-                                     parent,
-                                     BaseDlgProc, reinterpret_cast<LPARAM>(this));
+                                     parent, BaseDlgProc,
+                                     reinterpret_cast<LPARAM>(this));
         if (res != nullptr) {
             registerCallbacks();
             win::Base win(res);

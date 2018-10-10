@@ -45,7 +45,7 @@ namespace win {
     //////////////////////////////////////////* Static area *///////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR LightSpillCust::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    INT_PTR CALLBACK LightSpillCust::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         LightSpillCust * theDlg;
         if (msg == WM_INITDIALOG) {
             theDlg = reinterpret_cast<LightSpillCust*>(lParam);
@@ -161,8 +161,7 @@ namespace win {
         assert(inParent);
         mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
                                       MAKEINTRESOURCE(IDD_ROLL_LIGHT_SPILLCUST_OBJ),
-                                      inParent,
-                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      inParent, panelProc,
                                       reinterpret_cast<LPARAM>(this)));
         assert(mHwnd);
     }

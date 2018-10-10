@@ -43,7 +43,7 @@ namespace win {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR AnimCalc::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    INT_PTR CALLBACK AnimCalc::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         AnimCalc * theDlg;
         if (msg == WM_INITDIALOG) {
             theDlg = reinterpret_cast<AnimCalc*>(lParam);
@@ -111,13 +111,10 @@ namespace win {
     bool AnimCalc::calculate(KeyList & inOutData, HWND inParent) {
         mData = &inOutData;
         mParent = inParent;
-        return DialogBoxParam(
-                              ResHelper::hInstance,
+        return DialogBoxParam(ResHelper::hInstance,
                               MAKEINTRESOURCE(IDD_TOOL_CALC_ANIM_VALUE),
-                              inParent,
-                              reinterpret_cast<DLGPROC>(panelProc),
-                              reinterpret_cast<LPARAM>(this)
-                             ) ? true : false;
+                              inParent, panelProc,
+                              reinterpret_cast<LPARAM>(this)) ? true : false;
     }
 
     void AnimCalc::destroy() {

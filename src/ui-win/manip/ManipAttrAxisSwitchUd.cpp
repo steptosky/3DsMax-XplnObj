@@ -47,7 +47,7 @@ namespace win {
     //////////////////////////////////////////* Static area *///////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR ManipAttrAxisSwitchUd::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    INT_PTR CALLBACK ManipAttrAxisSwitchUd::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         ManipAttrAxisSwitchUd * theDlg;
         if (msg == WM_INITDIALOG) {
             theDlg = reinterpret_cast<ManipAttrAxisSwitchUd*>(lParam);
@@ -153,8 +153,7 @@ namespace win {
         assert(inParent);
         mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
                                       MAKEINTRESOURCE(ROLL_MANIP_AXIS_KNOB), /* the same template */
-                                      inParent,
-                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      inParent, panelProc,
                                       reinterpret_cast<LPARAM>(this)));
         assert(mHwnd);
         if (mHwnd) {

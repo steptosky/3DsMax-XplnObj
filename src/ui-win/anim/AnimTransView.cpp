@@ -42,7 +42,7 @@ namespace win {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR AnimTransView::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
+    INT_PTR CALLBACK AnimTransView::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
         switch (msg) {
             case WM_COMMAND: {
                 switch (LOWORD(wParam)) {
