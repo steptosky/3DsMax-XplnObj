@@ -33,7 +33,7 @@
 
 #include "SceneUpdater.h"
 #include "common/Logger.h"
-#include "common/NodeVisitor.h"
+#include "common/NodeUtils.h"
 #include "models/MdManip.h"
 #include "models/MdObjAttr.h"
 #include <xpln/obj/ObjMesh.h>
@@ -119,7 +119,7 @@ Read the help for more information about this issue.");
             return true;
         };
         //-------------------------------
-        NodeVisitor::visitAll(fn);
+        NodeUtils::visitAll(fn);
         LMessage << LOG_PREFIX << msg << " " << nodes.size() << " objects updated";
         ui::win::Factory::showUpdatedObjects(nodes);
         //-------------------------------

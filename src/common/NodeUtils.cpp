@@ -27,7 +27,7 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "NodeVisitor.h"
+#include "NodeUtils.h"
 
 #pragma warning(push, 0)
 #include <max.h>
@@ -39,9 +39,9 @@
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool NodeVisitor::visitChildrenOf(INode * root, const Function & fn) {
+bool NodeUtils::visitChildrenOf(INode * root, const Function & fn) {
     DbgAssert(fn);
-    int numChildren = root->NumberOfChildren();
+    const auto numChildren = root->NumberOfChildren();
     for (int idx = 0; idx < numChildren; ++idx) {
         if (!fn(root->GetChildNode(idx))) {
             return false;
@@ -50,9 +50,9 @@ bool NodeVisitor::visitChildrenOf(INode * root, const Function & fn) {
     return true;
 }
 
-bool NodeVisitor::visitAllOf(INode * root, const Function & fn) {
+bool NodeUtils::visitAllOf(INode * root, const Function & fn) {
     DbgAssert(fn);
-    int numChildren = root->NumberOfChildren();
+    const auto numChildren = root->NumberOfChildren();
     for (int idx = 0; idx < numChildren; ++idx) {
         INode * currNode = root->GetChildNode(idx);
         if (!fn(currNode) || !visitAllOf(currNode, fn)) {
@@ -62,17 +62,13 @@ bool NodeVisitor::visitAllOf(INode * root, const Function & fn) {
     return true;
 }
 
-bool NodeVisitor::visitAll(const Function & fn) {
-    return visitAllOf(GetCOREInterface()->GetRootNode(), fn);
-}
-
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool NodeVisitor::sceneContainsMainObj() {
-    auto hasMainObj = [](INode * n) ->bool { return !MainObjParamsWrapper::isMainObj(n); };
-    return !NodeVisitor::visitChildrenOf(GetCOREInterface()->GetRootNode(), hasMainObj);
+bool NodeUtils::isSceneContainMainObj() {
+    auto const hasMainObj = [](INode * n) ->bool { return !MainObjParamsWrapper::isMainObj(n); };
+    return !visitChildrenOf(GetCOREInterface()->GetRootNode(), hasMainObj);
 }
 
 /**************************************************************************************************/
