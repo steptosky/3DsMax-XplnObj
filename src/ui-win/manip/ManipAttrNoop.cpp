@@ -31,6 +31,7 @@
 #include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
+#include "ui-win/UiUtilities.h"
 
 namespace ui {
 namespace win {
@@ -39,7 +40,40 @@ namespace win {
     //////////////////////////////////////////* Static area *///////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR ManipAttrNoop::panelProc(HWND /*hWnd*/, UINT /*msg*/, WPARAM /*wParam*/, LPARAM /*lParam*/) {
+    INT_PTR CALLBACK ManipAttrNoop::panelProc(const HWND hWnd, const UINT msg, const WPARAM wParam, const LPARAM lParam) {
+        ManipAttrNoop * theDlg;
+        if (msg == WM_INITDIALOG) {
+            theDlg = reinterpret_cast<ManipAttrNoop*>(lParam);
+            DLSetWindowLongPtr(hWnd, lParam);
+            theDlg->initWindow(hWnd);
+        }
+        else if (msg == WM_DESTROY) {
+            theDlg = DLGetWindowLongPtr<ManipAttrNoop*>(hWnd);
+            theDlg->destroyWindow(hWnd);
+        }
+        else {
+            theDlg = DLGetWindowLongPtr<ManipAttrNoop *>(hWnd);
+            if (!theDlg) {
+                return FALSE;
+            }
+        }
+
+        //--------------------------------------
+
+        switch (msg) {
+            case WM_CUSTEDIT_ENTER: {
+                switch (LOWORD(wParam)) {
+                    case EDIT_TOOLTIP: {
+                        theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
+                        theDlg->save();
+                        break;
+                    }
+                    default: break;
+                }
+                break;
+            }
+            default: break;
+        }
         return 0;
     }
 
@@ -64,11 +98,11 @@ namespace win {
         assert(inParent);
         mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
                                       MAKEINTRESOURCE(ROLL_MANIP_NOOP),
-                                      inParent,
-                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      inParent, panelProc,
                                       reinterpret_cast<LPARAM>(this)));
         assert(mHwnd);
         if (mHwnd) {
+            toWindow();
             mHwnd.show(true);
         }
         else {
@@ -78,7 +112,7 @@ namespace win {
 
     void ManipAttrNoop::destroy() {
         if (mHwnd) {
-            BOOL res = DestroyWindow(mHwnd.hwnd());
+            const BOOL res = DestroyWindow(mHwnd.hwnd());
             if (!res) {
                 LError << WinCode(GetLastError());
             }
@@ -110,6 +144,22 @@ namespace win {
             return;
         }
         mData = static_cast<const xobj::AttrManipNoop &>(manip);
+    }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void ManipAttrNoop::initWindow(HWND hWnd) {
+        cEdtToolType = GetICustEdit(GetDlgItem(hWnd, EDIT_TOOLTIP));
+    }
+
+    void ManipAttrNoop::destroyWindow(HWND /*hWnd*/) {
+        ReleaseICustEdit(cEdtToolType);
+    }
+
+    void ManipAttrNoop::toWindow() {
+        UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
     }
 
     /********************************************************************************************************/

@@ -3,6 +3,7 @@ The 3DsMax X-Plane Obj Exporter/Importer change-log.
 ===============================================================================
 Next
 
+- Added: Ability to use tool-tip for ATTR_manip_noop.
 - Added: Ability to use text variables in the param light's parameters string.
 - Updated: Named and param light name list. Full list you can find here `X-Plane Root/Resources/bitmaps/world/lites/lights.txt`
 
