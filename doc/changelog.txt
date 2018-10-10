@@ -1,6 +1,12 @@
 
 The 3DsMax X-Plane Obj Exporter/Importer change-log.
 ===============================================================================
+Next
+
+- Added: Ability to use variables for param light
+- Updated: Named and param light name list. Full list you can find here `X-Plane Root/Resources/bitmaps/world/lites/lights.txt`
+
+===============================================================================
 2.4.0-beta (12.09.2018)
 
 - Added: Supporting for 3ds max 2018 and 2019.
