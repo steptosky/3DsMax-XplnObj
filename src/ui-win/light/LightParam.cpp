@@ -92,7 +92,7 @@ namespace win {
                         theDlg->eventParamChanged(true);
                         break;
                     }
-                    case IDC_EDIT_CUSTOM: {
+                    case IDC_EDIT_NAME: {
                         theDlg->mData->setName(sts::toMbString(Utils::getText(theDlg->cEdtCustomName)));
                         theDlg->eventParamChanged(true);
                         break;
