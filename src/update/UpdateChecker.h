@@ -69,7 +69,7 @@ private:
     std::thread * mThread = nullptr;
     mutable std::mutex mMutex;
 
-    void setUpdateInfo(Update ipdate);
+    void setUpdateInfo(const Update & update);
     static void checkUpdateTask(void * inUserData);
     static std::string extractVersion(const std::string & jsonData);
 

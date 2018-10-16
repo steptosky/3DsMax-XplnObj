@@ -37,6 +37,11 @@
 
 #include "common/Logger.h"
 #include "common/String.h"
+#include "Info.h"
+
+#ifdef NDEBUG
+#   define CHECK_FOR_UPDATE
+#endif
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
@@ -51,21 +56,29 @@ UpdateChecker::~UpdateChecker() {
 /**************************************************************************************************/
 
 void UpdateChecker::freeResources() {
+#ifdef CHECK_FOR_UPDATE
     if (mThread) {
         mThread->join();
         delete mThread;
         mThread = nullptr;
     }
+#endif
     mUpdateInfo = Update();
 }
 
 void UpdateChecker::checkForUpdate() {
+#ifdef CHECK_FOR_UPDATE
     if (mThread) {
         LError << TOTEXT(UpdateChecker) << " - already has the thread";
         DbgAssert(false);
         return;
-    }
+}
     mThread = new std::thread(checkUpdateTask, this);
+#else
+    mUpdateInfo = Update();
+    mUpdateInfo.valid = true;
+    mUpdateInfo.error = {"update checking is turned off for debug mode"};
+#endif
 }
 
 /**************************************************************************************************/
@@ -77,9 +90,9 @@ UpdateChecker::Update UpdateChecker::updateInfo() const {
     return mUpdateInfo;
 }
 
-void UpdateChecker::setUpdateInfo(Update ipdate) {
+void UpdateChecker::setUpdateInfo(const Update & update) {
     std::lock_guard<std::mutex> lock(mMutex);
-    mUpdateInfo = ipdate;
+    mUpdateInfo = update;
 }
 
 /**************************************************************************************************/
@@ -97,7 +110,7 @@ void UpdateChecker::checkUpdateTask(void * inUserData) {
     }
     else {
         try {
-            std::string ver = UpdateChecker::extractVersion(response.body);
+            const std::string ver = extractVersion(response.body);
             update.version = sts::semver::SemVersion::parse(ver);
             if (!update.version) {
                 update.error.emplace_back("Can't parse the version: ");
@@ -125,10 +138,10 @@ UpdateChecker::Response UpdateChecker::latestReleaseTag() {
     const LPWSTR urlDoc = L"/repos/steptosky/3DsMax-XplnObj/releases/latest";
 
     // Use WinHttpOpen to obtain a session handle.
-    HINTERNET hSession = WinHttpOpen(L"WinHTTP",
-                                     WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY,
-                                     WINHTTP_NO_PROXY_NAME,
-                                     WINHTTP_NO_PROXY_BYPASS, 0);
+    const HINTERNET hSession = WinHttpOpen(L"WinHTTP",
+                                           WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY,
+                                           WINHTTP_NO_PROXY_NAME,
+                                           WINHTTP_NO_PROXY_BYPASS, 0);
 
     HINTERNET hConnect = nullptr;
     // Specify an HTTP server.
@@ -188,7 +201,6 @@ UpdateChecker::Response UpdateChecker::latestReleaseTag() {
     }
 
     // Keep checking for data until there is nothing left.
-    LPSTR pszOutBuffer;
     DWORD dwSize = 0;
     DWORD dwDownloaded = 0;
     if (bResults) {
@@ -204,7 +216,7 @@ UpdateChecker::Response UpdateChecker::latestReleaseTag() {
             }
 
             // Allocate space for the buffer.
-            pszOutBuffer = new char[dwSize + 1];
+            const LPSTR pszOutBuffer = new char[dwSize + 1];
             if (!pszOutBuffer) {
                 response.error.emplace_back();
                 response.error.back()
