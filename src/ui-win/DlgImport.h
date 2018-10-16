@@ -59,15 +59,15 @@ namespace win {
         void InitDlg(HWND hWnd);
         void DestroyDlg(HWND hWnd);
 
-        win::Base mLblVersion;
+        ctrl::Base mLblVersion;
 
-        win::Base mBtnCheckUpdate;
-        win::Base mBtnDonate;
-        win::Base mBtnOk;
-        win::Base mBtnCancel;
-        win::Base mBtnAbout;;
-        win::Edit mEdtLog;
-        win::Base mDlgMain;
+        ctrl::Base mBtnCheckUpdate;
+        ctrl::Base mBtnDonate;
+        ctrl::Base mBtnOk;
+        ctrl::Base mBtnCancel;
+        ctrl::Base mBtnAbout;;
+        ctrl::Edit mEdtLog;
+        ctrl::Base mDlgMain;
 
         //-------------------------------------------------------------------------
 

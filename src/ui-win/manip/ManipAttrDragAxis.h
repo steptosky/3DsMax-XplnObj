@@ -80,7 +80,7 @@ namespace win {
         xobj::AttrManipDragAxis mData;
         ManipAttrWheel mWheel;
 
-        win::Base mHwnd;
+        ctrl::Base mHwnd;
 
         ISpinnerControl * mSpnX = nullptr;
         ISpinnerControl * mSpnY = nullptr;
@@ -89,10 +89,10 @@ namespace win {
         ISpinnerControl * mSpnVal1 = nullptr;
         ISpinnerControl * mSpnVal2 = nullptr;
 
-        win::Base cBtnDataRef;
+        ctrl::Base cBtnDataRef;
         ICustEdit * cEdtDataRef = nullptr;
         ICustEdit * cEdtToolType = nullptr;
-        win::Combo cCmbCursor;
+        ctrl::Combo cCmbCursor;
     };
 
     /********************************************************************************************************/

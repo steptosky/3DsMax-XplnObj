@@ -171,7 +171,7 @@ namespace win {
                                      reinterpret_cast<LPARAM>(this));
         if (res != nullptr) {
             registerCallbacks();
-            win::Base win(res);
+            ctrl::Base win(res);
             win.show();
         }
         return res != nullptr;
@@ -248,7 +248,7 @@ namespace win {
     /**************************************************************************************************/
 
     void AnimRotateAxisView::setWindowPos(const RECT & size) {
-        win::Base(hwnd()).setRect(size);
+        ctrl::Base(hwnd()).setRect(size);
     }
 
     RECT AnimRotateAxisView::clientRect() const {

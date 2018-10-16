@@ -45,7 +45,7 @@ namespace win {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /********************************************************************************************************/
 
-    class LightAttr : public max::win::RollupBase, LightIO::ILightIO, public sts::signals::AutoDisconnect {
+    class LightAttr : public max::ctrl::RollupBase, LightIO::ILightIO, public sts::signals::AutoDisconnect {
     public:
 
         void create(IRollupWindow * rollWin);
@@ -71,7 +71,7 @@ namespace win {
         void initWindow(HWND hWnd) override;
         void destroyWindow(HWND hWnd) override;
 
-        win::Combo cCmbLightType;
+        ctrl::Combo cCmbLightType;
 
         void toWindow();
 
@@ -85,7 +85,7 @@ namespace win {
         RECT mThisSize;
 
         std::map<const sts::Str, AbstractLight *> mChildren;
-        win::Base * currSubWin = nullptr;
+        ctrl::Base * currSubWin = nullptr;
 
         //-------------------------------------------------------------------------
 

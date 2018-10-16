@@ -85,8 +85,8 @@ namespace win {
 
         std::function<void(const xobj::AttrManipWheel &)> mCallback;
         xobj::AttrManipWheel mData;
-        win::Base mHwnd;
-        win::CheckBox mChkEnable;
+        ctrl::Base mHwnd;
+        ctrl::CheckBox mChkEnable;
         ISpinnerControl * mSpnDelta = nullptr;
 
     };

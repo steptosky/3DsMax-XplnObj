@@ -47,7 +47,7 @@ namespace win {
     class LightParam : public AbstractLight {
     public:
 
-        win::Base & getCBase() override {
+        ctrl::Base & getCBase() override {
             return mHwnd;
         }
 
@@ -72,10 +72,10 @@ namespace win {
         void disableControls();
 
         xobj::ObjLightParam * mData = nullptr;
-        win::Base mHwnd;
+        ctrl::Base mHwnd;
 
-        win::Combo cCmbName;
-        win::Base cStcCust;
+        ctrl::Combo cCmbName;
+        ctrl::Base cStcCust;
         ICustEdit * cEdtCustomName = nullptr;
         ICustEdit * cEdtAdditional = nullptr;
 

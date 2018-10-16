@@ -192,7 +192,7 @@ namespace win {
 
     void ManipAttr::create() {
         createRollup(ROLL_MANIP_MAIN, _T("X Manipulator"), this);
-        mOriginRollupSize = win::Base(hwnd()).size();
+        mOriginRollupSize = ctrl::Base(hwnd()).size();
         disableControls();
         registerCallbacks();
     }

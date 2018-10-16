@@ -75,14 +75,14 @@ namespace win {
         MdManip * mModelData;
         xobj::AttrManipCmdSwitchUpDown mData;
 
-        win::Base mHwnd;
-        win::Base mLblName;
-        win::Base cBtnCmdNeg;
-        win::Base cBtnCmdPos;
+        ctrl::Base mHwnd;
+        ctrl::Base mLblName;
+        ctrl::Base cBtnCmdNeg;
+        ctrl::Base cBtnCmdPos;
         ICustEdit * cEdtCmdNeg = nullptr;
         ICustEdit * cEdtCmdPos = nullptr;
         ICustEdit * cEdtToolType = nullptr;
-        win::Combo cCmbCursor;
+        ctrl::Combo cCmbCursor;
     };
 
     /********************************************************************************************************/

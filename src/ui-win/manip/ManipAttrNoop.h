@@ -69,7 +69,7 @@ namespace win {
             mModelData->saveToNode(mData);
         }
 
-        win::Base mHwnd;
+        ctrl::Base mHwnd;
         MdManip * mModelData;
         xobj::AttrManipNoop mData;
         ICustEdit * cEdtToolType = nullptr;

@@ -46,7 +46,7 @@ namespace win {
     class LightNamed : public AbstractLight {
     public:
 
-        win::Base & getCBase() override {
+        ctrl::Base & getCBase() override {
             return mHwnd;
         }
 
@@ -72,8 +72,8 @@ namespace win {
         void disableControls();
 
         xobj::ObjLightNamed * mData = nullptr;
-        win::Base mHwnd;
-        win::Combo cCmbName;
+        ctrl::Base mHwnd;
+        ctrl::Combo cCmbName;
         ICustEdit * cName = nullptr;
 
         static std::set<std::string> mPreDefinedList;

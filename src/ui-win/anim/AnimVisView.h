@@ -46,7 +46,7 @@ namespace win {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /********************************************************************************************************/
 
-    class AnimVisView : public max::win::RollupBase {
+    class AnimVisView : public max::ctrl::RollupBase {
     public:
 
         void create(IRollupWindow * rollWin);
@@ -91,14 +91,14 @@ namespace win {
         void setDataRefValueAsToolType();
 
         int mCurrSelected = 0;
-        win::List cListKeys;
-        win::Base cBtnDataRef;
-        win::Base cBtnAddShow;
-        win::Base cBtnAddHide;
-        win::Base cBtnDelete;
-        win::Base cStcValue1;
-        win::Base cStcValue2;
-        win::CheckBox cChkEnable;
+        ctrl::List cListKeys;
+        ctrl::Base cBtnDataRef;
+        ctrl::Base cBtnAddShow;
+        ctrl::Base cBtnAddHide;
+        ctrl::Base cBtnDelete;
+        ctrl::Base cStcValue1;
+        ctrl::Base cStcValue2;
+        ctrl::CheckBox cChkEnable;
         ICustEdit * cEditDataRef = nullptr;
         ISpinnerControl * cSpnValue1 = nullptr;
         ISpinnerControl * cSpnValue2 = nullptr;

@@ -47,7 +47,7 @@ namespace win {
 
         sts::signals::Signal<bool> eventParamChanged;
 
-        virtual win::Base & getCBase() = 0;
+        virtual ctrl::Base & getCBase() = 0;
         virtual void create(HWND inParent) = 0;
         virtual void destroy() = 0;
 

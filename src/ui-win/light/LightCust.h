@@ -44,7 +44,7 @@ namespace win {
     class LightCust : public AbstractLight {
     public:
 
-        win::Base & getCBase() override {
+        ctrl::Base & getCBase() override {
             return mHwnd;
         }
 
@@ -70,7 +70,7 @@ namespace win {
         void disableControls();
 
         xobj::ObjLightCustom * mData = nullptr;
-        win::Base mHwnd;
+        ctrl::Base mHwnd;
 
         ISpinnerControl * mSpnR = nullptr;
         ISpinnerControl * mSpnG = nullptr;
@@ -84,7 +84,7 @@ namespace win {
         ISpinnerControl * mSpnS2 = nullptr;
         ISpinnerControl * mSpnT2 = nullptr;
 
-        win::Base cBtnDataRef;
+        ctrl::Base cBtnDataRef;
         ICustEdit * cEdtDataRef = nullptr;
     };
 

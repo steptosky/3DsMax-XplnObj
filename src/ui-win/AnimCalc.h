@@ -66,9 +66,9 @@ namespace win {
         ISpinnerControl * cSpnVal1 = nullptr;
         ISpinnerControl * cSpnVal2 = nullptr;
 
-        win::Base cBtnOk;
-        win::Base cBtnCancel;
-        win::Base mMainWin;
+        ctrl::Base cBtnOk;
+        ctrl::Base cBtnCancel;
+        ctrl::Base mMainWin;
         KeyList * mData = nullptr;
         HWND mParent;
 
