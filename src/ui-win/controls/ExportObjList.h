@@ -41,17 +41,17 @@ namespace ctrl {
     class ExportObjList : public Base {
     public:
 
-        ExportObjList();
-        virtual ~ExportObjList();
+        ExportObjList() = default;
+        virtual ~ExportObjList() = default;
 
         //-------------------------------------------------------------------------
 
-        bool setup(HWND inParent, int inControlID) override;
-        void setup(HWND inHWnd) override;
+        bool setup(HWND parent, int controlId) override;
+        void setup(HWND hwnd) override;
 
         void checkAll(bool state);
         void checkItem(int idx, bool state);
-        int addItem(const String & inName);
+        int addItem(const String & name);
         bool isChecked(int idx);
 
         //-------------------------------------------------------------------------
@@ -68,12 +68,11 @@ namespace ctrl {
                                     UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
         static LRESULT drawItems(LPARAM lParam, ExportObjList * data);
 
-        int mHeaderId = 0;
         unsigned mLastFreeId = 0;
         HWND mHeader = nullptr;
 
-        COLORREF mWinColor;
-        COLORREF mWinTextColor;
+        COLORREF mWinColor = 0;
+        COLORREF mWinTextColor = 0;
         HBRUSH mWinBrush = nullptr;
 
         TCHAR * mHeadersText[2] = {_T("V"), _T("X-Objects")};
