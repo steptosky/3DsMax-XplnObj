@@ -34,7 +34,7 @@
 #pragma warning(pop)
 
 #include <xpln/enums/ECursor.h>
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
@@ -88,12 +88,12 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case EDIT_DATAREF: {
-                        theDlg->mData.setDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)).c_str());
+                        theDlg->mData.setDataref(sts::toMbString(Utils::getText(theDlg->cEdtDataRef)).c_str());
                         theDlg->save();
                         break;
                     }
                     case EDIT_TOOLTIP: {
-                        theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)).c_str());
+                        theDlg->mData.setToolTip(sts::toMbString(Utils::getText(theDlg->cEdtToolType)).c_str());
                         theDlg->save();
                         break;
                     }
@@ -269,9 +269,9 @@ namespace win {
         mSpnStep->SetValue(mData.step(), FALSE);
         mSpnExp->SetValue(mData.exp(), FALSE);
 
-        UiUtilities::setText(cEdtDataRef, sts::toString(mData.dataref()));
+        Utils::setText(cEdtDataRef, sts::toString(mData.dataref()));
 
-        UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
+        Utils::setText(cEdtToolType, sts::toString(mData.toolTip()));
         cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
     }
 

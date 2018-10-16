@@ -31,7 +31,7 @@
 #include "common/Logger.h"
 #include "Resource/resource.h"
 #include "ui-win/AnimCalc.h"
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "resource/ResHelper.h"
 #include "ui-win/Factory.h"
 
@@ -183,14 +183,14 @@ namespace win {
 
     void AnimVisView::clearValues() {
         cListKeys.clear();
-        UiUtilities::setText(cEditDataRef, sts::toString("none"));
+        Utils::setText(cEditDataRef, sts::toString("none"));
         cSpnValue1->SetValue(0.0f, FALSE);
         cSpnValue2->SetValue(1.0f, FALSE);
     }
 
     void AnimVisView::setDataRefValueAsToolType() {
 #if MAX_VERSION_MAJOR > 11
-    cEditDataRef->SetTooltip(true, UiUtilities::getText(cEditDataRef).c_str());
+    cEditDataRef->SetTooltip(true, Utils::getText(cEditDataRef).c_str());
 #endif
     }
 
@@ -284,7 +284,7 @@ namespace win {
         mData.mKeyList.push_back(MdAnimVis::Key(type,
                                                 cSpnValue1->GetFVal(),
                                                 cSpnValue2->GetFVal(),
-                                                sts::toMbString(UiUtilities::getText(cEditDataRef))));
+                                                sts::toMbString(Utils::getText(cEditDataRef))));
         cListKeys.addItem(toText(mData.mKeyList.back()));
         mData.saveToNode();
     }
@@ -326,7 +326,7 @@ namespace win {
             MdAnimVis::Key & key = mData.mKeyList[static_cast<size_t>(mCurrSelected)];
             key.pValue1 = cSpnValue1->GetFVal();
             key.pValue2 = cSpnValue2->GetFVal();
-            key.pDrf = sts::toMbString(UiUtilities::getText(cEditDataRef));
+            key.pDrf = sts::toMbString(Utils::getText(cEditDataRef));
         }
         makeUiList();
     }
@@ -346,7 +346,7 @@ namespace win {
         }
         cSpnValue1->SetValue(sts::toFloat(list2[0]), FALSE);
         cSpnValue2->SetValue(sts::toFloat(list2[1]), FALSE);
-        UiUtilities::setText(cEditDataRef, sts::toString(list2[2]));
+        Utils::setText(cEditDataRef, sts::toString(list2[2]));
         setDataRefValueAsToolType();
     }
 

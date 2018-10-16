@@ -34,7 +34,7 @@
 #pragma warning(pop)
 
 #include "resource/resource.h"
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "resource/ResHelper.h"
 
 namespace ui {
@@ -71,7 +71,7 @@ namespace win {
                         if (HIWORD(wParam) == CBN_SELCHANGE) {
                             auto text = theDlg->cCmbName.currSelectedText();
                             theDlg->mData->setName(sts::toMbString(text));
-                            UiUtilities::setText(theDlg->cName, sts::toString(text));
+                            Utils::setText(theDlg->cName, sts::toString(text));
                             theDlg->eventParamChanged(true);
                         }
                         break;
@@ -83,7 +83,7 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case IDC_NAME_LIGHTNAMED: {
-                        theDlg->mData->setName(sts::toMbString(UiUtilities::getText(theDlg->cName)));
+                        theDlg->mData->setName(sts::toMbString(Utils::getText(theDlg->cName)));
                         theDlg->eventParamChanged(true);
                         break;
                     }
@@ -220,7 +220,7 @@ namespace win {
         if (mData) {
             enableControls();
 
-            UiUtilities::setText(cName, sts::toString(mData->name()));
+            Utils::setText(cName, sts::toString(mData->name()));
             const auto iter = mPreDefinedList.find(mData->name());
             if (iter != mPreDefinedList.end()) {
                 cCmbName.setCurrSelected(sts::toString(*iter));
@@ -235,7 +235,7 @@ namespace win {
     }
 
     void LightNamed::toData() {
-        mData->setName(sts::toMbString(UiUtilities::getText(cName)));
+        mData->setName(sts::toMbString(Utils::getText(cName)));
     }
 
     /**************************************************************************************************/

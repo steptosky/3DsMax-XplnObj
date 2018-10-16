@@ -34,7 +34,7 @@
 #pragma warning(pop)
 
 #include <xpln/enums/ECursor.h>
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
@@ -88,12 +88,12 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case EDIT_COMMAND: {
-                        theDlg->mData.setCmd(sts::toMbString(UiUtilities::getText(theDlg->cEdtCommand)));
+                        theDlg->mData.setCmd(sts::toMbString(Utils::getText(theDlg->cEdtCommand)));
                         theDlg->save();
                         break;
                     }
                     case EDIT_TOOLTIP: {
-                        theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
+                        theDlg->mData.setToolTip(sts::toMbString(Utils::getText(theDlg->cEdtToolType)));
                         theDlg->save();
                         break;
                     }
@@ -199,8 +199,8 @@ namespace win {
     }
 
     void ManipAttrCmd::toWindow() {
-        UiUtilities::setText(cEdtCommand, sts::toString(mData.cmd()));
-        UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
+        Utils::setText(cEdtCommand, sts::toString(mData.cmd()));
+        Utils::setText(cEdtToolType, sts::toString(mData.toolTip()));
         cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
     }
 

@@ -27,7 +27,7 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "UiUtilities.h"
+#include "Utils.h"
 
 namespace ui {
 namespace win {
@@ -36,7 +36,7 @@ namespace win {
     //////////////////////////////////////////* Static area *///////////////////////////////////////////
     /**************************************************************************************************/
 
-    void UiUtilities::setText(ICustEdit * inCtr, const sts::Str & inText) {
+    void Utils::setText(ICustEdit * inCtr, const sts::Str & inText) {
         MCHAR * txt = new MCHAR[inText.size() + 1];
 
 #ifdef UNICODE
@@ -49,20 +49,20 @@ namespace win {
         delete[] txt;
     }
 
-    void UiUtilities::getText(ICustEdit * inCtr, sts::Str & inText) {
+    void Utils::getText(ICustEdit * inCtr, sts::Str & inText) {
         MCHAR txt[256];
         inCtr->GetText(txt, 256);
         inText = sts::toString(txt);
     }
 
-    void UiUtilities::getText(ICustEdit * inCtr, sts::Str & inText, int size) {
+    void Utils::getText(ICustEdit * inCtr, sts::Str & inText, int size) {
         MCHAR * txt = new MCHAR[size];
         inCtr->GetText(txt, size);
         inText = sts::toString(*txt);
         delete[] txt;
     }
 
-    sts::Str UiUtilities::getText(ICustEdit * inCtr) {
+    sts::Str Utils::getText(ICustEdit * inCtr) {
         MCHAR txt[256];
         inCtr->GetText(txt, 256);
         return sts::toString(txt);

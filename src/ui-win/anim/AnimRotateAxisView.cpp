@@ -30,7 +30,7 @@
 #include "AnimRotateAxisView.h"
 #include "common/Logger.h"
 #include "Resource/resource.h"
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "ui-win/AnimCalc.h"
 #include "resource/ResHelper.h"
 #include "ui-win/Factory.h"
@@ -268,7 +268,7 @@ namespace win {
             cChkEnable.setState(mData.mEnable);
             cChkReverse.setState(mData.mReverse);
             cChkLoop.setState(mData.mLoopEnable);
-            UiUtilities::setText(cEditDataRef, sts::toString(mData.mDataref));
+            Utils::setText(cEditDataRef, sts::toString(mData.mDataref));
             cSpnLoopValue->SetValue(mData.mLoopValue, FALSE);
             setDataRefValueAsToolType();
             makeUiList();
@@ -287,7 +287,7 @@ namespace win {
         cChkReverse.setState(false);
         cChkLoop.setState(false);
         cListKeys.clear();
-        UiUtilities::setText(cEditDataRef, sts::toString("none"));
+        Utils::setText(cEditDataRef, sts::toString("none"));
         cSpnValue->SetValue(0.0f, FALSE);
         cSpnLoopValue->SetValue(0.0f, FALSE);
     }
@@ -360,7 +360,7 @@ namespace win {
     }
 
     void AnimRotateAxisView::setDrft() {
-        mData.mDataref = sts::toMbString(UiUtilities::getText(cEditDataRef));
+        mData.mDataref = sts::toMbString(Utils::getText(cEditDataRef));
         setDataRefValueAsToolType();
         mData.saveToNode();
     }

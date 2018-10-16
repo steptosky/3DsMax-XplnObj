@@ -34,7 +34,7 @@
 #pragma warning(pop)
 
 #include <xpln/enums/ECursor.h>
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
@@ -92,17 +92,17 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case EDIT_COMMAND: {
-                        theDlg->mData.setCmdPositive(sts::toMbString(UiUtilities::getText(theDlg->cEdtCmdPos)));
+                        theDlg->mData.setCmdPositive(sts::toMbString(Utils::getText(theDlg->cEdtCmdPos)));
                         theDlg->save();
                         break;
                     }
                     case EDIT_COMMAND2: {
-                        theDlg->mData.setCmdNegative(sts::toMbString(UiUtilities::getText(theDlg->cEdtCmdNeg)));
+                        theDlg->mData.setCmdNegative(sts::toMbString(Utils::getText(theDlg->cEdtCmdNeg)));
                         theDlg->save();
                         break;
                     }
                     case EDIT_TOOLTIP: {
-                        theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
+                        theDlg->mData.setToolTip(sts::toMbString(Utils::getText(theDlg->cEdtToolType)));
                         theDlg->save();
                         break;
                     }
@@ -244,9 +244,9 @@ namespace win {
         mSpnX->SetValue(mData.directionX(), FALSE);
         mSpnY->SetValue(mData.directionY(), FALSE);
         mSpnZ->SetValue(mData.directionZ(), FALSE);
-        UiUtilities::setText(cEdtCmdNeg, sts::toString(mData.cmdNegative()));
-        UiUtilities::setText(cEdtCmdPos, sts::toString(mData.cmdPositive()));
-        UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
+        Utils::setText(cEdtCmdNeg, sts::toString(mData.cmdNegative()));
+        Utils::setText(cEdtCmdPos, sts::toString(mData.cmdPositive()));
+        Utils::setText(cEdtToolType, sts::toString(mData.toolTip()));
         cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
     }
 

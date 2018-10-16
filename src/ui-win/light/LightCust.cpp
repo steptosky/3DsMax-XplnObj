@@ -34,7 +34,7 @@
 #pragma warning(pop)
 
 #include "resource/resource.h"
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "resource/ResHelper.h"
 #include "ui-win/Factory.h"
 
@@ -79,7 +79,7 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case IDC_EDIT_DATAREF: {
-                        theDlg->mData->setDataRef(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)));
+                        theDlg->mData->setDataRef(sts::toMbString(Utils::getText(theDlg->cEdtDataRef)));
                         theDlg->eventParamChanged(true);
                         break;
                     }
@@ -271,7 +271,7 @@ namespace win {
             mSpnS2->SetValue(mData->textureRect().point2().x, FALSE);
             mSpnT2->SetValue(mData->textureRect().point2().y, FALSE);
 
-            UiUtilities::setText(cEdtDataRef, sts::toString(mData->dataRef()));
+            Utils::setText(cEdtDataRef, sts::toString(mData->dataRef()));
         }
         else {
             disableControls();
@@ -287,7 +287,7 @@ namespace win {
                               xobj::Point2(mSpnS2->GetFVal(), mSpnT2->GetFVal()));
         mData->setTextureRect(rect);
 
-        mData->setDataRef(sts::toMbString(UiUtilities::getText(cEdtDataRef)));
+        mData->setDataRef(sts::toMbString(Utils::getText(cEdtDataRef)));
     }
 
     /**************************************************************************************************/

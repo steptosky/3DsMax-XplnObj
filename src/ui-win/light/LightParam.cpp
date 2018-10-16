@@ -34,7 +34,7 @@
 #pragma warning(pop)
 
 #include "resource/resource.h"
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "resource/ResHelper.h"
 
 namespace ui {
@@ -75,8 +75,8 @@ namespace win {
 
                             theDlg->mData->setName(sts::toMbString(iter->first));
                             theDlg->mData->setRawParams(sts::toMbString(iter->second));
-                            UiUtilities::setText(theDlg->cEdtCustomName, sts::toString(iter->first));
-                            UiUtilities::setText(theDlg->cEdtAdditional, sts::toString(iter->second));
+                            Utils::setText(theDlg->cEdtCustomName, sts::toString(iter->first));
+                            Utils::setText(theDlg->cEdtAdditional, sts::toString(iter->second));
                             theDlg->eventParamChanged(true);
                         }
                         break;
@@ -88,12 +88,12 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case IDC_EDIT_PARAMS: {
-                        theDlg->mData->setRawParams(sts::toMbString(UiUtilities::getText(theDlg->cEdtAdditional)));
+                        theDlg->mData->setRawParams(sts::toMbString(Utils::getText(theDlg->cEdtAdditional)));
                         theDlg->eventParamChanged(true);
                         break;
                     }
                     case IDC_EDIT_CUSTOM: {
-                        theDlg->mData->setName(sts::toMbString(UiUtilities::getText(theDlg->cEdtCustomName)));
+                        theDlg->mData->setName(sts::toMbString(Utils::getText(theDlg->cEdtCustomName)));
                         theDlg->eventParamChanged(true);
                         break;
                     }
@@ -221,8 +221,8 @@ namespace win {
         if (mData) {
             enableControls();
 
-            UiUtilities::setText(cEdtCustomName, sts::toString(mData->name()));
-            UiUtilities::setText(cEdtAdditional, sts::toString(mData->params()));
+            Utils::setText(cEdtCustomName, sts::toString(mData->name()));
+            Utils::setText(cEdtAdditional, sts::toString(mData->params()));
             const auto iter = mPreDefinedList.find(mData->name());
             if (iter != mPreDefinedList.end()) {
                 cCmbName.setCurrSelected(sts::toString(iter->first));

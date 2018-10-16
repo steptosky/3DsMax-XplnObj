@@ -34,7 +34,7 @@
 #pragma warning(pop)
 
 #include <xpln/enums/ECursor.h>
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
@@ -92,17 +92,17 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case EDIT_X_DATAREF: {
-                        theDlg->mData.setXDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtXDataRef)));
+                        theDlg->mData.setXDataref(sts::toMbString(Utils::getText(theDlg->cEdtXDataRef)));
                         theDlg->save();
                         break;
                     }
                     case EDIT_Y_DATAREF: {
-                        theDlg->mData.setYDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtYDataRef)));
+                        theDlg->mData.setYDataref(sts::toMbString(Utils::getText(theDlg->cEdtYDataRef)));
                         theDlg->save();
                         break;
                     }
                     case EDIT_TOOLTIP: {
-                        theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
+                        theDlg->mData.setToolTip(sts::toMbString(Utils::getText(theDlg->cEdtToolType)));
                         theDlg->save();
                         break;
                     }
@@ -267,14 +267,14 @@ namespace win {
         mSpnX->SetValue(mData.x(), FALSE);
         mSpnXMin->SetValue(mData.xMin(), FALSE);
         mSpnXMax->SetValue(mData.xMax(), FALSE);
-        UiUtilities::setText(cEdtXDataRef, sts::toString(mData.xDataref()));
+        Utils::setText(cEdtXDataRef, sts::toString(mData.xDataref()));
 
         mSpnY->SetValue(mData.y(), FALSE);
         mSpnYMin->SetValue(mData.yMin(), FALSE);
         mSpnYMax->SetValue(mData.yMax(), FALSE);
-        UiUtilities::setText(cEdtYDataRef, sts::toString(mData.yDataref()));
+        Utils::setText(cEdtYDataRef, sts::toString(mData.yDataref()));
 
-        UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
+        Utils::setText(cEdtToolType, sts::toString(mData.toolTip()));
         cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
     }
 
