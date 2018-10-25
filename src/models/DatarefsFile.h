@@ -1,7 +1,7 @@
 #pragma once
 
 /*
-**  Copyright(C) 2018, StepToSky
+**  Copyright(C) 2017, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -29,70 +29,79 @@
 **  Contacts: www.steptosky.com
 */
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-#ifdef _MSC_VER
-#   define ENABLE_PRECOMPILED_HEADERS
-#endif
-
-#ifdef ENABLE_PRECOMPILED_HEADERS
-
-//-------------------------------------------------------------------------
-
-#include <cassert>
-
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-
-#include <cstdint>
-#include <cstddef>
-#include <limits>
-
-#include <thread>
-#include <mutex>
-
-#include <vector>
-#include <map>
-#include <list>
-
-#include <functional>
-#include <utility>
-#include <memory>
-#include <stdexcept>
-#include <algorithm>
-#include <tuple>
-#include <regex>
-#include <optional>
-
-//-------------------------------------------------------------------------
-
-#include "common/Logger.h"
-#include "common/String.h"
-#include "ui-win/Utils.h"
-
-//-------------------------------------------------------------------------
-
-// 3d max SDK produces too many warnings,
-// So It isn't possible to see the plugin's ones.
 #pragma warning(push, 0)
-#include <max.h>
-#include <strclass.h>
 #include <Path.h>
-#include <3dsmaxport.h>
-
-#include <imenuman.h>
-#include <iparamb2.h>
-#include <notify.h>
 #pragma warning(pop)
 
-//-------------------------------------------------------------------------
+#include <memory>
+#include <cstdint>
+#include <optional>
+#include <xpln/utils/DatarefsFile.h>
 
-#endif
+namespace md {
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
+
+class DatarefsFile {
+public:
+
+    //-------------------------------------------------------------------------
+
+    typedef std::shared_ptr<DatarefsFile> Ptr;
+    typedef xobj::Dataref data_type;
+
+    //-------------------------------------------------------------------------
+
+    DatarefsFile() = default;
+    DatarefsFile(const DatarefsFile &) = default;
+    DatarefsFile(DatarefsFile &&) = default;
+
+    virtual ~DatarefsFile() = default;
+
+    DatarefsFile & operator=(const DatarefsFile &) = default;
+    DatarefsFile & operator=(DatarefsFile &&) = default;
+
+    //-------------------------------------------------------------------------
+
+    MaxSDK::Util::Path mFilePath;
+    MStr mDisplayName;
+    bool mIsEditable = false;
+    bool mUsesId = false;
+    bool mIsForProject = false;
+
+    std::vector<xobj::Dataref> mData;
+
+    //-------------------------------------------------------------------------
+
+    std::optional<std::size_t> indexOfKey(const std::string & key);
+    std::optional<std::size_t> indexOfId(std::uint64_t id);
+
+    std::uint64_t generateId();
+
+    //-------------------------------------------------------------------------
+
+    bool loadSimData(const MaxSDK::Util::Path & filePath);
+    bool loadProjectData(const MaxSDK::Util::Path & filePath);
+
+    bool saveData(const MaxSDK::Util::Path & filePath);
+
+    //-------------------------------------------------------------------------
+
+    void sortData();
+
+    //-------------------------------------------------------------------------
+
+private:
+
+    bool loadFile();
+    std::uint64_t mGeneratorVal = 0;
+
+};
+
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+}

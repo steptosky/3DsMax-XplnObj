@@ -1,7 +1,7 @@
 #pragma once
 
 /*
-**  Copyright(C) 2018, StepToSky
+**  Copyright(C) 2017, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -29,70 +29,77 @@
 **  Contacts: www.steptosky.com
 */
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-#ifdef _MSC_VER
-#   define ENABLE_PRECOMPILED_HEADERS
-#endif
-
-#ifdef ENABLE_PRECOMPILED_HEADERS
-
-//-------------------------------------------------------------------------
-
-#include <cassert>
-
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-
-#include <cstdint>
-#include <cstddef>
-#include <limits>
-
-#include <thread>
-#include <mutex>
-
-#include <vector>
-#include <map>
-#include <list>
-
-#include <functional>
-#include <utility>
-#include <memory>
-#include <stdexcept>
-#include <algorithm>
-#include <tuple>
-#include <regex>
-#include <optional>
-
-//-------------------------------------------------------------------------
-
-#include "common/Logger.h"
-#include "common/String.h"
-#include "ui-win/Utils.h"
-
-//-------------------------------------------------------------------------
-
-// 3d max SDK produces too many warnings,
-// So It isn't possible to see the plugin's ones.
 #pragma warning(push, 0)
-#include <max.h>
-#include <strclass.h>
 #include <Path.h>
-#include <3dsmaxport.h>
-
-#include <imenuman.h>
-#include <iparamb2.h>
-#include <notify.h>
 #pragma warning(pop)
 
-//-------------------------------------------------------------------------
+#include <optional>
+#include <functional>
+#include "common/String.h"
+#include "IDcView.h"
+#include "common/Config.h"
 
-#endif
+struct NotifyInfo;
+
+namespace presenters {
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
+
+/*!
+ * \details
+ */
+template<typename T>
+class Dc : public sts::Single<Dc<T>>, public sts::signals::AutoDisconnect {
+public:
+    typedef IDcView<T> IView;
+private:
+    friend sts::Single<Dc<T>>;
+    explicit Dc(IView * view);
+    virtual ~Dc();
+public:
+
+    //-------------------------------------------------------------------------
+
+    static MStr selectData(const MStr & current);
+
+    //-------------------------------------------------------------------------
+
+private:
+
+    void loadSimDatarefs();
+    void loadProjectDatarefs();
+
+    void unloadIf(const std::function<bool(const typename IView::Files::value_type & v)> & fn);
+
+    void slotSimDirChanged(Config &, const MaxSDK::Util::Path &, const MaxSDK::Util::Path &);
+
+    void slotViewReady();
+    void slotKeyChanged(const typename IView::FilePtr & file, const MStr & key);
+    void slotSearchKeyChanged(const MStr & data);
+    void slotCurrFileChanged(const MStr & name);
+    static void slotFileOpened(void * param, NotifyInfo *);
+    static void slotSystemReset(void * param, NotifyInfo *);
+    static void slotSystemNew(void * param, NotifyInfo *);
+
+    static MaxSDK::Util::Path simDataFile(Config & config);
+    static MaxSDK::Util::Path projectDataFile(Config & config);
+
+    static std::optional<std::size_t> indexOfPath(const typename IView::Files & data, const MaxSDK::Util::Path & path);
+    static std::optional<std::size_t> indexOfDisplayName(const typename IView::Files & data, const MStr & displayName);
+
+    MStr mCurrKey;
+    MStr mCurrSearchKey;
+    IView * mView;
+    typename IView::Files mDatarefs;
+    MaxSDK::Util::Path mSelectedFile;
+
+};
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+}
+
+#include "Dc.inl.h"

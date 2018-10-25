@@ -1,7 +1,7 @@
 #pragma once
 
 /*
-**  Copyright(C) 2018, StepToSky
+**  Copyright(C) 2017, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -29,70 +29,50 @@
 **  Contacts: www.steptosky.com
 */
 
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-#ifdef _MSC_VER
-#   define ENABLE_PRECOMPILED_HEADERS
-#endif
-
-#ifdef ENABLE_PRECOMPILED_HEADERS
-
-//-------------------------------------------------------------------------
-
-#include <cassert>
-
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-
-#include <cstdint>
-#include <cstddef>
-#include <limits>
-
-#include <thread>
-#include <mutex>
-
-#include <vector>
-#include <map>
-#include <list>
-
 #include <functional>
-#include <utility>
-#include <memory>
-#include <stdexcept>
-#include <algorithm>
-#include <tuple>
-#include <regex>
-#include <optional>
-
-//-------------------------------------------------------------------------
-
-#include "common/Logger.h"
 #include "common/String.h"
-#include "ui-win/Utils.h"
 
-//-------------------------------------------------------------------------
-
-// 3d max SDK produces too many warnings,
-// So It isn't possible to see the plugin's ones.
-#pragma warning(push, 0)
-#include <max.h>
-#include <strclass.h>
-#include <Path.h>
-#include <3dsmaxport.h>
-
-#include <imenuman.h>
-#include <iparamb2.h>
-#include <notify.h>
-#pragma warning(pop)
-
-//-------------------------------------------------------------------------
-
-#endif
+namespace presenters {
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
+
+template<typename T>
+class IDcView {
+public:
+
+    //-----------------------------------------
+
+    typedef T File;
+    typedef typename T::Ptr FilePtr;
+    typedef typename T::data_type data_type;
+    typedef std::vector<FilePtr> Files;
+
+    //-----------------------------------------
+
+    IDcView() = default;
+    virtual ~IDcView() = default;
+
+    //-----------------------------------------
+
+    virtual void open() = 0;
+    virtual void setAvailableFiles(const Files * files) = 0;
+    virtual void setCurrKey(const MStr & key) = 0;
+    virtual void setSearchKey(const MStr & key) = 0;
+    virtual void setCurrFile(const FilePtr & file, std::optional<std::size_t> selectedItem) = 0;
+
+    //-----------------------------------------
+
+    std::function<void()> sigReady;
+    std::function<void(const FilePtr &, const MStr & key)> sigKeyChanged;
+    std::function<void(const MStr &)> sigSearchKeyChanged;
+    std::function<void(const MStr &)> sigCurrFileChanged;
+
+    //-----------------------------------------
+};
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+}

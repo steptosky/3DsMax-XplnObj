@@ -33,6 +33,8 @@
 #include "ui-win/Factory.h"
 #include "resource/ResHelper.h"
 #include "common/NodeUtils.h"
+#include "presenters/Datarefs.h"
+#include "presenters/Commands.h"
 
 #ifndef IO_SAVE_CAST
 #	if MAX_VERSION_MAJOR > 14
@@ -143,6 +145,8 @@ void ObjCommon::Stop() {
     //----------------------------------------
     UnRegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
     mUpdateChecker.freeResources();
+    presenters::Datarefs::free();
+    presenters::Commands::free();
     ui::ToolFrame::destroy();
     delete mCloneNodeChunk;
 }

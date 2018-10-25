@@ -29,70 +29,17 @@
 **  Contacts: www.steptosky.com
 */
 
+#include "models/CommandsFile.h"
+#include "Dc.h"
+
+namespace presenters {
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-#ifdef _MSC_VER
-#   define ENABLE_PRECOMPILED_HEADERS
-#endif
-
-#ifdef ENABLE_PRECOMPILED_HEADERS
-
-//-------------------------------------------------------------------------
-
-#include <cassert>
-
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-
-#include <cstdint>
-#include <cstddef>
-#include <limits>
-
-#include <thread>
-#include <mutex>
-
-#include <vector>
-#include <map>
-#include <list>
-
-#include <functional>
-#include <utility>
-#include <memory>
-#include <stdexcept>
-#include <algorithm>
-#include <tuple>
-#include <regex>
-#include <optional>
-
-//-------------------------------------------------------------------------
-
-#include "common/Logger.h"
-#include "common/String.h"
-#include "ui-win/Utils.h"
-
-//-------------------------------------------------------------------------
-
-// 3d max SDK produces too many warnings,
-// So It isn't possible to see the plugin's ones.
-#pragma warning(push, 0)
-#include <max.h>
-#include <strclass.h>
-#include <Path.h>
-#include <3dsmaxport.h>
-
-#include <imenuman.h>
-#include <iparamb2.h>
-#include <notify.h>
-#pragma warning(pop)
-
-//-------------------------------------------------------------------------
-
-#endif
+typedef Dc<md::CommandsFile> Commands;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
+}
