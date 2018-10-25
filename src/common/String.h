@@ -31,17 +31,76 @@
 
 #pragma warning(push, 0)
 #include <max.h>
+#include <Path.h>
+#include <strclass.h>
 #pragma warning(pop)
 
 #include "additional/utils/StringUtils.h"
+#include <xpln/utils/Path.h>
 
 /**************************************************************************************************/
 /////////////////////////////////////* UNICODE UTILS *//////////////////////////////////////////////
 /**************************************************************************************************/
 
 /* 
- * Utilities for Unicode for different versions of the 3Ds Max.
+ * String utilities
  */
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+
+#ifdef UNICODE
+#   define USE_WITH_UNICODE(x) x
+#   define USE_WITHOUT_UNICODE(x)
+#else
+#   define USE_WITH_UNICODE(x)
+#   define USE_WITHOUT_UNICODE(x) x
+#endif
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+
+typedef TSTR TStr;
+typedef MSTR MStr;
+
+namespace xobj {
+
+inline MSTR toMStr(const std::string & str) {
+#ifdef UNICODE
+    return MSTR::FromUTF8(str.data(), str.length());
+#else
+    return MSTR(str.c_str());
+#endif
+}
+
+inline std::string fromMStr(const CStr & str) {
+    return std::string(str.data(), str.Length());
+}
+
+inline std::string fromMStr(const WStr & str) {
+#ifdef UNICODE
+    std::size_t len = 0;
+    const auto utf8 = str.ToUTF8(&len);
+    return std::string(utf8.data(), len);
+#else
+    return ::sts::toMbString(std::wstring(str.data(), str.Length()));
+#endif
+}
+
+//-------------------------------------------------------------------------
+
+inline Path fromMPath(const MaxSDK::Util::Path & path) {
+#ifdef UNICODE
+    const auto str = path.GetString();
+    return Path(str.data(), str.Length());
+#else
+    return Path(sts::toWString(fromMStr(path.GetString())));
+#endif
+}
+
+}
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,18 +108,56 @@
 
 #if MAX_VERSION_MAJOR > 14
 
+/*!
+ * \deprecated use xobj::toMStr
+ */
 inline TSTR toTSTR(TSTR str) { return str; }
+
+/*!
+ * \deprecated use xobj::toMStr
+ */
 inline TSTR toTSTR(const char * str) { return sts::toWString(str).c_str(); }
+
+/*!
+ * \deprecated use xobj::toMStr
+ */
 inline TSTR toTSTR(const wchar_t * str) { return sts::toWString(str).c_str(); }
+
+/*!
+ * \deprecated use xobj::toMStr
+ */
 inline TSTR toTSTR(std::string & str) { return sts::toWString(str).c_str(); }
+
+/*!
+ * \deprecated use xobj::toMStr
+ */
 inline TSTR toTSTR(std::wstring & str) { return sts::toWString(str).c_str(); }
 
 #else
 
+/*!
+ * \deprecated use xobj::toMStr
+ */
 inline TSTR toTSTR(TSTR str) { return str; }
+
+/*!
+ * \deprecated use xobj::toMStr
+ */
 inline TSTR toTSTR(const char * str) { return sts::toMbString(str).c_str(); }
+
+/*!
+ * \deprecated use xobj::toMStr
+ */
 inline TSTR toTSTR(const wchar_t * str) { return sts::toMbString(str).c_str(); }
+
+/*!
+ * \deprecated use xobj::toMStr
+ */
 inline TSTR toTSTR(std::string & str) { return sts::toMbString(str).c_str(); }
+
+/*!
+ * \deprecated use xobj::toMStr
+ */
 inline TSTR toTSTR(std::wstring & str) { return sts::toMbString(str).c_str(); }
 
 #endif
