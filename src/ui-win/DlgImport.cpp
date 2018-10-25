@@ -31,6 +31,7 @@
 #pragma warning(push, 0)
 #include <max.h>
 #include <3dsmaxport.h>
+#include <IPathConfigMgr.h>
 #pragma warning(pop)
 
 #include <xpln/obj/ObjMain.h>
@@ -42,6 +43,7 @@
 #include "converters/ConverterMain.h"
 #include "converters/ConverterUtils.h"
 #include "resource/ResHelper.h"
+#include "common/Config.h"
 
 namespace ui {
 namespace win {
@@ -221,8 +223,24 @@ namespace win {
         }
 
         xobj::ObjMain xMain;
+        xobj::ImportContext context;
+        context.setObjFile(sts::toWString(mainFileName));
+
+        // MaxSDK::Util::Path::Exists have been added sine 3Ds Max 2013
+        const auto pathConfMgr = IPathConfigMgr::GetPathConfigMgr();
+        auto config = Config::instance();
+        const auto projectDatarefs = config->projectDatarefsFile();
+        const auto projectCommands = config->projectCommandsFile();
+
+        if (pathConfMgr->DoesFileExist(projectDatarefs)) {
+            context.setDatarefsFile(xobj::fromMPath(projectDatarefs));
+        }
+        if (pathConfMgr->DoesFileExist(projectCommands)) {
+            context.setCommandsFile(xobj::fromMPath(projectCommands));
+        }
+
         ConverterUtils::toXTMatrix(ConverterUtils::FROMOGL_MTX, xMain.pMatrix);
-        if (!xMain.importFromFile(mainFileName)) {
+        if (!xMain.importObj(context)) {
             finish(true);
             return false;
         }

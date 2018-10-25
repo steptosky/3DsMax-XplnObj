@@ -31,6 +31,7 @@
 #pragma warning(push, 0)
 #include <max.h>
 #include <3dsmaxport.h>
+#include <IPathConfigMgr.h>
 #pragma warning(pop)
 
 #include <windows.h>
@@ -429,9 +430,25 @@ namespace win {
                                                   XIO_RELEASE_TYPE, sts::MbStrUtils::joinStr("[", XIO_COMPILE_DATE, "]"));
             const std::string signature = sts::MbStrUtils::joinStr(XIO_ORGANIZATION_NAME, " ", XIO_PROJECT_NAME, ": ",
                                                                    pluginVersion.toString(true, true));
-            xMain.pExportOptions.setSignature(signature);
 
-            if (!xMain.exportToFile(exportFilePath)) {
+            xobj::ExportContext context;
+            context.setObjFile(sts::toWString(exportFilePath));
+            context.setSignature(signature);
+
+            // MaxSDK::Util::Path::Exists have been added sine 3Ds Max 2013
+            const auto pathConfMgr = IPathConfigMgr::GetPathConfigMgr();
+            auto config = Config::instance();
+            const auto projectDatarefs = config->projectDatarefsFile();
+            const auto projectCommands = config->projectCommandsFile();
+
+            if (pathConfMgr->DoesFileExist(projectDatarefs)) {
+                context.setDatarefsFile(xobj::fromMPath(projectDatarefs));
+            }
+            if (pathConfMgr->DoesFileExist(projectCommands)) {
+                context.setCommandsFile(xobj::fromMPath(projectCommands));
+            }
+
+            if (!xMain.exportObj(context)) {
                 CLError << "Export object: \"" << sts::toMbString(currMainNode.first->GetName()) << "\" is FAILED";
             }
             else {
