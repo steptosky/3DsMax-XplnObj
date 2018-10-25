@@ -162,6 +162,7 @@ namespace win {
     void DlgDcView<T>::setAvailableFiles(const typename T::Files * files) {
         DbgAssert(files);
         mCtrlComboFile.clear();
+        mCtrlBtnNewData.enable(false);
         for (const auto & f : *files) {
             mCtrlComboFile.addItem(f->mDisplayName.data());
         }
@@ -287,6 +288,9 @@ namespace win {
 
     template<typename T>
     void DlgDcView<T>::keySelected() {
+        if(!mCurrFile) {
+            return;
+        }
         const auto index = mCtrlList.selectedIndex();
         if (!index || *index >= mCurrFile->mData.size()) {
             mCtrlKey->SetText(_T(""));
@@ -308,6 +312,9 @@ namespace win {
 
     template<typename T>
     void DlgDcView<T>::newData() {
+        if(!mCurrFile) {
+            return;
+        }
         typename T::data_type currData;
         do {
             const auto res = editData(currData);
