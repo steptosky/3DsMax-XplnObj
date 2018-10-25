@@ -173,6 +173,8 @@
 #define IDD_UPDATED_OBJECTS             1139
 #define BTN_CANCEL                      1140
 #define SPN_SLOPELIMIT_ROLLMAX_EDIT     1140
+#define BTN_OK2                         1140
+#define BTN_SELECT_SIM_PATH             1140
 #define BTN_ABOUT                       1141
 #define SPN_SLOPELIMIT_ROLLMAX          1141
 #define BTN_NEW_DATA                    1141
@@ -302,6 +304,7 @@
 #define DLG_EDIT_CPMMAND                1222
 #define DLG_EDIT_COMMAND                1222
 #define BTN_COMMAND2                    1223
+#define DLG_SETTINGS                    1223
 #define SPN_Z_EDIT                      1224
 #define SPN_Y_EDIT                      1225
 #define SPN_X_EDIT                      1226
@@ -346,6 +349,7 @@
 #define LBL_VALUE_UNITS                 1270
 #define LBL_KEY                         1271
 #define CHK_WRITABLE                    1272
+#define IDC_SIM_PATH                    1273
 
 // Next default values for new objects
 // 
@@ -353,7 +357,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        173
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1273
+#define _APS_NEXT_CONTROL_VALUE         1274
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -4,6 +4,7 @@ Change-log
 
 Next
 -------------------------
+- Added: Settings window. Use menu ``X-Plane->Settings`` for accessing it.
 - Added: Ability to use tool-tip for ``ATTR_manip_noop``.
 - Added: Ability to use text variables in the param light's parameters string.
 - Updated: Link to the help. It is on-line now.

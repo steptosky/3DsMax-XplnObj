@@ -46,7 +46,6 @@ Config::Config() {
     // Path like: C:\Users\Alex\AppData\Local\Autodesk\3dsMax\9 - 64bit\enu\plugcfg
     mConfigFile = IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR);
     mConfigFile.Append(_T("xpln_obj_io.ini"));
-    mSimDir = _T(R"(X:\X-Plane 11)");
     load();
 }
 

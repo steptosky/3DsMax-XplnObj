@@ -146,6 +146,7 @@ namespace win {
                 };
                 //--------------------
                 menu->AddItem(createMenuItem(MainMenuActions::ActionDoc));
+                menu->AddItem(createMenuItem(MainMenuActions::ActionSettings));
                 menu->AddItem(createMenuItem(MainMenuActions::ActionDonate));
                 menu->AddItem(createMenuItem(MainMenuActions::ActionUpdate));
                 menu->AddItem(createMenuItem(MainMenuActions::ActionAbout));

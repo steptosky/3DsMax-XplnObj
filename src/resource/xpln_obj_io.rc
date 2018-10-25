@@ -825,6 +825,17 @@ BEGIN
     RTEXT           "Description:",LBL_DESCRIPTION,12,31,43,8
 END
 
+DLG_SETTINGS DIALOGEX 0, 0, 357, 190
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Settings"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Ok",BTN_OK,154,169,50,14
+    GROUPBOX        "X-Plane path",-1,7,5,343,34
+    CTEXT           "path/to/x-plane",IDC_SIM_PATH,15,19,270,9
+    PUSHBUTTON      "Browse",BTN_SELECT_SIM_PATH,293,16,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1111,6 +1122,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 93
     END
+
+    DLG_SETTINGS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 350
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 183
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -1291,6 +1310,11 @@ BEGIN
 END
 
 DLG_EDIT_COMMAND AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+DLG_SETTINGS AFX_DIALOG_LAYOUT
 BEGIN
     0
 END
