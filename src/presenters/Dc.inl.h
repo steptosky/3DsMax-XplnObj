@@ -231,7 +231,7 @@ void Dc<T>::slotViewReady() {
 
 template<typename T>
 void Dc<T>::slotKeyChanged(const typename IView::FilePtr & file, const MStr & key) {
-    if (!file->mUsesId) {
+    if (!file || !file->mUsesId) {
         mCurrKey = key;
         return;
     }
