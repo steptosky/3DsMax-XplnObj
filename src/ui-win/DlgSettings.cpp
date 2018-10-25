@@ -132,7 +132,7 @@ namespace win {
     /**************************************************************************************************/
 
     void DlgSettings::selectSimPath() {
-        const auto ip = UtilGetCOREInterface8();
+        const auto ip = GetCOREInterface8();
         auto config = Config::instance();
 
         FilterList filterList;
