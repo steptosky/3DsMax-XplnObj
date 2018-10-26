@@ -4,6 +4,7 @@ Change-log
 
 Next
 -------------------------
+- Added: DataRefs/Commands selector. I.e. buttons ``drf:`` and ``cmd:`` are implemented now. Read plug-in's help for more information.
 - Added: Settings window. Use menu ``X-Plane->Settings`` for accessing it.
 - Added: Ability to use tool-tip for ``ATTR_manip_noop``.
 - Added: Ability to use text variables in the param light's parameters string.

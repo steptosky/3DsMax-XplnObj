@@ -33,7 +33,7 @@
 #include "resource/resource.h"
 #include "common/Config.h"
 #include "resource/ResHelper.h"
-#include "Factory.h"
+#include "presenters/Datarefs.h"
 
 namespace ui {
 namespace win {
@@ -47,7 +47,10 @@ namespace win {
             case WM_COMMAND: {
                 switch (LOWORD(wParam)) {
                     case BTN_LIGHTLEVEL_DRF: {
-                        Factory::showNotImplemented();;
+                        MSTR str;
+                        Utils::getText(cEdtLightLevelDrf, str);
+                        cEdtLightLevelDrf->SetText(presenters::Datarefs::selectData(str));
+                        dropFromUiLightLevel();
                         break;
                     }
                     case CMB_COCKPIT: {

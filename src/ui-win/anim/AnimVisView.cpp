@@ -29,11 +29,11 @@
 
 #include "AnimVisView.h"
 #include "common/Logger.h"
-#include "Resource/resource.h"
+#include "resource/resource.h"
 #include "ui-win/AnimCalc.h"
 #include "ui-win/Utils.h"
 #include "resource/ResHelper.h"
-#include "ui-win/Factory.h"
+#include "presenters/Datarefs.h"
 
 namespace ui {
 namespace win {
@@ -63,8 +63,13 @@ namespace win {
                         break;
                     case BTN_DELETE: deleteItem();
                         break;
-                    case BTN_DATAREF: Factory::showNotImplemented();;
+                    case BTN_DATAREF: {
+                        MSTR str;
+                        Utils::getText(cEditDataRef, str);
+                        cEditDataRef->SetText(presenters::Datarefs::selectData(str));
+                        selectedDataChanged();
                         break;
+                    }
                     default: break;
                 }
                 break;
@@ -335,13 +340,17 @@ namespace win {
         mCurrSelected = cListKeys.currSelected();
         auto list1 = sts::StrUtils::split<sts::StrUtils::Vector>(sts::toString(cListKeys.currSelectedText()), _T("="));
         if (list1.size() != 2) {
-            LError << "Internal error 1.";
+#ifndef NDEBUG
+            LError << "Internal error 1";
+#endif
             return;
         }
         sts::StrUtils::trim(list1[1]);
         auto list2 = sts::StrUtils::split<sts::StrUtils::Vector>(list1[1], _T(" "));
         if (list2.size() != 3) {
-            LError << "Internal error 2.";
+#ifndef NDEBUG
+            LError << "Internal error 2";
+#endif
             return;
         }
         cSpnValue1->SetValue(sts::toFloat(list2[0]), FALSE);

@@ -38,7 +38,7 @@
 #include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
-#include "ui-win/Factory.h"
+#include "presenters/Datarefs.h"
 
 namespace ui {
 namespace win {
@@ -71,11 +71,21 @@ namespace win {
             case WM_COMMAND: {
                 switch (LOWORD(wParam)) {
                     case BTN_X_DATAREF: {
-                        Factory::showNotImplemented();
+                        MSTR str;
+                        Utils::getText(theDlg->cEdtXDataRef, str);
+                        str = presenters::Datarefs::selectData(str);
+                        theDlg->cEdtXDataRef->SetText(str);
+                        theDlg->mData.setXDataref(xobj::fromMStr(str));
+                        theDlg->save();
                         break;
                     }
                     case BTN_Y_DATAREF: {
-                        Factory::showNotImplemented();
+                        MSTR str;
+                        Utils::getText(theDlg->cEdtYDataRef, str);
+                        str = presenters::Datarefs::selectData(str);
+                        theDlg->cEdtYDataRef->SetText(str);
+                        theDlg->mData.setYDataref(xobj::fromMStr(str));
+                        theDlg->save();
                         break;
                     }
                     case CMB_CURSOR: {

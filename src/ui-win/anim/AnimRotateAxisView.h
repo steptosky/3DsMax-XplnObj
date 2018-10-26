@@ -72,7 +72,7 @@ namespace win {
         void setEnable();
         void setReverseEnable();
         void setLoopEnable();
-        void setDrft();
+        void setDataref();
         void loopSpnChanged();
         void valueSpnChanged();
         void selectionChanged();

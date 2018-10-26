@@ -29,11 +29,11 @@
 
 #include "AnimRotateAxisView.h"
 #include "common/Logger.h"
-#include "Resource/resource.h"
+#include "resource/resource.h"
 #include "ui-win/Utils.h"
 #include "ui-win/AnimCalc.h"
 #include "resource/ResHelper.h"
-#include "ui-win/Factory.h"
+#include "presenters/Datarefs.h"
 
 namespace ui {
 namespace win {
@@ -57,8 +57,13 @@ namespace win {
                         break;
                     case CHK_LOOP: setLoopEnable();
                         break;
-                    case BTN_DATAREF: Factory::showNotImplemented();;
+                    case BTN_DATAREF: {
+                        MSTR str;
+                        Utils::getText(cEditDataRef, str);
+                        cEditDataRef->SetText(presenters::Datarefs::selectData(str));
+                        setDataref();
                         break;
+                    }
                     case BTN_REVERSE_VALUE: reverseValues();
                         break;
                     case BTN_CALC_VALUE: calculateValues();
@@ -71,7 +76,7 @@ namespace win {
             }
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
-                    case EDIT_DATAREF: setDrft();
+                    case EDIT_DATAREF: setDataref();
                         break;
                     default: break;
                 }
@@ -359,7 +364,7 @@ namespace win {
         mData.saveToNode();
     }
 
-    void AnimRotateAxisView::setDrft() {
+    void AnimRotateAxisView::setDataref() {
         mData.mDataref = sts::toMbString(Utils::getText(cEditDataRef));
         setDataRefValueAsToolType();
         mData.saveToNode();

@@ -38,7 +38,7 @@
 #include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
-#include "ui-win/Factory.h"
+#include "presenters/Commands.h"
 
 namespace ui {
 namespace win {
@@ -70,12 +70,22 @@ namespace win {
         switch (msg) {
             case WM_COMMAND: {
                 switch (LOWORD(wParam)) {
-                    case BTN_COMMAND2: {
-                        Factory::showNotImplemented();
+                    case BTN_COMMAND: {
+                        MSTR str;
+                        Utils::getText(theDlg->cEdtCmdPos, str);
+                        str = presenters::Commands::selectData(str);
+                        theDlg->cEdtCmdPos->SetText(str);
+                        theDlg->mData.setCmdPositive(xobj::fromMStr(str));
+                        theDlg->save();
                         break;
                     }
-                    case BTN_COMMAND: {
-                        Factory::showNotImplemented();
+                    case BTN_COMMAND2: {
+                        MSTR str;
+                        Utils::getText(theDlg->cEdtCmdNeg, str);
+                        str = presenters::Commands::selectData(str);
+                        theDlg->cEdtCmdNeg->SetText(str);
+                        theDlg->mData.setCmdNegative(xobj::fromMStr(str));
+                        theDlg->save();
                         break;
                     }
                     case CMB_CURSOR: {
