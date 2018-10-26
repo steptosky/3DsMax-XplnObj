@@ -36,6 +36,8 @@
 #include "common/Logger.h"
 #include "common/String.h"
 
+#define PATHS_SECTION "PATHS"
+
 using namespace std::string_literals;
 
 /**************************************************************************************************/
@@ -60,6 +62,9 @@ Config::~Config() {
 void Config::setSimDir(const MaxSDK::Util::Path & dir) {
     const auto temp = mSimDir;
     mSimDir = dir;
+    beginGroup(PATHS_SECTION);
+    setValue("sim_dir", xobj::fromMStr(mSimDir.GetString()));
+    endGroup();
     sigSimDirChanged(*this, temp, mSimDir);
 }
 
@@ -68,7 +73,10 @@ void Config::setSimDir(const MaxSDK::Util::Path & dir) {
 /**************************************************************************************************/
 
 MaxSDK::Util::Path Config::simDir() {
-    return mSimDir;
+    beginGroup(PATHS_SECTION);
+    const auto val = xobj::toMStr(value("sim_dir", ""));
+    endGroup();
+    return val;
 }
 
 MaxSDK::Util::Path Config::simDatarefsFile() {
