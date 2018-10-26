@@ -288,7 +288,7 @@ namespace win {
 
     template<typename T>
     void DlgDcView<T>::keySelected() {
-        if(!mCurrFile) {
+        if (!mCurrFile) {
             return;
         }
         const auto index = mCtrlList.selectedIndex();
@@ -312,13 +312,25 @@ namespace win {
 
     template<typename T>
     void DlgDcView<T>::newData() {
-        if(!mCurrFile) {
+        if (!mCurrFile) {
             return;
         }
         typename T::data_type currData;
         do {
             const auto res = editData(currData);
             if (res) {
+
+                // This algorithm saves data to the file but the file may have some changes
+                // that has been made manually with a text editor or with something else like VCS.
+                // So before save the file we try to reload it.
+                // TODO it seems this logic should be in the presenter.
+                try {
+                    mCurrFile->loadData(mCurrFile->mFilePath);
+                }
+                catch (const std::exception & e) {
+                    LError << "Can't load file <" << xobj::fromMStr(mCurrFile->mFilePath.GetString()) << "> reason: " << e.what();
+                }
+
                 auto index = mCurrFile->indexOfKey(res->mKey);
                 if (index) {
                     MStr message;
@@ -327,6 +339,7 @@ namespace win {
                     currData = *res;
                     continue;
                 }
+
                 mCurrFile->mData.emplace_back(*res);
                 mCurrFile->sortData();
                 mCurrFile->saveData(mCurrFile->mFilePath);

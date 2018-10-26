@@ -63,7 +63,7 @@ bool CommandsFile::loadFile() {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool CommandsFile::loadSimData(const MaxSDK::Util::Path & filePath) {
+bool CommandsFile::loadData(const MaxSDK::Util::Path & filePath) {
     // MaxSDK::Util::Path::Exists have been added sine 3Ds Max 2013
     const auto pathConfMgr = IPathConfigMgr::GetPathConfigMgr();
 
@@ -73,32 +73,25 @@ bool CommandsFile::loadSimData(const MaxSDK::Util::Path & filePath) {
         LError << "X-Plane commands file isn't found by the path: " << xobj::fromMStr(filePath.GetString());
         return false;
     }
+    return loadFile();
+}
 
+bool CommandsFile::loadSimData(const MaxSDK::Util::Path & filePath) {
     mIsEditable = false;
     mUsesId = false;
     mIsForProject = false;
     mFilePath = filePath;
     mDisplayName = _T("[X-Plane] Commands");
-    return loadFile();
+    return loadData(filePath);
 }
 
 bool CommandsFile::loadProjectData(const MaxSDK::Util::Path & filePath) {
-    // MaxSDK::Util::Path::Exists have been added sine 3Ds Max 2013
-    const auto pathConfMgr = IPathConfigMgr::GetPathConfigMgr();
-
-    mData.clear();
-    mGeneratorVal = 0;
-    if (!pathConfMgr->DoesFileExist(filePath)) {
-        LError << "Project commands file isn't found by the path: " << xobj::fromMStr(filePath.GetString());
-        return false;
-    }
-
     mIsEditable = true;
     mUsesId = true;
     mIsForProject = true;
     mFilePath = filePath;
     mDisplayName = _T("[Project] Commands");
-    return loadFile();
+    return loadData(filePath);
 }
 
 /**************************************************************************************************/

@@ -82,6 +82,7 @@ public:
 
     //-------------------------------------------------------------------------
 
+    bool loadData(const MaxSDK::Util::Path & filePath);
     bool loadSimData(const MaxSDK::Util::Path & filePath);
     bool loadProjectData(const MaxSDK::Util::Path & filePath);
 

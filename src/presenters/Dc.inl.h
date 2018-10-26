@@ -236,10 +236,21 @@ void Dc<T>::slotKeyChanged(const typename IView::FilePtr & file, const MStr & ke
         return;
     }
 
+    // This algorithm set the correct id for id oriented data and
+    // it saves data to the file but the file may have some changes
+    // that has been made manually with a text editor or with something else like VCS.
+    // So before save the file we try to reload it.
+    try {
+        file->loadData(file->mFilePath);
+    }
+    catch (const std::exception & e) {
+        LError << "Can't load file <" << xobj::fromMStr(file->mFilePath.GetString()) << "> reason: " << e.what();
+    }
+
     const auto index = file->indexOfKey(xobj::fromMStr(key));
-    DbgAssert(index);
     if (!index) {
-        mCurrKey = _T("ERROR");
+        // This case can be when data was deleted from the data file.
+        mCurrKey = _T("ERROR_DATA_NOT_FOUND");
         return;
     }
     auto & data = file->mData[*index];
