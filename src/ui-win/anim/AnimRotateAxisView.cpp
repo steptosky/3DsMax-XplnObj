@@ -29,11 +29,11 @@
 
 #include "AnimRotateAxisView.h"
 #include "common/Logger.h"
-#include "Resource/resource.h"
-#include "ui-win/UiUtilities.h"
+#include "resource/resource.h"
+#include "ui-win/Utils.h"
 #include "ui-win/AnimCalc.h"
 #include "resource/ResHelper.h"
-#include "ui-win/Factory.h"
+#include "presenters/Datarefs.h"
 
 namespace ui {
 namespace win {
@@ -42,7 +42,7 @@ namespace win {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR AnimRotateAxisView::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
+    INT_PTR CALLBACK AnimRotateAxisView::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
         switch (msg) {
             case WM_COMMAND: {
                 switch (LOWORD(wParam)) {
@@ -57,8 +57,13 @@ namespace win {
                         break;
                     case CHK_LOOP: setLoopEnable();
                         break;
-                    case BTN_DATAREF: Factory::showNotImplemented();;
+                    case BTN_DATAREF: {
+                        MSTR str;
+                        Utils::getText(cEditDataRef, str);
+                        cEditDataRef->SetText(presenters::Datarefs::selectData(str));
+                        setDataref();
                         break;
+                    }
                     case BTN_REVERSE_VALUE: reverseValues();
                         break;
                     case BTN_CALC_VALUE: calculateValues();
@@ -71,7 +76,7 @@ namespace win {
             }
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
-                    case EDIT_DATAREF: setDrft();
+                    case EDIT_DATAREF: setDataref();
                         break;
                     default: break;
                 }
@@ -167,11 +172,11 @@ namespace win {
     bool AnimRotateAxisView::create(HWND parent) {
         HWND res = CreateDialogParam(ResHelper::hInstance,
                                      MAKEINTRESOURCE(DLG_ANIM),
-                                     parent,
-                                     BaseDlgProc, reinterpret_cast<LPARAM>(this));
+                                     parent, BaseDlgProc,
+                                     reinterpret_cast<LPARAM>(this));
         if (res != nullptr) {
             registerCallbacks();
-            win::Base win(res);
+            ctrl::Base win(res);
             win.show();
         }
         return res != nullptr;
@@ -248,7 +253,7 @@ namespace win {
     /**************************************************************************************************/
 
     void AnimRotateAxisView::setWindowPos(const RECT & size) {
-        win::Base(hwnd()).setRect(size);
+        ctrl::Base(hwnd()).setRect(size);
     }
 
     RECT AnimRotateAxisView::clientRect() const {
@@ -268,7 +273,7 @@ namespace win {
             cChkEnable.setState(mData.mEnable);
             cChkReverse.setState(mData.mReverse);
             cChkLoop.setState(mData.mLoopEnable);
-            UiUtilities::setText(cEditDataRef, sts::toString(mData.mDataref));
+            Utils::setText(cEditDataRef, sts::toString(mData.mDataref));
             cSpnLoopValue->SetValue(mData.mLoopValue, FALSE);
             setDataRefValueAsToolType();
             makeUiList();
@@ -287,7 +292,7 @@ namespace win {
         cChkReverse.setState(false);
         cChkLoop.setState(false);
         cListKeys.clear();
-        UiUtilities::setText(cEditDataRef, sts::toString("none"));
+        Utils::setText(cEditDataRef, sts::toString("none"));
         cSpnValue->SetValue(0.0f, FALSE);
         cSpnLoopValue->SetValue(0.0f, FALSE);
     }
@@ -359,8 +364,8 @@ namespace win {
         mData.saveToNode();
     }
 
-    void AnimRotateAxisView::setDrft() {
-        mData.mDataref = sts::toMbString(UiUtilities::getText(cEditDataRef));
+    void AnimRotateAxisView::setDataref() {
+        mData.mDataref = sts::toMbString(Utils::getText(cEditDataRef));
         setDataRefValueAsToolType();
         mData.saveToNode();
     }

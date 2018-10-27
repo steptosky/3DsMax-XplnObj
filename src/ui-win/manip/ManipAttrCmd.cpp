@@ -34,11 +34,11 @@
 #pragma warning(pop)
 
 #include <xpln/enums/ECursor.h>
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
-#include "ui-win/Factory.h"
+#include "presenters/Commands.h"
 
 namespace ui {
 namespace win {
@@ -47,7 +47,7 @@ namespace win {
     //////////////////////////////////////////* Static area *///////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR ManipAttrCmd::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    INT_PTR CALLBACK ManipAttrCmd::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         ManipAttrCmd * theDlg;
         if (msg == WM_INITDIALOG) {
             theDlg = reinterpret_cast<ManipAttrCmd*>(lParam);
@@ -71,7 +71,12 @@ namespace win {
             case WM_COMMAND: {
                 switch (LOWORD(wParam)) {
                     case BTN_COMMAND: {
-                        Factory::showNotImplemented();
+                        MSTR str;
+                        Utils::getText(theDlg->cEdtCommand, str);
+                        str = presenters::Commands::selectData(str);
+                        theDlg->cEdtCommand->SetText(str);
+                        theDlg->mData.setCmd(xobj::fromMStr(str));
+                        theDlg->save();
                         break;
                     }
                     case CMB_CURSOR: {
@@ -88,12 +93,12 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case EDIT_COMMAND: {
-                        theDlg->mData.setCmd(sts::toMbString(UiUtilities::getText(theDlg->cEdtCommand)));
+                        theDlg->mData.setCmd(sts::toMbString(Utils::getText(theDlg->cEdtCommand)));
                         theDlg->save();
                         break;
                     }
                     case EDIT_TOOLTIP: {
-                        theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
+                        theDlg->mData.setToolTip(sts::toMbString(Utils::getText(theDlg->cEdtToolType)));
                         theDlg->save();
                         break;
                     }
@@ -127,8 +132,7 @@ namespace win {
         assert(inParent);
         mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
                                       MAKEINTRESOURCE(ROLL_MANIP_COMMAND),
-                                      inParent,
-                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      inParent, panelProc,
                                       reinterpret_cast<LPARAM>(this)));
         assert(mHwnd);
         if (mHwnd) {
@@ -200,8 +204,8 @@ namespace win {
     }
 
     void ManipAttrCmd::toWindow() {
-        UiUtilities::setText(cEdtCommand, sts::toString(mData.cmd()));
-        UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
+        Utils::setText(cEdtCommand, sts::toString(mData.cmd()));
+        Utils::setText(cEdtToolType, sts::toString(mData.toolTip()));
         cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
     }
 

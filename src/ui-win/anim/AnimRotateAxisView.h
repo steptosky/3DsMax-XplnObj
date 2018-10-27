@@ -44,7 +44,7 @@ namespace win {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /********************************************************************************************************/
 
-    class AnimRotateAxisView : public max::win::BaseProc {
+    class AnimRotateAxisView : public max::ctrl::BaseProc {
     public:
 
         explicit AnimRotateAxisView(MdAnimRot::eAxis axis);
@@ -72,7 +72,7 @@ namespace win {
         void setEnable();
         void setReverseEnable();
         void setLoopEnable();
-        void setDrft();
+        void setDataref();
         void loopSpnChanged();
         void valueSpnChanged();
         void selectionChanged();
@@ -81,17 +81,17 @@ namespace win {
         void setDataRefValueAsToolType();
 
         int mCurrSelected = 0;
-        win::Base cStcName;
-        win::Base cBtnDataRef;
-        win::Base cBtnReverseValue;
-        win::Base cBtnCalculateValue;
-        win::Base cBtnUpdate;
-        win::Base cStcValue1;
-        win::Base cStcValue2;
-        win::List cListKeys;
-        win::CheckBox cChkEnable;
-        win::CheckBox cChkReverse;
-        win::CheckBox cChkLoop;
+        ctrl::Base cStcName;
+        ctrl::Base cBtnDataRef;
+        ctrl::Base cBtnReverseValue;
+        ctrl::Base cBtnCalculateValue;
+        ctrl::Base cBtnUpdate;
+        ctrl::Base cStcValue1;
+        ctrl::Base cStcValue2;
+        ctrl::List cListKeys;
+        ctrl::CheckBox cChkEnable;
+        ctrl::CheckBox cChkReverse;
+        ctrl::CheckBox cChkLoop;
         ICustEdit * cEditDataRef = nullptr;
         ISpinnerControl * cSpnValue = nullptr;
         ISpinnerControl * cSpnLoopValue = nullptr;

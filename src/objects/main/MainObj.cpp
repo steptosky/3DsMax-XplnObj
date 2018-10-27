@@ -320,10 +320,10 @@ void MainObject::loadRawGlobAttr(sts_bwc::DataStream & stream) const {
     }
     //-------------------------------------------------------------------------
     if (data.chkLodDraped) {
-        wrapper.setLodDrap(xobj::AttrLodDrap(float(data.lodDrapedDist)));
+        wrapper.setLodDrap(xobj::AttrDrapedLod(float(data.lodDrapedDist)));
     }
     else {
-        wrapper.setLodDrap(xobj::AttrLodDrap());
+        wrapper.setLodDrap(xobj::AttrDrapedLod());
     }
     //-------------------------------------------------------------------------
     if (data.chkLayerGroup) {

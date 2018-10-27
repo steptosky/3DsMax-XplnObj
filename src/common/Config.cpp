@@ -30,21 +30,99 @@
 #include "Config.h"
 
 #pragma warning(push, 0)
-#include <max.h>
 #include <IPathConfigMgr.h>
 #pragma warning(pop)
 
+#include "common/Logger.h"
 #include "common/String.h"
+
+#define PATHS_SECTION "PATHS"
+
+using namespace std::string_literals;
+
+/**************************************************************************************************/
+/////////////////////////////////////////* Static area *////////////////////////////////////////////
+/**************************************************************************************************/
+
+Config::Config() {
+    // Path like: C:\Users\Alex\AppData\Local\Autodesk\3dsMax\9 - 64bit\enu\plugcfg
+    mConfigFile = IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR);
+    mConfigFile.Append(_T("xpln_obj_io.ini"));
+    load();
+}
+
+Config::~Config() {
+    Config::save();
+}
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-Config::Config() {
-    // Path like: C:\Users\Alex\AppData\Local\Autodesk\3dsMax\9 - 64bit\enu\plugcfg
-    mConfigFile = sts::toMbString(IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR));
-    mConfigFile.append("\\xpln_obj_io.ini");
-    load();
+void Config::setSimDir(const MaxSDK::Util::Path & dir) {
+    const auto temp = mSimDir;
+    mSimDir = dir;
+    beginGroup(PATHS_SECTION);
+    setValue("sim_dir", xobj::fromMStr(mSimDir.GetString()));
+    endGroup();
+    sigSimDirChanged(*this, temp, mSimDir);
+}
+
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
+
+MaxSDK::Util::Path Config::simDir() {
+    beginGroup(PATHS_SECTION);
+    const auto val = xobj::toMStr(value("sim_dir", ""));
+    endGroup();
+    return val;
+}
+
+MaxSDK::Util::Path Config::simDatarefsFile() {
+    MaxSDK::Util::Path sim = simDir();
+    return sim.IsEmpty() ? sim : sim.Append(_T("Resources")).Append(_T("plugins")).Append(_T("DataRefs.txt"));
+}
+
+MaxSDK::Util::Path Config::simCommandsFile() {
+    MaxSDK::Util::Path sim = simDir();
+    return sim.IsEmpty() ? sim : sim.Append(_T("Resources")).Append(_T("plugins")).Append(_T("Commands.txt"));
+}
+
+MaxSDK::Util::Path Config::projectDatarefsFile() {
+    MaxSDK::Util::Path sceneFolder = GetCOREInterface()->GetCurFilePath();
+    return sceneFolder.IsEmpty() ? sceneFolder : sceneFolder.RemoveLeaf().Append(_T("DataRefs.txt"));
+}
+
+MaxSDK::Util::Path Config::projectCommandsFile() {
+    MaxSDK::Util::Path sceneFolder = GetCOREInterface()->GetCurFilePath();
+    return sceneFolder.IsEmpty() ? sceneFolder : sceneFolder.RemoveLeaf().Append(_T("Commands.txt"));
+}
+
+/**************************************************************************************************/
+///////////////////////////////////////////* Functions *////////////////////////////////////////////
+/**************************************************************************************************/
+
+bool Config::load() {
+    try {
+        loadFile(sts::toMbString(mConfigFile.GetString()));
+        return true;
+    }
+    catch (const std::exception & e) {
+        LError << e.what();
+        return false;
+    }
+}
+
+bool Config::save() const {
+    try {
+        saveFile(sts::toMbString(mConfigFile.GetString()));
+        return true;
+    }
+    catch (const std::exception & e) {
+        LError << e.what();
+        return false;
+    }
 }
 
 /**************************************************************************************************/

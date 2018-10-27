@@ -160,8 +160,8 @@ namespace win {
         MdLight mMdLight;
 
         INode * mCurrNode = nullptr;
-        win::Base mDock;
-        win::Base mRollupArea;
+        ctrl::Base mDock;
+        ctrl::Base mRollupArea;
 
         IRollupWindow * mIRollupWindow = nullptr;
     };

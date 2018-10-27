@@ -39,7 +39,7 @@
 #include "ui-win/controls/Base.h"
 #include "ui-win/controls/CheckBox.h"
 #include "ui-win/controls/Edit.h"
-#include "Converters/Converterer.h"
+#include "Converters/ConverterToXpln.h"
 #include "common/Logger.h"
 #include "controls/ExportObjList.h"
 
@@ -66,20 +66,20 @@ namespace win {
         void InitDlg(HWND hWnd);
         void DestroyDlg(HWND hWnd);
 
-        win::Base mLblVersion;
+        ctrl::Base mLblVersion;
 
-        win::Base mDlgMain;
-        win::Base mBtnCheckUpdate;
-        win::Base mBtnDonate;
-        win::Base mBtnSaveLog;
-        win::Base mBtnOk;
-        win::Base mBtnCancel;
-        win::Base mBtnAbout;;
-        win::Base mBtnSelAll;
-        win::Base mBtnUnSelAll;
-        win::Edit mEdtLog;
-        win::CheckBox mChkAutoExport;
-        win::ExportObjList mLstObjects;
+        ctrl::Base mDlgMain;
+        ctrl::Base mBtnCheckUpdate;
+        ctrl::Base mBtnDonate;
+        ctrl::Base mBtnSaveLog;
+        ctrl::Base mBtnOk;
+        ctrl::Base mBtnCancel;
+        ctrl::Base mBtnAbout;;
+        ctrl::Base mBtnSelAll;
+        ctrl::Base mBtnUnSelAll;
+        ctrl::Edit mEdtLog;
+        ctrl::CheckBox mChkAutoExport;
+        ctrl::ExportObjList mLstObjects;
 
         //-------------------------------------------------------------------------
 
@@ -100,7 +100,7 @@ namespace win {
         size_t selectedNodeCount();
         void slotSelObjChanged(int idx);
 
-        Converterer mConverterer;
+        ConverterToXpln mConverterer;
         TimeValue mTime = 0;
         std::string mLogText;
 

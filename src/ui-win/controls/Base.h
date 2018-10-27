@@ -33,10 +33,11 @@
 #include <tchar.h>
 #include <string>
 #include <cassert>
+#include "common/String.h"
 #include "common/Logger.h"
 
 namespace ui {
-namespace win {
+namespace ctrl {
 
     /**************************************************************************************************/
     ////////////////////////////////////////////////////////////////////////////////////////////////////

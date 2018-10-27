@@ -61,14 +61,18 @@ namespace win {
     private:
 
         static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+        void initWindow(HWND hWnd);
+        void destroyWindow(HWND hWnd);
+        void toWindow();
 
         void save() const {
             mModelData->saveToNode(mData);
         }
 
-        win::Base mHwnd;
+        ctrl::Base mHwnd;
         MdManip * mModelData;
         xobj::AttrManipNoop mData;
+        ICustEdit * cEdtToolType = nullptr;
     };
 
     /********************************************************************************************************/

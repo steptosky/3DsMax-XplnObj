@@ -34,7 +34,7 @@
 #pragma warning(pop)
 
 #include "resource/resource.h"
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "resource/ResHelper.h"
 
 namespace ui {
@@ -44,7 +44,7 @@ namespace win {
     //////////////////////////////////////////* Static area *///////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR LightNamed::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    INT_PTR CALLBACK LightNamed::panelProc(const HWND hWnd, const UINT msg, const WPARAM wParam, const LPARAM lParam) {
         LightNamed * theDlg;
         if (msg == WM_INITDIALOG) {
             theDlg = reinterpret_cast<LightNamed*>(lParam);
@@ -69,9 +69,22 @@ namespace win {
                 switch (LOWORD(wParam)) {
                     case IDC_CMB_LIGHTNAMED: {
                         if (HIWORD(wParam) == CBN_SELCHANGE) {
-                            theDlg->mData->setLightId(xobj::ELightNamed::fromUiString(sts::toMbString(theDlg->cCmbName.currSelectedText()).c_str()));
+                            auto text = theDlg->cCmbName.currSelectedText();
+                            theDlg->mData->setName(sts::toMbString(text));
+                            Utils::setText(theDlg->cName, sts::toString(text));
                             theDlg->eventParamChanged(true);
                         }
+                        break;
+                    }
+                    default: break;
+                }
+                break;
+            }
+            case WM_CUSTEDIT_ENTER: {
+                switch (LOWORD(wParam)) {
+                    case IDC_NAME_LIGHTNAMED: {
+                        theDlg->mData->setName(sts::toMbString(Utils::getText(theDlg->cName)));
+                        theDlg->eventParamChanged(true);
                         break;
                     }
                     default: break;
@@ -82,6 +95,67 @@ namespace win {
         }
         return FALSE;
     }
+
+    /**************************************************************************************************/
+    /////////////////////////////////////////* Static area *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    std::set<std::string> LightNamed::mPreDefinedList{
+        "ship_nav_left",
+        "ship_nav_right",
+        "ship_mast_obs",
+        "ship_mast_grn",
+        "ship_nav_tail",
+        "ship_mast_powered",
+        "carrier_datum",
+        "carrier_waveoff",
+        "carrier_meatball1",
+        "carrier_meatball2",
+        "carrier_meatball3",
+        "carrier_meatball4",
+        "carrier_meatball5",
+        "carrier_mast_strobe",
+        "carrier_deck_blue_s",
+        "carrier_deck_blue_w",
+        "carrier_deck_blue_n",
+        "carrier_deck_blue_e",
+        "carrier_pitch_lights",
+        "carrier_foul_line_red",
+        "carrier_foul_line_white",
+        "carrier_center_white",
+        "carrier_edge_white",
+        "carrier_thresh_white",
+        "frigate_SGSI_lo",
+        "frigate_SGSI_on",
+        "frigate_SGSI_hi",
+        "frigate_deck_green",
+        "oilrig_deck_blue",
+
+        "town_light_60",
+        "town_light_90",
+        "town_light_150",
+        "town_light_180",
+        "town_light_220",
+        "town_light_280",
+        "town_light_330",
+        "town_light_350",
+        "town_light_omni",
+        "town_tiny_light_60",
+        "town_tiny_light_90",
+        "town_tiny_light_150",
+        "town_tiny_light_180",
+        "town_tiny_light_220",
+        "town_tiny_light_280",
+        "town_tiny_light_330",
+        "town_tiny_light_350",
+        "town_tiny_light_omni",
+
+        "obs_strobe_day",
+        "obs_strobe_night",
+        "obs_red_day",
+        "obs_red_night",
+        "hospital_helipad_blue",
+    };
 
     /**************************************************************************************************/
     ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
@@ -99,8 +173,8 @@ namespace win {
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void LightNamed::show(xobj::ObjLightNamed * inData) {
-        mData = inData;
+    void LightNamed::show(xobj::ObjLightNamed * data) {
+        mData = data;
         toWindow();
         mHwnd.show();
     }
@@ -109,12 +183,11 @@ namespace win {
         mHwnd.hide();
     }
 
-    void LightNamed::create(HWND inParent) {
-        assert(inParent);
+    void LightNamed::create(const HWND parent) {
+        assert(parent);
         mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
                                       MAKEINTRESOURCE(IDD_ROLL_LIGHT_NAMED_OBJ),
-                                      inParent,
-                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      parent, panelProc,
                                       reinterpret_cast<LPARAM>(this)));
         assert(mHwnd);
     }
@@ -130,23 +203,31 @@ namespace win {
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void LightNamed::initWindow(HWND hWnd) {
+    void LightNamed::initWindow(const HWND hWnd) {
         cCmbName.setup(hWnd, IDC_CMB_LIGHTNAMED);
-        assert(cCmbName);
-        for (auto & curr : xobj::ELightNamed::list()) {
-            cCmbName.addItem(sts::toString(curr.toUiString()));
+        cName = GetICustEdit(GetDlgItem(hWnd, IDC_NAME_LIGHTNAMED));
+        for (auto & curr : mPreDefinedList) {
+            cCmbName.addItem(sts::toString(curr));
         }
-        cCmbName.setCurrSelected(0);
     }
 
-    void LightNamed::destroyWindow(HWND /*hWnd*/) {
+    void LightNamed::destroyWindow(const HWND /*hWnd*/) {
         cCmbName.release();
+        ReleaseICustEdit(cName);
     }
 
     void LightNamed::toWindow() {
         if (mData) {
             enableControls();
-            cCmbName.setCurrSelected(sts::toString(mData->lightId().toUiString()));
+
+            Utils::setText(cName, sts::toString(mData->name()));
+            const auto iter = mPreDefinedList.find(mData->name());
+            if (iter != mPreDefinedList.end()) {
+                cCmbName.setCurrSelected(sts::toString(*iter));
+            }
+            else {
+                cCmbName.setCurrSelected(-1);
+            }
         }
         else {
             disableControls();
@@ -154,7 +235,7 @@ namespace win {
     }
 
     void LightNamed::toData() {
-        mData->setLightId(xobj::ELightNamed::fromUiString(sts::toMbString(cCmbName.currSelectedText()).c_str()));
+        mData->setName(sts::toMbString(Utils::getText(cName)));
     }
 
     /**************************************************************************************************/
@@ -163,10 +244,12 @@ namespace win {
 
     void LightNamed::enableControls() {
         cCmbName.enable();
+        cName->Enable();
     }
 
     void LightNamed::disableControls() {
         cCmbName.disable();
+        cName->Disable();
     }
 
     /********************************************************************************************************/

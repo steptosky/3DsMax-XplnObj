@@ -27,49 +27,69 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "UiUtilities.h"
+#pragma once
+
+#include "common/String.h"
 
 namespace ui {
 namespace win {
 
     /**************************************************************************************************/
-    //////////////////////////////////////////* Static area *///////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void UiUtilities::setText(ICustEdit * inCtr, const sts::Str & inText) {
-        MCHAR * txt = new MCHAR[inText.size() + 1];
+    class Utils {
+    public:
 
-#ifdef UNICODE
-    wcscpy(txt, inText.c_str());
-#else
-        strcpy(txt, inText.c_str());
-#endif // UNICODE
+        //-------------------------------------------------------------------------
 
-        inCtr->SetText(txt);
-        delete[] txt;
-    }
+        /*!
+         * \deprecated Actually all code should use native 
+         *             3Ds Max strings where it is possible.
+         */
+        static void setText(ICustEdit * inCtr, const sts::Str & inText);
 
-    void UiUtilities::getText(ICustEdit * inCtr, sts::Str & inText) {
-        MCHAR txt[256];
-        inCtr->GetText(txt, 256);
-        inText = sts::toString(txt);
-    }
+        /*!
+         * \deprecated Actually all code should use native
+         *             3Ds Max strings where it is possible.
+         */
+        static void getText(ICustEdit * inCtr, sts::Str & inText, int size);
 
-    void UiUtilities::getText(ICustEdit * inCtr, sts::Str & inText, int size) {
-        MCHAR * txt = new MCHAR[size];
-        inCtr->GetText(txt, size);
-        inText = sts::toString(*txt);
-        delete[] txt;
-    }
+        /*!
+         * \deprecated Actually all code should use native
+         *             3Ds Max strings where it is possible.
+         */
+        static void getText(ICustEdit * inCtr, sts::Str & inText);
 
-    sts::Str UiUtilities::getText(ICustEdit * inCtr) {
-        MCHAR txt[256];
-        inCtr->GetText(txt, 256);
-        return sts::toString(txt);
-    }
+        /*!
+         * \deprecated Actually all code should use native
+         *             3Ds Max strings where it is possible.
+         */
+        static sts::Str getText(ICustEdit * inCtr);
+
+        //-------------------------------------------------------------------------
+
+        /*!
+         * \details In some 3Ds Max version this method isn't 
+         *          implemented for ICustEdit.
+         *          So this wrapper must be used if the plug-in 
+         *          supports 3Ds Max version lower than 
+         *          3Ds Max 2009
+         *          
+         * \param [in] inCtr
+         * \param [out] str
+         * \param [in] bufSize it is ignored for 3Ds Max greater than 2008.
+         *                     See ICustEdit::GetText(MCHAR *text, int ct)
+         */
+        static void getText(ICustEdit * inCtr, MStr & str, int bufSize = 512);
+
+        //-------------------------------------------------------------------------
+
+    };
 
     /**************************************************************************************************/
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     /**************************************************************************************************/
+
 }
 }

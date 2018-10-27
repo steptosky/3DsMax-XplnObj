@@ -34,9 +34,9 @@
 #pragma warning(pop)
 
 #include "resource/resource.h"
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "resource/ResHelper.h"
-#include "ui-win/Factory.h"
+#include "presenters/Datarefs.h"
 
 namespace ui {
 namespace win {
@@ -45,7 +45,7 @@ namespace win {
     //////////////////////////////////////////* Static area *///////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR LightSpillCust::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    INT_PTR CALLBACK LightSpillCust::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         LightSpillCust * theDlg;
         if (msg == WM_INITDIALOG) {
             theDlg = reinterpret_cast<LightSpillCust*>(lParam);
@@ -69,7 +69,12 @@ namespace win {
             case WM_COMMAND: {
                 switch (LOWORD(wParam)) {
                     case IDC_BTN_DATAREF: {
-                        Factory::showNotImplemented();;
+                        MSTR str;
+                        Utils::getText(theDlg->cEdtDataRef, str);
+                        str = presenters::Datarefs::selectData(str);
+                        theDlg->cEdtDataRef->SetText(str);
+                        theDlg->mData->setDataRef(xobj::fromMStr(str));
+                        theDlg->eventParamChanged(true);
                         break;
                     }
                     default: break;
@@ -79,7 +84,7 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case IDC_EDIT_DATAREF: {
-                        theDlg->mData->setDataRef(sts::toMbString(UiUtilities::getText(theDlg->cEdtDataRef)));
+                        theDlg->mData->setDataRef(sts::toMbString(Utils::getText(theDlg->cEdtDataRef)));
                         theDlg->eventParamChanged(true);
                         break;
                     }
@@ -161,8 +166,7 @@ namespace win {
         assert(inParent);
         mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
                                       MAKEINTRESOURCE(IDD_ROLL_LIGHT_SPILLCUST_OBJ),
-                                      inParent,
-                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      inParent, panelProc,
                                       reinterpret_cast<LPARAM>(this)));
         assert(mHwnd);
     }
@@ -218,7 +222,7 @@ namespace win {
             mSpnB->SetValue(color.blue(), FALSE);
             mSpnA->SetValue(color.alpha(), FALSE);
             mSpnSize->SetValue(mData->size(), FALSE);
-            UiUtilities::setText(cEdtDataRef, sts::toString(mData->dataRef()));
+            Utils::setText(cEdtDataRef, sts::toString(mData->dataRef()));
         }
         else {
             disableControls();
@@ -229,7 +233,7 @@ namespace win {
         xobj::Color color(mSpnR->GetFVal(), mSpnG->GetFVal(), mSpnB->GetFVal(), mSpnA->GetFVal());
         mData->setColor(color);
         mData->setSize(mSpnSize->GetFVal());
-        mData->setDataRef(sts::toMbString(UiUtilities::getText(cEdtDataRef)));
+        mData->setDataRef(sts::toMbString(Utils::getText(cEdtDataRef)));
     }
 
     /**************************************************************************************************/

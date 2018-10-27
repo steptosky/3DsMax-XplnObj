@@ -54,10 +54,10 @@ namespace win {
         void DestroyDlg(HWND hWnd);
 
         HWND mHWnd = nullptr;
-        win::Base mLblThisAbout;
-        win::Base mLblLibAbout;
-        win::Base mBtnOk;
-        win::Base mDlgMain;
+        ctrl::Base mLblThisAbout;
+        ctrl::Base mLblLibAbout;
+        ctrl::Base mBtnOk;
+        ctrl::Base mDlgMain;
 
         //-------------------------------------------------------------------------
 

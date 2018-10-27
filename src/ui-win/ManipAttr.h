@@ -48,7 +48,7 @@ namespace win {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /********************************************************************************************************/
 
-    class ManipAttr : public max::win::RollupBase, ManipIO::IManipIo, public sts::signals::AutoDisconnect {
+    class ManipAttr : public max::ctrl::RollupBase, ManipIO::IManipIo, public sts::signals::AutoDisconnect {
     public:
 
         ManipAttr();
@@ -72,7 +72,7 @@ namespace win {
         void initWindow(HWND hWnd) override;
         void destroyWindow(HWND hWnd) override;
 
-        win::Combo cCmbManipType;
+        ctrl::Combo cCmbManipType;
 
         void enableControls();
         void disableControls();

@@ -32,6 +32,10 @@
 #include <max.h>
 #pragma warning(pop)
 
+#include <tuple>
+#include <xpln/common/Point3.h>
+#include <xpln/common/Color.h>
+
 namespace xobj {
 class ObjAbstract;
 class ObjAbstractLight;
@@ -46,12 +50,14 @@ class TMatrix;
 
 class ExportParams;
 class ImportParams;
+class LightGetter;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
 class ConverterLight {
+    friend LightGetter;
     ConverterLight() = default;
     ~ConverterLight() = default;
 public:
@@ -62,15 +68,20 @@ public:
 private:
 
     // to MAX
-    static INode * toMaxLightNamed(const xobj::ObjLightNamed * inObjLight, const ImportParams & params);
-    static INode * toMaxLightParam(const xobj::ObjLightParam * inObjLight, const ImportParams & params);
-    static INode * toMaxLightCustom(const xobj::ObjLightCustom * inObjLight, const ImportParams & params);
-    static INode * toMaxLightSpillCust(const xobj::ObjLightSpillCust * inObjLight, const ImportParams & params);
-    static INode * toMaxLightPoint(const xobj::ObjLightPoint * inObjLight, const ImportParams & params);
+    static INode * toMaxLightNamed(const xobj::ObjLightNamed * xLight, const ImportParams & params);
+    static INode * toMaxLightParam(const xobj::ObjLightParam * xLight, const ImportParams & params);
+    static INode * toMaxLightCustom(const xobj::ObjLightCustom * xLight, const ImportParams & params);
+    static INode * toMaxLightSpillCust(const xobj::ObjLightSpillCust * xLight, const ImportParams & params);
+    static INode * toMaxLightPoint(const xobj::ObjLightPoint * xLight, const ImportParams & params);
 
     static void setPosition(TimeValue t, INode * mode,
                             const xobj::TMatrix & targetTm, const xobj::Point3 & pos);
 
+    static xobj::Point3 direction(INode * node, TimeValue time);
+    static xobj::Color lightColor(INode * node, TimeValue time);
+    static bool isSpotLight(INode * node);
+    // [falloff, hotspot]
+    static std::tuple<float, float> coneAngle(INode * node, TimeValue time);
 };
 
 /**************************************************************************************************/

@@ -43,7 +43,7 @@ namespace win {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /********************************************************************************************************/
 
-    class ObjAttr : public max::win::RollupBase {
+    class ObjAttr : public max::ctrl::RollupBase {
     public:
 
         void create(IRollupWindow * rollWin);
@@ -74,12 +74,12 @@ namespace win {
 
         //-------------------------------------------------------------------------
 
-        win::CheckBox cChkSunLight;
-        win::CheckBox cChkTwoSided;
-        win::CheckBox cChkDraped;
-        win::CheckBox cChkShadow;
-        win::CheckBox cChkSolidCamera;
-        win::CheckBox cChkDraw;
+        ctrl::CheckBox cChkSunLight;
+        ctrl::CheckBox cChkTwoSided;
+        ctrl::CheckBox cChkDraped;
+        ctrl::CheckBox cChkShadow;
+        ctrl::CheckBox cChkSolidCamera;
+        ctrl::CheckBox cChkDraw;
 
         void enableBool(bool state);
         void dropFromUiBool();
@@ -87,8 +87,8 @@ namespace win {
 
         //-------------------------------------------------------------------------
 
-        win::CheckBox cChkShiny;
-        win::Base cLblShinyRatio;
+        ctrl::CheckBox cChkShiny;
+        ctrl::Base cLblShinyRatio;
         ISpinnerControl * cSpnShinyRatio = nullptr;
 
         void enableShiny(bool state);
@@ -97,8 +97,8 @@ namespace win {
 
         //-------------------------------------------------------------------------
 
-        win::CheckBox cChkCockpit;
-        win::Combo cCmbCockpit;
+        ctrl::CheckBox cChkCockpit;
+        ctrl::Combo cCmbCockpit;
 
         void enableCockpit(bool state);
         void dropFromUiCockpit();
@@ -106,9 +106,9 @@ namespace win {
 
         //-------------------------------------------------------------------------
 
-        win::CheckBox cChkHard;
-        win::CheckBox cChkHardDeck;
-        win::Combo cCmbHard;
+        ctrl::CheckBox cChkHard;
+        ctrl::CheckBox cChkHardDeck;
+        ctrl::Combo cCmbHard;
 
         void enableHard(bool state);
         void dropFromUiHard();
@@ -116,8 +116,8 @@ namespace win {
 
         //-------------------------------------------------------------------------
 
-        win::Combo cCmbBlend;
-        win::Base cLblBlendRatio;
+        ctrl::Combo cCmbBlend;
+        ctrl::Base cLblBlendRatio;
         ISpinnerControl * cSpnBlendRatio = nullptr;
 
         void enableBlend(bool state);
@@ -126,8 +126,8 @@ namespace win {
 
         //-------------------------------------------------------------------------
 
-        win::CheckBox cChkPolyOffset;
-        win::Base cLblPolyOstDist;
+        ctrl::CheckBox cChkPolyOffset;
+        ctrl::Base cLblPolyOstDist;
         ISpinnerControl * cSpnPolyOstDist = nullptr;
 
         void enablePolyOffset(bool state);
@@ -137,10 +137,10 @@ namespace win {
         //-------------------------------------------------------------------------
 
         ICustEdit * cEdtLightLevelDrf = nullptr;
-        win::CheckBox cChkLightLevel;
-        win::Base cBtnLightLevelDrf;
-        win::Base cLblLightLevelVal1;
-        win::Base cLblLightLevelVal2;
+        ctrl::CheckBox cChkLightLevel;
+        ctrl::Base cBtnLightLevelDrf;
+        ctrl::Base cLblLightLevelVal1;
+        ctrl::Base cLblLightLevelVal2;
         ISpinnerControl * cSpnLightLevelVal1 = nullptr;
         ISpinnerControl * cSpnLightLevelVal2 = nullptr;
 

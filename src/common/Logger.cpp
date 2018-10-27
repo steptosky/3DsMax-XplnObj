@@ -101,15 +101,15 @@ void Logger::logCallBack(sts::BaseLogger::eType inType, const char * inMsg,
     }
 
     if (msgType == SYSLOG_INFO) {
-        mMaxLog->LogEntry(msgType, dialog, _M(XIO_PROJECT_SHORT_NAME), inCategory ? _M("%s %s %s") : _M("%s%s %s"),
+        mMaxLog->LogEntry(msgType, dialog, _M(XIO_PROJECT_NAME), inCategory ? _M("%s %s %s") : _M("%s%s %s"),
                           _M(LOG_PREFIX), inCategory ? sts::toString(inCategory).c_str() : _M(""), sts::toString(inMsg).c_str());
         Debug(std::cout << sts::BaseLogger::typeAsString(inType) << ": "
             << (inCategory ? inCategory : "") << (inCategory ? " " : "") << (inMsg ? inMsg : "") << std::endl);
     }
     else {
-        mMaxLog->LogEntry(msgType, dialog, _M(XIO_PROJECT_SHORT_NAME), inCategory ? _M("%s %s %s") : _M("%s%s %s"),
+        mMaxLog->LogEntry(msgType, dialog, _M(XIO_PROJECT_NAME), inCategory ? _M("%s %s %s") : _M("%s%s %s"),
                           _M(LOG_PREFIX), inCategory ? sts::toString(inCategory).c_str() : _M(""), sts::toString(inMsg).c_str());
-        mMaxLog->LogEntry(msgType, NO_DIALOG, _M(XIO_PROJECT_SHORT_NAME), _M("%s\t\t<%s -> %s(%d)>"),
+        mMaxLog->LogEntry(msgType, NO_DIALOG, _M(XIO_PROJECT_NAME), _M("%s\t\t<%s -> %s(%d)>"),
                           _M(LOG_PREFIX), sts::toString(inFunction).c_str(), sts::toString(inFile).c_str(), inLine);
         Debug(std::cout << sts::BaseLogger::typeAsString(inType) << ": "
             << (inCategory ? inCategory : "") << (inCategory ? " " : "") << (inMsg ? inMsg : "") << LEOL <<"\t<"

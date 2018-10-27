@@ -29,11 +29,11 @@
 
 #include "AnimVisView.h"
 #include "common/Logger.h"
-#include "Resource/resource.h"
+#include "resource/resource.h"
 #include "ui-win/AnimCalc.h"
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "resource/ResHelper.h"
-#include "ui-win/Factory.h"
+#include "presenters/Datarefs.h"
 
 namespace ui {
 namespace win {
@@ -42,7 +42,7 @@ namespace win {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR AnimVisView::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
+    INT_PTR CALLBACK AnimVisView::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
         switch (msg) {
             case WM_COMMAND: {
                 switch (LOWORD(wParam)) {
@@ -63,8 +63,13 @@ namespace win {
                         break;
                     case BTN_DELETE: deleteItem();
                         break;
-                    case BTN_DATAREF: Factory::showNotImplemented();;
+                    case BTN_DATAREF: {
+                        MSTR str;
+                        Utils::getText(cEditDataRef, str);
+                        cEditDataRef->SetText(presenters::Datarefs::selectData(str));
+                        selectedDataChanged();
                         break;
+                    }
                     default: break;
                 }
                 break;
@@ -183,14 +188,14 @@ namespace win {
 
     void AnimVisView::clearValues() {
         cListKeys.clear();
-        UiUtilities::setText(cEditDataRef, sts::toString("none"));
+        Utils::setText(cEditDataRef, sts::toString("none"));
         cSpnValue1->SetValue(0.0f, FALSE);
         cSpnValue2->SetValue(1.0f, FALSE);
     }
 
     void AnimVisView::setDataRefValueAsToolType() {
 #if MAX_VERSION_MAJOR > 11
-    cEditDataRef->SetTooltip(true, UiUtilities::getText(cEditDataRef).c_str());
+    cEditDataRef->SetTooltip(true, Utils::getText(cEditDataRef).c_str());
 #endif
     }
 
@@ -284,7 +289,7 @@ namespace win {
         mData.mKeyList.push_back(MdAnimVis::Key(type,
                                                 cSpnValue1->GetFVal(),
                                                 cSpnValue2->GetFVal(),
-                                                sts::toMbString(UiUtilities::getText(cEditDataRef))));
+                                                sts::toMbString(Utils::getText(cEditDataRef))));
         cListKeys.addItem(toText(mData.mKeyList.back()));
         mData.saveToNode();
     }
@@ -326,7 +331,7 @@ namespace win {
             MdAnimVis::Key & key = mData.mKeyList[static_cast<size_t>(mCurrSelected)];
             key.pValue1 = cSpnValue1->GetFVal();
             key.pValue2 = cSpnValue2->GetFVal();
-            key.pDrf = sts::toMbString(UiUtilities::getText(cEditDataRef));
+            key.pDrf = sts::toMbString(Utils::getText(cEditDataRef));
         }
         makeUiList();
     }
@@ -335,18 +340,22 @@ namespace win {
         mCurrSelected = cListKeys.currSelected();
         auto list1 = sts::StrUtils::split<sts::StrUtils::Vector>(sts::toString(cListKeys.currSelectedText()), _T("="));
         if (list1.size() != 2) {
-            LError << "Internal error 1.";
+#ifndef NDEBUG
+            LError << "Internal error 1";
+#endif
             return;
         }
         sts::StrUtils::trim(list1[1]);
         auto list2 = sts::StrUtils::split<sts::StrUtils::Vector>(list1[1], _T(" "));
         if (list2.size() != 3) {
-            LError << "Internal error 2.";
+#ifndef NDEBUG
+            LError << "Internal error 2";
+#endif
             return;
         }
         cSpnValue1->SetValue(sts::toFloat(list2[0]), FALSE);
         cSpnValue2->SetValue(sts::toFloat(list2[1]), FALSE);
-        UiUtilities::setText(cEditDataRef, sts::toString(list2[2]));
+        Utils::setText(cEditDataRef, sts::toString(list2[2]));
         setDataRefValueAsToolType();
     }
 

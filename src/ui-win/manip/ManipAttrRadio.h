@@ -80,14 +80,14 @@ namespace win {
         xobj::AttrManipRadio mData;
         ManipAttrWheel mWheel;
 
-        win::Base mHwnd;
+        ctrl::Base mHwnd;
 
         ISpinnerControl * mSpnDown = nullptr;
 
-        win::Base cBtnDataRef;
+        ctrl::Base cBtnDataRef;
         ICustEdit * cEdtDataRef = nullptr;
         ICustEdit * cEdtToolType = nullptr;
-        win::Combo cCmbCursor;
+        ctrl::Combo cCmbCursor;
     };
 
     /********************************************************************************************************/

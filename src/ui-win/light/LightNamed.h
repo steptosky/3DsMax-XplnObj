@@ -29,6 +29,8 @@
 
 #pragma once
 
+#include <set>
+#include <string>
 #include <xpln/obj/ObjLightNamed.h>
 #include "AbstractLight.h"
 #include "ui-win/controls/Base.h"
@@ -44,12 +46,12 @@ namespace win {
     class LightNamed : public AbstractLight {
     public:
 
-        win::Base & getCBase() override {
+        ctrl::Base & getCBase() override {
             return mHwnd;
         }
 
-        void create(HWND inParent) override;
-        void show(xobj::ObjLightNamed * inData);
+        void create(HWND parent) override;
+        void show(xobj::ObjLightNamed * data);
         void hide();
         void destroy() override;
 
@@ -70,9 +72,12 @@ namespace win {
         void disableControls();
 
         xobj::ObjLightNamed * mData = nullptr;
-        win::Base mHwnd;
+        ctrl::Base mHwnd;
+        ctrl::Combo cCmbName;
+        ICustEdit * cName = nullptr;
 
-        win::Combo cCmbName;
+        static std::set<std::string> mPreDefinedList;
+
     };
 
     /********************************************************************************************************/

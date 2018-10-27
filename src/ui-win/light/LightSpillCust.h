@@ -44,7 +44,7 @@ namespace win {
     class LightSpillCust : public AbstractLight {
     public:
 
-        win::Base & getCBase() override {
+        ctrl::Base & getCBase() override {
             return mHwnd;
         }
 
@@ -69,7 +69,7 @@ namespace win {
         void enableControls();
         void disableControls();
 
-        win::Base mHwnd;
+        ctrl::Base mHwnd;
 
         ISpinnerControl * mSpnR = nullptr;
         ISpinnerControl * mSpnG = nullptr;
@@ -78,7 +78,7 @@ namespace win {
 
         ISpinnerControl * mSpnSize = nullptr;
 
-        win::Base cBtnDataRef;
+        ctrl::Base cBtnDataRef;
         ICustEdit * cEdtDataRef = nullptr;
 
         xobj::ObjLightSpillCust * mData = nullptr;

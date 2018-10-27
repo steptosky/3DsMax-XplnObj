@@ -47,11 +47,11 @@ namespace win {
     public:
 
         enum eAction {
-            ActionDoc =1,
+            ActionDoc = 1,
             ActionUpdate =2,
-            ActionDonate= 3,
-            ActionAbout= 4,
-            ActionSettings =5,
+            ActionDonate = 3,
+            ActionAbout = 4,
+            ActionSettings = 5,
             ActionCppMesh =100,
         };
 

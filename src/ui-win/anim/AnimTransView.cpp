@@ -30,10 +30,10 @@
 #include "AnimTransView.h"
 #include "common/Logger.h"
 #include "resource/resource.h"
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "ui-win/AnimCalc.h"
 #include "resource/ResHelper.h"
-#include "ui-win/Factory.h"
+#include "presenters/Datarefs.h"
 
 namespace ui {
 namespace win {
@@ -42,7 +42,7 @@ namespace win {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR AnimTransView::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
+    INT_PTR CALLBACK AnimTransView::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
         switch (msg) {
             case WM_COMMAND: {
                 switch (LOWORD(wParam)) {
@@ -57,8 +57,13 @@ namespace win {
                         break;
                     case CHK_LOOP: setLoopEnable();
                         break;
-                    case BTN_DATAREF: Factory::showNotImplemented();;
+                    case BTN_DATAREF: {
+                        MSTR str;
+                        Utils::getText(cEditDataRef, str);
+                        cEditDataRef->SetText(presenters::Datarefs::selectData(str));
+                        setDataref();
                         break;
+                    }
                     case BTN_REVERSE_VALUE: reverseValues();
                         break;
                     case BTN_CALC_VALUE: calculateValues();
@@ -71,7 +76,7 @@ namespace win {
             }
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
-                    case EDIT_DATAREF: setDrft();
+                    case EDIT_DATAREF: setDataref();
                         break;
                     default: break;
                 }
@@ -241,7 +246,7 @@ namespace win {
             cChkEnable.setState(mData.mEnable);
             cChkReverse.setState(mData.mReverse);
             cChkLoop.setState(mData.mLoopEnable);
-            UiUtilities::setText(cEditDataRef, sts::toString(mData.mDataref));
+            Utils::setText(cEditDataRef, sts::toString(mData.mDataref));
             cSpnLoopValue->SetValue(mData.mLoopValue, FALSE);
             setDataRefValueAsToolType();
             makeUiList();
@@ -260,7 +265,7 @@ namespace win {
         cChkReverse.setState(false);
         cChkLoop.setState(false);
         cListKeys.clear();
-        UiUtilities::setText(cEditDataRef, sts::toString("none"));
+        Utils::setText(cEditDataRef, sts::toString("none"));
         cSpnValue->SetValue(0.0f, FALSE);
         cSpnLoopValue->SetValue(0.0f, FALSE);
     }
@@ -333,8 +338,8 @@ namespace win {
         mData.saveToNode();
     }
 
-    void AnimTransView::setDrft() {
-        mData.mDataref = sts::toMbString(UiUtilities::getText(cEditDataRef));
+    void AnimTransView::setDataref() {
+        mData.mDataref = sts::toMbString(Utils::getText(cEditDataRef));
         setDataRefValueAsToolType();
         mData.saveToNode();
     }

@@ -66,11 +66,13 @@
 #include <algorithm>
 #include <tuple>
 #include <regex>
+#include <optional>
 
 //-------------------------------------------------------------------------
 
 #include "common/Logger.h"
 #include "common/String.h"
+#include "ui-win/Utils.h"
 
 //-------------------------------------------------------------------------
 
@@ -78,6 +80,8 @@
 // So It isn't possible to see the plugin's ones.
 #pragma warning(push, 0)
 #include <max.h>
+#include <strclass.h>
+#include <Path.h>
 #include <3dsmaxport.h>
 
 #include <imenuman.h>

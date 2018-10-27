@@ -29,7 +29,13 @@
 
 #pragma once
 
-#include "common/String.h"
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
+
+#include <optional>
+#include <xpln/utils/CommandsFile.h>
+#include "ui-win/controls/Base.h"
 
 namespace ui {
 namespace win {
@@ -38,13 +44,38 @@ namespace win {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /********************************************************************************************************/
 
-    class UiUtilities {
+    /*!
+     * \details Edit dialog for commands.
+     */
+    class DlgEditCommand {
     public:
 
-        static void setText(ICustEdit * inCtr, const sts::Str & inText);
-        static void getText(ICustEdit * inCtr, sts::Str & inText, int size);
-        static void getText(ICustEdit * inCtr, sts::Str & inText);
-        static sts::Str getText(ICustEdit * inCtr);
+        DlgEditCommand() = default;
+        virtual ~DlgEditCommand() = default;
+
+        //-------------------------------------------------------------------------
+
+        static std::optional<xobj::Command> edit(const xobj::Command & dataref);
+
+        //-------------------------------------------------------------------------
+
+    private:
+
+        std::optional<xobj::Command> create(const xobj::Command & dataref);
+
+        void initDlg(HWND hWnd);
+        void destroyDlg(HWND hWnd);
+
+        void dataToUi();
+        void uiToData();
+
+        static INT_PTR callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+        ctrl::Base mDlgMain;
+        ICustEdit * mCtrlKey = nullptr;
+        ICustEdit * mCtrlDesc = nullptr;
+
+        xobj::Command mCommand;
 
     };
 

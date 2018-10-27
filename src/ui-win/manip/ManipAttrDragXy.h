@@ -75,22 +75,22 @@ namespace win {
         MdManip * mModelData;
         xobj::AttrManipDragXy mData;
 
-        win::Base mHwnd;
+        ctrl::Base mHwnd;
 
         ISpinnerControl * mSpnX = nullptr;
         ISpinnerControl * mSpnXMin = nullptr;
         ISpinnerControl * mSpnXMax = nullptr;
-        win::Base cBtnXDataRef;
+        ctrl::Base cBtnXDataRef;
         ICustEdit * cEdtXDataRef = nullptr;
 
         ISpinnerControl * mSpnY = nullptr;
         ISpinnerControl * mSpnYMin = nullptr;
         ISpinnerControl * mSpnYMax = nullptr;
-        win::Base cBtnYDataRef;
+        ctrl::Base cBtnYDataRef;
         ICustEdit * cEdtYDataRef = nullptr;
 
         ICustEdit * cEdtToolType = nullptr;
-        win::Combo cCmbCursor;
+        ctrl::Combo cCmbCursor;
     };
 
     /********************************************************************************************************/

@@ -39,7 +39,7 @@ namespace win {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /********************************************************************************************************/
 
-    class AnimRotateRollup : public max::win::RollupBase {
+    class AnimRotateRollup : public max::ctrl::RollupBase {
     public:
 
         void create(IRollupWindow * rollWin);

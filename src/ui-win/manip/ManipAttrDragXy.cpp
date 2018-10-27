@@ -34,11 +34,11 @@
 #pragma warning(pop)
 
 #include <xpln/enums/ECursor.h>
-#include "ui-win/UiUtilities.h"
+#include "ui-win/Utils.h"
 #include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
-#include "ui-win/Factory.h"
+#include "presenters/Datarefs.h"
 
 namespace ui {
 namespace win {
@@ -47,7 +47,7 @@ namespace win {
     //////////////////////////////////////////* Static area *///////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR ManipAttrDragXy::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    INT_PTR CALLBACK ManipAttrDragXy::panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         ManipAttrDragXy * theDlg;
         if (msg == WM_INITDIALOG) {
             theDlg = reinterpret_cast<ManipAttrDragXy*>(lParam);
@@ -71,11 +71,21 @@ namespace win {
             case WM_COMMAND: {
                 switch (LOWORD(wParam)) {
                     case BTN_X_DATAREF: {
-                        Factory::showNotImplemented();
+                        MSTR str;
+                        Utils::getText(theDlg->cEdtXDataRef, str);
+                        str = presenters::Datarefs::selectData(str);
+                        theDlg->cEdtXDataRef->SetText(str);
+                        theDlg->mData.setXDataref(xobj::fromMStr(str));
+                        theDlg->save();
                         break;
                     }
                     case BTN_Y_DATAREF: {
-                        Factory::showNotImplemented();
+                        MSTR str;
+                        Utils::getText(theDlg->cEdtYDataRef, str);
+                        str = presenters::Datarefs::selectData(str);
+                        theDlg->cEdtYDataRef->SetText(str);
+                        theDlg->mData.setYDataref(xobj::fromMStr(str));
+                        theDlg->save();
                         break;
                     }
                     case CMB_CURSOR: {
@@ -92,17 +102,17 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case EDIT_X_DATAREF: {
-                        theDlg->mData.setXDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtXDataRef)));
+                        theDlg->mData.setXDataref(sts::toMbString(Utils::getText(theDlg->cEdtXDataRef)));
                         theDlg->save();
                         break;
                     }
                     case EDIT_Y_DATAREF: {
-                        theDlg->mData.setYDataref(sts::toMbString(UiUtilities::getText(theDlg->cEdtYDataRef)));
+                        theDlg->mData.setYDataref(sts::toMbString(Utils::getText(theDlg->cEdtYDataRef)));
                         theDlg->save();
                         break;
                     }
                     case EDIT_TOOLTIP: {
-                        theDlg->mData.setToolTip(sts::toMbString(UiUtilities::getText(theDlg->cEdtToolType)));
+                        theDlg->mData.setToolTip(sts::toMbString(Utils::getText(theDlg->cEdtToolType)));
                         theDlg->save();
                         break;
                     }
@@ -172,8 +182,7 @@ namespace win {
         assert(inParent);
         mHwnd.setup(CreateDialogParam(ResHelper::hInstance,
                                       MAKEINTRESOURCE(ROLL_MANIP_DRAGXY),
-                                      inParent,
-                                      reinterpret_cast<DLGPROC>(panelProc),
+                                      inParent, panelProc,
                                       reinterpret_cast<LPARAM>(this)));
         assert(mHwnd);
         if (mHwnd) {
@@ -268,14 +277,14 @@ namespace win {
         mSpnX->SetValue(mData.x(), FALSE);
         mSpnXMin->SetValue(mData.xMin(), FALSE);
         mSpnXMax->SetValue(mData.xMax(), FALSE);
-        UiUtilities::setText(cEdtXDataRef, sts::toString(mData.xDataref()));
+        Utils::setText(cEdtXDataRef, sts::toString(mData.xDataref()));
 
         mSpnY->SetValue(mData.y(), FALSE);
         mSpnYMin->SetValue(mData.yMin(), FALSE);
         mSpnYMax->SetValue(mData.yMax(), FALSE);
-        UiUtilities::setText(cEdtYDataRef, sts::toString(mData.yDataref()));
+        Utils::setText(cEdtYDataRef, sts::toString(mData.yDataref()));
 
-        UiUtilities::setText(cEdtToolType, sts::toString(mData.toolTip()));
+        Utils::setText(cEdtToolType, sts::toString(mData.toolTip()));
         cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
     }
 

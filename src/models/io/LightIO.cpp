@@ -132,7 +132,7 @@ bool LightIO::load(INode * node, sts::DataStreamI & stream, xobj::ObjLightCustom
 
 void LightIO::save(sts::DataStreamO & stream, const xobj::ObjLightNamed & inLight) {
     stream.setValue<uint8_t>(uint8_t(1)); // io version
-    stream.setValue<std::string>(inLight.lightId().toString());
+    stream.setValue<std::string>(inLight.name());
 }
 
 bool LightIO::load(INode * node, sts::DataStreamI & stream, xobj::ObjLightNamed & outLight) {
@@ -141,28 +141,43 @@ bool LightIO::load(INode * node, sts::DataStreamI & stream, xobj::ObjLightNamed 
         log_unexpected_version(node, version);
         return false;
     }
-    outLight.setLightId(xobj::ELightNamed::fromString(stream.value<std::string>().c_str()));
+    outLight.setName(stream.value<std::string>());
     return true;
 }
 
 /***************************************************************************************/
 
 void LightIO::save(sts::DataStreamO & stream, const xobj::ObjLightParam & inLight) {
-    stream.setValue<uint8_t>(uint8_t(1)); // io version
-    stream.setValue<std::string>(inLight.lightId().toString());
-    stream.setValue<std::string>(inLight.lightName());
-    stream.setValue<std::string>(inLight.additionalParams());
+    stream.setValue<std::uint8_t>(std::uint8_t(2)); // io version
+    // script version
+    // It may be needed when syntax of script should be updated or correctly read.
+    stream.setValue<std::string>(inLight.name());
+    stream.setValue<std::uint8_t>(std::uint8_t(1));
+    stream.setValue<std::string>(inLight.params());
 }
 
 bool LightIO::load(INode * node, sts::DataStreamI & stream, xobj::ObjLightParam & outLight) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
+    if (version == 2) {
+        // script version
+        outLight.setName(stream.value<std::string>());
+        stream.value<std::uint8_t>();
+        outLight.setRawParams(stream.value<std::string>());
+        return true;
+    }
+
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outLight.setLightId(xobj::ELightParams::fromString(stream.value<std::string>().c_str()));
-    outLight.setLightName(stream.value<std::string>());
-    outLight.setAdditionalParams(stream.value<std::string>());
+
+    const auto lightId = stream.value<std::string>();
+    auto lightName = stream.value<std::string>();
+    if (lightName.empty()) {
+        lightName = lightId;
+    }
+    outLight.setName(lightName);
+    outLight.setRawParams(stream.value<std::string>());
     return true;
 }
 

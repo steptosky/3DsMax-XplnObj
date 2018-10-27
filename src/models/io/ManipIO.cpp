@@ -489,13 +489,17 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragX
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipNoop & /*inManip*/) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipNoop & inManip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(2));
+    stream.setValue<std::string>(inManip.toolTip());
 }
 
-bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipNoop & /*outManip*/) {
-    uint8_t version = stream.value<uint8_t>();
-    if (version != 1) {
+bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipNoop & outManip) {
+    const auto version = stream.value<std::uint8_t>();
+    if (version == 2) {
+        outManip.setToolTip(stream.value<std::string>());
+    }
+    else if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }

@@ -34,6 +34,7 @@
 #include "gup/Settings.h"
 #include "gup/ObjCommon.h"
 #include "Info.h"
+#include "DlgSettings.h"
 
 namespace ui {
 namespace win {
@@ -47,8 +48,7 @@ namespace win {
     }
 
     void Factory::showSettingsWindow() {
-        MessageBoxA(GetActiveWindow(),
-                    "We have planned to add some settings but it hasn't been made yet.", "Info", MB_ICONINFORMATION);
+        DlgSettings::show();
     }
 
     void Factory::showNotImplemented() {

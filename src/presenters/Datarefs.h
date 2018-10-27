@@ -1,5 +1,7 @@
+#pragma once
+
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2018, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -27,54 +29,17 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "NodeVisitor.h"
+#include "models/DatarefsFile.h"
+#include "Dc.h"
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
-
-#include "objects/main/MainObjParamsWrapper.h"
-
-/**************************************************************************************************/
-//////////////////////////////////////////* Functions */////////////////////////////////////////////
-/**************************************************************************************************/
-
-bool NodeVisitor::visitChildrenOf(INode * root, const Function & fn) {
-    DbgAssert(fn);
-    int numChildren = root->NumberOfChildren();
-    for (int idx = 0; idx < numChildren; ++idx) {
-        if (!fn(root->GetChildNode(idx))) {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool NodeVisitor::visitAllOf(INode * root, const Function & fn) {
-    DbgAssert(fn);
-    int numChildren = root->NumberOfChildren();
-    for (int idx = 0; idx < numChildren; ++idx) {
-        INode * currNode = root->GetChildNode(idx);
-        if (!fn(currNode) || !visitAllOf(currNode, fn)) {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool NodeVisitor::visitAll(const Function & fn) {
-    return visitAllOf(GetCOREInterface()->GetRootNode(), fn);
-}
-
+namespace presenters {
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool NodeVisitor::sceneContainsMainObj() {
-    auto hasMainObj = [](INode * n) ->bool { return !MainObjParamsWrapper::isMainObj(n); };
-    return !NodeVisitor::visitChildrenOf(GetCOREInterface()->GetRootNode(), hasMainObj);
-}
+typedef Dc<md::DatarefsFile> Datarefs;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
+}

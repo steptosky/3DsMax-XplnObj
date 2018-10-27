@@ -141,7 +141,7 @@
 #define IDC_B_SPIN                      1122
 #define IDC_EDIT_PARAMS                 1123
 #define IDC_S1_EDIT                     1124
-#define IDC_EDIT_CUSTOM                 1124
+#define IDC_EDIT_NAME                   1124
 #define IDC_S1_SPIN                     1125
 #define IDC_T1_EDIT                     1126
 #define IDC_T1_SPIN                     1127
@@ -164,6 +164,7 @@
 #define LBL_VERSION                     1137
 #define SPN_LAYERGROUP_DRAPED           1137
 #define ROLL_SMOKEOBJ_ATTR              1137
+#define BTN_CLEAR                       1137
 #define USER_OUPUT                      1138
 #define SPN_LODDRAPED_DIST_EDIT         1138
 #define ROLL_MANIP_PANEL                1138
@@ -172,8 +173,11 @@
 #define IDD_UPDATED_OBJECTS             1139
 #define BTN_CANCEL                      1140
 #define SPN_SLOPELIMIT_ROLLMAX_EDIT     1140
+#define BTN_OK2                         1140
+#define BTN_SELECT_SIM_PATH             1140
 #define BTN_ABOUT                       1141
 #define SPN_SLOPELIMIT_ROLLMAX          1141
+#define BTN_NEW_DATA                    1141
 #define LBL_TEXT                        1142
 #define SPN_SLOPELIMIT_PITCHMAX_EDIT    1142
 #define BTN_SAVE_LOG                    1142
@@ -248,12 +252,16 @@
 #define BTN_CALC_VALUE                  1193
 #define CHK_COCKPIT_REGION_3            1194
 #define CHK_LOOP                        1194
+#define EDIT_KEY                        1194
 #define SPN_COCKPIT_3_T_EDIT            1195
 #define SPN_LOOP_EDIT                   1195
+#define EDIT_VALUE_TYPE                 1195
 #define SPN_COCKPIT_3_T                 1196
 #define SPN_LOOP                        1196
+#define EDIT_VALUE_UNITS                1196
 #define SPN_COCKPIT_3_B_EDIT            1197
 #define LIST_VALUES                     1197
+#define EDIT_DESCRIPTION                1197
 #define SPN_COCKPIT_3_B                 1198
 #define SPN_COCKPIT_3_L_EDIT            1199
 #define BTN_ADD_SHOW                    1199
@@ -289,9 +297,14 @@
 #define EDIT_TOOLTIP                    1217
 #define CMB_CURSOR                      1218
 #define EDIT_COMMAND                    1220
+#define DLG_DC                          1220
 #define BTN_COMMAND                     1221
+#define DLG_EDIT_DATAREF                1221
 #define EDIT_COMMAND2                   1222
+#define DLG_EDIT_CPMMAND                1222
+#define DLG_EDIT_COMMAND                1222
 #define BTN_COMMAND2                    1223
+#define DLG_SETTINGS                    1223
 #define SPN_Z_EDIT                      1224
 #define SPN_Y_EDIT                      1225
 #define SPN_X_EDIT                      1226
@@ -325,6 +338,18 @@
 #define SPN_POLYOFFSET_DIST_LABEL       1258
 #define SPN_BLEND_LABEL                 1259
 #define SPN_SHINY_LABEL                 1260
+#define IDC_NAME_LIGHTNAMED             1261
+#define IDC_LIST                        1262
+#define IDC_COMBO_FILES                 1264
+#define IDC_PATH                        1265
+#define EDIT_SEARCH                     1266
+#define IDC_PATH_TYPE                   1267
+#define LBL_DESCRIPTION                 1268
+#define LBL_VALUE_TYPE                  1269
+#define LBL_VALUE_UNITS                 1270
+#define LBL_KEY                         1271
+#define CHK_WRITABLE                    1272
+#define IDC_SIM_PATH                    1273
 
 // Next default values for new objects
 // 
@@ -332,7 +357,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        173
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1261
+#define _APS_NEXT_CONTROL_VALUE         1274
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -32,7 +32,9 @@
 #include "common/Logger.h"
 #include "ui-win/Factory.h"
 #include "resource/ResHelper.h"
-#include "common/NodeVisitor.h"
+#include "common/NodeUtils.h"
+#include "presenters/Datarefs.h"
+#include "presenters/Commands.h"
 
 #ifndef IO_SAVE_CAST
 #	if MAX_VERSION_MAJOR > 14
@@ -143,6 +145,8 @@ void ObjCommon::Stop() {
     //----------------------------------------
     UnRegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
     mUpdateChecker.freeResources();
+    presenters::Datarefs::free();
+    presenters::Commands::free();
     ui::ToolFrame::destroy();
     delete mCloneNodeChunk;
 }
@@ -255,11 +259,11 @@ IOResult ObjCommon::Load(ILoad * iload) {
 
 void ObjCommon::slotFileOpened(void * param, NotifyInfo *) {
     ObjCommon * d = static_cast<ObjCommon*>(param);
-    // NodeVisitor::sceneContainsMainObj() - this is needed for the old scenes which 
+    // NodeUtils::isSceneContainMainObj() - this is needed for the old scenes which 
     // have not set the flag d->pSettings.isSavedAsXplnScene()
     // This situation slows down loading non-x-plane scenes because it needs
     // to check whether the scene contains main x-plane object.
-    if (d->pSettings.isSavedAsXplnScene() || NodeVisitor::sceneContainsMainObj()) {
+    if (d->pSettings.isSavedAsXplnScene() || NodeUtils::isSceneContainMainObj()) {
         d->mSceneUpdater.update(d->pSettings.sceneVersion(), d->pSettings.pluginVersion());
     }
 }

@@ -39,7 +39,7 @@ class INode;
 /*!
  * \details Helper
  */
-class NodeVisitor {
+class NodeUtils {
 public:
 
     //-------------------------------------------------------------------------
@@ -56,11 +56,14 @@ public:
      * \return false if process was stopped by the function 
      *         otherwise true which means that all the nodes were processed.
      */
-    static bool visitAll(const Function & fn);
+    static bool visitAll(const Function & fn) {
+        return visitAllOf(GetCOREInterface()->GetRootNode(), fn);
+    }
 
     /*!
      * \details Visit all the INode of the given root one according to their hierarchy
      *          and call specified function for each one.
+     * \param root
      * \param fn function which will receive each INode. 
      * \return false if process was stopped by the function 
      *         otherwise true which means that all the nodes were processed.
@@ -70,6 +73,7 @@ public:
     /*!
      * \details Visit all the children INode of the given root one according to their order
      *          and call specified function for each one.
+     * \param root
      * \param fn function which will receive each INode. 
      * \return false if process was stopped by the function 
      *         otherwise true which means that all the nodes were processed.
@@ -77,7 +81,6 @@ public:
     static bool visitChildrenOf(INode * root, const Function & fn);
 
     //-------------------------------------------------------------------------
-    // Predefined methods
 
     /*!
      * \details Check whether the current scene contains at least one x-plane main object.
@@ -85,7 +88,7 @@ public:
      *          does not check children of children.
      * \return True if contains otherwise false.
      */
-    static bool sceneContainsMainObj();
+    static bool isSceneContainMainObj();
 
     //-------------------------------------------------------------------------
 };

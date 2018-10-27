@@ -34,7 +34,7 @@
 #pragma warning(pop)
 
 #include "ui-win/controls/Base.h"
-#include "Converters/Converterer.h"
+#include "converters/ConverterToMax.h"
 #include "ui-win/controls/Edit.h"
 #include "common/Logger.h"
 
@@ -59,15 +59,15 @@ namespace win {
         void InitDlg(HWND hWnd);
         void DestroyDlg(HWND hWnd);
 
-        win::Base mLblVersion;
+        ctrl::Base mLblVersion;
 
-        win::Base mBtnCheckUpdate;
-        win::Base mBtnDonate;
-        win::Base mBtnOk;
-        win::Base mBtnCancel;
-        win::Base mBtnAbout;;
-        win::Edit mEdtLog;
-        win::Base mDlgMain;
+        ctrl::Base mBtnCheckUpdate;
+        ctrl::Base mBtnDonate;
+        ctrl::Base mBtnOk;
+        ctrl::Base mBtnCancel;
+        ctrl::Base mBtnAbout;;
+        ctrl::Edit mEdtLog;
+        ctrl::Base mDlgMain;
 
         //-------------------------------------------------------------------------
 
@@ -84,7 +84,7 @@ namespace win {
         int startImport();
         void finish(bool falied);
 
-        Converterer mConverterer;
+        ConverterToMax mConverterer;
         TimeValue mTime = 0;
         std::string mLogText;
 

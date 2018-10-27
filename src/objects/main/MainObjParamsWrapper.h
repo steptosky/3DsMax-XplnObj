@@ -37,7 +37,7 @@
 #include <xpln/obj/attributes/AttrBlend.h>
 #include <xpln/obj/attributes/AttrLayerGroup.h>
 #include <xpln/obj/attributes/AttrDrapedLayerGroup.h>
-#include <xpln/obj/attributes/AttrLodDrap.h>
+#include <xpln/obj/attributes/AttrDrapedLod.h>
 #include <xpln/obj/attributes/AttrSlungLoadWeight.h>
 #include <xpln/obj/attributes/AttrSpecular.h>
 #include <xpln/obj/attributes/AttrTint.h>
@@ -135,7 +135,7 @@ public:
     void setBlend(const xobj::AttrBlend & attr);
     void setLayerGroup(const xobj::AttrLayerGroup & attr);
     void setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup & attr);
-    void setLodDrap(const xobj::AttrLodDrap & attr);
+    void setLodDrap(const xobj::AttrDrapedLod & attr);
     void setSlungWeight(const xobj::AttrSlungLoadWeight & attr);
     void setSpecular(const xobj::AttrSpecular & attr);
     void setTint(const xobj::AttrTint & attr);
@@ -146,7 +146,7 @@ public:
     xobj::AttrBlend blend();
     xobj::AttrLayerGroup layerGroup();
     xobj::AttrDrapedLayerGroup drapedLayerGroup();
-    xobj::AttrLodDrap lodDrap();
+    xobj::AttrDrapedLod lodDrap();
     xobj::AttrSlungLoadWeight slungWeight();
     xobj::AttrSpecular specular();
     xobj::AttrTint tint();

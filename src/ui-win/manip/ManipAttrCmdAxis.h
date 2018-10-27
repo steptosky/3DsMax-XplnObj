@@ -75,19 +75,19 @@ namespace win {
         MdManip * mModelData;
         xobj::AttrManipCmdAxis mData;
 
-        win::Base mHwnd;
+        ctrl::Base mHwnd;
 
         ISpinnerControl * mSpnX = nullptr;
         ISpinnerControl * mSpnY = nullptr;
         ISpinnerControl * mSpnZ = nullptr;
 
-        win::Base cBtnCmdNeg;
+        ctrl::Base cBtnCmdNeg;
         ICustEdit * cEdtCmdNeg = nullptr;
-        win::Base cBtnCmdPos;
+        ctrl::Base cBtnCmdPos;
         ICustEdit * cEdtCmdPos = nullptr;
 
         ICustEdit * cEdtToolType = nullptr;
-        win::Combo cCmbCursor;
+        ctrl::Combo cCmbCursor;
     };
 
     /********************************************************************************************************/

@@ -61,10 +61,10 @@ namespace win {
 
         void showData();
 
-        win::Base cBtnOk;
-        win::Base mEditInfo;
-        win::Base mLstObjects;
-        win::Base mMainWin;
+        ctrl::Base cBtnOk;
+        ctrl::Base mEditInfo;
+        ctrl::Base mLstObjects;
+        ctrl::Base mMainWin;
         const std::vector<INode *> * mData = nullptr;
         HWND mParent;
 

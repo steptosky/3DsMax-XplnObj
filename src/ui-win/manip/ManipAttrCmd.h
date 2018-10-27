@@ -75,11 +75,11 @@ namespace win {
         MdManip * mModelData;
         xobj::AttrManipCmd mData;
 
-        win::Base mHwnd;
-        win::Base cBtnCommand;
+        ctrl::Base mHwnd;
+        ctrl::Base cBtnCommand;
         ICustEdit * cEdtCommand = nullptr;
         ICustEdit * cEdtToolType = nullptr;
-        win::Combo cCmbCursor;
+        ctrl::Combo cCmbCursor;
     };
 
     /********************************************************************************************************/

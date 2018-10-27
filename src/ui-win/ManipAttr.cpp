@@ -59,7 +59,7 @@ namespace win {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     /**************************************************************************************************/
 
-    INT_PTR ManipAttr::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
+    INT_PTR CALLBACK ManipAttr::panelProc(HWND /*hWnd*/, UINT msg, WPARAM wParam, LPARAM /*lParam*/) {
         switch (msg) {
             case WM_COMMAND: {
                 switch (LOWORD(wParam)) {
@@ -192,7 +192,7 @@ namespace win {
 
     void ManipAttr::create() {
         createRollup(ROLL_MANIP_MAIN, _T("X Manipulator"), this);
-        mOriginRollupSize = win::Base(hwnd()).size();
+        mOriginRollupSize = ctrl::Base(hwnd()).size();
         disableControls();
         registerCallbacks();
     }

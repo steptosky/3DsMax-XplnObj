@@ -49,7 +49,7 @@ void MdLinks::openPluginBinary() {
 
 void MdLinks::openDocBinary() {
     ShellExecute(nullptr, _T("open"),
-                 _T("https://github.com/steptosky/3DsMax-XplnObj-Doc/releases"),
+                 _T("https://3dsmax-xplnobj.readthedocs.io"),
                  nullptr, nullptr, SW_SHOWNORMAL);
 }
 

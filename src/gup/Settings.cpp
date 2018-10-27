@@ -29,7 +29,7 @@
 
 #include "Settings.h"
 #include "Info.h"
-#include "common/NodeVisitor.h"
+#include "common/NodeUtils.h"
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
@@ -41,7 +41,7 @@ bool Settings::isSavedAsXplnScene() const {
 
 void Settings::prepareDataForSave() {
     setSceneVersion(pluginVersion());
-    setValue("xpln_scene", NodeVisitor::sceneContainsMainObj());
+    setValue("xpln_scene", NodeUtils::isSceneContainMainObj());
 }
 
 void Settings::setSceneVersion(const sts::semver::SemVersion & version) {

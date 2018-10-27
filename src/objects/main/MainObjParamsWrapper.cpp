@@ -815,7 +815,7 @@ xobj::AttrDrapedLayerGroup MainObjParamsWrapper::drapedLayerGroup() {
     return out;
 }
 
-xobj::AttrLodDrap MainObjParamsWrapper::lodDrap() {
+xobj::AttrDrapedLod MainObjParamsWrapper::lodDrap() {
     float dist = 0;
     BOOL enabled = TRUE;
     if (mPbAttr) {
@@ -828,9 +828,9 @@ xobj::AttrLodDrap MainObjParamsWrapper::lodDrap() {
     }
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
-        return xobj::AttrLodDrap();
+        return xobj::AttrDrapedLod();
     }
-    xobj::AttrLodDrap out(dist);
+    xobj::AttrDrapedLod out(dist);
     out.setEnabled(enabled == TRUE);
     return out;
 }
@@ -1080,7 +1080,7 @@ void MainObjParamsWrapper::setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup 
     }
 }
 
-void MainObjParamsWrapper::setLodDrap(const xobj::AttrLodDrap & attr) {
+void MainObjParamsWrapper::setLodDrap(const xobj::AttrDrapedLod & attr) {
     if (mPbAttr) {
         if (!mPbAttr->SetValue(MainObjAttr_LodDrapEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LodDrapEnable);

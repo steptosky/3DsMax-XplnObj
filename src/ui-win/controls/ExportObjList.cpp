@@ -38,27 +38,15 @@
 #include <winuser.h>
 
 namespace ui {
-namespace win {
-
-    /**************************************************************************************************/
-    /////////////////////////////////////////* Static area *////////////////////////////////////////////
-    /**************************************************************************************************/
-
-    /**************************************************************************************************/
-    ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-    /**************************************************************************************************/
-
-    ExportObjList::ExportObjList() { }
-
-    ExportObjList::~ExportObjList() { }
+namespace ctrl {
 
     /**************************************************************************************************/
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    bool ExportObjList::setup(HWND inParent, int inControlID) {
-        DbgAssert(inParent);
-        bool res = Base::setup(inParent, inControlID);
+    bool ExportObjList::setup(const HWND parent, const int controlId) {
+        DbgAssert(parent);
+        const auto res = Base::setup(parent, controlId);
         if (!res) {
             return res;
         }
@@ -66,8 +54,8 @@ namespace win {
         return false;
     }
 
-    void ExportObjList::setup(HWND inParent) {
-        Base::setup(inParent);
+    void ExportObjList::setup(const HWND hwnd) {
+        Base::setup(hwnd);
         setup();
     }
 
@@ -75,14 +63,14 @@ namespace win {
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void ExportObjList::checkAll(bool state) {
+    void ExportObjList::checkAll(const bool state) {
         assert(hwnd());
         for (int nItem = 0; nItem < ListView_GetItemCount(hwnd()); nItem++) {
             checkItem(nItem, state);
         }
     }
 
-    void ExportObjList::checkItem(int idx, bool state) {
+    void ExportObjList::checkItem(const int idx, const bool state) {
         assert(hwnd());
         ListView_SetCheckState(hwnd(), idx, state);
     }
@@ -91,14 +79,14 @@ namespace win {
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    int ExportObjList::addItem(const String & inName) {
+    int ExportObjList::addItem(const String & name) {
         assert(hwnd());
         LVITEM lvi = {0};
         lvi.iItem = mLastFreeId;
 
         // Insert the item itself
         // Since we're always inserting item 0, new items will appear on top
-        int idx = ListView_InsertItem(hwnd(), &lvi);
+        const int idx = ListView_InsertItem(hwnd(), &lvi);
         if (idx == -1) {
             return idx;
         }
@@ -108,15 +96,15 @@ namespace win {
         lvi.mask = LVIF_TEXT;
         lvi.iSubItem = 1;
 
-        size_t length = inName.length() + 1;
+        const std::size_t length = name.length() + 1;
         lvi.pszText = new TCHAR[length];
-        _tcscpy_s(lvi.pszText, length, inName.c_str());
+        _tcscpy_s(lvi.pszText, length, name.c_str());
 
         ListView_SetItem(hwnd(), &lvi);
         return mLastFreeId - 1;
     }
 
-    bool ExportObjList::isChecked(int idx) {
+    bool ExportObjList::isChecked(const int idx) {
         assert(hwnd());
         if (idx == -1) {
             return false;
@@ -162,7 +150,7 @@ namespace win {
     //////////////////////////////////////////* Functions */////////////////////////////////////////////
     /**************************************************************************************************/
 
-    LRESULT ExportObjList::subClassProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam,
+    LRESULT ExportObjList::subClassProc(const HWND hWnd, const UINT uMsg, const WPARAM wParam, const LPARAM lParam,
                                         UINT_PTR /*uIdSubclass*/, DWORD_PTR /*dwRefData*/) {
         //ExportObjList * control = reinterpret_cast<ExportObjList*>(dwRefData);
         switch (uMsg) {
@@ -210,7 +198,7 @@ namespace win {
 
     // Items background
     LRESULT ExportObjList::drawItems(LPARAM lParam, ExportObjList * data) {
-        LPNMLVCUSTOMDRAW lplvcd = reinterpret_cast<LPNMLVCUSTOMDRAW>(lParam);
+        const auto lplvcd = reinterpret_cast<LPNMLVCUSTOMDRAW>(lParam);
         switch (lplvcd->nmcd.dwDrawStage) {
             case CDDS_PREPAINT: return CDRF_NOTIFYITEMDRAW;
             case CDDS_ITEMPREPAINT: return CDRF_NOTIFYSUBITEMDRAW;
@@ -228,7 +216,7 @@ namespace win {
 
     LRESULT ExportObjList::draw(LPARAM lParam) {
         LPNMCUSTOMDRAW item = reinterpret_cast<LPNMCUSTOMDRAW>(lParam);
-        HWND parentWin = parent();
+        const auto parentWin = parent();
         DbgAssert(parentWin);
 
         // Background
@@ -238,7 +226,7 @@ namespace win {
         if (parentWin) {
             // Items background
             SetWindowLongPtr(parentWin, DWLP_MSGRESULT,
-                             static_cast<LONG>(ExportObjList::drawItems(lParam, this)));
+                             static_cast<LONG>(drawItems(lParam, this)));
         }
         return TRUE;
     }

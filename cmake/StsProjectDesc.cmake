@@ -87,7 +87,7 @@ set(ProjectId ${ProjectName})
 # Set it to ON if you are in unstable branch otherwise set it to OFF
 set(ProjectVersionSnapshot OFF)
 set(ProjectVersionMajor 2)
-set(ProjectVersionMinor 4)
+set(ProjectVersionMinor 5)
 set(ProjectVersionPatch 0)
 set(ProjectVersion "${ProjectVersionMajor}.${ProjectVersionMinor}.${ProjectVersionPatch}")
 

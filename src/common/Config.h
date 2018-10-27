@@ -29,9 +29,13 @@
 
 #pragma once
 
+#pragma warning(push, 0)
+#include <Path.h>
+#pragma warning(pop)
+
+#include <sts/signals/Signal.h>
 #include "additional/utils/Single.h"
 #include "additional/utils/Settings.h"
-#include "additional/utils/BaseLogger.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,37 +47,39 @@
 class Config : public sts::Settings, public sts::Single<Config> {
 public:
 
-    bool load() {
-        try {
-            loadFile(mConfigFile);
-            return true;
-        }
-        catch (const std::exception & e) {
-            LError << e.what();
-            return false;
-        }
-    }
-
-    bool save() const {
-        try {
-            saveFile(mConfigFile);
-            return true;
-        }
-        catch (const std::exception & e) {
-            LError << e.what();
-            return false;
-        }
-    }
-
     Config();
+    virtual ~Config();
 
-    virtual ~Config() {
-        save();
-    }
+    //-------------------------------------------------------------------------
+
+    /*!
+     * \details Is emit when the sim folder is changed.
+     * \details [this, old, new]
+     */
+    sts::signals::Signal<Config&, const MaxSDK::Util::Path&, const MaxSDK::Util::Path&> sigSimDirChanged;
+
+    //-------------------------------------------------------------------------
+
+    void setSimDir(const MaxSDK::Util::Path & dir);
+
+    MaxSDK::Util::Path simDir();
+    MaxSDK::Util::Path simDatarefsFile();
+    MaxSDK::Util::Path simCommandsFile();
+
+    MaxSDK::Util::Path projectDatarefsFile();
+    MaxSDK::Util::Path projectCommandsFile();
+
+    //-------------------------------------------------------------------------
+
+    bool load();
+    bool save() const;
+
+    //-------------------------------------------------------------------------
 
 private:
 
-    std::string mConfigFile;
+    MaxSDK::Util::Path mSimDir;
+    MaxSDK::Util::Path mConfigFile;
 
 };
 

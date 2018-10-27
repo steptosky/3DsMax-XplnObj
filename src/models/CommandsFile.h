@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 **  Copyright(C) 2017, StepToSky
 **
@@ -27,76 +29,77 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
+#pragma warning(push, 0)
+#include <Path.h>
+#pragma warning(pop)
 
-#include <vector>
+#include <memory>
+#include <xpln/utils/CommandsFile.h>
 
-namespace xobj {
-class ObjAbstract;
-class ObjMain;
-class Transform;
-}
-
-class MainObjParamsWrapper;
-
-class INode;
-class Interface;
-class Matrix3;
-class StdMat;
-class RawExpOption;
-class Log;
-
-class ConverterMesh;
-class ConverterLine;
-class ConverterDummy;
-class ConverterLight;
-class ConverterAttr;
-class ConverterAnim;
-
-class ExportParams;
-class ImportParams;
+namespace md {
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-class Converterer {
+class CommandsFile {
 public:
 
-    bool toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMain);
-    static bool toMax(xobj::ObjMain & xObjMain);
+    //-------------------------------------------------------------------------
 
-    Converterer();
-    ~Converterer();
+    typedef std::shared_ptr<CommandsFile> Ptr;
+    typedef xobj::Command data_type;
+
+    //-------------------------------------------------------------------------
+
+    CommandsFile() = default;
+    CommandsFile(const CommandsFile &) = default;
+    CommandsFile(CommandsFile &&) = default;
+
+    virtual ~CommandsFile() = default;
+
+    CommandsFile & operator=(const CommandsFile &) = default;
+    CommandsFile & operator=(CommandsFile &&) = default;
+
+    //-------------------------------------------------------------------------
+
+    MaxSDK::Util::Path mFilePath;
+    MStr mDisplayName;
+    bool mIsEditable = false;
+    bool mUsesId = false;
+    bool mIsForProject = false;
+
+    std::vector<xobj::Command> mData;
+
+    //-------------------------------------------------------------------------
+
+    std::optional<std::size_t> indexOfKey(const std::string & key);
+    std::optional<std::size_t> indexOfId(std::uint64_t id);
+
+    std::uint64_t generateId();
+
+    //-------------------------------------------------------------------------
+
+    bool loadData(const MaxSDK::Util::Path & filePath);
+    bool loadSimData(const MaxSDK::Util::Path & filePath);
+    bool loadProjectData(const MaxSDK::Util::Path & filePath);
+
+    bool saveData(const MaxSDK::Util::Path & filePath);
+
+    //-------------------------------------------------------------------------
+
+    void sortData();
+
+    //-------------------------------------------------------------------------
+
 private:
 
-    //-------------------------------------------------------------------------
-
-    static bool processXTransformHierarchy(INode * parent, xobj::Transform * xTransform, const ImportParams & params);
-    static void processXTransformObjects(INode * parent, xobj::Transform * xTransform, const ImportParams & params);
-    static INode * processXObjects(const xobj::ObjAbstract & xObj, const ImportParams & params);
-
-    //-------------------------------------------------------------------------
-
-    bool processNode(INode * node, xobj::Transform * xTransform, const ExportParams & params) const;
-
-    typedef std::vector<xobj::ObjAbstract*> ObjAbstractList;
-    void toXpln(INode * inxNode, const Matrix3 & baseTm,
-                ObjAbstractList & outList, const ExportParams & params) const;
-
-    static bool collectLods(INode * ownerNode, INode * currNode, std::vector<INode*> & outLods);
-
-    //-------------------------------------------------------------------------
-
-    MainObjParamsWrapper * mMainObj;
-    xobj::ObjMain * mXObjMain;
-    Interface * mIp;
-    std::vector<INode *> mLods;
-
-    //-------------------------------------------------------------------------
+    bool loadFile();
+    std::uint64_t mGeneratorVal = 0;
 
 };
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
+}

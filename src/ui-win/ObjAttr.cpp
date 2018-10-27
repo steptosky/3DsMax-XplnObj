@@ -29,11 +29,11 @@
 
 #include "ObjAttr.h"
 #include "models/MdObjAttr.h"
-#include "UiUtilities.h"
+#include "Utils.h"
 #include "resource/resource.h"
 #include "common/Config.h"
 #include "resource/ResHelper.h"
-#include "Factory.h"
+#include "presenters/Datarefs.h"
 
 namespace ui {
 namespace win {
@@ -47,7 +47,10 @@ namespace win {
             case WM_COMMAND: {
                 switch (LOWORD(wParam)) {
                     case BTN_LIGHTLEVEL_DRF: {
-                        Factory::showNotImplemented();;
+                        MSTR str;
+                        Utils::getText(cEdtLightLevelDrf, str);
+                        cEdtLightLevelDrf->SetText(presenters::Datarefs::selectData(str));
+                        dropFromUiLightLevel();
                         break;
                     }
                     case CMB_COCKPIT: {
@@ -558,7 +561,7 @@ namespace win {
     void ObjAttr::dropFromUiLightLevel() {
         xobj::AttrLightLevel attr(cSpnLightLevelVal1->GetFVal(),
                                   cSpnLightLevelVal2->GetFVal(),
-                                  sts::toMbString(UiUtilities::getText(cEdtLightLevelDrf)));
+                                  sts::toMbString(Utils::getText(cEdtLightLevelDrf)));
         attr.setEnabled(cChkLightLevel.isChecked());
         mData.setLightLevel(attr);
         mMdData->saveToNode(mData);
@@ -566,7 +569,7 @@ namespace win {
 
     void ObjAttr::loadToUiLightLevel() {
         cChkLightLevel.setState(mData.lightLevel());
-        UiUtilities::setText(cEdtLightLevelDrf, sts::toString(mData.lightLevel().dataref()));
+        Utils::setText(cEdtLightLevelDrf, sts::toString(mData.lightLevel().dataref()));
         cSpnLightLevelVal1->SetValue(mData.lightLevel().val1(), FALSE);
         cSpnLightLevelVal2->SetValue(mData.lightLevel().val2(), FALSE);
     }
