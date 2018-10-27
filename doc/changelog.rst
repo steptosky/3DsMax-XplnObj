@@ -2,15 +2,16 @@
 Change-log
 ===============================================================================
 
-Next
+2.5.0-beta (27.10.2018)
 -------------------------
-- Added: DataRefs/Commands selector. I.e. buttons ``drf:`` and ``cmd:`` are implemented now. Read plug-in's help for more information.
+- Added: Dialog DataRefs/Commands selector. I.e. buttons ``drf:`` and ``cmd:`` are implemented now.
 - Added: Settings window. Use menu ``X-Plane->Settings`` for accessing it.
 - Added: Ability to use tool-tip for ``ATTR_manip_noop``.
 - Added: Ability to use text variables in the param light's parameters string.
 - Updated: Link to the help. It is on-line now.
-- Updated: Named and param light name list. Full list you can find here ``X-Plane Root/Resources/bitmaps/world/lites/lights.txt``
-
+- Updated: Embedded named and param lights' names lists. Full list you can find here ``X-Plane-root/Resources/bitmaps/world/lites/lights.txt``
+- Fixed: Sorting algorithm for LODs. `#9 <https://github.com/steptosky/3DsMax-XplnObj/issues/9>`_
+- Fixed: Fixed bug for attribute printing:  ``AttrShiny`` ``AttrBlend``. Default/disabled values were not printed when those attributes were enabled and then disabled.
 
 2.4.0-beta (12.09.2018)
 -------------------------

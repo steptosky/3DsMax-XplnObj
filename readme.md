@@ -1,4 +1,4 @@
-# The X-Plane .obj exporter for the 3DsMax.
+# The X-Plane .obj exporter for the 3Ds Max.
 - The plug-in is distributed under [BSD (3-Clause)](http://opensource.org/licenses/BSD-3-Clause) license.
   For more information read the [license](license.txt) file.
 - The X-Plane [official website](http://www.x-plane.com/).
