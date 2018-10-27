@@ -75,6 +75,18 @@ inline MSTR toMStr(const std::string & str) {
 #endif
 }
 
+/*! 
+ * \details temporary solution until whole code uses corrected string 
+ * \todo
+ */
+inline MSTR toMStr(const std::wstring & str) {
+#ifdef UNICODE
+    return MSTR::FromUTF16(str.data(), str.length());
+#else
+    return MSTR(sts::toMbString(str).c_str());
+#endif
+}
+
 inline std::string fromMStr(const CStr & str) {
     return std::string(str.data(), str.Length());
 }

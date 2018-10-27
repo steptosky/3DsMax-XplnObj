@@ -247,8 +247,8 @@ namespace win {
     void ManipAttrToggle::toWindow() {
         mSpnOn->SetValue(mData.on(), FALSE);
         mSpnOff->SetValue(mData.off(), FALSE);
-        Utils::setText(cEdtDataRef, sts::toString(mData.dataref()));
-        Utils::setText(cEdtToolType, sts::toString(mData.toolTip()));
+        cEdtDataRef->SetText(xobj::toMStr(mData.dataref()));
+        cEdtToolType->SetText(xobj::toMStr(mData.toolTip()));
         cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
     }
 

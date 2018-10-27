@@ -42,32 +42,7 @@ namespace win {
     public:
 
         //-------------------------------------------------------------------------
-
-        /*!
-         * \deprecated Actually all code should use native 
-         *             3Ds Max strings where it is possible.
-         */
-        static void setText(ICustEdit * inCtr, const sts::Str & inText);
-
-        /*!
-         * \deprecated Actually all code should use native
-         *             3Ds Max strings where it is possible.
-         */
-        static void getText(ICustEdit * inCtr, sts::Str & inText, int size);
-
-        /*!
-         * \deprecated Actually all code should use native
-         *             3Ds Max strings where it is possible.
-         */
-        static void getText(ICustEdit * inCtr, sts::Str & inText);
-
-        /*!
-         * \deprecated Actually all code should use native
-         *             3Ds Max strings where it is possible.
-         */
-        static sts::Str getText(ICustEdit * inCtr);
-
-        //-------------------------------------------------------------------------
+        /// @ {
 
         /*!
          * \details In some 3Ds Max version this method isn't 
@@ -81,8 +56,26 @@ namespace win {
          * \param [in] bufSize it is ignored for 3Ds Max greater than 2008.
          *                     See ICustEdit::GetText(MCHAR *text, int ct)
          */
-        static void getText(ICustEdit * inCtr, MStr & str, int bufSize = 512);
+        static void getText(ICustEdit * inCtr, MStr & str, unsigned bufSize = 512);
 
+        /*!
+         * \details In some 3Ds Max version this method isn't 
+         *          implemented for ICustEdit.
+         *          So this wrapper must be used if the plug-in 
+         *          supports 3Ds Max version lower than 
+         *          3Ds Max 2009
+         *          
+         * \param [in] inCtr
+         * \param [in] bufSize it is ignored for 3Ds Max greater than 2008.
+         *                     See ICustEdit::GetText(MCHAR *text, int ct)
+         */
+        static MStr getText(ICustEdit * inCtr, const unsigned bufSize = 512) {
+            MStr out;
+            getText(inCtr, out, bufSize);
+            return out;
+        }
+
+        /// @}
         //-------------------------------------------------------------------------
 
     };

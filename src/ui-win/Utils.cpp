@@ -36,50 +36,14 @@ namespace win {
     //////////////////////////////////////////* Functions */////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void Utils::setText(ICustEdit * inCtr, const sts::Str & inText) {
-        auto * txt = new MCHAR[inText.size() + 1];
-
-#ifdef UNICODE
-        wcscpy(txt, inText.c_str());
-#else
-        strcpy(txt, inText.c_str());
-#endif // UNICODE
-
-        inCtr->SetText(txt);
-        delete[] txt;
-    }
-
-    void Utils::getText(ICustEdit * inCtr, sts::Str & inText) {
-        MCHAR txt[512];
-        inCtr->GetText(txt, 512);
-        inText = sts::toString(txt);
-    }
-
-    void Utils::getText(ICustEdit * inCtr, sts::Str & inText, const int size) {
-        auto * txt = new MCHAR[size];
-        inCtr->GetText(txt, size);
-        inText = sts::toString(*txt);
-        delete[] txt;
-    }
-
-    sts::Str Utils::getText(ICustEdit * inCtr) {
-        MCHAR txt[512] = {0};
-        inCtr->GetText(txt, 512);
-        return sts::toString(txt);
-    }
-
-    /**************************************************************************************************/
-    //////////////////////////////////////////* Functions */////////////////////////////////////////////
-    /**************************************************************************************************/
-
 #if MAX_VERSION_MAJOR > 10 // 2008
-    void Utils::getText(ICustEdit * inCtr, MStr & str, const int) {
+    void Utils::getText(ICustEdit * inCtr, MStr & str, const unsigned) {
         inCtr->GetText(str);
     }
 #else
-    void Utils::getText(ICustEdit * inCtr, MStr & str, const int bufSize) {
+    void Utils::getText(ICustEdit * inCtr, MStr & str, const unsigned bufSize) {
         str.Resize(bufSize);
-        inCtr->GetText(str.data(), bufSize);
+        inCtr->GetText(str.data(), static_cast<int>(bufSize));
     }
 #endif
 
