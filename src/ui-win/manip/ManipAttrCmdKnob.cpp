@@ -226,9 +226,9 @@ namespace win {
     }
 
     void ManipAttrCmdKnob::toWindow() {
-        Utils::setText(cEdtCmdNeg, sts::toString(mData.cmdNegative()));
-        Utils::setText(cEdtCmdPos, sts::toString(mData.cmdPositive()));
-        Utils::setText(cEdtToolType, sts::toString(mData.toolTip()));
+        cEdtCmdPos->SetText(xobj::toMStr(mData.cmdPositive()));
+        cEdtCmdNeg->SetText(xobj::toMStr(mData.cmdNegative()));
+        cEdtToolType->SetText(xobj::toMStr(mData.toolTip()));
         cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
     }
 

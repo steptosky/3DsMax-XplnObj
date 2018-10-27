@@ -277,14 +277,14 @@ namespace win {
         mSpnX->SetValue(mData.x(), FALSE);
         mSpnXMin->SetValue(mData.xMin(), FALSE);
         mSpnXMax->SetValue(mData.xMax(), FALSE);
-        Utils::setText(cEdtXDataRef, sts::toString(mData.xDataref()));
+        cEdtXDataRef->SetText(xobj::toMStr(mData.xDataref()));
 
         mSpnY->SetValue(mData.y(), FALSE);
         mSpnYMin->SetValue(mData.yMin(), FALSE);
         mSpnYMax->SetValue(mData.yMax(), FALSE);
-        Utils::setText(cEdtYDataRef, sts::toString(mData.yDataref()));
+        cEdtYDataRef->SetText(xobj::toMStr(mData.yDataref()));
 
-        Utils::setText(cEdtToolType, sts::toString(mData.toolTip()));
+        cEdtToolType->SetText(xobj::toMStr(mData.toolTip()));
         cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
     }
 

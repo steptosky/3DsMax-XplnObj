@@ -569,7 +569,7 @@ namespace win {
 
     void ObjAttr::loadToUiLightLevel() {
         cChkLightLevel.setState(mData.lightLevel());
-        Utils::setText(cEdtLightLevelDrf, sts::toString(mData.lightLevel().dataref()));
+        cEdtLightLevelDrf->SetText(xobj::toMStr(mData.lightLevel().dataref()));
         cSpnLightLevelVal1->SetValue(mData.lightLevel().val1(), FALSE);
         cSpnLightLevelVal2->SetValue(mData.lightLevel().val2(), FALSE);
     }
