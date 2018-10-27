@@ -101,7 +101,9 @@ inline std::string fromMStr(const WStr & str) {
 #endif
 }
 
-//-------------------------------------------------------------------------
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
 inline Path fromMPath(const MaxSDK::Util::Path & path) {
 #ifdef UNICODE
@@ -111,68 +113,7 @@ inline Path fromMPath(const MaxSDK::Util::Path & path) {
     return Path(sts::toWString(fromMStr(path.GetString())));
 #endif
 }
-
 }
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-#if MAX_VERSION_MAJOR > 14
-
-/*!
- * \deprecated use xobj::toMStr
- */
-inline TSTR toTSTR(TSTR str) { return str; }
-
-/*!
- * \deprecated use xobj::toMStr
- */
-inline TSTR toTSTR(const char * str) { return sts::toWString(str).c_str(); }
-
-/*!
- * \deprecated use xobj::toMStr
- */
-inline TSTR toTSTR(const wchar_t * str) { return sts::toWString(str).c_str(); }
-
-/*!
- * \deprecated use xobj::toMStr
- */
-inline TSTR toTSTR(std::string & str) { return sts::toWString(str).c_str(); }
-
-/*!
- * \deprecated use xobj::toMStr
- */
-inline TSTR toTSTR(std::wstring & str) { return sts::toWString(str).c_str(); }
-
-#else
-
-/*!
- * \deprecated use xobj::toMStr
- */
-inline TSTR toTSTR(TSTR str) { return str; }
-
-/*!
- * \deprecated use xobj::toMStr
- */
-inline TSTR toTSTR(const char * str) { return sts::toMbString(str).c_str(); }
-
-/*!
- * \deprecated use xobj::toMStr
- */
-inline TSTR toTSTR(const wchar_t * str) { return sts::toMbString(str).c_str(); }
-
-/*!
- * \deprecated use xobj::toMStr
- */
-inline TSTR toTSTR(std::string & str) { return sts::toMbString(str).c_str(); }
-
-/*!
- * \deprecated use xobj::toMStr
- */
-inline TSTR toTSTR(std::wstring & str) { return sts::toMbString(str).c_str(); }
-
-#endif
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
