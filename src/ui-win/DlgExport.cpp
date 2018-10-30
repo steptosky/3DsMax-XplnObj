@@ -332,11 +332,11 @@ namespace win {
 
     void DlgExport::saveLogRequest() {
         Interface8 * ip = GetCOREInterface8();
-        MSTR fileName;
+        MSTR fileName(_T("3DsMax-XplnObj-Log.txt"));
         MSTR initialDir(_T("C:\\Users\\%USERNAME%\\Documents"));
         FilterList extensionList;
-        extensionList.Append(_T("Log files(*.log)"));
-        extensionList.Append(_T("*.log"));
+        extensionList.Append(_T("Log files(*.txt)"));
+        extensionList.Append(_T("*.txt"));
         bool res = ip->DoMaxSaveAsDialog(GetCOREInterface()->GetMAXHWnd(), _T("Log saving"), fileName, initialDir, extensionList);
         if (res) {
             Logger::instance()->saveLog(fileName);
