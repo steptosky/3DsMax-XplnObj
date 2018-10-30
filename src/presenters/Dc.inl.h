@@ -249,8 +249,7 @@ void Dc<T>::slotKeyChanged(const typename IView::FilePtr & file, const MStr & ke
 
     const auto index = file->indexOfKey(xobj::fromMStr(key));
     if (!index) {
-        // This case can be when data was deleted from the data file.
-        mCurrKey = _T("ERROR_DATA_NOT_FOUND");
+        mCurrKey = key;
         return;
     }
     auto & data = file->mData[*index];
