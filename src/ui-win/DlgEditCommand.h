@@ -29,13 +29,10 @@
 
 #pragma once
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
-
-#include <optional>
 #include <xpln/utils/CommandsFile.h>
-#include "ui-win/controls/Base.h"
+#include "ui-win/controls-new/ModalDialog.h"
+#include "ui-win/controls-new/MaxEdit.h"
+#include "ui-win/controls-new/Button.h"
 
 namespace ui {
 namespace win {
@@ -55,25 +52,19 @@ namespace win {
 
         //-------------------------------------------------------------------------
 
-        static std::optional<xobj::Command> edit(const xobj::Command & dataref);
+        static std::optional<xobj::Command> edit(const xobj::Command & command);
 
         //-------------------------------------------------------------------------
 
     private:
 
-        std::optional<xobj::Command> create(const xobj::Command & dataref);
+        std::optional<xobj::Command> create(const xobj::Command & command);
 
-        void initDlg(HWND hWnd);
-        void destroyDlg(HWND hWnd);
-
-        void dataToUi();
-        void uiToData();
-
-        static INT_PTR callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-        ctrl::Base mDlgMain;
-        ICustEdit * mCtrlKey = nullptr;
-        ICustEdit * mCtrlDesc = nullptr;
+        wrapper::ModalDialog mDialog;
+        wrapper::Button mBtnOk;
+        wrapper::Button mBtnCancel;
+        wrapper::MaxEdit mEditKey;
+        wrapper::MaxEdit mEditDescription;
 
         xobj::Command mCommand;
 
