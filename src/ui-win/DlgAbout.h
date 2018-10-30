@@ -29,7 +29,9 @@
 
 #pragma once
 
-#include "ui-win/controls/Base.h"
+#include "ui-win/controls-new/ModalDialog.h"
+#include "ui-win/controls-new/Static.h"
+#include "ui-win/controls-new/Button.h"
 
 namespace ui {
 namespace win {
@@ -39,31 +41,33 @@ namespace win {
     /********************************************************************************************************/
 
     class DlgAbout {
-
-        DlgAbout();
-        ~DlgAbout();
-
     public:
 
+        //-------------------------------------------------------------------------
+
+        DlgAbout() = default;
+        DlgAbout(const DlgAbout &) = delete;
+        DlgAbout(DlgAbout &&) = delete;
+
+        virtual ~DlgAbout() = default;
+
+        DlgAbout & operator=(const DlgAbout &) = delete;
+        DlgAbout & operator=(DlgAbout &&) = delete;
+
+        //-------------------------------------------------------------------------
+
         static void show();
+
+        //-------------------------------------------------------------------------
 
     private:
 
         void open();
-        void InitDlg(HWND hWnd);
-        void DestroyDlg(HWND hWnd);
 
-        HWND mHWnd = nullptr;
-        ctrl::Base mLblThisAbout;
-        ctrl::Base mLblLibAbout;
-        ctrl::Base mBtnOk;
-        ctrl::Base mDlgMain;
-
-        //-------------------------------------------------------------------------
-
-        static INT_PTR CALLBACK callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-        //-------------------------------------------------------------------------
+        wrapper::Static mLblThisAbout;
+        wrapper::Static mLblLibAbout;
+        wrapper::Button mBtnOk;
+        wrapper::ModalDialog mDlgMain;
 
     };
 
