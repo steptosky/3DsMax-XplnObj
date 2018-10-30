@@ -29,10 +29,12 @@
 
 #pragma once
 
-#include "ui-win/controls/Base.h"
-#include "common/String.h"
-#include "controls/Combo.h"
-#include "controls/DcList.h"
+#include "ui-win/controls-new/ModalDialog.h"
+#include "ui-win/controls-new/Static.h"
+#include "ui-win/controls-new/Button.h"
+#include "ui-win/controls-new/ComboBox.h"
+#include "ui-win/controls-new/DcList.h"
+#include "ui-win/controls-new/MaxEdit.h"
 
 namespace ui {
 namespace win {
@@ -63,8 +65,7 @@ namespace win {
 
     private:
 
-        void initDlg(HWND hWnd);
-        void destroyDlg(HWND hWnd);
+        void initDlg(wrapper::ModalDialog & dialog);
 
         void fileChanged();
         void keyEntered();
@@ -77,16 +78,17 @@ namespace win {
 
         static const MCHAR * tittle();
 
-        static INT_PTR callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-        ctrl::Base mDlgMain;
-        ctrl::Base mCtrlLblCurrPath;
-        ctrl::Base mCtrlLblCurrPathType;
-        ctrl::Base mCtrlBtnNewData;
-        ctrl::Combo mCtrlComboFile;
-        ctrl::DcList mCtrlList;
-        ICustEdit * mCtrlKey = nullptr;
-        ICustEdit * mCtrlSearchKey = nullptr;
+        wrapper::ModalDialog mDialog;
+        wrapper::Static mLblCurrPath;
+        wrapper::Static mLblCurrPathType;
+        wrapper::Button mBtnNewData;
+        wrapper::Button mBtnOk;
+        wrapper::Button mBtnCancel;
+        wrapper::Button mBtnClearSearch;
+        wrapper::ComboBox mComboFile;
+        wrapper::DcList mListDc;
+        wrapper::MaxEdit mEditKey;
+        wrapper::MaxEdit mEditSearchKey;
 
         MStr mCurrKey;
         typename T::FilePtr mCurrFile;
