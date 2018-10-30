@@ -32,16 +32,14 @@
 #include <vector>
 #include <utility>
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
-
-#include "ui-win/controls/Base.h"
-#include "ui-win/controls/CheckBox.h"
-#include "ui-win/controls/Edit.h"
-#include "Converters/ConverterToXpln.h"
+#include "converters/ConverterToXpln.h"
 #include "common/Logger.h"
-#include "controls/ExportObjList.h"
+#include "ui-win/controls-new/ModalDialog.h"
+#include "ui-win/controls-new/ExportObjList.h"
+#include "ui-win/controls-new/Button.h"
+#include "ui-win/controls-new/EditBox.h"
+#include "ui-win/controls-new/CheckBox.h"
+#include "ui-win/controls-new/Static.h"
 
 namespace ui {
 namespace win {
@@ -53,33 +51,37 @@ namespace win {
     class DlgExport {
     public:
 
-        DlgExport();
-        ~DlgExport();
+        //-------------------------------------------------------------------------
+
+        DlgExport() = default;
+        ~DlgExport() = default;
+
+        //-------------------------------------------------------------------------
 
         bool show(const TCHAR * inFileName, Interface * inIp, bool suppressPrompts, bool selectedOnly);
 
+        //-------------------------------------------------------------------------
+
     private:
+
         typedef std::pair<INode *, int> NodeCollectionStruct;
         typedef std::vector<NodeCollectionStruct> NodeCollection;
 
-        HWND mHWnd = nullptr;;
-        void InitDlg(HWND hWnd);
-        void DestroyDlg(HWND hWnd);
+        void onInit();
 
-        ctrl::Base mLblVersion;
-
-        ctrl::Base mDlgMain;
-        ctrl::Base mBtnCheckUpdate;
-        ctrl::Base mBtnDonate;
-        ctrl::Base mBtnSaveLog;
-        ctrl::Base mBtnOk;
-        ctrl::Base mBtnCancel;
-        ctrl::Base mBtnAbout;;
-        ctrl::Base mBtnSelAll;
-        ctrl::Base mBtnUnSelAll;
-        ctrl::Edit mEdtLog;
-        ctrl::CheckBox mChkAutoExport;
-        ctrl::ExportObjList mLstObjects;
+        wrapper::ModalDialog mDlgMain;
+        wrapper::Static mLblVersion;
+        wrapper::Button mBtnCheckUpdate;
+        wrapper::Button mBtnDonate;
+        wrapper::Button mBtnSaveLog;
+        wrapper::Button mBtnOk;
+        wrapper::Button mBtnCancel;
+        wrapper::Button mBtnAbout;;
+        wrapper::Button mBtnSelAll;
+        wrapper::Button mBtnUnSelAll;
+        wrapper::EditBox mEdtLog;
+        wrapper::CheckBox mChkAutoExport;
+        wrapper::ExportObjList mLstObjects;
 
         //-------------------------------------------------------------------------
 
@@ -88,7 +90,6 @@ namespace win {
 
         //-------------------------------------------------------------------------
 
-        static INT_PTR CALLBACK callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
         static void logCallback(sts::BaseLogger::eType type, const char * msg);
 
         //-------------------------------------------------------------------------

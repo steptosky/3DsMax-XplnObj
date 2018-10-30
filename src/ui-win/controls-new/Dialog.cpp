@@ -1,7 +1,5 @@
-#pragma once
-
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2018, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -29,47 +27,33 @@
 **  Contacts: www.steptosky.com
 */
 
-#include <vector>
-#include "ui-win/controls-new/ModalDialog.h"
-#include "ui-win/controls-new/EditBox.h"
-#include "ui-win/controls-new/Button.h"
+#include <windows.h>
+#include "Dialog.h"
+#include "resource/ResHelper.h"
 
 namespace ui {
 namespace win {
+    namespace wrapper {
 
-    /********************************************************************************************************/
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /********************************************************************************************************/
+        /**************************************************************************************************/
+        //////////////////////////////////////////* Functions */////////////////////////////////////////////
+        /**************************************************************************************************/
 
-    class UpdatedObjects {
-    public:
+        bool Dialog::create(HWND parent, const int templateId) {
+            const auto hWnd = CreateDialogParam(ResHelper::hInstance, MAKEINTRESOURCE(templateId),
+                                                parent, Base::procedure,
+                                                reinterpret_cast<LPARAM>(this));
+            setHwnd(hWnd);
+            return hWnd != nullptr;
+        }
 
-        //-------------------------------------------------------------------------
+        void Dialog::destroy() {
+            DestroyWindow(hwnd());
+        }
 
-        UpdatedObjects() = default;
-        virtual ~UpdatedObjects() = default;
-
-        //-------------------------------------------------------------------------
-
-        bool show(const std::vector<INode *> * nodes, HWND parent);
-
-        //-------------------------------------------------------------------------
-
-    private:
-
-        void fillData();
-
-        wrapper::Button cBtnOk;
-        wrapper::EditBox mEditInfo;
-        wrapper::EditBox mLstObjects;
-        wrapper::ModalDialog mMainWin;
-
-        const std::vector<INode *> * mData = nullptr;
-
-    };
-
-    /********************************************************************************************************/
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /********************************************************************************************************/
+        /**************************************************************************************************/
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        /**************************************************************************************************/
+    }
 }
 }

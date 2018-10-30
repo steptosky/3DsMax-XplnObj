@@ -27,23 +27,21 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "DlgImport.h "
+#include "DlgImport.h"
+
 #pragma warning(push, 0)
-#include <max.h>
-#include <3dsmaxport.h>
 #include <IPathConfigMgr.h>
 #pragma warning(pop)
 
 #include <xpln/obj/ObjMain.h>
-#include "common/String.h"
 #include "resource/resource.h"
 #include "Info.h"
 #include "common/Logger.h"
-#include "DlgAbout.h"
-#include "converters/ConverterMain.h"
 #include "converters/ConverterUtils.h"
 #include "resource/ResHelper.h"
 #include "common/Config.h"
+#include "models/MdLinks.h"
+#include "Factory.h"
 
 namespace ui {
 namespace win {
@@ -74,87 +72,16 @@ namespace win {
                     gImportDlg->mLogText.append(sts::BaseLogger::typeAsString(type))
                               .append(": ").append(msg).append("\r\n");
                 }
-                gImportDlg->mEdtLog.setText(gImportDlg->mLogText);
+                gImportDlg->mEdtLog.setXObjText(gImportDlg->mLogText);
             }
         }
     }
-
-    /**************************************************************************************************/
-    //////////////////////////////////////////* Static area *///////////////////////////////////////////
-    /**************************************************************************************************/
-
-    INT_PTR CALLBACK DlgImport::callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-        DlgImport * theDlg;
-        if (message == WM_INITDIALOG) {
-            theDlg = reinterpret_cast<DlgImport*>(lParam);
-            theDlg->mDlgMain.setup(hWnd);
-            DLSetWindowLongPtr(hWnd, lParam);
-        }
-        else {
-            if ((theDlg = DLGetWindowLongPtr<DlgImport *>(hWnd)) == nullptr) {
-                return FALSE;
-            }
-            if (message == WM_DESTROY) {
-                theDlg->mDlgMain.release();
-            }
-        }
-
-        //------------------------------------------------------
-
-        switch (message) {
-            case WM_INITDIALOG:
-                theDlg->InitDlg(hWnd);
-                break;
-            case WM_COMMAND:
-                switch (LOWORD(wParam)) {
-                    case BTN_OK:
-                        if (!theDlg->mFinished) {
-                            theDlg->startImport();
-                        }
-                        else {
-                            EndDialog(hWnd, 1);
-                        }
-                        break;
-                    case BTN_CANCEL:
-                        EndDialog(hWnd, 0);
-                        break;
-                    case BTN_DONATE:
-                        ShellExecute(nullptr, _T("open"), _T("http://steptosky.com/index.php/software/8-x-obj-exporter"), nullptr, nullptr, SW_SHOWNORMAL);
-                        break;
-                    case BTN_CHECK_FOR_UPDATE:
-                        ShellExecute(nullptr, _T("open"), _T("http://steptosky.com/index.php/software/8-x-obj-exporter"), nullptr, nullptr, SW_SHOWNORMAL);
-                        break;
-                    case BTN_ABOUT:
-                        DlgAbout::show();
-                        break;
-                    default: break;
-                }
-                break;
-            case WM_DESTROY:
-                theDlg->DestroyDlg(hWnd);
-                break;
-            case WM_CLOSE:
-                EndDialog(hWnd, 0);
-                break;
-            default:
-                return FALSE;
-        }
-        return TRUE;
-    }
-
-    /**************************************************************************************************/
-    ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-    /**************************************************************************************************/
-
-    DlgImport::DlgImport() {}
-
-    DlgImport::~DlgImport() {}
 
     /**************************************************************************************************/
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    bool DlgImport::show(const TCHAR * inFileName, Interface * inIp, bool suppressPrompts) {
+    bool DlgImport::show(const TCHAR * inFileName, Interface * inIp, const bool suppressPrompts) {
         gImportDlg = this;
         mIp = inIp;
         mFileName = inFileName;
@@ -162,36 +89,30 @@ namespace win {
         mFinished = false;
         mErrorCount = 0;
         mWarningCount = 0;
-
-        INT_PTR res = DialogBoxParam(ResHelper::hInstance, MAKEINTRESOURCE(DLG_EXPORT), GetCOREInterface()->GetMAXHWnd(),
-                                     callBack, reinterpret_cast<LPARAM>(this));
+        //------------------------------
+        mLblVersion.setupChild(mDlgMain, LBL_VERSION);
+        mBtnCheckUpdate.setupChild(mDlgMain, BTN_CHECK_FOR_UPDATE);
+        mBtnOk.setupChild(mDlgMain, BTN_OK);
+        mBtnCancel.setupChild(mDlgMain, BTN_CANCEL);
+        mBtnAbout.setupChild(mDlgMain, BTN_ABOUT);
+        mBtnDonate.setupChild(mDlgMain, BTN_DONATE);
+        mEdtLog.setupChild(mDlgMain, USER_OUPUT);
+        //------------------------------
+        mBtnOk.onClick = [&](auto) { mFinished ? mDlgMain.destroy(1) : startImport(); };
+        mBtnCancel.onClick = [&](auto) { mDlgMain.destroy(0); };
+        mBtnCheckUpdate.onClick = [](auto) { MdLinks::openPluginBinary(); };
+        mBtnAbout.onClick = [](auto) { Factory::showAboutWindow(); };
+        mBtnDonate.onClick = [](auto) { MdLinks::openDonate(); };
+        //------------------------------
+        mDlgMain.onInit = [&](auto win) {
+            win->centerByParent();
+            win->setText(_T("X-Plane Obj Import"));
+            mLblVersion.setText(xobj::toMStr(sts::StrUtils::joinStr(_T(XIO_VERSION_STRING), _T("-"), _T(XIO_RELEASE_TYPE))));
+        };
+        //------------------------------
+        const auto res = mDlgMain.create(GetCOREInterface()->GetMAXHWnd(), DLG_EXPORT);
         gImportDlg = nullptr;
         return res != 0;
-    }
-
-    void DlgImport::InitDlg(HWND hWnd) {
-        CenterWindow(mDlgMain.hwnd(), mDlgMain.parent());
-        SetWindowTextA(hWnd, "X-Plane Obj Import");
-        mHWnd = hWnd;
-
-        mLblVersion.setup(hWnd, LBL_VERSION);
-        mBtnCheckUpdate.setup(hWnd, BTN_CHECK_FOR_UPDATE);
-        mBtnOk.setup(hWnd, BTN_OK);
-        mBtnCancel.setup(hWnd, BTN_CANCEL);
-        mBtnAbout.setup(hWnd, BTN_ABOUT);
-        mBtnDonate.setup(hWnd, BTN_DONATE);
-        mEdtLog.setup(hWnd, USER_OUPUT);
-        mDlgMain.show();
-        mLblVersion.setText(sts::StrUtils::joinStr(_T(XIO_VERSION_STRING), _T("-"), _T(XIO_RELEASE_TYPE)));
-    }
-
-    void DlgImport::DestroyDlg(HWND /*hWnd*/) {
-        mLblVersion.release();
-        mBtnCheckUpdate.release();
-        mBtnOk.release();
-        mBtnCancel.release();
-        mBtnAbout.release();
-        mBtnDonate.release();
     }
 
     /**************************************************************************************************/

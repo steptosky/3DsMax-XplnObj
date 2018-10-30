@@ -1,7 +1,5 @@
-#pragma once
-
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2018, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -29,47 +27,30 @@
 **  Contacts: www.steptosky.com
 */
 
-#include <vector>
-#include "ui-win/controls-new/ModalDialog.h"
-#include "ui-win/controls-new/EditBox.h"
-#include "ui-win/controls-new/Button.h"
+#include <windows.h>
+#include "Button.h"
 
 namespace ui {
 namespace win {
+    namespace wrapper {
 
-    /********************************************************************************************************/
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /********************************************************************************************************/
+        /**************************************************************************************************/
+        /////////////////////////////////////////* Static area *////////////////////////////////////////////
+        /**************************************************************************************************/
 
-    class UpdatedObjects {
-    public:
+        std::optional<INT_PTR> CALLBACK Button::procedure(const UINT message, const WPARAM wParam, const LPARAM) {
+            if (message == WM_COMMAND && LOWORD(wParam) == controlId()) {
+                if (onClick) {
+                    onClick(this);
+                }
+                return FALSE;
+            }
+            return std::nullopt;
+        }
 
-        //-------------------------------------------------------------------------
-
-        UpdatedObjects() = default;
-        virtual ~UpdatedObjects() = default;
-
-        //-------------------------------------------------------------------------
-
-        bool show(const std::vector<INode *> * nodes, HWND parent);
-
-        //-------------------------------------------------------------------------
-
-    private:
-
-        void fillData();
-
-        wrapper::Button cBtnOk;
-        wrapper::EditBox mEditInfo;
-        wrapper::EditBox mLstObjects;
-        wrapper::ModalDialog mMainWin;
-
-        const std::vector<INode *> * mData = nullptr;
-
-    };
-
-    /********************************************************************************************************/
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /********************************************************************************************************/
+        /**************************************************************************************************/
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        /**************************************************************************************************/
+    }
 }
 }

@@ -1,7 +1,5 @@
-#pragma once
-
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2018, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -29,47 +27,40 @@
 **  Contacts: www.steptosky.com
 */
 
-#include <vector>
-#include "ui-win/controls-new/ModalDialog.h"
-#include "ui-win/controls-new/EditBox.h"
-#include "ui-win/controls-new/Button.h"
+#include <windows.h>
+#include "MaxSpinner.h"
 
 namespace ui {
 namespace win {
+    namespace wrapper {
 
-    /********************************************************************************************************/
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /********************************************************************************************************/
+        /**************************************************************************************************/
+        /////////////////////////////////////////* Static area *////////////////////////////////////////////
+        /**************************************************************************************************/
 
-    class UpdatedObjects {
-    public:
+        std::optional<INT_PTR> CALLBACK MaxSpinner::procedure(const UINT, const WPARAM, const LPARAM) {
+            return std::nullopt;
+        }
 
-        //-------------------------------------------------------------------------
+        /**************************************************************************************************/
+        //////////////////////////////////////////* Functions */////////////////////////////////////////////
+        /**************************************************************************************************/
 
-        UpdatedObjects() = default;
-        virtual ~UpdatedObjects() = default;
+        void MaxSpinner::onParentInit(HWND) {
+            DbgAssert(mControl);
+            if (mControl) {
+                setHwnd(mControl->GetHwnd());
+            }
+            DbgAssert(hwnd());
+        }
 
-        //-------------------------------------------------------------------------
+        void MaxSpinner::onParentDestroy(HWND) {
+            ReleaseISpinner(mControl);
+        }
 
-        bool show(const std::vector<INode *> * nodes, HWND parent);
-
-        //-------------------------------------------------------------------------
-
-    private:
-
-        void fillData();
-
-        wrapper::Button cBtnOk;
-        wrapper::EditBox mEditInfo;
-        wrapper::EditBox mLstObjects;
-        wrapper::ModalDialog mMainWin;
-
-        const std::vector<INode *> * mData = nullptr;
-
-    };
-
-    /********************************************************************************************************/
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /********************************************************************************************************/
+        /**************************************************************************************************/
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        /**************************************************************************************************/
+    }
 }
 }

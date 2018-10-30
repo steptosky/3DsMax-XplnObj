@@ -29,7 +29,9 @@
 
 #pragma once
 
-#include "ui-win/controls/Base.h"
+#include "ui-win/controls-new/ModalDialog.h"
+#include "ui-win/controls-new/Static.h"
+#include "ui-win/controls-new/Button.h"
 
 namespace ui {
 namespace win {
@@ -48,21 +50,12 @@ namespace win {
     private:
 
         void open();
-        void initDlg(HWND hWnd);
-        void destroyDlg(HWND hWnd);
-
         void selectSimPath();
 
-        ctrl::Base mDlgMain;
-        ctrl::Base mLblSimPath;
-        ctrl::Base mBtnOk;
-        ctrl::Base mBtnSelectSimPath;
-
-        //-------------------------------------------------------------------------
-
-        static INT_PTR callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-        //-------------------------------------------------------------------------
+        wrapper::ModalDialog mDialog;
+        wrapper::Static mLblSimPath;
+        wrapper::Button mBtnOk;
+        wrapper::Button mBtnSelectSimPath;
 
     };
 
