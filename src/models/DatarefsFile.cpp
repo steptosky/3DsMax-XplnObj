@@ -34,6 +34,7 @@
 #include "DatarefsFile.h"
 #include <algorithm>
 #include <cctype>
+#include "gup/ObjCommon.h"
 
 namespace md {
 
@@ -86,8 +87,10 @@ bool DatarefsFile::loadSimData(const MaxSDK::Util::Path & filePath) {
 }
 
 bool DatarefsFile::loadProjectData(const MaxSDK::Util::Path & filePath) {
+    auto & settings = ObjCommon::instance()->pSettings;
+    mUsesId = settings.isUseDatarefsId();
+
     mIsEditable = true;
-    mUsesId = true;
     mIsForProject = true;
     mFilePath = filePath;
     mDisplayName = _T("[Project] DataRefs");

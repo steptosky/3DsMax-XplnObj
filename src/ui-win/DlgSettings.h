@@ -32,6 +32,7 @@
 #include "ui-win/controls-new/ModalDialog.h"
 #include "ui-win/controls-new/Static.h"
 #include "ui-win/controls-new/Button.h"
+#include "ui-win/controls-new/CheckBox.h"
 
 namespace ui {
 namespace win {
@@ -55,6 +56,8 @@ namespace win {
         wrapper::ModalDialog mDialog;
         wrapper::Static mLblSimPath;
         wrapper::Button mBtnOk;
+        wrapper::CheckBox mChkDatarefsId;
+        wrapper::CheckBox mChkCommandsId;
         wrapper::Button mBtnSelectSimPath;
 
     };

@@ -29,8 +29,9 @@
 
 #pragma once
 
-#include "additional/utils/Settings.h"
+#include <sts/signals/Signal.h>
 #include <sts/semver/SemVersion.h>
+#include "additional/utils/Settings.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,18 +39,39 @@
 
 /*!
  * \details Access to the settings which are stored with the GUP (ObjCommon) class.
- * \Note This settings are saved with the scene, so each scene has its own parameters.
+ * \Note This settings are saved with the scene, so each scene has its own values.
  */
 class Settings : public sts::Settings {
 public:
 
+    //-------------------------------------------------------------------------
+    /// @{
+
     Settings() = default;
+
+    /// @}
+    //-------------------------------------------------------------------------
+    /// @{
+
+    void setUseDatarefsId(bool state);
+    void setUseCommandsId(bool state);
+    bool isUseDatarefsId();
+    bool isUseCommandsId();
+
+    sts::signals::Signal<Settings*> onProjectSettingsChanged;
+
+    /// @}
+    //-------------------------------------------------------------------------
+    /// @{
 
     bool isSavedAsXplnScene() const;
     void prepareDataForSave();
     void setSceneVersion(const sts::semver::SemVersion & version);
     sts::semver::SemVersion sceneVersion() const;
     static sts::semver::SemVersion pluginVersion();
+
+    /// @}
+    //-------------------------------------------------------------------------
 
 };
 

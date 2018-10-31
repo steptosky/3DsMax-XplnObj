@@ -31,6 +31,46 @@
 #include "Info.h"
 #include "common/NodeUtils.h"
 
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
+
+#define SETTINGS_PROJECT "PROJECT"
+#define SETTINGS_PROJECT_USE_DATAREFS_ID "datarefsId"
+#define SETTINGS_PROJECT_USE_COMMANDS_ID "commandsId"
+
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+void Settings::setUseDatarefsId(const bool state) {
+    beginGroup(SETTINGS_PROJECT);
+    setValue(SETTINGS_PROJECT_USE_DATAREFS_ID, state);
+    endGroup();
+    onProjectSettingsChanged(this);
+}
+
+void Settings::setUseCommandsId(const bool state) {
+    beginGroup(SETTINGS_PROJECT);
+    setValue(SETTINGS_PROJECT_USE_COMMANDS_ID, state);
+    endGroup();
+    onProjectSettingsChanged(this);
+}
+
+bool Settings::isUseDatarefsId() {
+    beginGroup(SETTINGS_PROJECT);
+    const auto val = value(SETTINGS_PROJECT_USE_DATAREFS_ID, false);
+    endGroup();
+    return val;
+}
+
+bool Settings::isUseCommandsId() {
+    beginGroup(SETTINGS_PROJECT);
+    const auto val = value(SETTINGS_PROJECT_USE_COMMANDS_ID, false);
+    endGroup();
+    return val;
+}
+
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/

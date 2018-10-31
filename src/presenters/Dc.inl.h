@@ -38,6 +38,7 @@
 #include <cctype>
 #include "ui-win/DlgDcView.h"
 #include "common/Config.h"
+#include "gup/ObjCommon.h"
 
 using namespace std::string_literals;
 
@@ -57,6 +58,8 @@ Dc<T>::Dc(IView * view)
     view->sigCurrFileChanged = std::bind(&Dc<T>::slotCurrFileChanged, this, std::placeholders::_1);
     view->sigReady = std::bind(&Dc<T>::slotViewReady, this);
     view->sigSearchKeyChanged = std::bind(&Dc<T>::slotSearchKeyChanged, this, std::placeholders::_1);
+
+    ObjCommon::instance()->pSettings.onProjectSettingsChanged.connect(this, &Dc<T>::onSettingsChanged);
 
     RegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
     RegisterNotification(slotSystemReset, this, NOTIFY_SYSTEM_POST_RESET);
@@ -151,7 +154,7 @@ void Dc<T>::loadSimDatarefs() {
 
 template<typename T>
 void Dc<T>::loadProjectDatarefs() {
-    auto config = Config::instance();
+    const auto config = Config::instance();
     // MaxSDK::Util::Path::Exists have been added sine 3Ds Max 2013
     const auto pathConfMgr = IPathConfigMgr::GetPathConfigMgr();
 
@@ -184,6 +187,25 @@ void Dc<T>::unloadIf(const std::function<bool(const typename IView::Files::value
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
+
+inline void __readSettings(md::DatarefsFile::Ptr & file, Settings & settings) {
+    if (file->mIsForProject) {
+        file->mUsesId = settings.isUseDatarefsId();
+    }
+}
+
+inline void __readSettings(md::CommandsFile::Ptr & file, Settings & settings) {
+    if (file->mIsForProject) {
+        file->mUsesId = settings.isUseCommandsId();
+    }
+}
+
+template<typename T>
+void Dc<T>::onSettingsChanged(Settings * settings) {
+    for (auto & f : mDatarefs) {
+        __readSettings(f, *settings);
+    }
+}
 
 template<typename T>
 void Dc<T>::slotViewReady() {

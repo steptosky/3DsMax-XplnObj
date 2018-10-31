@@ -38,6 +38,7 @@
 #include "common/String.h"
 #include "IDcView.h"
 #include "common/Config.h"
+#include "gup/Settings.h"
 
 struct NotifyInfo;
 
@@ -67,6 +68,8 @@ public:
     //-------------------------------------------------------------------------
 
 private:
+
+    void onSettingsChanged(Settings*);
 
     void loadSimDatarefs();
     void loadProjectDatarefs();

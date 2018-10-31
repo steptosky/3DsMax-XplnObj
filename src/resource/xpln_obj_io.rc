@@ -831,9 +831,12 @@ CAPTION "Settings"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     PUSHBUTTON      "Ok",BTN_OK,154,169,50,14
-    GROUPBOX        "X-Plane path",-1,7,5,343,34
-    CTEXT           "path/to/x-plane",IDC_SIM_PATH,15,19,270,9
-    PUSHBUTTON      "Browse",BTN_SELECT_SIM_PATH,293,16,50,14
+    GROUPBOX        "X-Plane path",IDC_STATIC,7,5,343,29
+    CTEXT           "path/to/x-plane",IDC_SIM_PATH,15,17,270,9,SS_NOTIFY
+    PUSHBUTTON      "Browse",BTN_SELECT_SIM_PATH,293,14,50,14
+    CONTROL         "Use DataRefs ID",IDC_CHK_DATAREFS_ID,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,49,69,10
+    CONTROL         "Use Commands ID",IDC_CHK_COMMANDS_ID,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,62,74,10
+    GROUPBOX        "Project's DataRefs and Commands settings",IDC_STATIC,7,37,343,40
 END
 
 

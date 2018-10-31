@@ -34,6 +34,7 @@
 #include <algorithm>
 #include <cctype>
 #include "CommandsFile.h"
+#include "gup/ObjCommon.h"
 
 namespace md {
 
@@ -86,8 +87,10 @@ bool CommandsFile::loadSimData(const MaxSDK::Util::Path & filePath) {
 }
 
 bool CommandsFile::loadProjectData(const MaxSDK::Util::Path & filePath) {
+    auto & settings = ObjCommon::instance()->pSettings;
+    mUsesId = settings.isUseCommandsId();
+
     mIsEditable = true;
-    mUsesId = true;
     mIsForProject = true;
     mFilePath = filePath;
     mDisplayName = _T("[Project] Commands");
