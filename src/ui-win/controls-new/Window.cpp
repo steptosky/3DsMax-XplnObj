@@ -48,7 +48,7 @@ namespace win {
                     if (onInit) {
                         onInit(this);
                     }
-                    break;
+                    return FALSE;
                 }
                 case WM_DESTROY: {
                     if (onDestroy) {
@@ -57,7 +57,7 @@ namespace win {
                     for (auto c : mControls) {
                         c->onParentDestroy(hwnd());
                     }
-                    break;
+                    return FALSE;
                 }
                 default: {
                     for (auto c : mControls) {

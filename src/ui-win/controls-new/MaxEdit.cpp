@@ -72,7 +72,10 @@ namespace win {
         }
 
         void MaxEdit::onParentDestroy(HWND) {
-            ReleaseICustEdit(mControl);
+            if (mControl) {
+                ReleaseICustEdit(mControl);
+                mControl = nullptr;
+            }
         }
 
         /**************************************************************************************************/

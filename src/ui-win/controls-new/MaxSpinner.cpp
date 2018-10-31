@@ -55,7 +55,10 @@ namespace win {
         }
 
         void MaxSpinner::onParentDestroy(HWND) {
-            ReleaseISpinner(mControl);
+            if (mControl) {
+                ReleaseISpinner(mControl);
+                mControl = nullptr;
+            }
         }
 
         /**************************************************************************************************/

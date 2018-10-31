@@ -39,8 +39,7 @@ namespace win {
         /////////////////////////////////////////* Static area *////////////////////////////////////////////
         /**************************************************************************************************/
 
-        std::optional<INT_PTR> CALLBACK ModalDialog::procedure(UINT message, WPARAM wParam, LPARAM lParam) {
-            //------------------------------------------------------
+        std::optional<INT_PTR> CALLBACK ModalDialog::procedure(const UINT message, const WPARAM wParam, const LPARAM lParam) {
             switch (message) {
                 case WM_CLOSE: {
                     if (onClose) {
@@ -49,17 +48,11 @@ namespace win {
                     else {
                         destroy();
                     }
-                    break;
+                    return FALSE;
                 }
-                default: break;
+                default: return Window::procedure(message, wParam, lParam);
             }
-            //------------------------------------------------------
-            return Window::procedure(message, wParam, lParam);
         }
-
-        /**************************************************************************************************/
-        ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-        /**************************************************************************************************/
 
         /**************************************************************************************************/
         //////////////////////////////////////////* Functions */////////////////////////////////////////////
