@@ -54,19 +54,19 @@ Dc<T>::Dc(IView * view)
 
     DbgAssert(mView);
 
-    view->sigKeyChanged = std::bind(&Dc<T>::slotKeyChanged, this, std::placeholders::_1, std::placeholders::_2);
-    view->sigCurrFileChanged = std::bind(&Dc<T>::slotCurrFileChanged, this, std::placeholders::_1);
-    view->sigReady = std::bind(&Dc<T>::slotViewReady, this);
-    view->sigSearchKeyChanged = std::bind(&Dc<T>::slotSearchKeyChanged, this, std::placeholders::_1);
+    view->sigKeyChanged = std::bind(&Dc<T>::onKeyChanged, this, std::placeholders::_1, std::placeholders::_2);
+    view->sigCurrFileChanged = std::bind(&Dc<T>::onCurrFileChanged, this, std::placeholders::_1);
+    view->sigReady = std::bind(&Dc<T>::onViewReady, this);
+    view->sigSearchKeyChanged = std::bind(&Dc<T>::onSearchKeyChanged, this, std::placeholders::_1);
 
     ObjCommon::instance()->pSettings.onProjectSettingsChanged.connect(this, &Dc<T>::onSettingsChanged);
 
-    RegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
-    RegisterNotification(slotSystemReset, this, NOTIFY_SYSTEM_POST_RESET);
-    RegisterNotification(slotSystemNew, this, NOTIFY_SYSTEM_POST_NEW);
+    RegisterNotification(onFileOpened, this, NOTIFY_FILE_POST_OPEN);
+    RegisterNotification(onSystemReset, this, NOTIFY_SYSTEM_POST_RESET);
+    RegisterNotification(onSystemNew, this, NOTIFY_SYSTEM_POST_NEW);
 
     auto config = Config::instance();
-    config->sigSimDirChanged.connect(this, &Dc<T>::slotSimDirChanged);
+    config->sigSimDirChanged.connect(this, &Dc<T>::onSimDirChanged);
 
     loadSimDatarefs();
     loadProjectDatarefs();
@@ -74,9 +74,9 @@ Dc<T>::Dc(IView * view)
 
 template<typename T>
 Dc<T>::~Dc() {
-    UnRegisterNotification(slotFileOpened, this, NOTIFY_FILE_POST_OPEN);
-    UnRegisterNotification(slotSystemReset, this, NOTIFY_SYSTEM_POST_RESET);
-    UnRegisterNotification(slotSystemNew, this, NOTIFY_SYSTEM_POST_NEW);
+    UnRegisterNotification(onFileOpened, this, NOTIFY_FILE_POST_OPEN);
+    UnRegisterNotification(onSystemReset, this, NOTIFY_SYSTEM_POST_RESET);
+    UnRegisterNotification(onSystemNew, this, NOTIFY_SYSTEM_POST_NEW);
     delete mView;
 }
 
@@ -208,7 +208,7 @@ void Dc<T>::onSettingsChanged(Settings * settings) {
 }
 
 template<typename T>
-void Dc<T>::slotViewReady() {
+void Dc<T>::onViewReady() {
     mView->setAvailableFiles(&mDatarefs);
 
     if (mDatarefs.empty()) {
@@ -252,7 +252,7 @@ void Dc<T>::slotViewReady() {
 }
 
 template<typename T>
-void Dc<T>::slotKeyChanged(const typename IView::FilePtr & file, const MStr & key) {
+void Dc<T>::onKeyChanged(const typename IView::FilePtr & file, const MStr & key) {
     if (!file || !file->mUsesId) {
         mCurrKey = key;
         return;
@@ -290,17 +290,17 @@ void Dc<T>::slotKeyChanged(const typename IView::FilePtr & file, const MStr & ke
 }
 
 template<typename T>
-void Dc<T>::slotSearchKeyChanged(const MStr & data) {
+void Dc<T>::onSearchKeyChanged(const MStr & data) {
     mCurrSearchKey = data;
 }
 
 template<typename T>
-void Dc<T>::slotSimDirChanged(Config &, const MaxSDK::Util::Path &, const MaxSDK::Util::Path &) {
+void Dc<T>::onSimDirChanged(Config &, const MaxSDK::Util::Path &, const MaxSDK::Util::Path &) {
     loadSimDatarefs();
 }
 
 template<typename T>
-void Dc<T>::slotCurrFileChanged(const MStr & name) {
+void Dc<T>::onCurrFileChanged(const MStr & name) {
     const auto index = indexOfDisplayName(mDatarefs, name);
     if (!index) {
         mView->setCurrFile(mDatarefs.at(0), std::nullopt);
@@ -319,19 +319,19 @@ void Dc<T>::slotCurrFileChanged(const MStr & name) {
 }
 
 template<typename T>
-void Dc<T>::slotFileOpened(void * param, NotifyInfo * info) {
+void Dc<T>::onFileOpened(void * param, NotifyInfo * info) {
     auto * d = static_cast<Dc<T>*>(param);
-    d->slotSystemNew(param, info);
+    d->onSystemNew(param, info);
 }
 
 template<typename T>
-void Dc<T>::slotSystemReset(void * param, NotifyInfo * info) {
+void Dc<T>::onSystemReset(void * param, NotifyInfo * info) {
     auto * d = static_cast<Dc<T>*>(param);
-    d->slotSystemNew(param, info);
+    d->onSystemNew(param, info);
 }
 
 template<typename T>
-void Dc<T>::slotSystemNew(void * param, NotifyInfo *) {
+void Dc<T>::onSystemNew(void * param, NotifyInfo *) {
     auto * d = static_cast<Dc<T>*>(param);
     d->loadProjectDatarefs();
 }
