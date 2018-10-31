@@ -83,7 +83,7 @@ namespace win {
         /**************************************************************************************************/
 
 #if MAX_VERSION_MAJOR > 10 // 2008
-        void MaxEdit::setToolTip(const MStr & text, const std::uint32_t ) {
+        void MaxEdit::setToolTip(const MStr & text, const std::uint32_t) {
             if (mControl) {
                 mControl->SetTooltip(true, MStr(text));
             }

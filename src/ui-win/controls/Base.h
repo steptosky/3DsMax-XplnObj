@@ -47,7 +47,7 @@ namespace ctrl {
     public:
 
 #ifdef UNICODE
-    typedef std::wstring String;
+        typedef std::wstring String;
 #else
         typedef std::string String;
 #endif // UNICODE

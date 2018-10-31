@@ -35,7 +35,6 @@
 
 #ifndef QT_IS_ENABLED
 
-
 namespace ui {
 namespace win {
 

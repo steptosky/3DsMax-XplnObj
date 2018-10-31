@@ -195,7 +195,7 @@ namespace win {
 
     void AnimVisView::setDataRefValueAsToolType() {
 #if MAX_VERSION_MAJOR > 11
-    cEditDataRef->SetTooltip(true, Utils::getText(cEditDataRef));
+        cEditDataRef->SetTooltip(true, Utils::getText(cEditDataRef));
 #endif
     }
 

@@ -193,7 +193,7 @@ namespace win {
 
     void AnimRotateAxisView::setDataRefValueAsToolType() {
 #if MAX_VERSION_MAJOR > 11
-    cEditDataRef->SetTooltip(true, sts::toString(mData.mDataref).c_str());
+        cEditDataRef->SetTooltip(true, sts::toString(mData.mDataref).c_str());
 #endif
     }
 
