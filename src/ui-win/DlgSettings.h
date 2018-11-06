@@ -58,6 +58,8 @@ namespace win {
         wrapper::Button mBtnOk;
         wrapper::CheckBox mChkDatarefsId;
         wrapper::CheckBox mChkCommandsId;
+        wrapper::CheckBox mChkDatarefsSorting;
+        wrapper::CheckBox mChkCommandsSorting;
         wrapper::Button mBtnSelectSimPath;
 
     };

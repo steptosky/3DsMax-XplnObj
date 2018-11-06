@@ -147,7 +147,7 @@ void Dc<T>::loadSimDatarefs() {
 
     auto f = std::make_shared<IView::File>();
     if (f->loadSimData(datarefFile)) {
-        f->sortData();
+        f->sortDataIfEnabled();
         mDatarefs.emplace_back(std::move(f));
     }
 }
@@ -167,7 +167,7 @@ void Dc<T>::loadProjectDatarefs() {
 
     auto f = std::make_shared<IView::File>();
     if (f->loadProjectData(datarefFile)) {
-        f->sortData();
+        f->sortDataIfEnabled();
         mDatarefs.emplace_back(std::move(f));
     }
 }
@@ -191,12 +191,46 @@ void Dc<T>::unloadIf(const std::function<bool(const typename IView::Files::value
 inline void __readSettings(md::DatarefsFile::Ptr & file, Settings & settings) {
     if (file->mIsForProject) {
         file->mUsesId = settings.isUseDatarefsId();
+        const auto sort = settings.sortDatarefs();
+        if (file->mSort != sort) {
+            file->mSort = sort;
+            if (!file->mSort) {
+                // reload from file
+                try {
+                    file->loadData(file->mFilePath);
+                }
+                catch (const std::exception & e) {
+                    LError << "Can't load file <" << xobj::fromMStr(file->mFilePath.GetString()) << "> reason: " << e.what();
+                }
+            }
+            else {
+                // sort
+                file->sortDataIfEnabled();
+            }
+        }
     }
 }
 
 inline void __readSettings(md::CommandsFile::Ptr & file, Settings & settings) {
     if (file->mIsForProject) {
         file->mUsesId = settings.isUseCommandsId();
+        const auto sort = settings.sortCommands();
+        if (file->mSort != sort) {
+            file->mSort = sort;
+            if (!file->mSort) {
+                // reload from file
+                try {
+                    file->loadData(file->mFilePath);
+                }
+                catch (const std::exception & e) {
+                    LError << "Can't load file <" << xobj::fromMStr(file->mFilePath.GetString()) << "> reason: " << e.what();
+                }
+            }
+            else {
+                // sort
+                file->sortDataIfEnabled();
+            }
+        }
     }
 }
 

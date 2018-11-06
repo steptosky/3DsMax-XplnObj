@@ -235,7 +235,7 @@ namespace win {
                 }
 
                 mCurrFile->mData.emplace_back(*res);
-                mCurrFile->sortData();
+                mCurrFile->sortDataIfEnabled();
                 mCurrFile->saveData(mCurrFile->mFilePath);
                 index = mCurrFile->indexOfKey(res->mKey);
                 index ? mListDc.showData(mCurrFile, index) : mListDc.showData(mCurrFile, std::nullopt);

@@ -69,6 +69,7 @@ public:
     MStr mDisplayName;
     bool mIsEditable = false;
     bool mUsesId = false;
+    bool mSort = false;
     bool mIsForProject = false;
 
     std::vector<xobj::Dataref> mData;
@@ -90,7 +91,7 @@ public:
 
     //-------------------------------------------------------------------------
 
-    void sortData();
+    void sortDataIfEnabled();
 
     //-------------------------------------------------------------------------
 

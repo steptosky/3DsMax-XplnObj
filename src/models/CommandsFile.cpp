@@ -82,6 +82,7 @@ bool CommandsFile::loadSimData(const MaxSDK::Util::Path & filePath) {
     mUsesId = false;
     mIsForProject = false;
     mFilePath = filePath;
+    mSort = true;
     mDisplayName = _T("[X-Plane] Commands");
     return loadData(filePath);
 }
@@ -89,6 +90,7 @@ bool CommandsFile::loadSimData(const MaxSDK::Util::Path & filePath) {
 bool CommandsFile::loadProjectData(const MaxSDK::Util::Path & filePath) {
     auto & settings = ObjCommon::instance()->pSettings;
     mUsesId = settings.isUseCommandsId();
+    mSort = settings.sortCommands();
 
     mIsEditable = true;
     mIsForProject = true;
@@ -167,16 +169,18 @@ std::uint64_t CommandsFile::generateId() {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void CommandsFile::sortData() {
-    const auto sortFn = [](const xobj::Command & v1, const xobj::Command & v2) {
-        return std::lexicographical_compare(v1.mKey.begin(), v1.mKey.end(),
-                                            v2.mKey.begin(), v2.mKey.end(),
-                                            [](const char x, const char y) {
-                                                return std::tolower(static_cast<unsigned char>(x)) <
-                                                       std::tolower(static_cast<unsigned char>(y));
-                                            });
-    };
-    std::sort(mData.begin(), mData.end(), sortFn);
+void CommandsFile::sortDataIfEnabled() {
+    if (mSort) {
+        const auto sortFn = [](const xobj::Command & v1, const xobj::Command & v2) {
+            return std::lexicographical_compare(v1.mKey.begin(), v1.mKey.end(),
+                                                v2.mKey.begin(), v2.mKey.end(),
+                                                [](const char x, const char y) {
+                                                    return std::tolower(static_cast<unsigned char>(x)) <
+                                                           std::tolower(static_cast<unsigned char>(y));
+                                                });
+        };
+        std::sort(mData.begin(), mData.end(), sortFn);
+    }
 }
 
 /**************************************************************************************************/

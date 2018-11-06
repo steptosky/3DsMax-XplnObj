@@ -38,6 +38,8 @@
 #define SETTINGS_PROJECT "PROJECT"
 #define SETTINGS_PROJECT_USE_DATAREFS_ID "datarefsId"
 #define SETTINGS_PROJECT_USE_COMMANDS_ID "commandsId"
+#define SETTINGS_PROJECT_SORTING_DATAREFS "datarefsSort"
+#define SETTINGS_PROJECT_SORTING_COMMANDS "commandsSort"
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
@@ -67,6 +69,38 @@ bool Settings::isUseDatarefsId() {
 bool Settings::isUseCommandsId() {
     beginGroup(SETTINGS_PROJECT);
     const auto val = value(SETTINGS_PROJECT_USE_COMMANDS_ID, false);
+    endGroup();
+    return val;
+}
+
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+void Settings::setSortDatarefs(const bool state) {
+    beginGroup(SETTINGS_PROJECT);
+    setValue(SETTINGS_PROJECT_SORTING_DATAREFS, state);
+    endGroup();
+    onProjectSettingsChanged(this);
+}
+
+void Settings::setSortCommands(const bool state) {
+    beginGroup(SETTINGS_PROJECT);
+    setValue(SETTINGS_PROJECT_SORTING_COMMANDS, state);
+    endGroup();
+    onProjectSettingsChanged(this);
+}
+
+bool Settings::sortDatarefs() {
+    beginGroup(SETTINGS_PROJECT);
+    const auto val = value(SETTINGS_PROJECT_SORTING_DATAREFS, false);
+    endGroup();
+    return val;
+}
+
+bool Settings::sortCommands() {
+    beginGroup(SETTINGS_PROJECT);
+    const auto val = value(SETTINGS_PROJECT_SORTING_COMMANDS, false);
     endGroup();
     return val;
 }

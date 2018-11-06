@@ -58,6 +58,11 @@ public:
     bool isUseDatarefsId();
     bool isUseCommandsId();
 
+    void setSortDatarefs(bool state);
+    void setSortCommands(bool state);
+    bool sortDatarefs();
+    bool sortCommands();
+
     sts::signals::Signal<Settings*> onProjectSettingsChanged;
 
     /// @}
