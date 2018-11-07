@@ -27,13 +27,13 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "MainObj.h "
+#include "MainObj.h"
 
 #include <xpln/enums/ELayer.h>
 #include <xpln/obj/attributes/AttrBlend.h>
 #include <xpln/obj/attributes/AttrWetDry.h>
 
-#include "MainObjectParams.h"
+#include "objects/main/param-blocks/MainObjParams.h"
 #include "common/Logger.h"
 #include "common/String.h"
 #include "models/bwc/SerializationId.h"
@@ -42,7 +42,9 @@
 #include "classes-desc/ClassesDescriptions.h"
 #include "additional/math/Compare.h"
 #include "MainObjIcon-gen.h"
-#include "MainObjParamBlocks.h"
+#include "param-blocks/MainObjPbAttr.h"
+#include "param-blocks/MainObjPbDisplay.h"
+#include "param-blocks/MainObjPbExport.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,9 +62,9 @@ public:
 
     void proc(ILoad *) override {
         mObj->makeIcon();
-        MainObjParamBlocks::postLoadAttr(mObj->mAttrParamsPb);
-        MainObjParamBlocks::postLoadExport(mObj->mExpPb);
-        MainObjParamBlocks::postLoadDisplay(mObj->mDisplayPb);
+        MainObjPbAttr::postLoad(mObj->mAttrParamsPb);
+        MainObjPbExport::postLoad(mObj->mExpPb);
+        MainObjPbDisplay::postLoad(mObj->mDisplayPb);
         delete this;
     }
 
@@ -109,7 +111,7 @@ void MainObject::updateTexturesButtons() const {
 }
 
 void MainObject::updateButtonText(IParamBlock2 * pBlock, const ParamID param, const MCHAR * value) {
-    IParamMap2 * map = pBlock->GetMap(MainObjParamBlocks::RollGlobShading);
+    IParamMap2 * map = pBlock->GetMap(MainObjPbAttr::RollGlobShading);
     //DbgAssert(map);
     if (map) {
         TSTR p, f, e, name;
@@ -129,7 +131,7 @@ void MainObject::updateButtonText(IParamBlock2 * pBlock, const ParamID param, co
 //-------------------------------------------------------------------------
 
 void MainObject::updateBlendSpinEnabling() const {
-    IParamMap2 * map = mAttrParamsPb->GetMap(MainObjParamBlocks::RollGlobShading);
+    IParamMap2 * map = mAttrParamsPb->GetMap(MainObjPbAttr::RollGlobShading);
     //DbgAssert(map);
     if (map) {
         MainObjParamsWrapper wrapper(mAttrParamsPb, nullptr, GetCOREInterface()->GetTime(), FOREVER);
@@ -140,7 +142,7 @@ void MainObject::updateBlendSpinEnabling() const {
 //-------------------------------------------------------------------------
 
 void MainObject::updateLayerGroupSpinEnabling() const {
-    IParamMap2 * map = mAttrParamsPb->GetMap(MainObjParamBlocks::RollGlobAttr);
+    IParamMap2 * map = mAttrParamsPb->GetMap(MainObjPbAttr::RollGlobAttr);
     //DbgAssert(map);
     if (map) {
         MainObjParamsWrapper wrapper(mAttrParamsPb, nullptr, GetCOREInterface()->GetTime(), FOREVER);
@@ -592,9 +594,9 @@ void MainObject::GetClassName(TSTR & s) {
 
 RefTargetHandle MainObject::Clone(RemapDir & remap) {
     auto newObj = new MainObject();
-    newObj->ReplaceReference(MainObjParamBlocks::PbOrderAttr, mAttrParamsPb->Clone(remap));
-    newObj->ReplaceReference(MainObjParamBlocks::PbOrderExport, mExpPb->Clone(remap));
-    newObj->ReplaceReference(MainObjParamBlocks::PbOrderDisplay, mDisplayPb->Clone(remap));
+    newObj->ReplaceReference(static_cast<int>(eMainObjPbOrder::PbOrderAttr), mAttrParamsPb->Clone(remap));
+    newObj->ReplaceReference(static_cast<int>(eMainObjPbOrder::PbOrderExport), mExpPb->Clone(remap));
+    newObj->ReplaceReference(static_cast<int>(eMainObjPbOrder::PbOrderDisplay), mDisplayPb->Clone(remap));
     BaseClone(this, newObj, remap);
     return (newObj);
 }
@@ -608,10 +610,10 @@ Animatable * MainObject::SubAnim(const int i) {
 }
 
 TSTR MainObject::SubAnimName(const int i) {
-    switch (i) {
-        case MainObjParamBlocks::PbOrderAttr: return _T("Attributes");
-        case MainObjParamBlocks::PbOrderExport: return _T("Options");
-        case MainObjParamBlocks::PbOrderDisplay: return _T("Display");
+    switch (static_cast<eMainObjPbOrder>(i)) {
+        case eMainObjPbOrder::PbOrderAttr: return _T("Attributes");
+        case eMainObjPbOrder::PbOrderExport: return _T("Options");
+        case eMainObjPbOrder::PbOrderDisplay: return _T("Display");
         default: return _T("");
     }
 }
@@ -629,19 +631,19 @@ int MainObject::NumParamBlocks() {
 }
 
 IParamBlock2 * MainObject::GetParamBlock(const int i) {
-    switch (i) {
-        case MainObjParamBlocks::PbOrderAttr: return mAttrParamsPb;
-        case MainObjParamBlocks::PbOrderExport: return mExpPb;
-        case MainObjParamBlocks::PbOrderDisplay: return mDisplayPb;
+    switch (static_cast<eMainObjPbOrder>(i)) {
+        case eMainObjPbOrder::PbOrderAttr: return mAttrParamsPb;
+        case eMainObjPbOrder::PbOrderExport: return mExpPb;
+        case eMainObjPbOrder::PbOrderDisplay: return mDisplayPb;
         default: return nullptr;
     }
 }
 
 IParamBlock2 * MainObject::GetParamBlockByID(const BlockID id) {
-    switch (id) {
-        case MainObjAttrParams: return mAttrParamsPb;
-        case MainObjExpParams: return mExpPb;
-        case MainObjDisplay: return mDisplayPb;
+    switch (static_cast<eMainObjParamsBlocks>(id)) {
+        case eMainObjParamsBlocks::MainObjAttrParams: return mAttrParamsPb;
+        case eMainObjParamsBlocks::MainObjExpParams: return mExpPb;
+        case eMainObjParamsBlocks::MainObjDisplay: return mDisplayPb;
         default: return nullptr;
     }
 }
@@ -655,25 +657,25 @@ int MainObject::NumRefs() {
 }
 
 RefTargetHandle MainObject::GetReference(const int i) {
-    switch (i) {
-        case MainObjParamBlocks::PbOrderAttr: return mAttrParamsPb;
-        case MainObjParamBlocks::PbOrderExport: return mExpPb;
-        case MainObjParamBlocks::PbOrderDisplay: return mDisplayPb;
+    switch (static_cast<eMainObjPbOrder>(i)) {
+        case eMainObjPbOrder::PbOrderAttr: return mAttrParamsPb;
+        case eMainObjPbOrder::PbOrderExport: return mExpPb;
+        case eMainObjPbOrder::PbOrderDisplay: return mDisplayPb;
         default: return nullptr;
     }
 }
 
 void MainObject::SetReference(const int i, RefTargetHandle target) {
-    switch (i) {
-        case MainObjParamBlocks::PbOrderAttr: {
+    switch (static_cast<eMainObjPbOrder>(i)) {
+        case eMainObjPbOrder::PbOrderAttr: {
             mAttrParamsPb = static_cast<IParamBlock2*>(target);
             break;
         }
-        case MainObjParamBlocks::PbOrderExport: {
+        case eMainObjPbOrder::PbOrderExport: {
             mExpPb = static_cast<IParamBlock2*>(target);
             break;
         }
-        case MainObjParamBlocks::PbOrderDisplay: {
+        case eMainObjPbOrder::PbOrderDisplay: {
             mDisplayPb = static_cast<IParamBlock2*>(target);
             break;
         }
@@ -695,9 +697,9 @@ RefResult MainObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /
     switch (message) {
         case REFMSG_CHANGE:
             if (mEditOb == this) {
-                MainObjParamBlocks::mAttr.InvalidateUI(mAttrParamsPb->LastNotifyParamID());
-                MainObjParamBlocks::mExport.InvalidateUI(mExpPb->LastNotifyParamID());
-                MainObjParamBlocks::mDisplay.InvalidateUI(mDisplayPb->LastNotifyParamID());
+                MainObjPbAttr::mPb.InvalidateUI(mAttrParamsPb->LastNotifyParamID());
+                MainObjPbExport::mPb.InvalidateUI(mExpPb->LastNotifyParamID());
+                MainObjPbDisplay::mPb.InvalidateUI(mDisplayPb->LastNotifyParamID());
             }
             break;
         default: break;

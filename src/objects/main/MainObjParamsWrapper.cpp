@@ -33,7 +33,7 @@
 #include <iparamb2.h>
 #pragma warning(pop)
 
-#include "MainObjectParams.h"
+#include "objects/main/param-blocks/MainObjParams.h"
 #include "common/Logger.h"
 #include "common/String.h"
 #include "classes-desc/ClassesDescriptions.h"
@@ -50,8 +50,8 @@ MainObjParamsWrapper::MainObjParamsWrapper(INode * node, const TimeValue t, cons
     DbgAssert(node);
     DbgAssert(isMainObj(node));
 
-    mPbExp = node->GetObjectRef()->GetParamBlockByID(MainObjExpParams);
-    mPbAttr = node->GetObjectRef()->GetParamBlockByID(MainObjAttrParams);
+    mPbExp = node->GetObjectRef()->GetParamBlockByID(static_cast<BlockID>(eMainObjParamsBlocks::MainObjExpParams));
+    mPbAttr = node->GetObjectRef()->GetParamBlockByID(static_cast<BlockID>(eMainObjParamsBlocks::MainObjAttrParams));
     DbgAssert(mPbExp);
     DbgAssert(mPbAttr);
 }

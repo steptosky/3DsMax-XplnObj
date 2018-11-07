@@ -31,7 +31,6 @@
 
 #pragma warning(push, 0)
 #include <max.h>
-#include <iparamb2.h>
 #pragma warning(pop)
 
 /**************************************************************************************************/
@@ -41,12 +40,12 @@
 /*!
  * \details Parameter blocks of the X-Obj object
  */
-enum eMainObjParamsBlocks : BlockID {
+enum class eMainObjParamsBlocks : BlockID {
     //! Attribute params
     MainObjAttrParams,
     //! Export params
     MainObjExpParams,
-    //!< For internal using
+    //! Display params
     MainObjDisplay,
 };
 
@@ -210,6 +209,16 @@ enum eMainObjExpParams : ParamID {
 
 enum eMainObjDisplayParams : ParamID {
     MainObjDisp_IconScale,
+};
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+
+enum class eMainObjPbOrder : int {
+    PbOrderAttr = eMainObjPbOrder(eMainObjParamsBlocks::MainObjAttrParams),
+    PbOrderExport = eMainObjPbOrder(eMainObjParamsBlocks::MainObjExpParams),
+    PbOrderDisplay = eMainObjPbOrder(eMainObjParamsBlocks::MainObjDisplay),
 };
 
 /**************************************************************************************************/

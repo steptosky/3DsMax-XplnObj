@@ -29,7 +29,7 @@
 
 #include "ObjAttrIO.h "
 #include "additional/stsio/DataStream.h"
-#include "objects/main/MainObjectParams.h"
+#include "objects/main/param-blocks/MainObjParams.h"
 #include "objects/lod/LodObjParams.h"
 #include "NodeIO.h"
 #include "models/eDataId.h"
