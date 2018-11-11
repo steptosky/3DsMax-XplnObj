@@ -29,7 +29,6 @@
 
 #include "ExportObjList.h"
 #include <windows.h>
-#include <minwinbase.h>
 
 namespace ui {
 namespace win {
@@ -51,9 +50,6 @@ namespace win {
                             }
                         }
                         break;
-                    }
-                    case NM_CUSTOMDRAW: {
-                        return draw(lParam);
                     }
                     default: break;
                 }
@@ -120,17 +116,13 @@ namespace win {
         }
 
         bool ExportObjList::isChecked(const int idx) {
-            if (idx < 0) {
-                return false;
-            }
-            return ListView_GetCheckState(hwnd(), idx) != 0;
+            return idx < 0 ? false : ListView_GetCheckState(hwnd(), idx) != 0;
         }
 
         void ExportObjList::setup() {
-            mWinColor = GetCustSysColor(COLOR_WINDOW);
-            mWinTextColor = GetCustSysColor(COLOR_WINDOWTEXT);
-            mWinBrush = GetCustSysColorBrush(COLOR_WINDOW);
-            DbgAssert(mWinBrush);
+            ListView_SetBkColor(hwnd(), GetCustSysColor(COLOR_WINDOW));
+            ListView_SetTextColor(hwnd(), GetCustSysColor(COLOR_WINDOWTEXT));
+            ListView_SetTextBkColor(hwnd(), GetCustSysColor(COLOR_WINDOW));
 
             ListView_SetExtendedListViewStyle(hwnd(), LVS_EX_CHECKBOXES | LVS_EX_FULLROWSELECT);
 
@@ -144,75 +136,8 @@ namespace win {
             lvc.pszText = _T("X-Objects");
             ListView_InsertColumn(hwnd(), 1, &lvc);
 
-            // Set column widths
             ListView_SetColumnWidth(hwnd(), 0, LVSCW_AUTOSIZE_USEHEADER);
             ListView_SetColumnWidth(hwnd(), 1, LVSCW_AUTOSIZE_USEHEADER);
-
-            if (mWinBrush) {
-                if (!SetWindowSubclass(hwnd(), &ExportObjList::subClassProc, 1, reinterpret_cast<DWORD_PTR>(this))) {
-                    LError << "Can't subclass " << TOTEXT(ExportObjList);
-                }
-            }
-            else {
-                LError << "Can't get window brush " << TOTEXT(ExportObjList);
-            }
-        }
-
-        /**************************************************************************************************/
-        //////////////////////////////////////////* Functions */////////////////////////////////////////////
-        /**************************************************************************************************/
-
-        LRESULT ExportObjList::subClassProc(const HWND hWnd, const UINT uMsg, const WPARAM wParam, const LPARAM lParam,
-                                            UINT_PTR /*uIdSubclass*/, DWORD_PTR /*dwRefData*/) {
-            switch (uMsg) {
-                case WM_NCDESTROY: {
-                    // You must remove your window subclass before the window being 
-                    // subclassed is destroyed. This is typically done either by removing 
-                    // the subclass once your temporary need has passed, or if you are 
-                    // installing a permanent subclass, by inserting a call to 
-                    // RemoveWindowSubclass inside the subclass procedure itself:
-                    if (!RemoveWindowSubclass(hWnd, &ExportObjList::subClassProc, 1)) {
-                        LError << "Can't remove subclass " << TOTEXT(ExportObjList);
-                    }
-                    break;
-                }
-                default: break;
-            }
-            return DefSubclassProc(hWnd, uMsg, wParam, lParam);
-        }
-
-        // Items background
-        LRESULT ExportObjList::drawItems(LPARAM lParam, ExportObjList * data) {
-            const auto lplvcd = reinterpret_cast<LPNMLVCUSTOMDRAW>(lParam);
-            switch (lplvcd->nmcd.dwDrawStage) {
-                case CDDS_PREPAINT: return CDRF_NOTIFYITEMDRAW;
-                case CDDS_ITEMPREPAINT: return CDRF_NOTIFYSUBITEMDRAW;
-                case CDDS_SUBITEM | CDDS_ITEMPREPAINT: {
-                    //Before a subitem is drawn
-                    lplvcd->clrText = data->mWinTextColor;
-                    lplvcd->clrTextBk = data->mWinColor;
-                    lplvcd->clrFace = data->mWinColor;
-                    return CDRF_NEWFONT;
-                }
-                default: break;
-            }
-            return CDRF_DODEFAULT;
-        }
-
-        LRESULT ExportObjList::draw(LPARAM lParam) {
-            const auto item = reinterpret_cast<LPNMCUSTOMDRAW>(lParam);
-            const auto parentWin = parent();
-            DbgAssert(parentWin);
-
-            // Background
-            if (mWinBrush) {
-                FillRect(item->hdc, &item->rc, mWinBrush);
-            }
-            if (parentWin) {
-                // Items background
-                SetWindowLongPtr(parentWin, DWLP_MSGRESULT, static_cast<LONG>(drawItems(lParam, this)));
-            }
-            return TRUE;
         }
 
         /**************************************************************************************************/

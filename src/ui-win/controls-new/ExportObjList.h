@@ -64,21 +64,12 @@ namespace win {
 
             //-------------------------------------------------------------------------
 
-            // It applies the 3DS Max's theme
-            LRESULT draw(LPARAM lParam);
-
-            //-------------------------------------------------------------------------
-
         private:
 
             std::optional<INT_PTR> procedure(UINT message, WPARAM wParam, LPARAM lParam) override;
             void onParentInit(HWND owner) override;
             void reset();
-
             void setup();
-            static LRESULT subClassProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam,
-                                        UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
-            static LRESULT drawItems(LPARAM lParam, ExportObjList * data);
 
             unsigned mLastFreeId = 0;
             COLORREF mWinColor = 0;
