@@ -2,11 +2,14 @@
 Change-log
 ===============================================================================
 
+.. note::
+    Don't forget to see :ref:`backward-compatibility`
+
 Next
 -------------------------
 - Added: Settings - enable/disable project's DataRefs and Commands ID usage.
 - Added: Settings - enable/disable project's DataRefs and Commands Sorting.
-- Updated: Datarefs and Commands project format. Symbol '':'' must immediately follow after the ID. See the help for more details.
+- Updated: Datarefs and Commands project format. Symbol '':'' must immediately follow the ID. See the help for more details.
 - Fixed: Bug when you try to set custom DataRef or Command key while project's DataRef or Command list is open, the key was set as ``ERROR_DATA_NOT_FOUND``
 
 2.5.0-beta (27.10.2018)
