@@ -87,13 +87,13 @@ set(ProjectId ${ProjectName})
 # Set it to ON if you are in unstable branch otherwise set it to OFF
 set(ProjectVersionSnapshot OFF)
 set(ProjectVersionMajor 2)
-set(ProjectVersionMinor 5)
+set(ProjectVersionMinor 6)
 set(ProjectVersionPatch 0)
 set(ProjectVersion "${ProjectVersionMajor}.${ProjectVersionMinor}.${ProjectVersionPatch}")
 
 # You can use any string you wish, 
 # but i will be changed to snapshot if it is enabled. 
-set(ProjectReleaseType "beta")
+set(ProjectReleaseType "")
 if (ProjectVersionSnapshot)
     set(ProjectReleaseType "snapshot")
 endif()
