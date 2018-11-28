@@ -259,11 +259,11 @@ IOResult ObjCommon::Load(ILoad * iload) {
 
 void ObjCommon::slotFileOpened(void * param, NotifyInfo *) {
     ObjCommon * d = static_cast<ObjCommon*>(param);
-    // NodeUtils::isSceneContainMainObj() - this is needed for the old scenes which 
+    // NodeUtils::isXplnScene() - this is needed for the old scenes which 
     // have not set the flag d->pSettings.isSavedAsXplnScene()
     // This situation slows down loading non-x-plane scenes because it needs
     // to check whether the scene contains main x-plane object.
-    if (d->pSettings.isSavedAsXplnScene() || NodeUtils::isSceneContainMainObj()) {
+    if (d->pSettings.isSavedAsXplnScene() || NodeUtils::isXplnScene()) {
         d->mSceneUpdater.update(d->pSettings.sceneVersion(), d->pSettings.pluginVersion());
     }
 }

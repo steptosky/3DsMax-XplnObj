@@ -66,7 +66,7 @@ bool NodeUtils::visitAllOf(INode * root, const Function & fn) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool NodeUtils::isSceneContainMainObj() {
+bool NodeUtils::isXplnScene() {
     auto const hasMainObj = [](INode * n) ->bool { return !MainObjParamsWrapper::isMainObj(n); };
     return !visitChildrenOf(GetCOREInterface()->GetRootNode(), hasMainObj);
 }

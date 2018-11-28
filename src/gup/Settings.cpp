@@ -115,7 +115,7 @@ bool Settings::isSavedAsXplnScene() const {
 
 void Settings::prepareDataForSave() {
     setSceneVersion(pluginVersion());
-    setValue("xpln_scene", NodeUtils::isSceneContainMainObj());
+    setValue("xpln_scene", NodeUtils::isXplnScene());
 }
 
 void Settings::setSceneVersion(const sts::semver::SemVersion & version) {
