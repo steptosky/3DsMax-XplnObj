@@ -11,7 +11,8 @@ Importing is still under developing and doesn't work properly!
 
 ## Dependencies
 - [CMake [3.10.0+]](https://cmake.org/) building tool.
-- [Conan [1.6+]](https://www.conan.io) package manager.  
+- [Conan [1.6+]](https://www.conan.io) package manager.
+- [Python 3](https://www.python.org) - is needed for the Conan.
 - [XplnObj](https://github.com/steptosky/XplnObj) is used via conan.
 - [sts-signals](https://github.com/steptosky/sts-signals) is used via conan.
 - [sts-semver](https://github.com/steptosky/sts-semver) is used via conan.
