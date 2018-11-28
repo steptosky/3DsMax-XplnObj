@@ -166,7 +166,7 @@ INode * ConverterMain::toMax(const xobj::ObjMain & inXObj) {
     attr.setCockpitRegion(inXObj.pAttr.cockpitRegion(xobj::AttrCockpitRegion::r3), xobj::AttrCockpitRegion::r3);
     attr.setCockpitRegion(inXObj.pAttr.cockpitRegion(xobj::AttrCockpitRegion::r4), xobj::AttrCockpitRegion::r4);
 
-    node->SetName(toTSTR(inXObj.objectName().c_str()));
+    node->SetName(xobj::toMStr(inXObj.objectName()));
     return node;
 }
 

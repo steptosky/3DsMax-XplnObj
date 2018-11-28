@@ -27,107 +27,37 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "DlgAbout.h "
-
-#pragma warning(push, 0)
-#include <max.h>
-#include <3dsmaxport.h>
-#pragma warning(pop)
-
+#include "DlgAbout.h"
 #include "resource/resource.h"
 #include "common/Logger.h"
-#include "resource/ResHelper.h"
 
 namespace ui {
 namespace win {
-
-    /**************************************************************************************************/
-    //////////////////////////////////////////* Static area *///////////////////////////////////////////
-    /**************************************************************************************************/
-
-    INT_PTR CALLBACK DlgAbout::callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-        DlgAbout * theDlg;
-        if (message == WM_INITDIALOG) {
-            theDlg = reinterpret_cast<DlgAbout*>(lParam);
-            theDlg->mDlgMain.setup(hWnd);
-            DLSetWindowLongPtr(hWnd, lParam);
-        }
-        else {
-            if ((theDlg = DLGetWindowLongPtr<DlgAbout *>(hWnd)) == nullptr) {
-                return FALSE;
-            }
-            if (message == WM_DESTROY) {
-                theDlg->mDlgMain.release();
-            }
-        }
-
-        //------------------------------------------------------
-
-        switch (message) {
-            case WM_INITDIALOG: {
-                theDlg->InitDlg(hWnd);
-                break;
-            }
-            case WM_COMMAND: {
-                switch (LOWORD(wParam)) {
-                    case BTN_OK:
-                        EndDialog(hWnd, 1);
-                        break;
-                    default: break;
-                }
-                break;
-            }
-            case WM_DESTROY: {
-                theDlg->DestroyDlg(hWnd);
-                break;
-            }
-            case WM_CLOSE: {
-                EndDialog(hWnd, 0);
-                break;
-            }
-            default: break;
-        }
-        return FALSE;
-    }
-
-    /**************************************************************************************************/
-    ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-    /**************************************************************************************************/
-
-    DlgAbout::DlgAbout() {}
-
-    DlgAbout::~DlgAbout() {}
 
     /**************************************************************************************************/
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
     void DlgAbout::open() {
-        DialogBoxParam(ResHelper::hInstance, MAKEINTRESOURCE(DLG_ABOUT), GetCOREInterface()->GetMAXHWnd(),
-                       callBack, reinterpret_cast<LPARAM>(this));
+        //--------------------------
+        mLblThisAbout.setupChild(mDlgMain, LBL_TEXT);
+        mLblLibAbout.setupChild(mDlgMain, LBL_TEXT2);
+        mBtnOk.setupChild(mDlgMain, BTN_OK);
+        //--------------------------
+        mDlgMain.onInit = [&](auto win) {
+            win->centerByParent();
+            mLblThisAbout.setXObjText(Logger::aboutInfo(true));
+            mLblLibAbout.setXObjText(Logger::aboutXLibInfo(true));
+
+        };
+        mBtnOk.onClick = [&](auto) { mDlgMain.destroy(); };
+        //--------------------------
+        mDlgMain.create(GetCOREInterface()->GetMAXHWnd(), DLG_ABOUT);
     }
 
     void DlgAbout::show() {
         DlgAbout dlg;
         dlg.open();
-    }
-
-    void DlgAbout::InitDlg(HWND hWnd) {
-        CenterWindow(mDlgMain.hwnd(), mDlgMain.parent());
-        mHWnd = hWnd;
-
-        mLblThisAbout.setup(hWnd, LBL_TEXT);
-        mLblLibAbout.setup(hWnd, LBL_TEXT2);
-        mBtnOk.setup(hWnd, BTN_OK);
-        mLblThisAbout.setText(Logger::aboutInfo(true));
-        mLblLibAbout.setText(Logger::aboutXLibInfo(true));
-        mDlgMain.show();
-    }
-
-    void DlgAbout::DestroyDlg(HWND /*hWnd*/) {
-        mLblThisAbout.release();
-        mLblLibAbout.release();
-        mBtnOk.release();
     }
 
     /**************************************************************************************************/

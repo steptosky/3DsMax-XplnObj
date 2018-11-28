@@ -33,27 +33,17 @@
 #include <iparamb2.h>
 #pragma warning(pop)
 
-#include "MainObjectParams.h"
-
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-class MainObjParamBlocks {
-    MainObjParamBlocks() = default;
-    virtual ~MainObjParamBlocks() = default;
+class MainObjPbAttr {
+    MainObjPbAttr() = default;
+    virtual ~MainObjPbAttr() = default;
 public:
 
     enum eVersions {
         PbVersionAttr = 2,
-        PbVersionExport = 1,
-        PbVersionDisplay = 1,
-    };
-
-    enum eOrder {
-        PbOrderAttr = eMainObjParamsBlocks::MainObjAttrParams,
-        PbOrderExport = eMainObjParamsBlocks::MainObjExpParams,
-        PbOrderDisplay = eMainObjParamsBlocks::MainObjDisplay,
     };
 
     enum eRollups {
@@ -65,13 +55,9 @@ public:
         RollCount,
     };
 
-    static ParamBlockDesc2 mAttr;
-    static ParamBlockDesc2 mExport;
-    static ParamBlockDesc2 mDisplay;
+    static ParamBlockDesc2 mPb;
 
-    static void postLoadAttr(IParamBlock2 * paramBlock);
-    static void postLoadExport(IParamBlock2 * paramBlock);
-    static void postLoadDisplay(IParamBlock2 * paramBlock);
+    static void postLoad(IParamBlock2 * paramBlock);
 
 };
 

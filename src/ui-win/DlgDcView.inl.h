@@ -29,15 +29,7 @@
 
 #pragma once
 
-#pragma warning(push, 0)
-#include <3dsmaxport.h>
-#pragma warning(pop)
-
-#include <windows.h>
-#include <xpln/utils/DatarefsFile.h>
 #include "resource/resource.h"
-#include "resource/ResHelper.h"
-#include "Utils.h"
 #include "DlgEditDataref.h"
 #include "DlgEditCommand.h"
 
@@ -45,114 +37,41 @@ namespace ui {
 namespace win {
 
     /**************************************************************************************************/
-    //////////////////////////////////////////* Static area *///////////////////////////////////////////
-    /**************************************************************************************************/
-
-    template<typename T>
-    INT_PTR CALLBACK DlgDcView<T>::callBack(const HWND hWnd, const UINT message, const WPARAM wParam, const LPARAM lParam) {
-        DlgDcView<T> * theDlg;
-        if (message == WM_INITDIALOG) {
-            theDlg = reinterpret_cast<DlgDcView<T>*>(lParam);
-            theDlg->mDlgMain.setup(hWnd);
-            DLSetWindowLongPtr(hWnd, lParam);
-        }
-        else {
-            if ((theDlg = DLGetWindowLongPtr<DlgDcView<T> *>(hWnd)) == nullptr) {
-                return FALSE;
-            }
-            if (message == WM_DESTROY) {
-                theDlg->mDlgMain.release();
-            }
-        }
-
-        //------------------------------------------------------
-
-        switch (message) {
-            case WM_INITDIALOG: {
-                theDlg->initDlg(hWnd);
-                break;
-            }
-            case WM_COMMAND: {
-                switch (LOWORD(wParam)) {
-                    case BTN_NEW_DATA: {
-                        theDlg->newData();
-                        break;
-                    }
-                    case BTN_OK: {
-                        EndDialog(hWnd, 1);
-                        break;
-                    }
-                    case BTN_CANCEL: {
-                        EndDialog(hWnd, 0);
-                        break;
-                    }
-                    case BTN_CLEAR: {
-                        theDlg->clearSearchKey();
-                        break;
-                    }
-                    case IDC_COMBO_FILES: {
-                        if (HIWORD(wParam) == CBN_SELCHANGE) {
-                            theDlg->fileChanged();
-                        }
-                        break;
-                    }
-                    default: break;
-                }
-                break;
-            }
-            case WM_CUSTEDIT_ENTER: {
-                switch (LOWORD(wParam)) {
-                    case EDIT_KEY: {
-                        theDlg->keyEntered();
-                        break;
-                    }
-                    case EDIT_SEARCH: {
-                        theDlg->searchKey();
-                        break;
-                    }
-                    default: break;
-                }
-                break;
-            }
-            case WM_NOTIFY: {
-                switch (LOWORD(wParam)) {
-                    case IDC_LIST: {
-                        const auto item = reinterpret_cast<LPNMHDR>(lParam);
-                        switch (item->code) {
-                            case NM_CLICK: {
-                                theDlg->keySelected();
-                                break;
-                            }
-                            default: break;
-                        }
-                        break;
-                    }
-                    default: break;
-                }
-                break;
-            }
-            case WM_DESTROY: {
-                theDlg->destroyDlg(hWnd);
-                break;
-            }
-            case WM_CLOSE: {
-                EndDialog(hWnd, 0);
-                break;
-            }
-            default: break;
-        }
-        return FALSE;
-    }
-
-    /**************************************************************************************************/
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
     template<typename T>
     void DlgDcView<T>::open() {
-        const auto res = DialogBoxParam(ResHelper::hInstance, MAKEINTRESOURCE(DLG_DC),
-                                        GetCOREInterface()->GetMAXHWnd(),
-                                        callBack, reinterpret_cast<LPARAM>(this));
+        mLblCurrPath.setupChild(mDialog, IDC_PATH);
+        mLblCurrPathType.setupChild(mDialog, IDC_PATH_TYPE);
+        mBtnNewData.setupChild(mDialog, BTN_NEW_DATA);
+        mBtnOk.setupChild(mDialog, BTN_OK);
+        mBtnCancel.setupChild(mDialog, BTN_CANCEL);
+        mBtnClearSearch.setupChild(mDialog, BTN_CLEAR);
+        mComboFile.setupChild(mDialog, IDC_COMBO_FILES);
+        mListDc.setupChild(mDialog, IDC_LIST);
+        mEditKey.setupChild(mDialog, EDIT_KEY);
+        mEditSearchKey.setupChild(mDialog, EDIT_SEARCH);
+        //-------------------------------------------------
+        mDialog.onClose = [&](auto) { mDialog.destroy(0); };
+        mDialog.onInit = [&](auto) { initDlg(mDialog); };
+
+        mBtnOk.onClick = [&](auto) { mDialog.destroy(1); };
+        mBtnCancel.onClick = [&](auto) { mDialog.destroy(0); };
+
+        mBtnNewData.onClick = [&](auto) { newData(); };
+        mBtnClearSearch.onClick = [&](auto) { clearSearchKey(); };
+
+        mComboFile.onSelectionChanged = [&](auto) { fileChanged(); };
+
+        mEditKey.onLostFocus = [&](auto) { keyEntered(); };
+        mEditKey.onEnter = mEditKey.onLostFocus;
+
+        mEditSearchKey.onEnter = [&](auto) { searchKey(); };
+
+        mListDc.onSelectionChanged = [&](auto) { keySelected(); };
+        //-------------------------------------------------
+        const auto res = mDialog.create(GetCOREInterface()->GetMAXHWnd(), DLG_DC);
         if (res == 1) {
             sigKeyChanged(mCurrFile, mCurrKey);
         }
@@ -161,21 +80,21 @@ namespace win {
     template<typename T>
     void DlgDcView<T>::setAvailableFiles(const typename T::Files * files) {
         DbgAssert(files);
-        mCtrlComboFile.clear();
-        mCtrlBtnNewData.enable(false);
+        mComboFile.clear();
+        mBtnNewData.enable(false);
         for (const auto & f : *files) {
-            mCtrlComboFile.addItem(f->mDisplayName.data());
+            mComboFile.addItem(f->mDisplayName);
         }
     }
 
     template<typename T>
     void DlgDcView<T>::setCurrKey(const MStr & key) {
-        mCtrlKey->SetText(MStr(key));
+        mEditKey.setText(key);
     }
 
     template<typename T>
     void DlgDcView<T>::setSearchKey(const MStr & key) {
-        mCtrlSearchKey->SetText(MStr(key));
+        mEditSearchKey.setText(key);
     }
 
     template<typename T>
@@ -183,17 +102,17 @@ namespace win {
         mCurrFile = file;
 
         if (!mCurrFile) {
-            mCtrlList.clear();
-            mCtrlComboFile.setCurrSelected(-1);
+            mListDc.clear();
+            mComboFile.setSelected(-1);
             return;
         }
 
-        mCtrlComboFile.setCurrSelected(mCurrFile->mDisplayName.data());
-        mCtrlLblCurrPathType.setText(mCurrFile->mIsEditable ? _T("  [ editable ]") : _T("  [ not editable ]"));
+        mComboFile.setSelected(mCurrFile->mDisplayName);
+        mLblCurrPathType.setText(mCurrFile->mIsEditable ? _T("  [ editable ]") : _T("  [ not editable ]"));
         auto currPath = mCurrFile->mFilePath.GetString();
-        mCtrlLblCurrPath.setText(currPath.data());
+        mLblCurrPath.setText(currPath);
 
-        mCtrlList.showData(mCurrFile, selectedItem);
+        mListDc.showData(mCurrFile, selectedItem);
         setDataEditable(mCurrFile->mIsEditable);
 
         if (selectedItem) {
@@ -224,34 +143,12 @@ namespace win {
     }
 
     template<typename T>
-    void DlgDcView<T>::initDlg(const HWND hWnd) {
-        CenterWindow(mDlgMain.hwnd(), mDlgMain.parent());
-        SetWindowText(hWnd, tittle());
-        mCtrlList.setup(GetDlgItem(hWnd, IDC_LIST));
-        mCtrlBtnNewData.setup(hWnd, BTN_NEW_DATA);
-        mCtrlLblCurrPath.setup(hWnd, IDC_PATH);
-        mCtrlLblCurrPathType.setup(hWnd, IDC_PATH_TYPE);
-        mCtrlComboFile.setup(hWnd, IDC_COMBO_FILES);
-        mCtrlKey = GetICustEdit(GetDlgItem(hWnd, EDIT_KEY));
-        mCtrlSearchKey = GetICustEdit(GetDlgItem(hWnd, EDIT_SEARCH));
-
-        mCtrlBtnNewData.setToolTip(_T("Create new dataref/command in editable file"));
-
-#if MAX_VERSION_MAJOR > 10 // 2008
-        mCtrlSearchKey->SetTooltip(true, _T("Type text for searching and press ENTER"));
-#endif
+    void DlgDcView<T>::initDlg(wrapper::ModalDialog & dialog) {
+        dialog.centerByParent();
+        dialog.setText(tittle());
+        mBtnNewData.setToolTip(_T("Create new dataref/command in editable file"));
+        mEditSearchKey.setToolTip(_T("Type text for searching and press ENTER"));
         sigReady();
-    }
-
-    template<typename T>
-    void DlgDcView<T>::destroyDlg(const HWND /*hWnd*/) {
-        ReleaseICustEdit(mCtrlSearchKey);
-        ReleaseICustEdit(mCtrlKey);
-        mCtrlBtnNewData.release();
-        mCtrlLblCurrPath.release();
-        mCtrlLblCurrPathType.release();
-        mCtrlComboFile.release();
-        mCtrlList.release();
     }
 
     /**************************************************************************************************/
@@ -260,30 +157,27 @@ namespace win {
 
     template<typename T>
     void DlgDcView<T>::fileChanged() {
-        sigCurrFileChanged(MStr(mCtrlComboFile.currSelectedText().data()));
+        sigCurrFileChanged(mComboFile.selectedText().value_or(MStr()));
     }
 
     template<typename T>
     void DlgDcView<T>::keyEntered() {
-        Utils::getText(mCtrlKey, mCurrKey);
+        mCurrKey = mEditKey.text();
     }
 
     template<typename T>
     void DlgDcView<T>::searchKey() {
-        if (mCtrlSearchKey->HasFocus()) {
-            MStr str;
-            Utils::getText(mCtrlSearchKey, str);
-            sigSearchKeyChanged(str);
-            mCtrlList.showData(mCurrFile, std::nullopt, xobj::fromMStr(str));
-        }
+        auto str = mEditSearchKey.text();
+        sigSearchKeyChanged(str);
+        mListDc.showData(mCurrFile, std::nullopt, xobj::fromMStr(str));
     }
 
     template<typename T>
     void DlgDcView<T>::clearSearchKey() {
         MStr str;
-        mCtrlSearchKey->SetText(str);
+        mEditSearchKey.setText(str);
         sigSearchKeyChanged(str);
-        mCtrlList.showData(mCurrFile, std::nullopt);
+        mListDc.showData(mCurrFile, std::nullopt);
     }
 
     template<typename T>
@@ -291,14 +185,14 @@ namespace win {
         if (!mCurrFile) {
             return;
         }
-        const auto index = mCtrlList.selectedIndex();
+        const auto index = mListDc.selectedIndex();
         if (!index || *index >= mCurrFile->mData.size()) {
-            mCtrlKey->SetText(_T(""));
+            mEditKey.setText(_T(""));
             return;
         }
         const auto & data = mCurrFile->mData.at(*index);
-        MStr str = xobj::toMStr(data.mKey);
-        mCtrlKey->SetText(str);
+        const MStr str = xobj::toMStr(data.mKey);
+        mEditKey.setText(str);
         keyEntered();
     }
 
@@ -335,16 +229,16 @@ namespace win {
                 if (index) {
                     MStr message;
                     message.Append(_T("Key [ ")).Append(xobj::toMStr(res->mKey)).Append(_T(" ] already exists"));
-                    MessageBox(mDlgMain.hwnd(), message, _T("Key duplicate"), MB_OK | MB_ICONWARNING);
+                    MessageBox(mDialog.hwnd(), message, _T("Key duplicate"), MB_OK | MB_ICONWARNING);
                     currData = *res;
                     continue;
                 }
 
                 mCurrFile->mData.emplace_back(*res);
-                mCurrFile->sortData();
+                mCurrFile->sortDataIfEnabled();
                 mCurrFile->saveData(mCurrFile->mFilePath);
                 index = mCurrFile->indexOfKey(res->mKey);
-                index ? mCtrlList.showData(mCurrFile, index) : mCtrlList.showData(mCurrFile, std::nullopt);
+                index ? mListDc.showData(mCurrFile, index) : mListDc.showData(mCurrFile, std::nullopt);
             }
             break;
         } while (true);
@@ -356,7 +250,7 @@ namespace win {
 
     template<typename T>
     void DlgDcView<T>::setDataEditable(const bool state) {
-        mCtrlBtnNewData.enable(state);
+        mBtnNewData.enable(state);
     }
 
     /**************************************************************************************************/

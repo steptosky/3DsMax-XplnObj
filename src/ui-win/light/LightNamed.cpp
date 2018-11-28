@@ -69,9 +69,9 @@ namespace win {
                 switch (LOWORD(wParam)) {
                     case IDC_CMB_LIGHTNAMED: {
                         if (HIWORD(wParam) == CBN_SELCHANGE) {
-                            auto text = theDlg->cCmbName.currSelectedText();
+                            const auto text = theDlg->cCmbName.currSelectedText();
                             theDlg->mData->setName(sts::toMbString(text));
-                            Utils::setText(theDlg->cName, sts::toString(text));
+                            theDlg->cName->SetText(xobj::toMStr(text));
                             theDlg->eventParamChanged(true);
                         }
                         break;
@@ -220,7 +220,7 @@ namespace win {
         if (mData) {
             enableControls();
 
-            Utils::setText(cName, sts::toString(mData->name()));
+            cName->SetText(xobj::toMStr(mData->name()));
             const auto iter = mPreDefinedList.find(mData->name());
             if (iter != mPreDefinedList.end()) {
                 cCmbName.setCurrSelected(sts::toString(*iter));

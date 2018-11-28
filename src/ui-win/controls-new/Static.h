@@ -1,5 +1,7 @@
+#pragma once
+
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2018, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -27,34 +29,44 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "ProgressBar.h "
-#include <commctrl.h>
+#include "Control.h"
 
 namespace ui {
-namespace ctrl {
+namespace win {
+    namespace wrapper {
 
-    /**************************************************************************************************/
-    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
-    /**************************************************************************************************/
+        class Window;
 
-    void ProgressBar::setRange(int inStart, int inStop) {
-        SendMessage(hwnd(), PBM_SETRANGE, 0, MAKELPARAM(inStart, inStop));
+        /**************************************************************************************************/
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        /**************************************************************************************************/
+
+        class Static : public Control {
+        public:
+
+            //-------------------------------------------------------------------------
+
+            Static() = default;
+            Static(const Static &) = delete;
+            Static(Static &&) = delete;
+
+            virtual ~Static() = default;
+
+            Static & operator=(const Static &) = delete;
+            Static & operator=(Static &&) = delete;
+
+            //-------------------------------------------------------------------------
+
+        protected:
+
+            std::optional<INT_PTR> procedure(UINT message, WPARAM wParam, LPARAM lParam) override;
+
+        };
+
+        /**************************************************************************************************/
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        /**************************************************************************************************/
+
     }
-
-    void ProgressBar::setStep(int inStep) {
-        SendMessage(hwnd(), PBM_SETSTEP, (WPARAM)inStep, 0);
-    }
-
-    void ProgressBar::stepIt() {
-        SendMessage(hwnd(), PBM_STEPIT, 0, 0);
-    }
-
-    void ProgressBar::setPosition(int inCurrPosition) {
-        SendMessage(hwnd(), PBM_SETPOS, (WPARAM)inCurrPosition, 0);
-    }
-
-    /**************************************************************************************************/
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**************************************************************************************************/
 }
 }

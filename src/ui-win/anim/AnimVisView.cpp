@@ -188,14 +188,14 @@ namespace win {
 
     void AnimVisView::clearValues() {
         cListKeys.clear();
-        Utils::setText(cEditDataRef, sts::toString("none"));
+        cEditDataRef->SetText(_T("none"));
         cSpnValue1->SetValue(0.0f, FALSE);
         cSpnValue2->SetValue(1.0f, FALSE);
     }
 
     void AnimVisView::setDataRefValueAsToolType() {
 #if MAX_VERSION_MAJOR > 11
-    cEditDataRef->SetTooltip(true, Utils::getText(cEditDataRef).c_str());
+        cEditDataRef->SetTooltip(true, Utils::getText(cEditDataRef));
 #endif
     }
 
@@ -355,7 +355,7 @@ namespace win {
         }
         cSpnValue1->SetValue(sts::toFloat(list2[0]), FALSE);
         cSpnValue2->SetValue(sts::toFloat(list2[1]), FALSE);
-        Utils::setText(cEditDataRef, sts::toString(list2[2]));
+        cEditDataRef->SetText(xobj::toMStr(list2[2]));
         setDataRefValueAsToolType();
     }
 

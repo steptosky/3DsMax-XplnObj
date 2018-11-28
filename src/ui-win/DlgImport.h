@@ -29,14 +29,11 @@
 
 #pragma once
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
-
-#include "ui-win/controls/Base.h"
 #include "converters/ConverterToMax.h"
-#include "ui-win/controls/Edit.h"
-#include "common/Logger.h"
+#include "ui-win/controls-new/ModalDialog.h"
+#include "ui-win/controls-new/EditBox.h"
+#include "ui-win/controls-new/Button.h"
+#include "ui-win/controls-new/Static.h"
 
 namespace ui {
 namespace win {
@@ -48,26 +45,27 @@ namespace win {
     class DlgImport {
     public:
 
-        DlgImport();
-        ~DlgImport();
+        //-------------------------------------------------------------------------
+
+        DlgImport() = default;
+        ~DlgImport() = default;
+
+        //-------------------------------------------------------------------------
 
         bool show(const TCHAR * inFileName, Interface * inIp, bool suppressPrompts);
 
+        //-------------------------------------------------------------------------
+
     private:
 
-        HWND mHWnd = nullptr;;
-        void InitDlg(HWND hWnd);
-        void DestroyDlg(HWND hWnd);
-
-        ctrl::Base mLblVersion;
-
-        ctrl::Base mBtnCheckUpdate;
-        ctrl::Base mBtnDonate;
-        ctrl::Base mBtnOk;
-        ctrl::Base mBtnCancel;
-        ctrl::Base mBtnAbout;;
-        ctrl::Edit mEdtLog;
-        ctrl::Base mDlgMain;
+        wrapper::Static mLblVersion;
+        wrapper::Button mBtnCheckUpdate;
+        wrapper::Button mBtnDonate;
+        wrapper::Button mBtnOk;
+        wrapper::Button mBtnCancel;
+        wrapper::Button mBtnAbout;;
+        wrapper::EditBox mEdtLog;
+        wrapper::ModalDialog mDlgMain;
 
         //-------------------------------------------------------------------------
 
@@ -76,7 +74,6 @@ namespace win {
 
         //-------------------------------------------------------------------------
 
-        static INT_PTR CALLBACK callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
         static void logCallback(sts::BaseLogger::eType type, const char * msg);
 
         //-------------------------------------------------------------------------

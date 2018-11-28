@@ -38,6 +38,7 @@
 #include "common/String.h"
 #include "IDcView.h"
 #include "common/Config.h"
+#include "gup/Settings.h"
 
 struct NotifyInfo;
 
@@ -68,20 +69,22 @@ public:
 
 private:
 
+    void onSettingsChanged(Settings *);
+
     void loadSimDatarefs();
     void loadProjectDatarefs();
 
     void unloadIf(const std::function<bool(const typename IView::Files::value_type & v)> & fn);
 
-    void slotSimDirChanged(Config &, const MaxSDK::Util::Path &, const MaxSDK::Util::Path &);
+    void onSimDirChanged(Config &, const MaxSDK::Util::Path &, const MaxSDK::Util::Path &);
 
-    void slotViewReady();
-    void slotKeyChanged(const typename IView::FilePtr & file, const MStr & key);
-    void slotSearchKeyChanged(const MStr & data);
-    void slotCurrFileChanged(const MStr & name);
-    static void slotFileOpened(void * param, NotifyInfo *);
-    static void slotSystemReset(void * param, NotifyInfo *);
-    static void slotSystemNew(void * param, NotifyInfo *);
+    void onViewReady();
+    void onKeyChanged(const typename IView::FilePtr & file, const MStr & key);
+    void onSearchKeyChanged(const MStr & data);
+    void onCurrFileChanged(const MStr & name);
+    static void onFileOpened(void * param, NotifyInfo *);
+    static void onSystemReset(void * param, NotifyInfo *);
+    static void onSystemNew(void * param, NotifyInfo *);
 
     static MaxSDK::Util::Path simDataFile(Config & config);
     static MaxSDK::Util::Path projectDataFile(Config & config);

@@ -173,7 +173,6 @@
 #define IDD_UPDATED_OBJECTS             1139
 #define BTN_CANCEL                      1140
 #define SPN_SLOPELIMIT_ROLLMAX_EDIT     1140
-#define BTN_OK2                         1140
 #define BTN_SELECT_SIM_PATH             1140
 #define BTN_ABOUT                       1141
 #define SPN_SLOPELIMIT_ROLLMAX          1141
@@ -301,7 +300,6 @@
 #define BTN_COMMAND                     1221
 #define DLG_EDIT_DATAREF                1221
 #define EDIT_COMMAND2                   1222
-#define DLG_EDIT_CPMMAND                1222
 #define DLG_EDIT_COMMAND                1222
 #define BTN_COMMAND2                    1223
 #define DLG_SETTINGS                    1223
@@ -350,6 +348,10 @@
 #define LBL_KEY                         1271
 #define CHK_WRITABLE                    1272
 #define IDC_SIM_PATH                    1273
+#define IDC_CHK_DATAREFS_ID             1274
+#define IDC_CHK_COMMANDS_ID             1275
+#define IDC_CHK_DATAREFS_SORT           1276
+#define IDC_CHK_COMMANDS_SORT           1277
 
 // Next default values for new objects
 // 
@@ -357,7 +359,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        173
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1274
+#define _APS_NEXT_CONTROL_VALUE         1275
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

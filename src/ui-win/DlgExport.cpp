@@ -27,19 +27,14 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "DlgExport.h "
+#include "DlgExport.h"
+
 #pragma warning(push, 0)
-#include <max.h>
-#include <3dsmaxport.h>
 #include <IPathConfigMgr.h>
 #pragma warning(pop)
 
-#include <windows.h>
-#include <commctrl.h>
-
 #include <xpln/obj/ObjMain.h>
 
-#include "common/String.h"
 #include "resource/resource.h"
 #include "Info.h"
 #include "common/Logger.h"
@@ -99,131 +94,16 @@ namespace win {
                     gExportDlg->mLogText.append(sts::BaseLogger::typeAsString(type))
                               .append(": ").append(msg).append("\r\n");
                 }
-                gExportDlg->mEdtLog.setText(gExportDlg->mLogText);
+                gExportDlg->mEdtLog.setXObjText(gExportDlg->mLogText);
             }
         }
     }
-
-    /**************************************************************************************************/
-    //////////////////////////////////////////* Static area *///////////////////////////////////////////
-    /**************************************************************************************************/
-
-    INT_PTR CALLBACK DlgExport::callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-        DlgExport * theDlg;
-        if (message == WM_INITDIALOG) {
-            theDlg = reinterpret_cast<DlgExport*>(lParam);
-            theDlg->mDlgMain.setup(hWnd);
-            DLSetWindowLongPtr(hWnd, lParam);
-        }
-        else {
-            if ((theDlg = DLGetWindowLongPtr<DlgExport *>(hWnd)) == nullptr) {
-                return FALSE;
-            }
-            if (message == WM_DESTROY) {
-                theDlg->mDlgMain.release();
-            }
-        }
-
-        //------------------------------------------------------
-
-        switch (message) {
-            case WM_INITDIALOG: {
-                theDlg->InitDlg(hWnd);
-                break;
-            }
-            case WM_COMMAND: {
-                switch (LOWORD(wParam)) {
-                    case BTN_OK: {
-                        if (!theDlg->mFinished) {
-                            theDlg->startExport();
-                        }
-                        else {
-                            EndDialog(hWnd, 1);
-                        }
-                        break;
-                    }
-                    case BTN_SAVE_LOG: {
-                        theDlg->saveLogRequest();
-                        break;
-                    }
-                    case BTN_SELECT_ALL: {
-                        theDlg->mLstObjects.checkAll(true);
-                        break;
-                    }
-                    case BTN_UNSELECT_ALL: {
-                        theDlg->mLstObjects.checkAll(false);
-                        break;
-                    }
-                    case BTN_CANCEL: {
-                        EndDialog(hWnd, 0);
-                        break;
-                    }
-                    case BTN_DONATE: {
-                        MdLinks::openDonate();
-                        break;
-                    }
-                    case BTN_CHECK_FOR_UPDATE: {
-                        MdLinks::openPluginBinary();
-                        break;
-                    }
-                    case BTN_ABOUT: {
-                        Factory::showAboutWindow();
-                        break;
-                    }
-                    default: break;
-                }
-                break;
-            }
-            case WM_NOTIFY: {
-                switch (LOWORD(wParam)) {
-                    case LST_OBJECTS: {
-                        LPNMHDR some_item = reinterpret_cast<LPNMHDR>(lParam);
-                        switch (some_item->code) {
-                            case LVN_ITEMCHANGED: {
-                                // Note: There is the loop call when the state is changed from the code while main nodes searching.
-                                LPNMLISTVIEW pnmv = reinterpret_cast<LPNMLISTVIEW>(lParam);
-                                if (pnmv->uChanged == LVIF_STATE) {
-                                    theDlg->slotSelObjChanged(pnmv->iItem);
-                                }
-                                break;
-                            }
-                            case NM_CUSTOMDRAW: {
-                                return theDlg->mLstObjects.draw(lParam);
-                            }
-                            default: break;
-                        }
-                        break;
-                    }
-                    default: break;
-                }
-                break;
-            }
-            case WM_DESTROY: {
-                theDlg->DestroyDlg(hWnd);
-                break;
-            }
-            case WM_CLOSE: {
-                EndDialog(hWnd, 0);
-                break;
-            }
-            default: break;
-        }
-        return FALSE;
-    }
-
-    /**************************************************************************************************/
-    ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
-    /**************************************************************************************************/
-
-    DlgExport::DlgExport() {}
-
-    DlgExport::~DlgExport() {}
 
     /**************************************************************************************************/
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    bool DlgExport::show(const TCHAR * inFileName, Interface * inIp, bool suppressPrompts, bool selectedOnly) {
+    bool DlgExport::show(const TCHAR * inFileName, Interface * inIp, const bool suppressPrompts, const bool selectedOnly) {
         gExportDlg = this;
         mIp = inIp;
         mExpFileName = inFileName;
@@ -232,36 +112,46 @@ namespace win {
         mFinished = false;
         mErrorCount = 0;
         mWarningCount = 0;
+        //------------------------------
+        mLblVersion.setupChild(mDlgMain, LBL_VERSION);
+        mBtnCheckUpdate.setupChild(mDlgMain, BTN_CHECK_FOR_UPDATE);
+        mBtnSaveLog.setupChild(mDlgMain, BTN_SAVE_LOG);
+        mBtnOk.setupChild(mDlgMain, BTN_OK);
+        mBtnCancel.setupChild(mDlgMain, BTN_CANCEL);
+        mBtnAbout.setupChild(mDlgMain, BTN_ABOUT);
+        mBtnSelAll.setupChild(mDlgMain, BTN_SELECT_ALL);
+        mBtnUnSelAll.setupChild(mDlgMain, BTN_UNSELECT_ALL);
+        mBtnDonate.setupChild(mDlgMain, BTN_DONATE);
+        mEdtLog.setupChild(mDlgMain, USER_OUPUT);
+        mChkAutoExport.setupChild(mDlgMain, CHK_AUTOEXPORT);
+        mLstObjects.setupChild(mDlgMain, LST_OBJECTS);
+        //------------------------------
+        mBtnOk.onClick = [&](auto) { mFinished ? mDlgMain.destroy(1) : startExport(); };
+        mBtnSaveLog.onClick = [&](auto) { saveLogRequest(); };
+        mBtnSelAll.onClick = [&](auto) { mLstObjects.checkAll(true); };
+        mBtnUnSelAll.onClick = [&](auto) { mLstObjects.checkAll(false); };
+        mBtnCancel.onClick = [&](auto) { mDlgMain.destroy(0); };
+        mBtnCheckUpdate.onClick = [](auto) { MdLinks::openPluginBinary(); };
+        mBtnAbout.onClick = [](auto) { Factory::showAboutWindow(); };
+        mBtnDonate.onClick = [](auto) { MdLinks::openDonate(); };
 
-        INT_PTR res = DialogBoxParam(ResHelper::hInstance, MAKEINTRESOURCE(DLG_EXPORT), GetCOREInterface()->GetMAXHWnd(),
-                                     callBack, reinterpret_cast<LPARAM>(this));
+        mLstObjects.onItemChanged = [&](auto, auto index) { slotSelObjChanged(index); };
+        //------------------------------
+        mDlgMain.onInit = [&](auto) { onInit(); };
+        mDlgMain.onDestroy = [&](auto) { saveConfigData(); };
+        //------------------------------
+        const auto res = mDlgMain.create(GetCOREInterface()->GetMAXHWnd(), DLG_EXPORT);
         gExportDlg = nullptr;
         return res != 0;
     }
 
-    void DlgExport::InitDlg(HWND hWnd) {
-        CenterWindow(mDlgMain.hwnd(), mDlgMain.parent());
-        SetWindowTextA(hWnd, "X-Plane Obj Export");
-        mHWnd = hWnd;
-
-        mLblVersion.setup(hWnd, LBL_VERSION);
-        mBtnCheckUpdate.setup(hWnd, BTN_CHECK_FOR_UPDATE);
-        mBtnSaveLog.setup(hWnd, BTN_SAVE_LOG);
-        mBtnOk.setup(hWnd, BTN_OK);
-        mBtnCancel.setup(hWnd, BTN_CANCEL);
-        mBtnAbout.setup(hWnd, BTN_ABOUT);
-        mBtnSelAll.setup(hWnd, BTN_SELECT_ALL);
-        mBtnUnSelAll.setup(hWnd, BTN_UNSELECT_ALL);
-        mBtnDonate.setup(hWnd, BTN_DONATE);
-        mEdtLog.setup(hWnd, USER_OUPUT);
-        mChkAutoExport.setup(hWnd, CHK_AUTOEXPORT);
-        mLstObjects.setup(hWnd, LST_OBJECTS);
-        mDlgMain.show();
-
+    void DlgExport::onInit() {
+        mDlgMain.centerByParent();
+        mDlgMain.setText(_T("X-Plane Obj Export"));
         mBtnSaveLog.disable();
 
-        sts::Str str(_T("Version: "));
-        str.append(sts::toString(Logger::versionShortString()));
+        MStr str(_T("Version: "));
+        str.Append(xobj::toMStr(Logger::versionShortString()));
         mLblVersion.setText(str);
 
         mBtnSaveLog.setToolTip(_T("Saves log which can help the developers to determine the problems. Use it for bug reports."));
@@ -275,21 +165,6 @@ namespace win {
         if (mChkAutoExport.isChecked()) {
             startExport();
         }
-    }
-
-    void DlgExport::DestroyDlg(HWND /*hWnd*/) {
-        saveConfigData();
-        mLblVersion.release();
-        mBtnCheckUpdate.release();
-        mBtnSaveLog.release();
-        mBtnOk.release();
-        mBtnCancel.release();
-        mBtnAbout.release();
-        mBtnSelAll.release();
-        mBtnUnSelAll.release();
-        mBtnDonate.release();
-        mChkAutoExport.release();
-        mLstObjects.release();
     }
 
     /**************************************************************************************************/
@@ -311,7 +186,7 @@ namespace win {
         if (cmn) {
             Settings & conf = cmn->pSettings;
             conf.beginGroup(TOTEXT(DlgExport));
-            mChkAutoExport.setState(conf.value(TOTEXT(mChkAutoExport), false));
+            mChkAutoExport.setChecked(conf.value(TOTEXT(mChkAutoExport), false));
             conf.endGroup();
         }
     }
@@ -332,12 +207,12 @@ namespace win {
 
     void DlgExport::saveLogRequest() {
         Interface8 * ip = GetCOREInterface8();
-        MSTR fileName;
+        MSTR fileName(_T("3DsMax-XplnObj-Log.txt"));
         MSTR initialDir(_T("C:\\Users\\%USERNAME%\\Documents"));
         FilterList extensionList;
-        extensionList.Append(_T("Log files(*.log)"));
-        extensionList.Append(_T("*.log"));
-        bool res = ip->DoMaxSaveAsDialog(GetCOREInterface()->GetMAXHWnd(), _T("Log saving"), fileName, initialDir, extensionList);
+        extensionList.Append(_T("Log files(*.txt)"));
+        extensionList.Append(_T("*.txt"));
+        const bool res = ip->DoMaxSaveAsDialog(GetCOREInterface()->GetMAXHWnd(), _T("Log saving"), fileName, initialDir, extensionList);
         if (res) {
             Logger::instance()->saveLog(fileName);
         }
@@ -390,11 +265,11 @@ namespace win {
 
         std::string mainFileName(sts::toMbString(mExpFileName));
         bool produceDerivedFiles = false;
-        size_t selNodeCoun = selectedNodeCount();
+        const auto selNodeCount = selectedNodeCount();
         if (selectedNodeCount() > 1) {
             produceDerivedFiles = true;
         }
-        CLMessage << "Found " << mMainNodesCollection.size() << " main object. Selected " << selNodeCoun;
+        CLMessage << "Found " << mMainNodesCollection.size() << " main object. Selected " << selNodeCount;
 
         for (auto currMainNode : mMainNodesCollection) {
             if (!currMainNode.first) {
@@ -474,7 +349,7 @@ namespace win {
             }
             else {
                 if (upd.version > sts::semver::SemVersion(XIO_VERSION_MAJOR, XIO_VERSION_MINOR, XIO_VERSION_PATCH)) {
-                    mBtnCheckUpdate.setText("Get update");
+                    mBtnCheckUpdate.setText(_T("Get update"));
                     CLWarning << "New version '" << upd.version.toString()
                             << "' is available. Please, press the '"
                             << sts::toMbString(mBtnCheckUpdate.text())
@@ -487,7 +362,7 @@ namespace win {
 
     size_t DlgExport::selectedNodeCount() {
         size_t count = 0;
-        for (auto currMainNode : mMainNodesCollection) {
+        for (const auto currMainNode : mMainNodesCollection) {
             if (!currMainNode.first) {
                 continue;
             }
@@ -504,21 +379,20 @@ namespace win {
 
     void DlgExport::collectMainNodes() {
         INode * nodeRoot = mIp->GetRootNode();
-        int count = nodeRoot->NumberOfChildren();
+        const auto count = nodeRoot->NumberOfChildren();
         for (int i = 0; i < count; ++i) {
             collectMainNodes(nodeRoot->GetChildNode(i), mMainNodesCollection);
         }
     }
 
     void DlgExport::collectMainNodes(INode * inRootNode, NodeCollection & outMains) {
-        assert(mLstObjects);
         if (MainObjParamsWrapper::isMainObj(inRootNode)) {
             MainObjParamsWrapper wrapper(inRootNode, mTime, FOREVER);
             int idx = mLstObjects.addItem(inRootNode->GetName());
             outMains.emplace_back(NodeCollectionStruct(inRootNode, idx));
             mLstObjects.checkItem(idx, wrapper.isExportEnable());
         }
-        int count = inRootNode->NumberOfChildren();
+        const auto count = inRootNode->NumberOfChildren();
         for (int i = 0; i < count; ++i) {
             collectMainNodes(inRootNode->GetChildNode(i), outMains);
         }

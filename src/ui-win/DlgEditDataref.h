@@ -29,13 +29,11 @@
 
 #pragma once
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
-
-#include <optional>
 #include <xpln/utils/DatarefsFile.h>
-#include "ui-win/controls/CheckBox.h"
+#include "ui-win/controls-new/Button.h"
+#include "ui-win/controls-new/ModalDialog.h"
+#include "ui-win/controls-new/MaxEdit.h"
+#include "ui-win/controls-new/CheckBox.h"
 
 namespace ui {
 namespace win {
@@ -63,20 +61,14 @@ namespace win {
 
         std::optional<xobj::Dataref> create(const xobj::Dataref & dataref);
 
-        void initDlg(HWND hWnd);
-        void destroyDlg(HWND hWnd);
-
-        void dataToUi();
-        void uiToData();
-
-        static INT_PTR callBack(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-        ctrl::Base mDlgMain;
-        ctrl::CheckBox mCtrChkWritable;
-        ICustEdit * mCtrlKey = nullptr;
-        ICustEdit * mCtrlValueType = nullptr;
-        ICustEdit * mCtrlValueUnits = nullptr;
-        ICustEdit * mCtrlDesc = nullptr;
+        wrapper::ModalDialog mDialog;
+        wrapper::CheckBox mChkIsWritable;
+        wrapper::Button mBtnOk;
+        wrapper::Button mBtnCancel;
+        wrapper::MaxEdit mEditKey;
+        wrapper::MaxEdit mEditValueType;
+        wrapper::MaxEdit mEditValueUnits;
+        wrapper::MaxEdit mEditDescription;
 
         xobj::Dataref mDataref;
 

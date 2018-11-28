@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 **  Copyright(C) 2017, StepToSky
 **
@@ -27,9 +29,9 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
-#include "common/String.h"
-#include "ui-win/controls/Base.h"
+#include "ui-win/controls-new/MaxFloatSpinner.h"
+#include "ui-win/controls-new/ModalDialog.h"
+#include "ui-win/controls-new/Button.h"
 
 namespace ui {
 namespace win {
@@ -46,31 +48,37 @@ namespace win {
             float datarefValue;
         };
 
-        typedef std::vector<AnimCalc::Key> KeyList;
+        typedef std::vector<Key> KeyList;
 
-        bool calculate(KeyList & inOutData, HWND inParent);
+        //-------------------------------------------------------------------------
 
-        AnimCalc();
-        virtual ~AnimCalc();
+        AnimCalc() = default;
+        AnimCalc(const AnimCalc &) = delete;
+        AnimCalc(AnimCalc &&) = delete;
+
+        virtual ~AnimCalc() = default;
+
+        AnimCalc & operator=(const AnimCalc &) = delete;
+        AnimCalc & operator=(AnimCalc &&) = delete;
+
+        //-------------------------------------------------------------------------
+
+        bool calculate(KeyList & inOutData, HWND parent);
+
+        //-------------------------------------------------------------------------
 
     private:
 
-        void destroy();
-
-        static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-        void initWindow(HWND hWnd);
-        void destroyWindow(HWND hWnd);
-
         void calculateValues();
 
-        ISpinnerControl * cSpnVal1 = nullptr;
-        ISpinnerControl * cSpnVal2 = nullptr;
+        wrapper::MaxFloatSpinner mSpnVal1;
+        wrapper::MaxFloatSpinner mSpnVal2;
 
-        ctrl::Base cBtnOk;
-        ctrl::Base cBtnCancel;
-        ctrl::Base mMainWin;
+        wrapper::Button mBtnOk;
+        wrapper::Button mBtnCancel;
+        wrapper::ModalDialog mDialog;
+
         KeyList * mData = nullptr;
-        HWND mParent;
 
     };
 

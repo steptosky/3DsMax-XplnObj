@@ -28,75 +28,10 @@
 */
 
 #include "ui-win/DlgEditDataref.h"
-
-#pragma warning(push, 0)
-#include <3dsmaxport.h>
-#pragma warning(pop)
-
-#include <cctype>
-#include <windows.h>
-#include <xpln/utils/DatarefsFile.h>
 #include "resource/resource.h"
-#include "resource/ResHelper.h"
-#include "Utils.h"
-#include "common/String.h"
 
 namespace ui {
 namespace win {
-
-    /**************************************************************************************************/
-    //////////////////////////////////////////* Static area *///////////////////////////////////////////
-    /**************************************************************************************************/
-
-    INT_PTR CALLBACK DlgEditDataref::callBack(const HWND hWnd, const UINT message, const WPARAM wParam, const LPARAM lParam) {
-        DlgEditDataref * theDlg;
-        if (message == WM_INITDIALOG) {
-            theDlg = reinterpret_cast<DlgEditDataref*>(lParam);
-            theDlg->mDlgMain.setup(hWnd);
-            DLSetWindowLongPtr(hWnd, lParam);
-        }
-        else {
-            if ((theDlg = DLGetWindowLongPtr<DlgEditDataref *>(hWnd)) == nullptr) {
-                return FALSE;
-            }
-            if (message == WM_DESTROY) {
-                theDlg->mDlgMain.release();
-            }
-        }
-
-        //------------------------------------------------------
-
-        switch (message) {
-            case WM_INITDIALOG: {
-                theDlg->initDlg(hWnd);
-                break;
-            }
-            case WM_COMMAND: {
-                switch (LOWORD(wParam)) {
-                    case BTN_OK: {
-                        EndDialog(hWnd, 1);
-                        break;
-                    }
-                    case BTN_CANCEL: {
-                        EndDialog(hWnd, 0);
-                        break;
-                    }
-                    default: break;
-                }
-                break;
-            }
-            case WM_DESTROY: {
-                theDlg->destroyDlg(hWnd);
-                break;
-            }
-            case WM_CLOSE: {
-                EndDialog(hWnd, 0);
-                break;
-            }
-            default: break;
-        }
-        return FALSE;
-    }
 
     /**************************************************************************************************/
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
@@ -109,80 +44,47 @@ namespace win {
 
     std::optional<xobj::Dataref> DlgEditDataref::create(const xobj::Dataref & dataref) {
         mDataref = dataref;
-        const auto res = DialogBoxParam(ResHelper::hInstance, MAKEINTRESOURCE(DLG_EDIT_DATAREF),
-                                        GetCOREInterface()->GetMAXHWnd(),
-                                        callBack, reinterpret_cast<LPARAM>(this));
+
+        mChkIsWritable.setupChild(mDialog, CHK_WRITABLE);
+        mBtnOk.setupChild(mDialog, BTN_OK);
+        mBtnCancel.setupChild(mDialog, BTN_CANCEL);
+        mEditKey.setupChild(mDialog, EDIT_KEY);
+        mEditValueType.setupChild(mDialog, EDIT_VALUE_TYPE);
+        mEditValueUnits.setupChild(mDialog, EDIT_VALUE_UNITS);
+        mEditDescription.setupChild(mDialog, EDIT_DESCRIPTION);
+        //----------------------------------
+        mDialog.onInit = [&](auto win) {
+            win->centerByParent();
+            mEditKey.setXObjText(mDataref.mKey);
+            mEditValueType.setXObjText(mDataref.mValueType);
+            mEditValueUnits.setXObjText(mDataref.mValueUnits);
+            mEditDescription.setXObjText(mDataref.mDescription);
+            mChkIsWritable.setChecked(mDataref.mWritable);
+        };
+        //----------------------------------
+        mChkIsWritable.onStateChanged = [&](auto, auto state) { mDataref.mWritable = state; };
+        mBtnOk.onClick = [&](auto) { mDialog.destroy(1); };
+        mBtnCancel.onClick = [&](auto) { mDialog.destroy(0); };
+
+        mEditKey.onLostFocus = [&](auto ctrl) { mDataref.mKey = ctrl->textXObj(); };
+        mEditKey.onEnter = mEditKey.onLostFocus;
+
+        mEditValueType.onLostFocus = [&](auto ctrl) { mDataref.mValueType = ctrl->textXObj(); };
+        mEditValueType.onEnter = mEditValueType.onLostFocus;
+
+        mEditValueUnits.onLostFocus = [&](auto ctrl) { mDataref.mValueUnits = ctrl->textXObj(); };
+        mEditValueUnits.onEnter = mEditValueUnits.onLostFocus;
+
+        mEditDescription.onLostFocus = [&](auto ctrl) { mDataref.mDescription = ctrl->textXObj(); };
+        mEditDescription.onEnter = mEditDescription.onLostFocus;
+        //----------------------------------
+
+        const auto res = mDialog.create(GetCOREInterface()->GetMAXHWnd(), DLG_EDIT_DATAREF);
         if (res == 0) {
             return std::nullopt;
         }
-        return mDataref;
-    }
-
-    /**************************************************************************************************/
-    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
-    /**************************************************************************************************/
-
-    void DlgEditDataref::initDlg(const HWND hWnd) {
-        CenterWindow(mDlgMain.hwnd(), mDlgMain.parent());
-        mCtrChkWritable.setup(hWnd, CHK_WRITABLE);
-
-        mCtrlKey = GetICustEdit(GetDlgItem(hWnd, EDIT_KEY));
-        mCtrlValueType = GetICustEdit(GetDlgItem(hWnd, EDIT_VALUE_TYPE));
-        mCtrlValueUnits = GetICustEdit(GetDlgItem(hWnd, EDIT_VALUE_UNITS));
-        mCtrlDesc = GetICustEdit(GetDlgItem(hWnd, EDIT_DESCRIPTION));
-
-        dataToUi();
-    }
-
-    void DlgEditDataref::destroyDlg(const HWND /*hWnd*/) {
-        uiToData();
-
-        ReleaseICustEdit(mCtrlKey);
-        ReleaseICustEdit(mCtrlValueType);
-        ReleaseICustEdit(mCtrlValueUnits);
-        ReleaseICustEdit(mCtrlDesc);
-
-        mCtrChkWritable.release();
-    }
-
-    /**************************************************************************************************/
-    //////////////////////////////////////////* Functions */////////////////////////////////////////////
-    /**************************************************************************************************/
-
-    void DlgEditDataref::dataToUi() {
-        MStr str = xobj::toMStr(mDataref.mKey);
-        mCtrlKey->SetText(str);
-
-        str = xobj::toMStr(mDataref.mValueType);
-        mCtrlValueType->SetText(str);
-
-        str = xobj::toMStr(mDataref.mValueUnits);
-        mCtrlValueUnits->SetText(str);
-
-        str = xobj::toMStr(mDataref.mDescription);
-        mCtrlDesc->SetText(str);
-
-        mCtrChkWritable.setState(mDataref.mWritable);
-    }
-
-    void DlgEditDataref::uiToData() {
-        MStr str;
-
-        Utils::getText(mCtrlKey, str);
-        mDataref.mKey = xobj::fromMStr(str);
-
-        Utils::getText(mCtrlValueType, str);
-        mDataref.mValueType = xobj::fromMStr(str);
-
-        Utils::getText(mCtrlValueUnits, str);
-        mDataref.mValueUnits = xobj::fromMStr(str);
-
-        Utils::getText(mCtrlDesc, str);
-        mDataref.mDescription = xobj::fromMStr(str);
-
-        mDataref.mWritable = mCtrChkWritable.isChecked();
-
         mDataref.fillEmptyFields();
+        return mDataref;
     }
 
     /**************************************************************************************************/

@@ -34,6 +34,7 @@
 #include "DatarefsFile.h"
 #include <algorithm>
 #include <cctype>
+#include "gup/ObjCommon.h"
 
 namespace md {
 
@@ -81,13 +82,17 @@ bool DatarefsFile::loadSimData(const MaxSDK::Util::Path & filePath) {
     mUsesId = false;
     mIsForProject = false;
     mFilePath = filePath;
+    mSort = true;
     mDisplayName = _T("[X-Plane] DataRefs");
     return loadData(filePath);
 }
 
 bool DatarefsFile::loadProjectData(const MaxSDK::Util::Path & filePath) {
+    auto & settings = ObjCommon::instance()->pSettings;
+    mUsesId = settings.isUseDatarefsId();
+    mSort = settings.sortDatarefs();
+
     mIsEditable = true;
-    mUsesId = true;
     mIsForProject = true;
     mFilePath = filePath;
     mDisplayName = _T("[Project] DataRefs");
@@ -164,16 +169,18 @@ std::uint64_t DatarefsFile::generateId() {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void DatarefsFile::sortData() {
-    const auto sortFn = [](const xobj::Dataref & v1, const xobj::Dataref & v2) {
-        return std::lexicographical_compare(v1.mKey.begin(), v1.mKey.end(),
-                                            v2.mKey.begin(), v2.mKey.end(),
-                                            [](const char x, const char y) {
-                                                return std::tolower(static_cast<unsigned char>(x)) <
-                                                       std::tolower(static_cast<unsigned char>(y));
-                                            });
-    };
-    std::sort(mData.begin(), mData.end(), sortFn);
+void DatarefsFile::sortDataIfEnabled() {
+    if (mSort) {
+        const auto sortFn = [](const xobj::Dataref & v1, const xobj::Dataref & v2) {
+            return std::lexicographical_compare(v1.mKey.begin(), v1.mKey.end(),
+                                                v2.mKey.begin(), v2.mKey.end(),
+                                                [](const char x, const char y) {
+                                                    return std::tolower(static_cast<unsigned char>(x)) <
+                                                           std::tolower(static_cast<unsigned char>(y));
+                                                });
+        };
+        std::sort(mData.begin(), mData.end(), sortFn);
+    }
 }
 
 /**************************************************************************************************/

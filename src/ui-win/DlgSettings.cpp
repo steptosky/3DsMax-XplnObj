@@ -28,103 +28,57 @@
 */
 
 #include "DlgSettings.h"
-
-#pragma warning(push, 0)
-#include <max.h>
-#include <3dsmaxport.h>
-#pragma warning(pop)
-
 #include "resource/resource.h"
-#include "common/Logger.h"
-#include "resource/ResHelper.h"
 #include "common/Config.h"
+#include "gup/ObjCommon.h"
 
 namespace ui {
 namespace win {
-
-    /**************************************************************************************************/
-    //////////////////////////////////////////* Static area *///////////////////////////////////////////
-    /**************************************************************************************************/
-
-    INT_PTR CALLBACK DlgSettings::callBack(const HWND hWnd, const UINT message, const WPARAM wParam, const LPARAM lParam) {
-        DlgSettings * theDlg;
-        if (message == WM_INITDIALOG) {
-            theDlg = reinterpret_cast<DlgSettings*>(lParam);
-            theDlg->mDlgMain.setup(hWnd);
-            DLSetWindowLongPtr(hWnd, lParam);
-        }
-        else {
-            if ((theDlg = DLGetWindowLongPtr<DlgSettings *>(hWnd)) == nullptr) {
-                return FALSE;
-            }
-            if (message == WM_DESTROY) {
-                theDlg->mDlgMain.release();
-            }
-        }
-
-        //------------------------------------------------------
-
-        switch (message) {
-            case WM_INITDIALOG: {
-                theDlg->initDlg(hWnd);
-                break;
-            }
-            case WM_COMMAND: {
-                switch (LOWORD(wParam)) {
-                    case BTN_OK: {
-                        EndDialog(hWnd, 1);
-                        break;
-                    }
-                    case BTN_SELECT_SIM_PATH: {
-                        theDlg->selectSimPath();
-                        break;
-                    }
-                    default: break;
-                }
-                break;
-            }
-            case WM_DESTROY: {
-                theDlg->destroyDlg(hWnd);
-                break;
-            }
-            case WM_CLOSE: {
-                EndDialog(hWnd, 0);
-                break;
-            }
-            default: break;
-        }
-        return FALSE;
-    }
 
     /**************************************************************************************************/
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
     void DlgSettings::open() {
-        DialogBoxParam(ResHelper::hInstance, MAKEINTRESOURCE(DLG_SETTINGS),
-                       GetCOREInterface()->GetMAXHWnd(),
-                       callBack, reinterpret_cast<LPARAM>(this));
+        //-------------------------
+        mLblSimPath.setupChild(mDialog, IDC_SIM_PATH);
+        mBtnOk.setupChild(mDialog, BTN_OK);
+        mChkDatarefsId.setupChild(mDialog, IDC_CHK_DATAREFS_ID);
+        mChkCommandsId.setupChild(mDialog, IDC_CHK_COMMANDS_ID);
+        mChkDatarefsSorting.setupChild(mDialog, IDC_CHK_DATAREFS_SORT);
+        mChkCommandsSorting.setupChild(mDialog, IDC_CHK_COMMANDS_SORT);
+        mBtnSelectSimPath.setupChild(mDialog, BTN_SELECT_SIM_PATH);
+        //-------------------------
+        mBtnOk.onClick = [&](auto) { mDialog.destroy(1); };
+        mBtnSelectSimPath.onClick = [&](auto) { selectSimPath(); };
+        mChkDatarefsId.onStateChanged = [](auto,const bool state) { ObjCommon::instance()->pSettings.setUseDatarefsId(state); };
+        mChkCommandsId.onStateChanged = [](auto, const bool state) { ObjCommon::instance()->pSettings.setUseCommandsId(state); };
+        mChkDatarefsSorting.onStateChanged = [](auto, const bool state) { ObjCommon::instance()->pSettings.setSortDatarefs(state); };
+        mChkCommandsSorting.onStateChanged = [](auto, const bool state) { ObjCommon::instance()->pSettings.setSortCommands(state); };
+        //-------------------------
+        mDialog.onInit = [&](auto win) {
+            win->centerByParent();
+            auto config = Config::instance();
+            auto & settings = ObjCommon::instance()->pSettings;
+            mLblSimPath.setText(config->simDir().GetString().data());
+            mChkDatarefsId.setChecked(settings.isUseDatarefsId());
+            mChkCommandsId.setChecked(settings.isUseCommandsId());
+            mChkDatarefsSorting.setChecked(settings.sortDatarefs());
+            mChkCommandsSorting.setChecked(settings.sortCommands());
+
+            mLblSimPath.setToolTip(_T("The path where X-Plane is installed."));
+            mChkDatarefsId.setToolTip(_T("Enabling ID usage for the project's DataRefs. The state is saved with the 3Ds Max's scene."));
+            mChkCommandsId.setToolTip(_T("Enabling ID usage for the project's Commands. The state is saved with the 3Ds Max's scene."));
+            mChkDatarefsSorting.setToolTip(_T("Enabling data sorting. The state is saved with the 3Ds Max's scene."));
+            mChkCommandsSorting.setToolTip(_T("Enabling data sorting. The state is saved with the 3Ds Max's scene."));
+        };
+        //-------------------------
+        mDialog.create(GetCOREInterface()->GetMAXHWnd(), DLG_SETTINGS);
     }
 
     void DlgSettings::show() {
         DlgSettings dlg;
         dlg.open();
-    }
-
-    void DlgSettings::initDlg(const HWND hWnd) {
-        CenterWindow(mDlgMain.hwnd(), mDlgMain.parent());
-        mLblSimPath.setup(hWnd, IDC_SIM_PATH);
-        mBtnOk.setup(hWnd, BTN_OK);
-        mBtnSelectSimPath.setup(hWnd, BTN_SELECT_SIM_PATH);
-
-        auto config = Config::instance();
-        mLblSimPath.setText(config->simDir().GetString().data());
-    }
-
-    void DlgSettings::destroyDlg(HWND /*hWnd*/) {
-        mLblSimPath.release();
-        mBtnOk.release();
-        mBtnSelectSimPath.release();
     }
 
     /**************************************************************************************************/

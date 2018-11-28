@@ -29,12 +29,10 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
-
 #include <vector>
-#include "ui-win/controls/Base.h"
+#include "ui-win/controls-new/ModalDialog.h"
+#include "ui-win/controls-new/EditBox.h"
+#include "ui-win/controls-new/Button.h"
 
 namespace ui {
 namespace win {
@@ -46,27 +44,27 @@ namespace win {
     class UpdatedObjects {
     public:
 
-        UpdatedObjects();
-        virtual ~UpdatedObjects();
+        //-------------------------------------------------------------------------
+
+        UpdatedObjects() = default;
+        virtual ~UpdatedObjects() = default;
+
+        //-------------------------------------------------------------------------
 
         bool show(const std::vector<INode *> * nodes, HWND parent);
 
+        //-------------------------------------------------------------------------
+
     private:
 
-        void destroy();
+        void fillData();
 
-        static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-        void initWindow(HWND hWnd);
-        void destroyWindow(HWND hWnd);
+        wrapper::Button cBtnOk;
+        wrapper::EditBox mEditInfo;
+        wrapper::EditBox mLstObjects;
+        wrapper::ModalDialog mMainWin;
 
-        void showData();
-
-        ctrl::Base cBtnOk;
-        ctrl::Base mEditInfo;
-        ctrl::Base mLstObjects;
-        ctrl::Base mMainWin;
         const std::vector<INode *> * mData = nullptr;
-        HWND mParent;
 
     };
 

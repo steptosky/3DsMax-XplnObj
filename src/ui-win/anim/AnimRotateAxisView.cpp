@@ -193,7 +193,7 @@ namespace win {
 
     void AnimRotateAxisView::setDataRefValueAsToolType() {
 #if MAX_VERSION_MAJOR > 11
-    cEditDataRef->SetTooltip(true, sts::toString(mData.mDataref).c_str());
+        cEditDataRef->SetTooltip(true, sts::toString(mData.mDataref).c_str());
 #endif
     }
 
@@ -273,7 +273,7 @@ namespace win {
             cChkEnable.setState(mData.mEnable);
             cChkReverse.setState(mData.mReverse);
             cChkLoop.setState(mData.mLoopEnable);
-            Utils::setText(cEditDataRef, sts::toString(mData.mDataref));
+            cEditDataRef->SetText(xobj::toMStr(mData.mDataref));
             cSpnLoopValue->SetValue(mData.mLoopValue, FALSE);
             setDataRefValueAsToolType();
             makeUiList();
@@ -292,7 +292,7 @@ namespace win {
         cChkReverse.setState(false);
         cChkLoop.setState(false);
         cListKeys.clear();
-        Utils::setText(cEditDataRef, sts::toString("none"));
+        cEditDataRef->SetText(_T("none"));
         cSpnValue->SetValue(0.0f, FALSE);
         cSpnLoopValue->SetValue(0.0f, FALSE);
     }

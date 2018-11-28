@@ -2,6 +2,15 @@
 Change-log
 ===============================================================================
 
+.. note:: Don't forget to see :ref:`backward-compatibility`
+
+2.6.0 (28.11.2018)
+-------------------------
+- Added: Settings - enable/disable project's DataRefs and Commands ID usage.
+- Added: Settings - enable/disable project's DataRefs and Commands Sorting.
+- Updated: Datarefs and Commands project format. Symbol '':'' must immediately follow the ID. See the help for more details.
+- Fixed: Bug when you try to set custom DataRef or Command key while project's DataRef or Command list is open, the key was set as ``ERROR_DATA_NOT_FOUND``
+
 2.5.0-beta (27.10.2018)
 -------------------------
 - Added: Dialog DataRefs/Commands selector. I.e. buttons ``drf:`` and ``cmd:`` are implemented now.
@@ -11,7 +20,7 @@ Change-log
 - Updated: Link to the help. It is on-line now.
 - Updated: Embedded named and param lights' names lists. Full list you can find here ``X-Plane-root/Resources/bitmaps/world/lites/lights.txt``
 - Fixed: Sorting algorithm for LODs. `#9 <https://github.com/steptosky/3DsMax-XplnObj/issues/9>`_
-- Fixed: Fixed bug for attribute printing:  ``AttrShiny`` ``AttrBlend``. Default/disabled values were not printed when those attributes were enabled and then disabled.
+- Fixed: Bug for attribute printing:  ``AttrShiny`` ``AttrBlend``. Default/disabled values were not printed when those attributes were enabled and then disabled.
 
 2.4.0-beta (12.09.2018)
 -------------------------

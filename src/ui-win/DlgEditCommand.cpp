@@ -28,133 +28,48 @@
 */
 
 #include "ui-win/DlgEditCommand.h"
-
-#pragma warning(push, 0)
-#include <3dsmaxport.h>
-#pragma warning(pop)
-
-#include <cctype>
-#include <windows.h>
-#include <xpln/utils/DatarefsFile.h>
 #include "resource/resource.h"
-#include "resource/ResHelper.h"
-#include "Utils.h"
-#include "common/String.h"
 
 namespace ui {
 namespace win {
 
     /**************************************************************************************************/
-    //////////////////////////////////////////* Static area *///////////////////////////////////////////
-    /**************************************************************************************************/
-
-    INT_PTR CALLBACK DlgEditCommand::callBack(const HWND hWnd, const UINT message, const WPARAM wParam, const LPARAM lParam) {
-        DlgEditCommand * theDlg;
-        if (message == WM_INITDIALOG) {
-            theDlg = reinterpret_cast<DlgEditCommand*>(lParam);
-            theDlg->mDlgMain.setup(hWnd);
-            DLSetWindowLongPtr(hWnd, lParam);
-        }
-        else {
-            if ((theDlg = DLGetWindowLongPtr<DlgEditCommand *>(hWnd)) == nullptr) {
-                return FALSE;
-            }
-            if (message == WM_DESTROY) {
-                theDlg->mDlgMain.release();
-            }
-        }
-
-        //------------------------------------------------------
-
-        switch (message) {
-            case WM_INITDIALOG: {
-                theDlg->initDlg(hWnd);
-                break;
-            }
-            case WM_COMMAND: {
-                switch (LOWORD(wParam)) {
-                    case BTN_OK: {
-                        EndDialog(hWnd, 1);
-                        break;
-                    }
-                    case BTN_CANCEL: {
-                        EndDialog(hWnd, 0);
-                        break;
-                    }
-                    default: break;
-                }
-                break;
-            }
-            case WM_DESTROY: {
-                theDlg->destroyDlg(hWnd);
-                break;
-            }
-            case WM_CLOSE: {
-                EndDialog(hWnd, 0);
-                break;
-            }
-            default: break;
-        }
-        return FALSE;
-    }
-
-    /**************************************************************************************************/
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    std::optional<xobj::Command> DlgEditCommand::edit(const xobj::Command & dataref) {
+    std::optional<xobj::Command> DlgEditCommand::edit(const xobj::Command & command) {
         DlgEditCommand win;
-        return win.create(dataref);
+        return win.create(command);
     }
 
-    std::optional<xobj::Command> DlgEditCommand::create(const xobj::Command & dataref) {
-        mCommand = dataref;
-        const auto res = DialogBoxParam(ResHelper::hInstance, MAKEINTRESOURCE(DLG_EDIT_COMMAND),
-                                        GetCOREInterface()->GetMAXHWnd(),
-                                        callBack, reinterpret_cast<LPARAM>(this));
+    std::optional<xobj::Command> DlgEditCommand::create(const xobj::Command & command) {
+        mCommand = command;
+
+        mBtnOk.setupChild(mDialog, BTN_OK);
+        mBtnCancel.setupChild(mDialog, BTN_CANCEL);
+        mEditKey.setupChild(mDialog, EDIT_KEY);
+        mEditDescription.setupChild(mDialog, EDIT_DESCRIPTION);
+        //----------------------------------
+        mDialog.onInit = [&](auto win) {
+            win->centerByParent();
+            mEditKey.setXObjText(mCommand.mKey);
+            mEditDescription.setXObjText(mCommand.mDescription);
+        };
+        //----------------------------------
+        mBtnOk.onClick = [&](auto) { mDialog.destroy(1); };
+        mBtnCancel.onClick = [&](auto) { mDialog.destroy(0); };
+
+        mEditKey.onLostFocus = [&](auto ctrl) { mCommand.mKey = ctrl->textXObj(); };
+        mEditKey.onEnter = mEditKey.onLostFocus;
+
+        mEditDescription.onLostFocus = [&](auto ctrl) { mCommand.mDescription = ctrl->textXObj(); };
+        mEditDescription.onEnter = mEditDescription.onLostFocus;
+        //----------------------------------
+        const auto res = mDialog.create(GetCOREInterface()->GetMAXHWnd(), DLG_EDIT_COMMAND);
         if (res == 0) {
             return std::nullopt;
         }
         return mCommand;
-    }
-
-    /**************************************************************************************************/
-    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
-    /**************************************************************************************************/
-
-    void DlgEditCommand::initDlg(const HWND hWnd) {
-        CenterWindow(mDlgMain.hwnd(), mDlgMain.parent());
-        mCtrlKey = GetICustEdit(GetDlgItem(hWnd, EDIT_KEY));
-        mCtrlDesc = GetICustEdit(GetDlgItem(hWnd, EDIT_DESCRIPTION));
-        dataToUi();
-    }
-
-    void DlgEditCommand::destroyDlg(const HWND /*hWnd*/) {
-        uiToData();
-        ReleaseICustEdit(mCtrlKey);
-        ReleaseICustEdit(mCtrlDesc);
-    }
-
-    /**************************************************************************************************/
-    //////////////////////////////////////////* Functions */////////////////////////////////////////////
-    /**************************************************************************************************/
-
-    void DlgEditCommand::dataToUi() {
-        MStr str = xobj::toMStr(mCommand.mKey);
-        mCtrlKey->SetText(str);
-
-        str = xobj::toMStr(mCommand.mDescription);
-        mCtrlDesc->SetText(str);
-    }
-
-    void DlgEditCommand::uiToData() {
-        MStr str;
-
-        Utils::getText(mCtrlKey, str);
-        mCommand.mKey = xobj::fromMStr(str);
-
-        Utils::getText(mCtrlDesc, str);
-        mCommand.mDescription = xobj::fromMStr(str);
     }
 
     /**************************************************************************************************/

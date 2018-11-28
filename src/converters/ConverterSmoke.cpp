@@ -91,7 +91,7 @@ INode * ConverterSmoke::toMax(const xobj::ObjAbstract * object, const ImportPara
     values.setType(smoke->smokeType());
     values.setSize(smoke->size());
     if (!smoke->objectName().empty()) {
-        pnode->SetName(toTSTR(smoke->objectName().c_str()));
+        pnode->SetName(xobj::toMStr(smoke->objectName()));
     }
     // todo set the position XYZ
     return pnode;

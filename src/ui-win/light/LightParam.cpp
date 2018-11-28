@@ -75,8 +75,8 @@ namespace win {
 
                             theDlg->mData->setName(sts::toMbString(iter->first));
                             theDlg->mData->setRawParams(sts::toMbString(iter->second));
-                            Utils::setText(theDlg->cEdtCustomName, sts::toString(iter->first));
-                            Utils::setText(theDlg->cEdtAdditional, sts::toString(iter->second));
+                            theDlg->cEdtCustomName->SetText(xobj::toMStr(iter->first));
+                            theDlg->cEdtAdditional->SetText(xobj::toMStr(iter->second));
                             theDlg->eventParamChanged(true);
                         }
                         break;
@@ -221,8 +221,8 @@ namespace win {
         if (mData) {
             enableControls();
 
-            Utils::setText(cEdtCustomName, sts::toString(mData->name()));
-            Utils::setText(cEdtAdditional, sts::toString(mData->params()));
+            cEdtCustomName->SetText(xobj::toMStr(mData->name()));
+            cEdtAdditional->SetText(xobj::toMStr(mData->params()));
             const auto iter = mPreDefinedList.find(mData->name());
             if (iter != mPreDefinedList.end()) {
                 cCmbName.setCurrSelected(sts::toString(iter->first));
