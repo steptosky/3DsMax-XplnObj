@@ -29,8 +29,11 @@
 
 #pragma once
 
+#include <unordered_set>
+
 #pragma warning(push, 0)
 #include <max.h>
+#include <ilayermanager.h>
 #pragma warning(pop)
 
 #include <xpln/obj/attributes/AttrWetDry.h>
@@ -45,6 +48,7 @@
 #include <xpln/obj/attributes/AttrCockpitRegion.h>
 
 class IParamBlock2;
+class ILayer;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,6 +156,23 @@ public:
     xobj::AttrTint tint();
     xobj::AttrSlopeLimit slopeLimit();
     xobj::AttrCockpitRegion cockpitRegion(xobj::AttrCockpitRegion::eNum idx);
+
+    /***************************************************************************************/
+
+    // todo implementation
+    bool useLayersObjects() {
+        return true;
+    }
+
+    // todo implementation
+    std::unordered_set<ILayer*> geometryLayers() {
+        ILayerManager * manager = GetCOREInterface13()->GetLayerManager();
+        const auto layer1 = manager->GetLayer(node()->GetName());
+        //const auto layer2 = manager->GetLayer(_T("X-Obj-002"));
+        DbgAssert(layer1);
+        //DbgAssert(layer2);
+        return std::unordered_set<ILayer*>{layer1};
+    }
 
     /***************************************************************************************/
 
