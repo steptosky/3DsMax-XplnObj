@@ -40,7 +40,7 @@
 #include "MainObjIcon-gen.h"
 #include "param-blocks/MainObjPbAttr.h"
 #include "param-blocks/MainObjPbDisplay.h"
-#include "param-blocks/MainObjPbExport.h"
+#include "param-blocks/MainObjPbGeometry.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,7 +59,7 @@ public:
     void proc(ILoad *) override {
         mObj->makeIcon();
         MainObjPbAttr::postLoad(mObj->mAttrParamsPb);
-        MainObjPbExport::postLoad(mObj->mExpPb);
+        MainObjPbGeometry::postLoad(mObj->mGeomPb);
         MainObjPbDisplay::postLoad(mObj->mDisplayPb);
         delete this;
     }
@@ -100,7 +100,7 @@ CreateMouseCallBack * MainObject::GetCreateMouseCallBack() {
 /**************************************************************************************************/
 
 void MainObject::updateTexturesButtons() const {
-    MainObjParamsWrapper wrapper(mAttrParamsPb, mExpPb, GetCOREInterface()->GetTime(), FOREVER);
+    MainObjParamsWrapper wrapper(mAttrParamsPb, mGeomPb, GetCOREInterface()->GetTime(), FOREVER);
     updateButtonText(mAttrParamsPb, MainObjAttr_Texture, sts::toString(wrapper.texture()).c_str());
     updateButtonText(mAttrParamsPb, MainObjAttr_TextureLit, sts::toString(wrapper.textureLit()).c_str());
     updateButtonText(mAttrParamsPb, MainObjAttr_TextureNormal, sts::toString(wrapper.textureNormal()).c_str());
@@ -276,7 +276,7 @@ void MainObject::GetClassName(TSTR & s) {
 RefTargetHandle MainObject::Clone(RemapDir & remap) {
     auto newObj = new MainObject();
     newObj->ReplaceReference(static_cast<int>(eMainObjPbOrder::PbOrderAttr), mAttrParamsPb->Clone(remap));
-    newObj->ReplaceReference(static_cast<int>(eMainObjPbOrder::PbOrderExport), mExpPb->Clone(remap));
+    newObj->ReplaceReference(static_cast<int>(eMainObjPbOrder::PbOrderGeometry), mGeomPb->Clone(remap));
     newObj->ReplaceReference(static_cast<int>(eMainObjPbOrder::PbOrderDisplay), mDisplayPb->Clone(remap));
     BaseClone(this, newObj, remap);
     return (newObj);
@@ -293,7 +293,7 @@ Animatable * MainObject::SubAnim(const int i) {
 TSTR MainObject::SubAnimName(const int i) {
     switch (static_cast<eMainObjPbOrder>(i)) {
         case eMainObjPbOrder::PbOrderAttr: return _T("Attributes");
-        case eMainObjPbOrder::PbOrderExport: return _T("Options");
+        case eMainObjPbOrder::PbOrderGeometry: return _T("Options");
         case eMainObjPbOrder::PbOrderDisplay: return _T("Display");
         default: return _T("");
     }
@@ -314,7 +314,7 @@ int MainObject::NumParamBlocks() {
 IParamBlock2 * MainObject::GetParamBlock(const int i) {
     switch (static_cast<eMainObjPbOrder>(i)) {
         case eMainObjPbOrder::PbOrderAttr: return mAttrParamsPb;
-        case eMainObjPbOrder::PbOrderExport: return mExpPb;
+        case eMainObjPbOrder::PbOrderGeometry: return mGeomPb;
         case eMainObjPbOrder::PbOrderDisplay: return mDisplayPb;
         default: return nullptr;
     }
@@ -323,7 +323,7 @@ IParamBlock2 * MainObject::GetParamBlock(const int i) {
 IParamBlock2 * MainObject::GetParamBlockByID(const BlockID id) {
     switch (static_cast<eMainObjParamsBlocks>(id)) {
         case eMainObjParamsBlocks::MainObjAttrParams: return mAttrParamsPb;
-        case eMainObjParamsBlocks::MainObjExpParams: return mExpPb;
+        case eMainObjParamsBlocks::MainObjGeometryParams: return mGeomPb;
         case eMainObjParamsBlocks::MainObjDisplay: return mDisplayPb;
         default: return nullptr;
     }
@@ -340,7 +340,7 @@ int MainObject::NumRefs() {
 RefTargetHandle MainObject::GetReference(const int i) {
     switch (static_cast<eMainObjPbOrder>(i)) {
         case eMainObjPbOrder::PbOrderAttr: return mAttrParamsPb;
-        case eMainObjPbOrder::PbOrderExport: return mExpPb;
+        case eMainObjPbOrder::PbOrderGeometry: return mGeomPb;
         case eMainObjPbOrder::PbOrderDisplay: return mDisplayPb;
         default: return nullptr;
     }
@@ -352,8 +352,8 @@ void MainObject::SetReference(const int i, RefTargetHandle target) {
             mAttrParamsPb = static_cast<IParamBlock2*>(target);
             break;
         }
-        case eMainObjPbOrder::PbOrderExport: {
-            mExpPb = static_cast<IParamBlock2*>(target);
+        case eMainObjPbOrder::PbOrderGeometry: {
+            mGeomPb = static_cast<IParamBlock2*>(target);
             break;
         }
         case eMainObjPbOrder::PbOrderDisplay: {
@@ -379,7 +379,7 @@ RefResult MainObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /
         case REFMSG_CHANGE:
             if (mEditOb == this) {
                 MainObjPbAttr::mPb.InvalidateUI(mAttrParamsPb->LastNotifyParamID());
-                MainObjPbExport::mPb.InvalidateUI(mExpPb->LastNotifyParamID());
+                MainObjPbGeometry::mPb.InvalidateUI(mGeomPb->LastNotifyParamID());
                 MainObjPbDisplay::mPb.InvalidateUI(mDisplayPb->LastNotifyParamID());
             }
             break;

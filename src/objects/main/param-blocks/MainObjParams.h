@@ -44,7 +44,7 @@ enum class eMainObjParamsBlocks : BlockID {
     //! Attribute params
     MainObjAttrParams,
     //! Export params
-    MainObjExpParams,
+    MainObjGeometryParams,
     //! Display params
     MainObjDisplay,
 };
@@ -176,31 +176,31 @@ enum eMainObjAttrParams : ParamID {
     //-------------------------------------
 };
 
-enum eMainObjExpParams : ParamID {
+enum eMainObjGeometryParams : ParamID {
     //-------------------------------------
     // bool
 
-    MainObjExp_Meshes = 0,
-    MainObjExp_Lines,
-    MainObjExp_Lights,
-    MainObjExp_Animation,
-    MainObjExp_Instancing,
-    MainObjExp_Debug,
-    MainObjExp_Optimisation,
+    MainObjGeom_Meshes = 0,
+    MainObjGeom_Lines,
+    MainObjGeom_Lights,
+    MainObjGeom_Animation,
+    MainObjGeom_Instancing,
+    MainObjGeom_Debug,
+    MainObjGeom_Optimization,
 
     //-------------------------------------
 
     //! bool
-    MainObj_ScaleEnabled = 15,
-    MainObj_ScaleValue,
+    MainObjGeom_ScaleEnabled = 15,
+    MainObjGeom_ScaleValue,
 
     //-------------------------------------
     // bool
-    MainObjExp_NameMeshes = 30,
-    MainObjExp_NameLines,
-    MainObjExp_NameLights,
-    MainObjExp_NameDummies,
-    MainObjExp_TreeHierarchy,
+    MainObjGeom_NameMeshes = 30,
+    MainObjGeom_NameLines,
+    MainObjGeom_NameLights,
+    MainObjGeom_NameDummies,
+    MainObjGeom_TreeHierarchy,
 
     MainObjAttr_ExportEnable = 50,
 
@@ -217,7 +217,7 @@ enum eMainObjDisplayParams : ParamID {
 
 enum class eMainObjPbOrder : int {
     PbOrderAttr = eMainObjPbOrder(eMainObjParamsBlocks::MainObjAttrParams),
-    PbOrderExport = eMainObjPbOrder(eMainObjParamsBlocks::MainObjExpParams),
+    PbOrderGeometry = eMainObjPbOrder(eMainObjParamsBlocks::MainObjGeometryParams),
     PbOrderDisplay = eMainObjPbOrder(eMainObjParamsBlocks::MainObjDisplay),
 };
 

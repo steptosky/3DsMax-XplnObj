@@ -50,7 +50,7 @@ MainObjParamsWrapper::MainObjParamsWrapper(INode * node, const TimeValue t, cons
     DbgAssert(node);
     DbgAssert(isMainObj(node));
 
-    mPbExp = node->GetObjectRef()->GetParamBlockByID(static_cast<BlockID>(eMainObjParamsBlocks::MainObjExpParams));
+    mPbExp = node->GetObjectRef()->GetParamBlockByID(static_cast<BlockID>(eMainObjParamsBlocks::MainObjGeometryParams));
     mPbAttr = node->GetObjectRef()->GetParamBlockByID(static_cast<BlockID>(eMainObjParamsBlocks::MainObjAttrParams));
     DbgAssert(mPbExp);
     DbgAssert(mPbAttr);
@@ -97,7 +97,7 @@ bool MainObjParamsWrapper::isExportEnable() {
 bool MainObjParamsWrapper::isMeshExport() {
     BOOL val = TRUE;
     if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjExp_Meshes, mT, val, mInterval)) {
+        if (!mPbExp->GetValue(MainObjGeom_Meshes, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Meshes);
         }
     }
@@ -110,7 +110,7 @@ bool MainObjParamsWrapper::isMeshExport() {
 bool MainObjParamsWrapper::isLinesExport() {
     BOOL val = TRUE;
     if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjExp_Lines, mT, val, mInterval)) {
+        if (!mPbExp->GetValue(MainObjGeom_Lines, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Lines);
         }
     }
@@ -123,7 +123,7 @@ bool MainObjParamsWrapper::isLinesExport() {
 bool MainObjParamsWrapper::isLightsExport() {
     BOOL val = TRUE;
     if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjExp_Lights, mT, val, mInterval)) {
+        if (!mPbExp->GetValue(MainObjGeom_Lights, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Lights);
         }
     }
@@ -136,7 +136,7 @@ bool MainObjParamsWrapper::isLightsExport() {
 bool MainObjParamsWrapper::isAnimationExport() {
     BOOL val = TRUE;
     if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjExp_Animation, mT, val, mInterval)) {
+        if (!mPbExp->GetValue(MainObjGeom_Animation, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Animation);
         }
     }
@@ -149,7 +149,7 @@ bool MainObjParamsWrapper::isAnimationExport() {
 bool MainObjParamsWrapper::isOptimisation() {
     BOOL val = TRUE;
     if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjExp_Optimisation, mT, val, mInterval)) {
+        if (!mPbExp->GetValue(MainObjGeom_Optimization, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Optimisation);
         }
     }
@@ -162,7 +162,7 @@ bool MainObjParamsWrapper::isOptimisation() {
 bool MainObjParamsWrapper::isInstancing() {
     BOOL val = FALSE;
     if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjExp_Instancing, mT, val, mInterval)) {
+        if (!mPbExp->GetValue(MainObjGeom_Instancing, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Instancing);
         }
     }
@@ -175,7 +175,7 @@ bool MainObjParamsWrapper::isInstancing() {
 bool MainObjParamsWrapper::isDebug() {
     BOOL val = FALSE;
     if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjExp_Debug, mT, val, mInterval)) {
+        if (!mPbExp->GetValue(MainObjGeom_Debug, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Debug);
         }
     }
@@ -200,7 +200,7 @@ void MainObjParamsWrapper::setExportEnable(const bool state) {
 
 void MainObjParamsWrapper::setMeshExport(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_Meshes, mT, int(state))) {
+        if (!mPbExp->SetValue(MainObjGeom_Meshes, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Meshes);
         }
     }
@@ -211,7 +211,7 @@ void MainObjParamsWrapper::setMeshExport(const bool state) {
 
 void MainObjParamsWrapper::setLinesExport(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_Lines, mT, int(state))) {
+        if (!mPbExp->SetValue(MainObjGeom_Lines, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Lines);
         }
     }
@@ -222,7 +222,7 @@ void MainObjParamsWrapper::setLinesExport(const bool state) {
 
 void MainObjParamsWrapper::setLightsExport(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_Lights, mT, int(state))) {
+        if (!mPbExp->SetValue(MainObjGeom_Lights, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Lights);
         }
     }
@@ -233,7 +233,7 @@ void MainObjParamsWrapper::setLightsExport(const bool state) {
 
 void MainObjParamsWrapper::setAnimationExport(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_Animation, mT, int(state))) {
+        if (!mPbExp->SetValue(MainObjGeom_Animation, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Animation);
         }
     }
@@ -244,7 +244,7 @@ void MainObjParamsWrapper::setAnimationExport(const bool state) {
 
 void MainObjParamsWrapper::setOptimisation(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_Optimisation, mT, int(state))) {
+        if (!mPbExp->SetValue(MainObjGeom_Optimization, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Optimisation);
         }
     }
@@ -255,7 +255,7 @@ void MainObjParamsWrapper::setOptimisation(const bool state) {
 
 void MainObjParamsWrapper::setInstancing(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_Instancing, mT, int(state))) {
+        if (!mPbExp->SetValue(MainObjGeom_Instancing, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Instancing);
         }
     }
@@ -266,7 +266,7 @@ void MainObjParamsWrapper::setInstancing(const bool state) {
 
 void MainObjParamsWrapper::setDebug(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_Debug, mT, int(state))) {
+        if (!mPbExp->SetValue(MainObjGeom_Debug, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Debug);
         }
     }
@@ -282,7 +282,7 @@ void MainObjParamsWrapper::setDebug(const bool state) {
 bool MainObjParamsWrapper::isNameMesh() {
     BOOL val = TRUE;
     if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjExp_NameMeshes, mT, val, mInterval)) {
+        if (!mPbExp->GetValue(MainObjGeom_NameMeshes, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameMeshes);
         }
     }
@@ -295,7 +295,7 @@ bool MainObjParamsWrapper::isNameMesh() {
 bool MainObjParamsWrapper::isNameLines() {
     BOOL val = TRUE;
     if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjExp_NameLines, mT, val, mInterval)) {
+        if (!mPbExp->GetValue(MainObjGeom_NameLines, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameLines);
         }
     }
@@ -308,7 +308,7 @@ bool MainObjParamsWrapper::isNameLines() {
 bool MainObjParamsWrapper::isNameLights() {
     BOOL val = TRUE;
     if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjExp_NameLights, mT, val, mInterval)) {
+        if (!mPbExp->GetValue(MainObjGeom_NameLights, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameLights);
         }
     }
@@ -321,7 +321,7 @@ bool MainObjParamsWrapper::isNameLights() {
 bool MainObjParamsWrapper::isNameDummies() {
     BOOL val = TRUE;
     if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjExp_NameDummies, mT, val, mInterval)) {
+        if (!mPbExp->GetValue(MainObjGeom_NameDummies, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameDummies);
         }
     }
@@ -334,7 +334,7 @@ bool MainObjParamsWrapper::isNameDummies() {
 bool MainObjParamsWrapper::isTreeHierarchy() {
     BOOL val = TRUE;
     if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjExp_TreeHierarchy, mT, val, mInterval)) {
+        if (!mPbExp->GetValue(MainObjGeom_TreeHierarchy, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_TreeHierarchy);
         }
     }
@@ -348,7 +348,7 @@ bool MainObjParamsWrapper::isTreeHierarchy() {
 
 void MainObjParamsWrapper::setNameMesh(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_NameMeshes, mT, int(state))) {
+        if (!mPbExp->SetValue(MainObjGeom_NameMeshes, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameMeshes);
         }
     }
@@ -359,7 +359,7 @@ void MainObjParamsWrapper::setNameMesh(const bool state) {
 
 void MainObjParamsWrapper::setNameLines(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_NameLines, mT, int(state))) {
+        if (!mPbExp->SetValue(MainObjGeom_NameLines, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameLines);
         }
     }
@@ -370,7 +370,7 @@ void MainObjParamsWrapper::setNameLines(const bool state) {
 
 void MainObjParamsWrapper::setNameLights(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_NameLights, mT, int(state))) {
+        if (!mPbExp->SetValue(MainObjGeom_NameLights, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameLights);
         }
     }
@@ -381,7 +381,7 @@ void MainObjParamsWrapper::setNameLights(const bool state) {
 
 void MainObjParamsWrapper::setNameDummies(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_NameDummies, mT, int(state))) {
+        if (!mPbExp->SetValue(MainObjGeom_NameDummies, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameDummies);
         }
     }
@@ -392,7 +392,7 @@ void MainObjParamsWrapper::setNameDummies(const bool state) {
 
 void MainObjParamsWrapper::setTreeHierarchy(const bool state) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjExp_TreeHierarchy, mT, int(state))) {
+        if (!mPbExp->SetValue(MainObjGeom_TreeHierarchy, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_TreeHierarchy);
         }
     }
@@ -408,7 +408,7 @@ void MainObjParamsWrapper::setTreeHierarchy(const bool state) {
 bool MainObjParamsWrapper::isManualScale() {
     BOOL val = TRUE;
     if (mPbExp) {
-        if (!mPbExp->GetValue(MainObj_ScaleEnabled, mT, val, mInterval)) {
+        if (!mPbExp->GetValue(MainObjGeom_ScaleEnabled, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObj_ScaleEnabled);
         }
     }
@@ -421,7 +421,7 @@ bool MainObjParamsWrapper::isManualScale() {
 float MainObjParamsWrapper::scale() {
     float val = TRUE;
     if (mPbExp) {
-        if (!mPbExp->GetValue(MainObj_ScaleValue, mT, val, mInterval)) {
+        if (!mPbExp->GetValue(MainObjGeom_ScaleValue, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObj_ScaleValue);
         }
     }
@@ -435,10 +435,10 @@ float MainObjParamsWrapper::scale() {
 
 void MainObjParamsWrapper::setScale(const bool manual, const float value) {
     if (mPbExp) {
-        if (!mPbExp->SetValue(MainObj_ScaleEnabled, mT, int(manual))) {
+        if (!mPbExp->SetValue(MainObjGeom_ScaleEnabled, mT, int(manual))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObj_ScaleEnabled);
         }
-        if (!mPbExp->SetValue(MainObj_ScaleValue, mT, value)) {
+        if (!mPbExp->SetValue(MainObjGeom_ScaleValue, mT, value)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObj_ScaleValue);
         }
     }

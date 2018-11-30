@@ -174,7 +174,7 @@ void MainObject::loadRawGlobAttr(sts_bwc::DataStream & stream) const {
         ui::win::DlgMessageBox::warning(nullptr, "[Backward Compatibility]", msg);
         LWarning << msg;
     }
-    MainObjParamsWrapper wrapper(mAttrParamsPb, mExpPb, TimeValue(0), FOREVER);
+    MainObjParamsWrapper wrapper(mAttrParamsPb, mGeomPb, TimeValue(0), FOREVER);
     if (data.chkNoBlend) {
         wrapper.setBlend(xobj::AttrBlend(xobj::AttrBlend::no_blend, float(data.noBlendRatio)));
     }
@@ -319,8 +319,8 @@ void MainObject::loadRawExpOption(sts_bwc::DataStream & stream) const {
             EXP_DEBUG = 1 << 24,
         };
 
-        if (mExpPb) {
-            MainObjParamsWrapper wrapper(mAttrParamsPb, mExpPb, TimeValue(0), FOREVER);
+        if (mGeomPb) {
+            MainObjParamsWrapper wrapper(mAttrParamsPb, mGeomPb, TimeValue(0), FOREVER);
             //-------------------------------------------------------------------------
             wrapper.setMeshExport((oFlags & EXP_OBJ_MESH) == EXP_OBJ_MESH);
             wrapper.setLinesExport(false);

@@ -147,7 +147,7 @@ private:
     //-------------------------------------------------------------------------
 
     IParamBlock2 * mAttrParamsPb = nullptr;
-    IParamBlock2 * mExpPb = nullptr;
+    IParamBlock2 * mGeomPb = nullptr;
     IParamBlock2 * mDisplayPb = nullptr;
 
     ClassDesc2 * mDesc;
