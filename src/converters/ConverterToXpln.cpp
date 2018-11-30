@@ -92,9 +92,9 @@ bool ConverterToXpln::toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xO
     //-----------------------------------------------
     ConverterMain::toXpln(mainNode->node(), xObjMain, mExportOptions);
     if (mainNode->useLayersObjects()) {
-        std::unordered_set<ILayer*> geometryLayers = mainNode->geometryLayers();
+        std::unordered_set<ILayer*> geometryLayers = mainNode->geometryLayers(mainNode->node()->GetName());
         if (geometryLayers.empty()) {
-            CLError << LogNode(mainNode->node()) << "has enabled using layers objects but hasn't layers specified";
+            CLError << LogNode(mainNode->node()) << "has enabled using layers objects but hasn't layers specified.";
             return false;
         }
         return byLayer(mainNode, geometryLayers, xObjMain);

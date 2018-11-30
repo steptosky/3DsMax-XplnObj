@@ -33,7 +33,6 @@
 
 #pragma warning(push, 0)
 #include <max.h>
-#include <ilayermanager.h>
 #pragma warning(pop)
 
 #include <xpln/obj/attributes/AttrWetDry.h>
@@ -159,20 +158,8 @@ public:
 
     /***************************************************************************************/
 
-    // todo implementation
-    bool useLayersObjects() {
-        return true;
-    }
-
-    // todo implementation
-    std::unordered_set<ILayer*> geometryLayers() {
-        ILayerManager * manager = GetCOREInterface13()->GetLayerManager();
-        const auto layer1 = manager->GetLayer(node()->GetName());
-        //const auto layer2 = manager->GetLayer(_T("X-Obj-002"));
-        DbgAssert(layer1);
-        //DbgAssert(layer2);
-        return std::unordered_set<ILayer*>{layer1};
-    }
+    static bool useLayersObjects();
+    static std::unordered_set<ILayer*> geometryLayers(const MStr & startsWith);
 
     /***************************************************************************************/
 

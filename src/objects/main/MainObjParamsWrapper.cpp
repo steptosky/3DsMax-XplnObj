@@ -30,7 +30,10 @@
 #include "MainObjParamsWrapper.h"
 
 #pragma warning(push, 0)
+#include <max.h>
 #include <iparamb2.h>
+#include <ilayermanager.h>
+#include <ilayer.h>
 #pragma warning(pop)
 
 #include "objects/main/param-blocks/MainObjParams.h"
@@ -1228,6 +1231,37 @@ void MainObjParamsWrapper::setCockpitRegion(const xobj::AttrCockpitRegion & attr
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
     }
+}
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+
+bool MainObjParamsWrapper::useLayersObjects() {
+    return true;
+}
+
+std::unordered_set<ILayer*> MainObjParamsWrapper::geometryLayers(const MStr & startsWith) {
+    std::unordered_set<ILayer*> out;
+
+    // From 3Ds Max SDK
+    // Note, passing in the value of 10 to the GetReference function may look like a hack,
+    // but it is the only way at this time to get the pointer we need
+    const auto pointer = GetCOREInterface()->GetScenePointer()->GetReference(10);
+    auto layerManager = dynamic_cast<ILayerManager*>(pointer);
+    if (!layerManager) {
+        return out;
+    }
+
+    const auto layerNum = layerManager->GetLayerCount();
+    for (int i = 0; i < layerNum; ++i) {
+        auto layer = layerManager->GetLayer(i);
+        if (layer->GetName().StartsWith(startsWith)) {
+            out.insert(layer);
+        }
+    }
+
+    return out;
 }
 
 /**************************************************************************************************/
