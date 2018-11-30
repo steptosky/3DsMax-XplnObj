@@ -37,13 +37,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-class MainObjPbExport {
-    MainObjPbExport() = default;
-    virtual ~MainObjPbExport() = default;
+class MainObjPbGeometry {
+    MainObjPbGeometry() = default;
+    virtual ~MainObjPbGeometry() = default;
 public:
 
     enum eVersions {
-        PbVersionExport = 1,
+        PbVersionGeometry = 1,
     };
 
     static ParamBlockDesc2 mPb;

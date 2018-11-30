@@ -36,7 +36,7 @@
 #define IDS_SCALE                       137
 #define IDS_ROLL_MAINOBJ_ATTR           138
 #define ROLL_MAINOBJ_COCKPIT            138
-#define IDS_ROLL_MAINOBJ_EXP            139
+#define IDS_ROLL_MAINOBJ_GEOMETRY       139
 #define IDS_ROLL_GLOB_SHADING           140
 #define IDS_TEXTURE_TYPES               142
 #define IDS_NONE                        143
@@ -157,7 +157,7 @@
 #define IDC_SCALE_SPIN                  1134
 #define BTN_DONATE                      1135
 #define SPN_FAR                         1135
-#define ROLL_MAINOBJ_EXP                1135
+#define ROLL_MAINOBJ_GEOMETRY           1135
 #define BTN_CHECK_FOR_UPDATE            1136
 #define SPN_LAYERGROUP_DRAPED_EDIT      1136
 #define ROLL_SMOKEOBJ_DISPLAY           1136
