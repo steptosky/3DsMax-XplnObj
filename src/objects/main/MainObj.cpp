@@ -83,7 +83,6 @@ MainObject * MainObject::mEditOb = nullptr;
 MainObject::MainObject() {
     mDesc = ClassesDescriptions::mainObj();
     mDesc->MakeAutoParamBlocks(this);
-    mObjColor = Point3(1.0, 0.7, 0.4);
     makeIcon();
 }
 
@@ -393,22 +392,19 @@ RefResult MainObject::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /
 /**************************************************************************************************/
 
 int MainObject::HitTest(const TimeValue t, INode * node, const int type, const int crossing, const int flags, IPoint2 * p, ViewExp * vpt) {
-    HitRegion hitRegion;
-    DWORD savedLimits;
-    const int res = 0;
     GraphicsWindow * gw = vpt->getGW();
-    Material * mtl = gw->getMaterial();
+    const DWORD limits = gw->getRndLimits();
+    HitRegion hitRegion;
     MakeHitRegion(hitRegion, type, crossing, 4, p);
-    gw->setRndLimits(((savedLimits = gw->getRndLimits()) | GW_PICK) & ~GW_ILLUM);
-    const Matrix3 m = node->GetObjectTM(t);
-    gw->setTransform(m);
+    gw->setRndLimits((limits | GW_PICK) & ~GW_ILLUM);
+    gw->setTransform(node->GetObjectTM(t));
     gw->clearHitCode();
-    if (mIconMesh.select(gw, mtl, &hitRegion, flags & HIT_ABORTONHIT)) {
+    if (mIconMesh.select(gw, gw->getMaterial(), &hitRegion, flags & HIT_ABORTONHIT)) {
+        gw->setRndLimits(limits);
         return TRUE;
     }
-    gw->clearHitCode();
-    gw->setRndLimits(savedLimits);
-    return res;
+    gw->setRndLimits(limits);
+    return FALSE;
 }
 
 //-------------------------------------------------------------------------
@@ -421,52 +417,81 @@ int MainObject::UsesWireColor() {
 
 int MainObject::Display(const TimeValue t, INode * node, ViewExp * vpt, int /*flags*/) {
     GraphicsWindow * gw = vpt->getGW();
-    Material * mtl = gw->getMaterial();
+    const auto nodeTm = node->GetNodeTM(t);
+    auto objTm = node->GetObjectTM(t);
     const Color color(node->GetWireColor());
-    mObjColor.x = color.r;
-    mObjColor.y = color.g;
-    mObjColor.z = color.b;
-    gw->setTransform(node->GetNodeTM(t));
-    //-------------------------------------------------------------------------
-    const DWORD limits = gw->getRndLimits();
-    gw->setRndLimits(GW_WIREFRAME | GW_EDGES_ONLY | GW_BACKCULL | (limits & GW_Z_BUFFER));
-
+    gw->setTransform(objTm);
+    //-------------------------------------
+    gw->setColor(TEXT_COLOR, color.r, color.g, color.b);
+    //-------------------------------------
     if (node->Selected()) {
-        gw->setColor(LINE_COLOR, GetSelColor());
+        const Point3 colorPoint = GetSelColor();
+        gw->setColor(LINE_COLOR, colorPoint);
+        gw->setColor(TEXT_COLOR, colorPoint);
     }
     else if (!node->IsFrozen() && !node->Dependent()) {
-        gw->setColor(LINE_COLOR, mObjColor);
+        const Point3 colorPoint(color.r, color.g, color.b);
+        gw->setColor(LINE_COLOR, colorPoint);
+        gw->setColor(TEXT_COLOR, colorPoint);
     }
-    mIconMesh.render(gw, mtl, nullptr, COMP_ALL);
+    //-------------------------------------
+    const auto nodePos = nodeTm.GetRow(3);
+    const auto objPos = objTm.GetRow(3);
+    const auto diffPos = nodePos - objPos;
+    const auto diffPosLen = diffPos.Length();
+    const float axisScale = mIconScaleCache * 0.25f;
+    //-----------------
+    // cross
+    if (diffPosLen > 0.00001f) {
+        const std::size_t centerMarkPointsNum = 2 * 3;
+        Point3 centerMarkPoints[centerMarkPointsNum] = {
+            diffPos - Point3(-1.0f * axisScale, 0.0f, 0.0f), diffPos - Point3(1.0f * axisScale, 0.0f, 0.0f),
+            diffPos - Point3(0.0f, -1.0f * axisScale, 0.0f), diffPos - Point3(0.0f, 1.0f * axisScale, 0.0f),
+            diffPos - Point3(0.0f, 0.0f, -1.0f * axisScale), diffPos - Point3(0.0f, 0.0f, 1.0f * axisScale),
+        };
+        static int centerMarkPointsEdges[centerMarkPointsNum + 1] = {
+            GW_EDGE_VIS,GW_EDGE_SKIP,
+            GW_EDGE_VIS,GW_EDGE_SKIP,
+            GW_EDGE_VIS
+        };
+        gw->polyline(centerMarkPointsNum, centerMarkPoints, nullptr, 0, centerMarkPointsEdges);
+    }
+    //-----------------
+    // line to center
+    const float lineShiftFactor = 1.1f;
+    if (diffPosLen > lineShiftFactor * mIconScaleCache) {
+        const std::size_t pointsNum = 2 * 1;
+        Point3 linePoints[pointsNum] = {diffPos.Normalize() * lineShiftFactor * mIconScaleCache, diffPos};
+        gw->polyline(pointsNum, linePoints, nullptr, 0, nullptr);
+    }
+    //-------------------------------------
+    const DWORD limits = gw->getRndLimits();
+    gw->setRndLimits(GW_WIREFRAME | GW_EDGES_ONLY | GW_BACKCULL | (limits & GW_Z_BUFFER));
+    mIconMesh.render(gw, gw->getMaterial(), nullptr, COMP_ALL);
     gw->setRndLimits(limits);
-    //-------------------------------------------------------------------------
-    return 0;
+    //-------------------------------------
+    if (mDisplayPb->GetInt(MainObjDisp_DrawName) != 0) {
+        Point3 textPos(0.0f, mIconScaleCache, 0.0f);
+        gw->text(&textPos, node->GetName());
+    }
+    //-------------------------------------
+    return TRUE;
 }
 
 //-------------------------------------------------------------------------
 
 void MainObject::makeIcon() {
-    float size = 1.0f;
-    Interval interval = FOREVER;
-    if (!mDisplayPb->GetValue(MainObjDisp_IconScale, mIp ? mIp->GetTime() : 0, size, interval)) {
-        LError << "Can't retrieve scale value from param block";
-    }
-
-    if (stsff::math::isEqual(mLastIconScale, size, 0.001f) && mIconMesh.getNumVerts() != 0) {
-        return;
-    }
-
+    float size = mDisplayPb->GetFloat(MainObjDisp_IconScale);
     auto masterScale = static_cast<float>(GetMasterScale(UNITS_METERS));
     if (masterScale != -1.0f) {
         masterScale = 1.0f / masterScale;
-        size = size * masterScale;
+        size *= masterScale;
         if (size < 0.00001f) {
             size = 0.00001f;
-            LError << "The icon scale is too small";
         }
     }
 
-    mLastIconScale = size;
+    mIconScaleCache = size;
     MainObjIcon::fillMesh(mIconMesh, size);
 }
 

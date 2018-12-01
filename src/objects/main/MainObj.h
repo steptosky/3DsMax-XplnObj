@@ -152,9 +152,15 @@ private:
 
     ClassDesc2 * mDesc;
     IObjParam * mIp = nullptr;
-    Point3 mObjColor;
     Mesh mIconMesh;
-    float mLastIconScale = 1.0f;
+
+    //-------------------------------------------------------------------------
+    // cache
+
+    // This value is corrected according to the current UNITS
+    float mIconScaleCache = 1.0f;
+
+    //-------------------------------------------------------------------------
 
     static MainObject * mEditOb;
     static MouseCallback mMouseCallback;
