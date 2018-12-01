@@ -34,6 +34,7 @@
 #include <iparamb2.h>
 #include <ilayermanager.h>
 #include <ilayer.h>
+#include <ILayerProperties.h>
 #pragma warning(pop)
 
 #include "objects/main/param-blocks/MainObjParams.h"
@@ -1252,24 +1253,41 @@ bool MainObjParamsWrapper::useLayersObjects() {
 
 std::unordered_set<ILayer*> MainObjParamsWrapper::geometryLayers(const MStr & startsWith) {
     std::unordered_set<ILayer*> out;
-
+    //----------------------
+    auto fpLayerManager = static_cast<IFPLayerManager*>(GetCOREInterface(LAYERMANAGER_INTERFACE));
+    if (!fpLayerManager) {
+        return out;
+    }
+    //----------------------
     // From 3Ds Max SDK
     // Note, passing in the value of 10 to the GetReference function may look like a hack,
     // but it is the only way at this time to get the pointer we need
     const auto pointer = GetCOREInterface()->GetScenePointer()->GetReference(10);
-    auto layerManager = dynamic_cast<ILayerManager*>(pointer);
-    if (!layerManager) {
-        return out;
-    }
-
-    const auto layerNum = layerManager->GetLayerCount();
+    const auto layerManager = dynamic_cast<ILayerManager*>(pointer);
+    //----------------------
+#if MAX_VERSION_MAJOR > 14 // 14 - 2012
+    const auto startWithFn = [](MStr & layerName, const MStr & nodeName) {
+        return layerName.StartsWith(nodeName);
+    };
+#else
+    const auto startWithFn = [](MStr & layerName, const MStr & nodeName) {
+        return sts::MbStrUtils::startsWith(xobj::fromMStr(layerName), xobj::fromMStr(nodeName));
+    };
+#endif
+    //----------------------
+    const auto layerNum = fpLayerManager->getCount();
     for (int i = 0; i < layerNum; ++i) {
-        auto layer = layerManager->GetLayer(i);
-        if (layer->GetName().StartsWith(startsWith)) {
-            out.insert(layer);
+        auto layerProperty = fpLayerManager->getLayer(i);
+        MStr name(layerProperty->getName());
+
+        if (startWithFn(name, startsWith)) {
+            const auto layer = layerManager->GetLayer(layerProperty->getName());
+            if (layer) {
+                out.insert(layer);
+            }
         }
     }
-
+    //----------------------
     return out;
 }
 
