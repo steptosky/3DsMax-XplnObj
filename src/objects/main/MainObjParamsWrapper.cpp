@@ -1238,7 +1238,16 @@ void MainObjParamsWrapper::setCockpitRegion(const xobj::AttrCockpitRegion & attr
 /**************************************************************************************************/
 
 bool MainObjParamsWrapper::useLayersObjects() {
-    return true;
+    int val = 0;
+    if (mPbExp) {
+        if (!mPbExp->GetValue(MainObjAttr_LinkingType, mT, val, mInterval)) {
+            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LinkingType);
+        }
+    }
+    else {
+        LError << "Pointer to IParamBlock2 is nullptr";
+    }
+    return val == 1;
 }
 
 std::unordered_set<ILayer*> MainObjParamsWrapper::geometryLayers(const MStr & startsWith) {

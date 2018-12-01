@@ -47,6 +47,62 @@
 #endif
 
 /**************************************************************************************************/
+/////////////////////////////////////////* Static area *////////////////////////////////////////////
+/**************************************************************************************************/
+
+class DialogProcedure : public ParamMap2UserDlgProc {
+public:
+
+    DialogProcedure() = default;
+    virtual ~DialogProcedure() = default;
+
+    //-------------------------------------------------------------------------
+
+    INT_PTR DlgProc(const TimeValue t, IParamMap2 * map, const HWND hWnd, const UINT msg, const WPARAM wParam, LPARAM) override {
+        auto ppb = map->GetParamBlock();
+
+        switch (msg) {
+            case WM_INITDIALOG: {
+                const HWND combo = GetDlgItem(hWnd, IDC_COMBO_GEOMETRY_SOURCE);
+                DbgAssert(combo);
+                if (combo) {
+                    ComboBox_AddString(combo, _T("Linked Objects"));
+                    ComboBox_AddString(combo, _T("Layer Objects"));
+                    const auto index = ppb->GetInt(MainObjAttr_LinkingType);
+                    ComboBox_SetCurSel(combo, index);
+                }
+                return TRUE;
+            }
+            case WM_COMMAND: {
+                switch (LOWORD(wParam)) {
+                    case IDC_COMBO_GEOMETRY_SOURCE: {
+                        if (HIWORD(wParam) == CBN_SELCHANGE) {
+                            const HWND combo = GetDlgItem(hWnd, IDC_COMBO_GEOMETRY_SOURCE);
+                            const auto selectedIndex = ComboBox_GetCurSel(combo);
+                            ppb->SetValue(MainObjAttr_LinkingType, t, selectedIndex);
+                        }
+                        break;
+                    }
+                    default: break;
+                }
+                break;
+            }
+            default: break;
+        }
+        return FALSE;
+    }
+
+    //-------------------------------------------------------------------------
+
+    void DeleteThis() override {}
+
+    //-------------------------------------------------------------------------
+
+};
+
+static DialogProcedure gDialogProcedure;
+
+/**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
@@ -55,7 +111,7 @@ ParamBlockDesc2 MainObjPbGeometry::mPb(static_cast<BlockID>(eMainObjParamsBlocks
                                        PbVersionGeometry, eMainObjPbOrder::PbOrderGeometry,
                                        //-------------------------------------------------------------------------
                                        // Rollouts
-                                       ROLL_MAINOBJ_GEOMETRY, IDS_ROLL_MAINOBJ_GEOMETRY, 0, APPENDROLL_CLOSED, NULL,
+                                       ROLL_MAINOBJ_GEOMETRY, IDS_ROLL_MAINOBJ_GEOMETRY, 0, APPENDROLL_CLOSED, &gDialogProcedure,
                                        //-------------------------------------------------------------------------
                                        // Export Params
                                        MainObjAttr_ExportEnable, _T("Enable-export"), TYPE_BOOL, 0, NO_IDS,
@@ -133,6 +189,10 @@ ParamBlockDesc2 MainObjPbGeometry::mPb(static_cast<BlockID>(eMainObjParamsBlocks
                                        MainObjGeom_TreeHierarchy, _T("Name-animation"), TYPE_BOOL, 0, NO_IDS,
                                        p_default, FALSE,
                                        p_ui, TYPE_SINGLECHECKBOX, CHK_NAME_TREE, p_end,
+                                       //-------------------------------------------------------------------------
+                                       MainObjAttr_LinkingType, _T("Linking-type"), TYPE_INT, 0, NO_IDS,
+                                       p_default, 0,
+                                       p_end,
                                        //-------------------------------------------------------------------------
                                        p_end);
 

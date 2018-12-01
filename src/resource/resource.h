@@ -350,6 +350,7 @@
 #define IDC_SIM_PATH                    1273
 #define IDC_CHK_DATAREFS_ID             1274
 #define IDC_CHK_COMMANDS_ID             1275
+#define IDC_COMBO_GEOMETRY_SOURCE       1275
 #define IDC_CHK_DATAREFS_SORT           1276
 #define IDC_CHK_COMMANDS_SORT           1277
 

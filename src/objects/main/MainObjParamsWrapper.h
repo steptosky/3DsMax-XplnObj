@@ -158,7 +158,7 @@ public:
 
     /***************************************************************************************/
 
-    static bool useLayersObjects();
+    bool useLayersObjects();
     static std::unordered_set<ILayer*> geometryLayers(const MStr & startsWith);
 
     /***************************************************************************************/
