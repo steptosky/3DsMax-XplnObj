@@ -59,7 +59,7 @@ class ILayer;
 class MainObjParamsWrapper {
 public:
 
-    MainObjParamsWrapper(IParamBlock2 * pbAttr, IParamBlock2 * pbExp, TimeValue t, const Interval & interval);
+    MainObjParamsWrapper(IParamBlock2 * pbAttr, IParamBlock2 * pbGeom, TimeValue t, const Interval & interval);
     MainObjParamsWrapper(INode * node, TimeValue t, const Interval & interval);
     ~MainObjParamsWrapper() = default;
 
@@ -175,7 +175,7 @@ private:
 
     Interval mInterval;
     TimeValue mT = 0;
-    IParamBlock2 * mPbExp = nullptr;
+    IParamBlock2 * mPbGeom = nullptr;
     IParamBlock2 * mPbAttr = nullptr;
     INode * mNode = nullptr;
 
