@@ -15,3 +15,4 @@ output-dev/
 output-release/
 set-conan-user.bat
 dev-conanfile.txt
+msvc-2019/

@@ -13,12 +13,12 @@ CLS
 if exist set-conan-user.bat call set-conan-user.bat
 ::==========================================================
 :: Creating building DIR and use it as working one.
-set dir="msvc-2017"
+set dir="msvc-2019"
 if not exist %dir% mkdir %dir%
 cd %dir%
 ::==========================================================
 :: Generating Visual Studio project.
-call cmake -G "Visual Studio 15 Win64" ../ ^
+call cmake -G "Visual Studio 16" ../ ^
         -DCMAKE_INSTALL_PREFIX=../output ^
         -DADD_3DMAXS_EXEC=ON
 
