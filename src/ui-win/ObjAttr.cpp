@@ -412,7 +412,7 @@ namespace win {
     void ObjAttr::loadToUiShiny() {
         cChkShiny.setState(mData.mShiny.has_value());
         if (mData.mShiny.has_value()) {
-            cSpnShinyRatio->SetValue(mData.mShiny->ratio(), FALSE);
+            cSpnShinyRatio->SetValue(mData.mShiny->mRatio, FALSE);
         }
     }
 
@@ -444,7 +444,7 @@ namespace win {
     void ObjAttr::loadToUiCockpit() {
         cChkCockpit.setState(mData.mCockpit.has_value());
         if (mData.mCockpit.has_value()) {
-            cCmbCockpit.setCurrSelected(static_cast<int>(mData.mCockpit->type()));
+            cCmbCockpit.setCurrSelected(static_cast<int>(mData.mCockpit->mType));
         }
     }
 
@@ -480,8 +480,8 @@ namespace win {
     void ObjAttr::loadToUiHard() {
         cChkHard.setState(mData.mHard.has_value());
         if (mData.mHard.has_value()) {
-            cChkHardDeck.setState(mData.mHard->isDeck());
-            cCmbHard.setCurrSelected(static_cast<int>(mData.mHard->surface().id()));
+            cChkHardDeck.setState(mData.mHard->mIsDeck);
+            cCmbHard.setCurrSelected(static_cast<int>(mData.mHard->mSurface.id()));
         }
     }
 
@@ -507,7 +507,7 @@ namespace win {
         int currSel = cCmbBlend.currSelected();
         xobj::AttrBlend attr(static_cast<xobj::AttrBlend::eType>(currSel),
                              cSpnBlendRatio->GetFVal());
-        if (attr.type() == xobj::AttrBlend::blend || currSel == 0) {
+        if (attr.mType == xobj::AttrBlend::blend || currSel == 0) {
             mData.mBlend = std::nullopt;
         }
         else {
@@ -518,8 +518,8 @@ namespace win {
 
     void ObjAttr::loadToUiBlend() {
         if (mData.mBlend.has_value()) {
-            cCmbBlend.setCurrSelected(static_cast<int>(mData.mBlend->type()));
-            cSpnBlendRatio->SetValue(mData.mBlend->ratio(), FALSE);
+            cCmbBlend.setCurrSelected(static_cast<int>(mData.mBlend->mType));
+            cSpnBlendRatio->SetValue(mData.mBlend->mRatio, FALSE);
         }
     }
 
@@ -554,7 +554,7 @@ namespace win {
     void ObjAttr::loadToUiPolyOffset() {
         cChkPolyOffset.setState(mData.mPolyOffset.has_value());
         if (mData.mPolyOffset.has_value()) {
-            cSpnPolyOstDist->SetValue(mData.mPolyOffset->offset(), FALSE);
+            cSpnPolyOstDist->SetValue(mData.mPolyOffset->mOffset, FALSE);
         }
     }
 
@@ -598,9 +598,9 @@ namespace win {
     void ObjAttr::loadToUiLightLevel() {
         cChkLightLevel.setState(mData.mLightLevel.has_value());
         if (mData.mLightLevel.has_value()) {
-            cEdtLightLevelDrf->SetText(xobj::toMStr(mData.mLightLevel->dataref()));
-            cSpnLightLevelVal1->SetValue(mData.mLightLevel->val1(), FALSE);
-            cSpnLightLevelVal2->SetValue(mData.mLightLevel->val2(), FALSE);
+            cEdtLightLevelDrf->SetText(xobj::toMStr(mData.mLightLevel->mDataref));
+            cSpnLightLevelVal1->SetValue(mData.mLightLevel->mVal1, FALSE);
+            cSpnLightLevelVal2->SetValue(mData.mLightLevel->mVal2, FALSE);
         }
     }
 
