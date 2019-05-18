@@ -293,7 +293,7 @@ namespace win {
             }
 
             xobj::ObjMain xMain;
-            ConverterUtils::toXTMatrix(ConverterUtils::TOOGL_MTX, xMain.pMatrix);
+            ConverterUtils::toXTMatrix(ConverterUtils::TOOGL_MTX, xMain.mMatrix);
             MainObjParamsWrapper mwrapper(currMainNode.first, GetCOREInterface()->GetTime(), FOREVER);
             result = mConverterer.toXpln(&mwrapper, xMain) ? TRUE : FALSE;
             if (result == FALSE) {

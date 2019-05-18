@@ -160,7 +160,7 @@ namespace win {
             context.setCommandsFile(xobj::fromMPath(projectCommands));
         }
 
-        ConverterUtils::toXTMatrix(ConverterUtils::FROMOGL_MTX, xMain.pMatrix);
+        ConverterUtils::toXTMatrix(ConverterUtils::FROMOGL_MTX, xMain.mMatrix);
         if (!xMain.importObj(context)) {
             finish(true);
             return false;
