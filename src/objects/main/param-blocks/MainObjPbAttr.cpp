@@ -175,7 +175,7 @@ public:
                     }
                     MainObjParamsWrapper wrapper(ppb, nullptr, t, FOREVER);
                     ComboBox_SetCurSel(cbmLayer, static_cast<int>(wrapper.layerGroup().value_or(xobj::AttrLayerGroup()).layer().id()));
-                    ComboBox_SetCurSel(cbmLayerDrap, static_cast<int>(wrapper.drapedLayerGroup().value_or(xobj::AttrLayerGroup()).layer().id()));
+                    ComboBox_SetCurSel(cbmLayerDrap, static_cast<int>(wrapper.drapedLayerGroup().value_or(xobj::AttrDrapedLayerGroup()).layer().id()));
                 }
                 if (cbmWetDry) {
                     ComboBox_AddString(cbmWetDry, _T("none"));
