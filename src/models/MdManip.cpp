@@ -28,7 +28,6 @@
 */
 
 #include "MdManip.h"
-#include "models/io/NodeIO.h"
 #include "common/String.h"
 
 /**************************************************************************************************/
@@ -80,10 +79,10 @@ bool MdManip::linkNode(INode * node) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void MdManip::saveToNode(INode * node, const xobj::AttrManipBase & inManip) const {
+void MdManip::saveToNode(INode * node, const std::optional<xobj::AttrManip> & inManip) const {
     if (node) {
         try {
-            ManipIO::saveToNode(node, &inManip);
+            ManipIO::saveToNode(node, inManip);
         }
         catch (std::exception & e) {
             LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
