@@ -30,6 +30,7 @@
 #pragma once
 
 #include <functional>
+#include <optional>
 #include <xpln/obj/manipulators/embeddable/AttrManipWheel.h>
 #include "common/String.h"
 #include "ui-win/controls/Base.h"
@@ -45,6 +46,8 @@ namespace win {
 
     class ManipAttrWheel : public IWindow {
     public:
+
+        typedef std::function<void(const std::optional<xobj::AttrManipWheel> &)> Callback;
 
         ManipAttrWheel() = default;
         virtual ~ManipAttrWheel();
@@ -66,7 +69,7 @@ namespace win {
             toWindow();
         }
 
-        void setCallBack(std::function<void(const std::optional<xobj::AttrManipWheel> &)> & inFn) {
+        void setCallBack(const Callback & inFn) {
             mCallback = inFn;
         }
 
@@ -83,7 +86,7 @@ namespace win {
         void enablingControls();
         void dataChanged();
 
-        std::function<void(const std::optional<xobj::AttrManipWheel> &)> mCallback;
+        Callback mCallback;
         std::optional<xobj::AttrManipWheel> mData;
         ctrl::Base mHwnd;
         ctrl::CheckBox mChkEnable;
