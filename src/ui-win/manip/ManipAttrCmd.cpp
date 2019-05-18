@@ -35,7 +35,6 @@
 
 #include <xpln/enums/ECursor.h>
 #include "ui-win/Utils.h"
-#include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
 #include "presenters/Commands.h"
@@ -75,13 +74,13 @@ namespace win {
                         Utils::getText(theDlg->cEdtCommand, str);
                         str = presenters::Commands::selectData(str);
                         theDlg->cEdtCommand->SetText(str);
-                        theDlg->mData.setCmd(xobj::fromMStr(str));
+                        theDlg->mData.mCommand = xobj::fromMStr(str);
                         theDlg->save();
                         break;
                     }
                     case CMB_CURSOR: {
                         if (HIWORD(wParam) == CBN_SELCHANGE) {
-                            theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
+                            theDlg->mData.mCursor = xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str());
                             theDlg->save();
                         }
                         break;
@@ -93,12 +92,12 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case EDIT_COMMAND: {
-                        theDlg->mData.setCmd(sts::toMbString(Utils::getText(theDlg->cEdtCommand)));
+                        theDlg->mData.mCommand = sts::toMbString(Utils::getText(theDlg->cEdtCommand));
                         theDlg->save();
                         break;
                     }
                     case EDIT_TOOLTIP: {
-                        theDlg->mData.setToolTip(sts::toMbString(Utils::getText(theDlg->cEdtToolType)));
+                        theDlg->mData.mToolType = sts::toMbString(Utils::getText(theDlg->cEdtToolType));
                         theDlg->save();
                         break;
                     }
@@ -172,12 +171,15 @@ namespace win {
     //////////////////////////////////////////* Functions */////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void ManipAttrCmd::setManip(const xobj::AttrManipBase & manip) {
-        if (manip.type() != mData.type()) {
-            LError << "Incorrect manipulator: " << manip.type().toString();
+    void ManipAttrCmd::setManip(const std::optional<xobj::AttrManip> & manip) {
+        assert(manip);
+        const auto data = std::get_if<xobj::AttrManipCmd>(&manip->mType);
+        if (!data) {
+            const xobj::EManipulator type = std::visit([](auto && m) { return m.mType; }, manip->mType);
+            LError << "Incorrect manipulator type: " << type.toString();
             return;
         }
-        mData = static_cast<const xobj::AttrManipCmd &>(manip);
+        mData = *data;
     }
 
     /**************************************************************************************************/
@@ -204,9 +206,9 @@ namespace win {
     }
 
     void ManipAttrCmd::toWindow() {
-        cEdtCommand->SetText(xobj::toMStr(mData.cmd()));
-        cEdtToolType->SetText(xobj::toMStr(mData.toolTip()));
-        cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
+        cEdtCommand->SetText(xobj::toMStr(mData.mCommand));
+        cEdtToolType->SetText(xobj::toMStr(mData.mToolType));
+        cCmbCursor.setCurrSelected(sts::toString(mData.mCursor.toUiString()));
     }
 
     /********************************************************************************************************/
