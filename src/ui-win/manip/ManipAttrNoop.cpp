@@ -64,7 +64,7 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case EDIT_TOOLTIP: {
-                        theDlg->mData.setToolTip(sts::toMbString(Utils::getText(theDlg->cEdtToolType)));
+                        theDlg->mData.mToolType = sts::toMbString(Utils::getText(theDlg->cEdtToolType));
                         theDlg->save();
                         break;
                     }
@@ -138,12 +138,15 @@ namespace win {
     //////////////////////////////////////////* Functions */////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void ManipAttrNoop::setManip(const xobj::AttrManipBase & manip) {
-        if (manip.type() != mData.type()) {
-            LError << "Incorrect manipulator: " << manip.type().toString();
+    void ManipAttrNoop::setManip(const std::optional<xobj::AttrManip> & manip) {
+        assert(manip);
+        const auto data = std::get_if<xobj::AttrManipNoop>(&manip->mType);
+        if (!data) {
+            const xobj::EManipulator type = std::visit([](auto && m) { return m.mType; }, manip->mType);
+            LError << "Incorrect manipulator type: " << type.toString();
             return;
         }
-        mData = static_cast<const xobj::AttrManipNoop &>(manip);
+        mData = *data;
     }
 
     /**************************************************************************************************/
@@ -159,7 +162,7 @@ namespace win {
     }
 
     void ManipAttrNoop::toWindow() {
-        cEdtToolType->SetText(xobj::toMStr(mData.toolTip()));
+        cEdtToolType->SetText(xobj::toMStr(mData.mToolType));
     }
 
     /********************************************************************************************************/
