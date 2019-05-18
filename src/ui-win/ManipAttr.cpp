@@ -97,7 +97,7 @@ namespace win {
 
     ManipAttr::~ManipAttr() {
         ManipAttr::destroy();
-        setCurrManip(nullptr);
+        setCurrManip(std::nullopt);
     }
 
     /**************************************************************************************************/
@@ -275,8 +275,8 @@ namespace win {
         sts::Str currItem = cCmbManipType.currSelectedText();
         //-------------------------------------------------
         if (currItem == sts::toString(xobj::EManipulator(xobj::EManipulator::none).toUiString())) {
-            setCurrManip(nullptr);
-            mData.saveToNode(xobj::AttrManipNone());
+            setCurrManip(std::nullopt);
+            mData.saveToNode(std::optional(xobj::AttrManip(xobj::AttrManipNone())));
             return;
         }
         //-------------------------------------------------
@@ -408,12 +408,12 @@ namespace win {
 
     void ManipAttr::gotAttrManip(const xobj::AttrManipNoop & inManip) {
         createSubWin<xobj::AttrManipNoop, ManipAttrNoop>(inManip);
-        mData.saveToNode(inManip);
+        mData.saveToNode(xobj::AttrManip(inManip));
     }
 
     void ManipAttr::gotAttrManip(const xobj::AttrManipPanel & inManip) {
         createSubWin<xobj::AttrManipPanel, ManipAttrPanel>(inManip);
-        mData.saveToNode(inManip);
+        mData.saveToNode(xobj::AttrManip(inManip));
     }
 
     void ManipAttr::gotAttrManip(const xobj::AttrManipPush & inManip) {
@@ -433,7 +433,7 @@ namespace win {
     }
 
     void ManipAttr::gotNoManip() {
-        setCurrManip(nullptr);
+        setCurrManip(std::nullopt);
         cCmbManipType.setCurrSelected(sts::toString(xobj::EManipulator(xobj::EManipulator::none).toUiString()));
     }
 
