@@ -225,7 +225,7 @@ Point3 ConverterMesh::vertexNormal(Mesh * mesh, int faceNo, RVertex * rv) {
         outVertNormal = rv->rn.getNormal();
     }
     else {
-        const auto numNormals = rv->rFlags & NORCT_MASK;
+        const int numNormals = rv->rFlags & NORCT_MASK;
         if (numNormals && f->smGroup) {
             if (numNormals == 1) {
                 outVertNormal = rv->rn.getNormal();
