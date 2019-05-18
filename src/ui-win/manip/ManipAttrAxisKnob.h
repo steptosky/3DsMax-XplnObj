@@ -56,7 +56,7 @@ namespace win {
         RECT rect() const override;
         void move(const POINT & point) override;
 
-        void setManip(const xobj::AttrManipBase & manip) override;
+        void setManip(const std::optional<xobj::AttrManip>& manip) override;
 
         //-------------------------------------------------------------------------
 
@@ -70,9 +70,7 @@ namespace win {
 
         void toWindow();
 
-        void save() const {
-            mModelData->saveToNode(mData);
-        }
+        void save() const { mModelData->saveToNode(xobj::AttrManip(mData)); }
 
         RECT mSize;
 
