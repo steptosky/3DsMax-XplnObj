@@ -102,7 +102,7 @@ Read the help for more information about this issue.");
                 return true;
             }
             mdBaseAttr.loadFromNode(attrSet);
-            if (attrSet.cockpit()) {
+            if (attrSet.mCockpit) {
                 MdManip mdManip;
                 if (mdManip.linkNode(node)) {
                     ManipGetter mg;
@@ -111,7 +111,7 @@ Read the help for more information about this issue.");
                         return true;
                     }
                     xobj::AttrManipPanel panelManip;
-                    panelManip.setCockpit(attrSet.cockpit());
+                    panelManip.setCockpit(*attrSet.mCockpit);
                     mdManip.saveToNode(panelManip);
                     nodes.emplace_back(node);
                 }
