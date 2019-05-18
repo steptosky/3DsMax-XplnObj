@@ -49,75 +49,75 @@ namespace bcw {
 struct ManipGetter : ManipIO::IManipIo {
 
     void gotAttrManip(const xobj::AttrManipAxisKnob & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipAxisSwitchLeftRight & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipAxisSwitchUpDown & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipCmd & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipCmdAxis & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipCmdKnob & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipCmdSwitchLeftRight & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipCmdSwitchUpDown & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipDelta & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipDragAxis & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipDragAxisPix & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipDragXy & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipNoop & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipPanel & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipPush & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipRadio & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipToggle & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipWrap & inManip) override {
-        mAttr.mManip = xobj::AttrManip(inManip);
+        mAttr.mManip = inManip;
     }
 
     void gotNoManip() override {
@@ -1040,7 +1040,7 @@ void ManipIO::saveToNode(INode * outNode, const std::optional<xobj::AttrManip> &
         removeFromNode(outNode);
         return;
     }
-    std::visit(ManipIO::ManipSaver{outNode}, manip->mType);
+    std::visit(ManipIO::ManipSaver{outNode}, *manip);
 }
 
 /**************************************************************************************************/

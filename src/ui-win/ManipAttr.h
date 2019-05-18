@@ -142,12 +142,12 @@ namespace win {
         void createSubWin(const T & inManip) {
             auto item = mChildren.find(sts::toString(inManip.mType.toUiString()));
             assert(item != mChildren.end());
-            setCurrManip(xobj::AttrManip(inManip));
+            setCurrManip(inManip);
             W * ui = new W(&mData);
             delete item->second;
             item->second = ui;
             currSubWin = ui;
-            ui->setManip(xobj::AttrManip(inManip));
+            ui->setManip(inManip);
             ui->create(hwnd());
             cCmbManipType.setCurrSelected(sts::toString(inManip.mType.toUiString()));
             recalculateSize();

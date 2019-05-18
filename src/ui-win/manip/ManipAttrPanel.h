@@ -62,7 +62,7 @@ namespace win {
 
         static INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-        void save() const { mModelData->saveToNode(xobj::AttrManip(mData)); }
+        void save() const { mModelData->saveToNode(mData); }
 
         ctrl::Base mHwnd;
         MdManip * mModelData;

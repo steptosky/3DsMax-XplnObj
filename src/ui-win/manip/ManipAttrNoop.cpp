@@ -140,9 +140,9 @@ namespace win {
 
     void ManipAttrNoop::setManip(const std::optional<xobj::AttrManip> & manip) {
         assert(manip);
-        const auto data = std::get_if<xobj::AttrManipNoop>(&manip->mType);
+        const auto data = std::get_if<xobj::AttrManipNoop>(&*manip);
         if (!data) {
-            const xobj::EManipulator type = std::visit([](auto && m) { return m.mType; }, manip->mType);
+            const xobj::EManipulator type = std::visit([](auto && m) { return m.mType; }, *manip);
             LError << "Incorrect manipulator type: " << type.toString();
             return;
         }

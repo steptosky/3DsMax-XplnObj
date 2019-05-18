@@ -64,7 +64,7 @@ namespace win {
         void destroyWindow(HWND hWnd);
         void toWindow();
 
-        void save() const { mModelData->saveToNode(xobj::AttrManip(mData)); }
+        void save() const { mModelData->saveToNode(mData); }
 
         ctrl::Base mHwnd;
         MdManip * mModelData;

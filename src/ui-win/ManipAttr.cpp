@@ -276,7 +276,7 @@ namespace win {
         //-------------------------------------------------
         if (currItem == sts::toString(xobj::EManipulator(xobj::EManipulator::none).toUiString())) {
             setCurrManip(std::nullopt);
-            mData.saveToNode(std::optional(xobj::AttrManip(xobj::AttrManipNone())));
+            mData.saveToNode(xobj::AttrManipNone());
             return;
         }
         //-------------------------------------------------
@@ -408,12 +408,12 @@ namespace win {
 
     void ManipAttr::gotAttrManip(const xobj::AttrManipNoop & inManip) {
         createSubWin<xobj::AttrManipNoop, ManipAttrNoop>(inManip);
-        mData.saveToNode(xobj::AttrManip(inManip));
+        mData.saveToNode(inManip);
     }
 
     void ManipAttr::gotAttrManip(const xobj::AttrManipPanel & inManip) {
         createSubWin<xobj::AttrManipPanel, ManipAttrPanel>(inManip);
-        mData.saveToNode(xobj::AttrManip(inManip));
+        mData.saveToNode(inManip);
     }
 
     void ManipAttr::gotAttrManip(const xobj::AttrManipPush & inManip) {

@@ -70,7 +70,7 @@ namespace win {
 
         void toWindow();
 
-        void save() const { mModelData->saveToNode(xobj::AttrManip(mData)); }
+        void save() const { mModelData->saveToNode(mData); }
 
         RECT mSize;
 

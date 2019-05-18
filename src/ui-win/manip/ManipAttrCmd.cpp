@@ -173,9 +173,9 @@ namespace win {
 
     void ManipAttrCmd::setManip(const std::optional<xobj::AttrManip> & manip) {
         assert(manip);
-        const auto data = std::get_if<xobj::AttrManipCmd>(&manip->mType);
+        const auto data = std::get_if<xobj::AttrManipCmd>(&*manip);
         if (!data) {
-            const xobj::EManipulator type = std::visit([](auto && m) { return m.mType; }, manip->mType);
+            const xobj::EManipulator type = std::visit([](auto && m) { return m.mType; }, *manip);
             LError << "Incorrect manipulator type: " << type.toString();
             return;
         }
