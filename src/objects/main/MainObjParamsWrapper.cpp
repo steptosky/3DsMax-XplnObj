@@ -146,7 +146,7 @@ bool MainObjParamsWrapper::isAnimationExport() {
     return val == TRUE;
 }
 
-bool MainObjParamsWrapper::isOptimisation() {
+bool MainObjParamsWrapper::isOptimization() {
     BOOL val = TRUE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_Optimization, mT, val, mInterval)) {
@@ -242,7 +242,7 @@ void MainObjParamsWrapper::setAnimationExport(const bool state) {
     }
 }
 
-void MainObjParamsWrapper::setOptimisation(const bool state) {
+void MainObjParamsWrapper::setOptimization(const bool state) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjGeom_Optimization, mT, int(state))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Optimisation);
@@ -469,7 +469,7 @@ std::string MainObjParamsWrapper::pathPrefix() {
     return val ? std::string(sts::toMbString(val)) : "";
 }
 
-std::string MainObjParamsWrapper::texture() {
+std::optional<std::string> MainObjParamsWrapper::texture() {
 #if MAX_VERSION_MAJOR < 12
     TCHAR * val = nullptr;
 #else
@@ -478,16 +478,17 @@ std::string MainObjParamsWrapper::texture() {
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_Texture, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_Texture);
-            return "";
+            return std::nullopt;
         }
     }
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
     }
-    return val ? std::string(sts::toMbString(val)) : "";
+    const auto valStr = val ? sts::toMbString(val) : std::string();
+    return !valStr.empty() ? std::optional(valStr) : std::nullopt;
 }
 
-std::string MainObjParamsWrapper::textureLit() {
+std::optional<std::string> MainObjParamsWrapper::textureLit() {
 #if MAX_VERSION_MAJOR < 12
     TCHAR * val = nullptr;
 #else
@@ -496,16 +497,17 @@ std::string MainObjParamsWrapper::textureLit() {
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_TextureLit, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TextureLit);
-            return "";
+            return std::nullopt;
         }
     }
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
     }
-    return val ? std::string(sts::toMbString(val)) : "";
+    const auto valStr = val ? sts::toMbString(val) : std::string();
+    return !valStr.empty() ? std::optional(valStr) : std::nullopt;
 }
 
-std::string MainObjParamsWrapper::textureNormal() {
+std::optional<std::string> MainObjParamsWrapper::textureNormal() {
 #if MAX_VERSION_MAJOR < 12
     TCHAR * val = nullptr;
 #else
@@ -514,13 +516,14 @@ std::string MainObjParamsWrapper::textureNormal() {
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_TextureNormal, mT, val, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TextureNormal);
-            return "";
+            return std::nullopt;
         }
     }
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
     }
-    return val ? std::string(sts::toMbString(val)) : "";
+    const auto valStr = val ? sts::toMbString(val) : std::string();
+    return !valStr.empty() ? std::optional(valStr) : std::nullopt;
 }
 
 //-------------------------------------------------------------------------
@@ -543,9 +546,9 @@ void MainObjParamsWrapper::setPathPrefix(const std::string & str) {
     }
 }
 
-void MainObjParamsWrapper::setTexture(const std::string & str) {
+void MainObjParamsWrapper::setTexture(const std::optional<std::string> & str) {
     if (mPbAttr) {
-        sts::Str convertedStr = sts::toString(str);
+        const auto convertedStr = sts::toString(str.value_or(std::string()));
 #if MAX_VERSION_MAJOR < 12
         const auto strVal = const_cast<TCHAR*>(convertedStr.c_str());
 #else
@@ -561,9 +564,9 @@ void MainObjParamsWrapper::setTexture(const std::string & str) {
     }
 }
 
-void MainObjParamsWrapper::setTextureLit(const std::string & str) {
+void MainObjParamsWrapper::setTextureLit(const std::optional<std::string> & str) {
     if (mPbAttr) {
-        sts::Str convertedStr = sts::toString(str);
+        const auto convertedStr = sts::toString(str.value_or(std::string()));
 #if MAX_VERSION_MAJOR < 12
         const auto strVal = const_cast<TCHAR*>(convertedStr.c_str());
 #else
@@ -579,9 +582,9 @@ void MainObjParamsWrapper::setTextureLit(const std::string & str) {
     }
 }
 
-void MainObjParamsWrapper::setTextureNormal(const std::string & str) {
+void MainObjParamsWrapper::setTextureNormal(const std::optional<std::string> & str) {
     if (mPbAttr) {
-        sts::Str convertedStr = sts::toString(str);
+        const auto convertedStr = sts::toString(str.value_or(std::string()));
 #if MAX_VERSION_MAJOR < 12
         const auto strVal = const_cast<TCHAR*>(convertedStr.c_str());
 #else
@@ -727,7 +730,7 @@ void MainObjParamsWrapper::setCockpitLit(const bool state) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-xobj::AttrWetDry MainObjParamsWrapper::wetDry() {
+std::optional<xobj::AttrWetDry> MainObjParamsWrapper::wetDry() {
     int val = 0;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_DryWet, mT, val, mInterval)) {
@@ -736,12 +739,12 @@ xobj::AttrWetDry MainObjParamsWrapper::wetDry() {
     }
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
-        return xobj::AttrWetDry();
+        return std::nullopt;
     }
-    return val == 0 ? xobj::AttrWetDry() : xobj::AttrWetDry(static_cast<xobj::AttrWetDry::eState>(val));
+    return val == 0 ? std::nullopt : std::optional(xobj::AttrWetDry(static_cast<xobj::AttrWetDry::eState>(val)));
 }
 
-xobj::AttrBlend MainObjParamsWrapper::blend() {
+std::optional<xobj::AttrBlend> MainObjParamsWrapper::blend() {
     float ratio = 0.0f;
     int type = 0;
     if (mPbAttr) {
@@ -754,14 +757,17 @@ xobj::AttrBlend MainObjParamsWrapper::blend() {
     }
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
-        return xobj::AttrBlend();
+        return std::nullopt;
     }
-    xobj::AttrBlend out(static_cast<xobj::AttrBlend::eType>(type), ratio);
-    out.setEnabled(type != 0);
-    return out;
+
+    if (type == 0) {
+        return std::nullopt;
+    }
+
+    return xobj::AttrBlend(static_cast<xobj::AttrBlend::eType>(type), ratio);
 }
 
-xobj::AttrLayerGroup MainObjParamsWrapper::layerGroup() {
+std::optional<xobj::AttrLayerGroup> MainObjParamsWrapper::layerGroup() {
 #if MAX_VERSION_MAJOR < 12
     TCHAR * layer = nullptr;
 #else
@@ -771,24 +777,24 @@ xobj::AttrLayerGroup MainObjParamsWrapper::layerGroup() {
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_LayerGroupLayer, mT, layer, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupLayer);
-            return xobj::AttrLayerGroup();
+            return std::nullopt;
         }
         if (!mPbAttr->GetValue(MainObjAttr_LayerGroupOffset, mT, offset, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupOffset);
-            return xobj::AttrLayerGroup();
+            return std::nullopt;
         }
     }
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
-        return xobj::AttrLayerGroup();
+        return std::nullopt;
     }
-    xobj::ELayer l = layer ? xobj::ELayer::fromString(sts::toMbString(layer).c_str()) : xobj::ELayer(xobj::ELayer::none);
-    xobj::AttrLayerGroup out(l, offset);
-    out.setEnabled(l.id() != xobj::ELayer::none);
-    return out;
+
+    const auto l = layer ? xobj::ELayer::fromString(sts::toMbString(layer).c_str()) : xobj::ELayer(xobj::ELayer::none);
+    const xobj::AttrLayerGroup out(l, offset);
+    return l.id() == xobj::ELayer::none ? std::nullopt : std::optional(out);
 }
 
-xobj::AttrDrapedLayerGroup MainObjParamsWrapper::drapedLayerGroup() {
+std::optional<xobj::AttrDrapedLayerGroup> MainObjParamsWrapper::drapedLayerGroup() {
 #if MAX_VERSION_MAJOR < 12
     TCHAR * layer = nullptr;
 #else
@@ -798,24 +804,23 @@ xobj::AttrDrapedLayerGroup MainObjParamsWrapper::drapedLayerGroup() {
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_LayerGroupDrapedLayer, mT, layer, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupDrapedLayer);
-            return xobj::AttrDrapedLayerGroup();
+            return std::nullopt;
         }
         if (!mPbAttr->GetValue(MainObjAttr_LayerGroupDrapedOffset, mT, offset, mInterval)) {
             LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupDrapedOffset);
-            return xobj::AttrDrapedLayerGroup();
+            return std::nullopt;
         }
     }
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
-        return xobj::AttrDrapedLayerGroup();
+        return std::nullopt;
     }
-    xobj::ELayer l = layer ? xobj::ELayer::fromString(sts::toMbString(layer).c_str()) : xobj::ELayer(xobj::ELayer::none);
-    xobj::AttrDrapedLayerGroup out(l, offset);
-    out.setEnabled(l.id() != xobj::ELayer::none);
-    return out;
+    const auto l = layer ? xobj::ELayer::fromString(sts::toMbString(layer).c_str()) : xobj::ELayer(xobj::ELayer::none);
+    const xobj::AttrDrapedLayerGroup out(l, offset);
+    return l.id() == xobj::ELayer::none ? std::nullopt : std::optional(out);
 }
 
-xobj::AttrDrapedLod MainObjParamsWrapper::lodDrap() {
+std::optional<xobj::AttrDrapedLod> MainObjParamsWrapper::lodDrap() {
     float dist = 0;
     BOOL enabled = TRUE;
     if (mPbAttr) {
@@ -828,14 +833,13 @@ xobj::AttrDrapedLod MainObjParamsWrapper::lodDrap() {
     }
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
-        return xobj::AttrDrapedLod();
+        return std::nullopt;
     }
-    xobj::AttrDrapedLod out(dist);
-    out.setEnabled(enabled == TRUE);
-    return out;
+    const xobj::AttrDrapedLod out(dist);
+    return enabled == TRUE ? std::optional(out) : std::nullopt;
 }
 
-xobj::AttrSlungLoadWeight MainObjParamsWrapper::slungWeight() {
+std::optional<xobj::AttrSlungLoadWeight> MainObjParamsWrapper::slungWeight() {
     float weight = 0;
     BOOL enabled = TRUE;
     if (mPbAttr) {
@@ -848,14 +852,13 @@ xobj::AttrSlungLoadWeight MainObjParamsWrapper::slungWeight() {
     }
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
-        return xobj::AttrSlungLoadWeight();
+        return std::nullopt;
     }
-    xobj::AttrSlungLoadWeight out(weight);
-    out.setEnabled(enabled == TRUE);
-    return out;
+    const xobj::AttrSlungLoadWeight out(weight);
+    return enabled == TRUE ? std::optional(out) : std::nullopt;
 }
 
-xobj::AttrSpecular MainObjParamsWrapper::specular() {
+std::optional<xobj::AttrSpecular> MainObjParamsWrapper::specular() {
     float ratio = 0;
     BOOL enabled = TRUE;
     if (mPbAttr) {
@@ -868,14 +871,13 @@ xobj::AttrSpecular MainObjParamsWrapper::specular() {
     }
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
-        return xobj::AttrSpecular();
+        return std::nullopt;
     }
-    xobj::AttrSpecular out(ratio);
-    out.setEnabled(enabled == TRUE);
-    return out;
+    const xobj::AttrSpecular out(ratio);
+    return enabled == TRUE ? std::optional(out) : std::nullopt;
 }
 
-xobj::AttrTint MainObjParamsWrapper::tint() {
+std::optional<xobj::AttrTint> MainObjParamsWrapper::tint() {
     float albedo = 0;
     float emissive = 0;
     BOOL enabled = TRUE;
@@ -892,14 +894,13 @@ xobj::AttrTint MainObjParamsWrapper::tint() {
     }
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
-        return xobj::AttrTint();
+        return std::nullopt;
     }
-    xobj::AttrTint out(albedo, emissive);
-    out.setEnabled(enabled == TRUE);
-    return out;
+    const xobj::AttrTint out(albedo, emissive);
+    return enabled == TRUE ? std::optional(out) : std::nullopt;
 }
 
-xobj::AttrSlopeLimit MainObjParamsWrapper::slopeLimit() {
+std::optional<xobj::AttrSlopeLimit> MainObjParamsWrapper::slopeLimit() {
     float minPitch = 0;
     float maxPitch = 0;
     float minRoll = 0;
@@ -924,14 +925,13 @@ xobj::AttrSlopeLimit MainObjParamsWrapper::slopeLimit() {
     }
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
-        return xobj::AttrSlopeLimit();
+        return std::nullopt;
     }
-    xobj::AttrSlopeLimit out(minPitch, maxPitch, minRoll, maxRoll);
-    out.setEnabled(enabled == TRUE);
-    return out;
+    const xobj::AttrSlopeLimit out(minPitch, maxPitch, minRoll, maxRoll);
+    return enabled == TRUE ? std::optional(out) : std::nullopt;
 }
 
-xobj::AttrCockpitRegion MainObjParamsWrapper::cockpitRegion(xobj::AttrCockpitRegion::eNum idx) {
+std::optional<xobj::AttrCockpitRegion> MainObjParamsWrapper::cockpitRegion(xobj::AttrCockpitRegion::eNum idx) {
     ParamID pEnabled = 0;
     ParamID pLeft = 0;
     ParamID pBottom = 0;
@@ -975,7 +975,7 @@ xobj::AttrCockpitRegion MainObjParamsWrapper::cockpitRegion(xobj::AttrCockpitReg
             pTop = MainObjAttr_CockpitRegion_4_T;
         }
         break;
-        default: return xobj::AttrCockpitRegion();
+        default: return std::nullopt;
     }
 
     int left = 0;
@@ -1002,18 +1002,18 @@ xobj::AttrCockpitRegion MainObjParamsWrapper::cockpitRegion(xobj::AttrCockpitReg
     }
     else {
         LError << "Pointer to IParamBlock2 is nullptr";
-        return xobj::AttrCockpitRegion();
+        return std::nullopt;
     }
-    xobj::AttrCockpitRegion out(left, bottom, right, top);
-    out.setEnabled(enabled == TRUE);
-    return out;
+    const xobj::AttrCockpitRegion out(left, bottom, right, top);
+    return enabled == TRUE ? std::optional(out) : std::nullopt;
 }
 
 //-------------------------------------------------------------------------
 
-void MainObjParamsWrapper::setWetDry(const xobj::AttrWetDry & attr) {
+void MainObjParamsWrapper::setWetDry(const std::optional<xobj::AttrWetDry> & attr) {
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(MainObjAttr_DryWet, mT, attr ? int(attr.state()) : FALSE)) {
+        const auto actual = attr.value_or(xobj::AttrWetDry());
+        if (!mPbAttr->SetValue(MainObjAttr_DryWet, mT, attr ? int(actual.state()) : FALSE)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_DryWet);
         }
     }
@@ -1022,12 +1022,13 @@ void MainObjParamsWrapper::setWetDry(const xobj::AttrWetDry & attr) {
     }
 }
 
-void MainObjParamsWrapper::setBlend(const xobj::AttrBlend & attr) {
+void MainObjParamsWrapper::setBlend(const std::optional<xobj::AttrBlend> & attr) {
     if (mPbAttr) {
-        if (!mPbAttr->SetValue(MainObjAttr_BlendingType, mT, attr ? int(attr.type()) : FALSE)) {
+        const auto actual = attr.value_or(xobj::AttrBlend());
+        if (!mPbAttr->SetValue(MainObjAttr_BlendingType, mT, attr ? int(actual.type()) : FALSE)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_BlendingType);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_BlendingRatio, mT, attr.ratio())) {
+        if (!mPbAttr->SetValue(MainObjAttr_BlendingRatio, mT, actual.ratio())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_BlendingRatio);
         }
     }
@@ -1036,10 +1037,11 @@ void MainObjParamsWrapper::setBlend(const xobj::AttrBlend & attr) {
     }
 }
 
-void MainObjParamsWrapper::setLayerGroup(const xobj::AttrLayerGroup & attr) {
+void MainObjParamsWrapper::setLayerGroup(const std::optional<xobj::AttrLayerGroup> & attr) {
     if (mPbAttr) {
+        const auto actual = attr.value_or(xobj::AttrLayerGroup());
 
-        sts::Str str = sts::toString(attr.layer().toString());
+        const auto str = sts::toString(actual.layer().toString());
 #if MAX_VERSION_MAJOR < 12
         TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
 #else
@@ -1049,7 +1051,7 @@ void MainObjParamsWrapper::setLayerGroup(const xobj::AttrLayerGroup & attr) {
         if (!mPbAttr->SetValue(MainObjAttr_LayerGroupLayer, mT, strVal)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupLayer);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_LayerGroupOffset, mT, attr.offset())) {
+        if (!mPbAttr->SetValue(MainObjAttr_LayerGroupOffset, mT, actual.offset())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupOffset);
         }
     }
@@ -1058,10 +1060,11 @@ void MainObjParamsWrapper::setLayerGroup(const xobj::AttrLayerGroup & attr) {
     }
 }
 
-void MainObjParamsWrapper::setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup & attr) {
+void MainObjParamsWrapper::setDrapedLayerGroup(const std::optional<xobj::AttrDrapedLayerGroup> & attr) {
     if (mPbAttr) {
+        const auto actual = attr.value_or(xobj::AttrDrapedLayerGroup());
 
-        sts::Str str = sts::toString(attr.layer().toString());
+        const auto str = sts::toString(actual.layer().toString());
 #if MAX_VERSION_MAJOR < 12
         TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
 #else
@@ -1071,7 +1074,7 @@ void MainObjParamsWrapper::setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup 
         if (!mPbAttr->SetValue(MainObjAttr_LayerGroupDrapedLayer, mT, strVal)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupDrapedLayer);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_LayerGroupDrapedOffset, mT, attr.offset())) {
+        if (!mPbAttr->SetValue(MainObjAttr_LayerGroupDrapedOffset, mT, actual.offset())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupDrapedOffset);
         }
     }
@@ -1080,12 +1083,13 @@ void MainObjParamsWrapper::setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup 
     }
 }
 
-void MainObjParamsWrapper::setLodDrap(const xobj::AttrDrapedLod & attr) {
+void MainObjParamsWrapper::setLodDrap(const std::optional<xobj::AttrDrapedLod> & attr) {
     if (mPbAttr) {
+        const auto actual = attr.value_or(xobj::AttrDrapedLod());
         if (!mPbAttr->SetValue(MainObjAttr_LodDrapEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LodDrapEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_LodDrapDistance, mT, attr.distance())) {
+        if (!mPbAttr->SetValue(MainObjAttr_LodDrapDistance, mT, actual.distance())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LodDrapDistance);
         }
     }
@@ -1094,12 +1098,13 @@ void MainObjParamsWrapper::setLodDrap(const xobj::AttrDrapedLod & attr) {
     }
 }
 
-void MainObjParamsWrapper::setSlungWeight(const xobj::AttrSlungLoadWeight & attr) {
+void MainObjParamsWrapper::setSlungWeight(const std::optional<xobj::AttrSlungLoadWeight> & attr) {
     if (mPbAttr) {
+        const auto actual = attr.value_or(xobj::AttrSlungLoadWeight());
         if (!mPbAttr->SetValue(MainObjAttr_SlungLoadWeightEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlungLoadWeightEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlungLoadWeight, mT, attr.weight())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlungLoadWeight, mT, actual.weight())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlungLoadWeight);
         }
     }
@@ -1108,12 +1113,13 @@ void MainObjParamsWrapper::setSlungWeight(const xobj::AttrSlungLoadWeight & attr
     }
 }
 
-void MainObjParamsWrapper::setSpecular(const xobj::AttrSpecular & attr) {
+void MainObjParamsWrapper::setSpecular(const std::optional<xobj::AttrSpecular> & attr) {
     if (mPbAttr) {
+        const auto actual = attr.value_or(xobj::AttrSpecular());
         if (!mPbAttr->SetValue(MainObjAttr_SpecularEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SpecularEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SpecularRatio, mT, attr.ratio())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SpecularRatio, mT, actual.ratio())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SpecularRatio);
         }
     }
@@ -1122,15 +1128,16 @@ void MainObjParamsWrapper::setSpecular(const xobj::AttrSpecular & attr) {
     }
 }
 
-void MainObjParamsWrapper::setTint(const xobj::AttrTint & attr) {
+void MainObjParamsWrapper::setTint(const std::optional<xobj::AttrTint> & attr) {
     if (mPbAttr) {
+        const auto actual = attr.value_or(xobj::AttrTint());
         if (!mPbAttr->SetValue(MainObjAttr_TintEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_TintAlbedo, mT, attr.albedo())) {
+        if (!mPbAttr->SetValue(MainObjAttr_TintAlbedo, mT, actual.albedo())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintAlbedo);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_TintEmissive, mT, attr.emissive())) {
+        if (!mPbAttr->SetValue(MainObjAttr_TintEmissive, mT, actual.emissive())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintEmissive);
         }
     }
@@ -1139,21 +1146,22 @@ void MainObjParamsWrapper::setTint(const xobj::AttrTint & attr) {
     }
 }
 
-void MainObjParamsWrapper::setSlopeLimit(const xobj::AttrSlopeLimit & attr) {
+void MainObjParamsWrapper::setSlopeLimit(const std::optional<xobj::AttrSlopeLimit> & attr) {
     if (mPbAttr) {
+        const auto actual = attr.value_or(xobj::AttrSlopeLimit());
         if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMinPitch, mT, attr.minPitch())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMinPitch, mT, actual.minPitch())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMinPitch);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMaxPitch, mT, attr.maxPitch())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMaxPitch, mT, actual.maxPitch())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMaxPitch);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMinRoll, mT, attr.minRoll())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMinRoll, mT, actual.minRoll())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMinRoll);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMaxRoll, mT, attr.maxRoll())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMaxRoll, mT, actual.maxRoll())) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMaxRoll);
         }
     }
@@ -1162,12 +1170,13 @@ void MainObjParamsWrapper::setSlopeLimit(const xobj::AttrSlopeLimit & attr) {
     }
 }
 
-void MainObjParamsWrapper::setCockpitRegion(const xobj::AttrCockpitRegion & attr, const xobj::AttrCockpitRegion::eNum idx) {
+void MainObjParamsWrapper::setCockpitRegion(const std::optional<xobj::AttrCockpitRegion> & attr, const xobj::AttrCockpitRegion::eNum idx) {
     ParamID pEnabled = 0;
     ParamID pLeft = 0;
     ParamID pBottom = 0;
     ParamID pRight = 0;
     ParamID pTop = 0;
+    const auto actual = attr.value_or(xobj::AttrCockpitRegion());
 
     if (idx > 3) {
         LError << "Cockpit region index must be between 0-3 inclusive";
@@ -1212,16 +1221,16 @@ void MainObjParamsWrapper::setCockpitRegion(const xobj::AttrCockpitRegion & attr
         if (!mPbAttr->SetValue(pEnabled, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pEnabled);
         }
-        if (!mPbAttr->SetValue(pLeft, mT, int(attr.left()))) {
+        if (!mPbAttr->SetValue(pLeft, mT, int(actual.left()))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pLeft);
         }
-        if (!mPbAttr->SetValue(pBottom, mT, int(attr.bottom()))) {
+        if (!mPbAttr->SetValue(pBottom, mT, int(actual.bottom()))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pBottom);
         }
-        if (!mPbAttr->SetValue(pRight, mT, int(attr.right()))) {
+        if (!mPbAttr->SetValue(pRight, mT, int(actual.right()))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pRight);
         }
-        if (!mPbAttr->SetValue(pTop, mT, int(attr.top()))) {
+        if (!mPbAttr->SetValue(pTop, mT, int(actual.top()))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pTop);
         }
     }

@@ -56,7 +56,7 @@ bool ConverterMain::toXpln(INode * inNode, xobj::ObjMain & outMain, const Export
 
     xop.enable(xobj::XOBJ_EXP_APPLY_LOD_TM);
 
-    attr.isOptimisation() ? xop.enable(xobj::XOBJ_EXP_OPTIMIZATION) : xop.disable(xobj::XOBJ_EXP_OPTIMIZATION);
+    attr.isOptimization() ? xop.enable(xobj::XOBJ_EXP_OPTIMIZATION) : xop.disable(xobj::XOBJ_EXP_OPTIMIZATION);
     attr.isInstancing() ? xop.enable(xobj::XOBJ_EXP_CHECK_INSTANCE) : xop.disable(xobj::XOBJ_EXP_CHECK_INSTANCE);
     attr.isDebug() ? xop.enable(xobj::XOBJ_EXP_DEBUG) : xop.disable(xobj::XOBJ_EXP_DEBUG);
     attr.isNameMesh() ? xop.enable(xobj::XOBJ_EXP_MARK_MESH) : xop.disable(xobj::XOBJ_EXP_MARK_MESH);
@@ -117,7 +117,7 @@ INode * ConverterMain::toMax(const xobj::ObjMain & inXObj) {
     MainObjParamsWrapper attr(node, GetCOREInterface()->GetTime(), FOREVER);
     auto & xop = inXObj.pExportOptions;
 
-    attr.setOptimisation(xop.isEnabled(xobj::XOBJ_EXP_OPTIMIZATION));
+    attr.setOptimization(xop.isEnabled(xobj::XOBJ_EXP_OPTIMIZATION));
     attr.setInstancing(xop.isEnabled(xobj::XOBJ_EXP_CHECK_INSTANCE));
     attr.setDebug(xop.isEnabled(xobj::XOBJ_EXP_DEBUG) || inXObj.pAttr.isDebug());
     attr.setNameMesh(xop.isEnabled(xobj::XOBJ_EXP_MARK_MESH));
