@@ -30,8 +30,6 @@
 #include "ObjAttr.h"
 #include "models/MdObjAttr.h"
 #include "Utils.h"
-#include "resource/resource.h"
-#include "common/Config.h"
 #include "resource/ResHelper.h"
 #include "presenters/Datarefs.h"
 
@@ -345,7 +343,7 @@ namespace win {
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void ObjAttr::enableBool(bool state) {
+    void ObjAttr::enableBool(const bool state) {
         if (!state) {
             cChkSunLight.disable();
             cChkTwoSided.disable();
@@ -365,29 +363,29 @@ namespace win {
     }
 
     void ObjAttr::dropFromUiBool() {
-        mData.setTree(cChkSunLight.isChecked());
-        mData.setTwoSided(cChkTwoSided.isChecked());
-        mData.setDraped(cChkDraped.isChecked());
-        mData.setCastShadow(cChkShadow.isChecked());
-        mData.setSolidForCamera(cChkSolidCamera.isChecked());
-        mData.setDraw(cChkDraw.isChecked());
+        mData.mIsTree = cChkSunLight.isChecked();
+        mData.mIsTwoSided = cChkTwoSided.isChecked();
+        mData.mIsDraped = cChkDraped.isChecked();
+        mData.mIsCastShadow = cChkShadow.isChecked();
+        mData.mIsSolidForCamera = cChkSolidCamera.isChecked();
+        mData.mIsDraw = cChkDraw.isChecked();
         mMdData->saveToNode(mData);
     }
 
     void ObjAttr::loadToUiBool() {
-        cChkSunLight.setState(mData.isTree());
-        cChkTwoSided.setState(mData.isTwoSided());
-        cChkDraped.setState(mData.isDraped());
-        cChkShadow.setState(mData.isCastShadow());
-        cChkSolidCamera.setState(mData.isSolidForCamera());
-        cChkDraw.setState(mData.isDraw());
+        cChkSunLight.setState(mData.mIsTree);
+        cChkTwoSided.setState(mData.mIsTwoSided);
+        cChkDraped.setState(mData.mIsDraped);
+        cChkShadow.setState(mData.mIsCastShadow);
+        cChkSolidCamera.setState(mData.mIsSolidForCamera);
+        cChkDraw.setState(mData.mIsDraw);
     }
 
     /**************************************************************************************************/
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void ObjAttr::enableShiny(bool state) {
+    void ObjAttr::enableShiny(const bool state) {
         if (!state) {
             cChkShiny.disable();
             cLblShinyRatio.disable();
@@ -397,54 +395,64 @@ namespace win {
             const auto isChecked = cChkShiny.isChecked();
             cChkShiny.enable();
             cLblShinyRatio.enable(isChecked);
-            cSpnShinyRatio->Enable(mData.shiny());
+            cSpnShinyRatio->Enable(mData.mShiny.has_value());
         }
     }
 
     void ObjAttr::dropFromUiShiny() {
-        xobj::AttrShiny attr(cSpnShinyRatio->GetFVal());
-        attr.setEnabled(cChkShiny.isChecked());
-        mData.setShiny(attr);
+        if (!cChkShiny.isChecked()) {
+            mData.mShiny = std::nullopt;
+        }
+        else {
+            mData.mShiny = xobj::AttrShiny(cSpnShinyRatio->GetFVal());
+        }
         mMdData->saveToNode(mData);
     }
 
     void ObjAttr::loadToUiShiny() {
-        cChkShiny.setState(mData.shiny());
-        cSpnShinyRatio->SetValue(mData.shiny().ratio(), FALSE);
+        cChkShiny.setState(mData.mShiny.has_value());
+        if (mData.mShiny.has_value()) {
+            cSpnShinyRatio->SetValue(mData.mShiny->ratio(), FALSE);
+        }
     }
 
     /**************************************************************************************************/
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void ObjAttr::enableCockpit(bool state) {
+    void ObjAttr::enableCockpit(const bool state) {
         if (!state) {
             cChkCockpit.disable();
             cCmbCockpit.disable();
         }
         else {
             cChkCockpit.enable();
-            cCmbCockpit.enable(mData.cockpit());
+            cCmbCockpit.enable(mData.mCockpit.has_value());
         }
     }
 
     void ObjAttr::dropFromUiCockpit() {
-        xobj::AttrCockpit attr(static_cast<xobj::AttrCockpit::eType>(cCmbCockpit.currSelected()));
-        attr.setEnabled(cChkCockpit.isChecked());
-        mData.setCockpit(attr);
+        if (!cChkCockpit.isChecked()) {
+            mData.mCockpit = std::nullopt;
+        }
+        else {
+            mData.mCockpit = xobj::AttrCockpit(static_cast<xobj::AttrCockpit::eType>(cCmbCockpit.currSelected()));
+        }
         mMdData->saveToNode(mData);
     }
 
     void ObjAttr::loadToUiCockpit() {
-        cChkCockpit.setState(mData.cockpit());
-        cCmbCockpit.setCurrSelected(static_cast<int>(mData.cockpit().type()));
+        cChkCockpit.setState(mData.mCockpit.has_value());
+        if (mData.mCockpit.has_value()) {
+            cCmbCockpit.setCurrSelected(static_cast<int>(mData.mCockpit->type()));
+        }
     }
 
     /**************************************************************************************************/
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void ObjAttr::enableHard(bool state) {
+    void ObjAttr::enableHard(const bool state) {
         if (!state) {
             cChkHard.disable();
             cChkHardDeck.disable();
@@ -452,36 +460,43 @@ namespace win {
         }
         else {
             cChkHard.enable();
-            cChkHardDeck.enable(mData.hard());
-            cCmbHard.enable(mData.hard());
+            cChkHardDeck.enable(mData.mHard.has_value());
+            cCmbHard.enable(mData.mHard.has_value());
         }
     }
 
     void ObjAttr::dropFromUiHard() {
-        xobj::AttrHard attr(xobj::ESurface::fromUiString(sts::toMbString(cCmbHard.currSelectedText()).c_str()), cChkHardDeck.isChecked());
-        attr.setEnabled(cChkHard.isChecked());
-        mData.setHard(attr);
+        if (!cChkHard.isChecked()) {
+            mData.mHard = std::nullopt;
+        }
+        else {
+            xobj::AttrHard attr(xobj::ESurface::fromUiString(sts::toMbString(cCmbHard.currSelectedText()).c_str()),
+                                cChkHardDeck.isChecked());
+            mData.mHard = attr;
+        }
         mMdData->saveToNode(mData);
     }
 
     void ObjAttr::loadToUiHard() {
-        cChkHard.setState(mData.hard());
-        cChkHardDeck.setState(mData.hard().isDeck());
-        cCmbHard.setCurrSelected(static_cast<int>(mData.hard().surface().id()));
+        cChkHard.setState(mData.mHard.has_value());
+        if (mData.mHard.has_value()) {
+            cChkHardDeck.setState(mData.mHard->isDeck());
+            cCmbHard.setCurrSelected(static_cast<int>(mData.mHard->surface().id()));
+        }
     }
 
     /**************************************************************************************************/
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void ObjAttr::enableBlend(bool state) {
+    void ObjAttr::enableBlend(const bool state) {
         if (!state) {
             cCmbBlend.disable();
             cLblBlendRatio.disable();
             cSpnBlendRatio->Disable();
         }
         else {
-            const auto isChecked = mData.blend();
+            const auto isChecked = mData.mBlend.has_value();
             cCmbBlend.enable();
             cLblBlendRatio.enable(isChecked);
             cSpnBlendRatio->Enable(isChecked);
@@ -492,21 +507,27 @@ namespace win {
         int currSel = cCmbBlend.currSelected();
         xobj::AttrBlend attr(static_cast<xobj::AttrBlend::eType>(currSel),
                              cSpnBlendRatio->GetFVal());
-        attr.setEnabled(currSel != 0);
-        mData.setBlend(attr);
+        if (attr.type() == xobj::AttrBlend::blend || currSel == 0) {
+            mData.mBlend = std::nullopt;
+        }
+        else {
+            mData.mBlend = attr;
+        }
         mMdData->saveToNode(mData);
     }
 
     void ObjAttr::loadToUiBlend() {
-        cCmbBlend.setCurrSelected(static_cast<int>(mData.blend().type()));
-        cSpnBlendRatio->SetValue(mData.blend().ratio(), FALSE);
+        if (mData.mBlend.has_value()) {
+            cCmbBlend.setCurrSelected(static_cast<int>(mData.mBlend->type()));
+            cSpnBlendRatio->SetValue(mData.mBlend->ratio(), FALSE);
+        }
     }
 
     /**************************************************************************************************/
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void ObjAttr::enablePolyOffset(bool state) {
+    void ObjAttr::enablePolyOffset(const bool state) {
         if (!state) {
             cChkPolyOffset.disable();
             cLblPolyOstDist.disable();
@@ -516,27 +537,32 @@ namespace win {
             const auto isChecked = cChkPolyOffset.isChecked();
             cChkPolyOffset.enable();
             cLblPolyOstDist.enable(isChecked);
-            cSpnPolyOstDist->Enable(mData.polyOffset());
+            cSpnPolyOstDist->Enable(mData.mPolyOffset.has_value());
         }
     }
 
     void ObjAttr::dropFromUiPolyOffset() {
-        xobj::AttrPolyOffset attr(cSpnPolyOstDist->GetFVal());
-        attr.setEnabled(cChkPolyOffset.isChecked());
-        mData.setPolyOffset(attr);
+        if (!cChkPolyOffset.isChecked()) {
+            mData.mPolyOffset = std::nullopt;
+        }
+        else {
+            mData.mPolyOffset = xobj::AttrPolyOffset(cSpnPolyOstDist->GetFVal());
+        }
         mMdData->saveToNode(mData);
     }
 
     void ObjAttr::loadToUiPolyOffset() {
-        cChkPolyOffset.setState(mData.polyOffset());
-        cSpnPolyOstDist->SetValue(mData.polyOffset().offset(), FALSE);
+        cChkPolyOffset.setState(mData.mPolyOffset.has_value());
+        if (mData.mPolyOffset.has_value()) {
+            cSpnPolyOstDist->SetValue(mData.mPolyOffset->offset(), FALSE);
+        }
     }
 
     /**************************************************************************************************/
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void ObjAttr::enableLightLevel(bool state) {
+    void ObjAttr::enableLightLevel(const bool state) {
         if (!state) {
             cChkLightLevel.disable();
             cLblLightLevelVal1.disable();
@@ -551,27 +577,31 @@ namespace win {
             cChkLightLevel.enable();
             cLblLightLevelVal1.enable(isChecked);
             cLblLightLevelVal2.enable(isChecked);
-            cSpnLightLevelVal1->Enable(mData.lightLevel());
-            cSpnLightLevelVal2->Enable(mData.lightLevel());
-            cEdtLightLevelDrf->Enable(mData.lightLevel());
-            cBtnLightLevelDrf.enable(mData.lightLevel());
+            cSpnLightLevelVal1->Enable(mData.mLightLevel.has_value());
+            cSpnLightLevelVal2->Enable(mData.mLightLevel.has_value());
+            cEdtLightLevelDrf->Enable(mData.mLightLevel.has_value());
+            cBtnLightLevelDrf.enable(mData.mLightLevel.has_value());
         }
     }
 
     void ObjAttr::dropFromUiLightLevel() {
-        xobj::AttrLightLevel attr(cSpnLightLevelVal1->GetFVal(),
-                                  cSpnLightLevelVal2->GetFVal(),
-                                  sts::toMbString(Utils::getText(cEdtLightLevelDrf)));
-        attr.setEnabled(cChkLightLevel.isChecked());
-        mData.setLightLevel(attr);
+        if (!cChkLightLevel.isChecked()) {
+            mData.mLightLevel = std::nullopt;
+        }
+        else {
+            mData.mLightLevel = xobj::AttrLightLevel(cSpnLightLevelVal1->GetFVal(), cSpnLightLevelVal2->GetFVal(),
+                                                     sts::toMbString(Utils::getText(cEdtLightLevelDrf)));;
+        }
         mMdData->saveToNode(mData);
     }
 
     void ObjAttr::loadToUiLightLevel() {
-        cChkLightLevel.setState(mData.lightLevel());
-        cEdtLightLevelDrf->SetText(xobj::toMStr(mData.lightLevel().dataref()));
-        cSpnLightLevelVal1->SetValue(mData.lightLevel().val1(), FALSE);
-        cSpnLightLevelVal2->SetValue(mData.lightLevel().val2(), FALSE);
+        cChkLightLevel.setState(mData.mLightLevel.has_value());
+        if (mData.mLightLevel.has_value()) {
+            cEdtLightLevelDrf->SetText(xobj::toMStr(mData.mLightLevel->dataref()));
+            cSpnLightLevelVal1->SetValue(mData.mLightLevel->val1(), FALSE);
+            cSpnLightLevelVal2->SetValue(mData.mLightLevel->val2(), FALSE);
+        }
     }
 
     /********************************************************************************************************/
