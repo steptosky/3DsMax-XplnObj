@@ -56,7 +56,7 @@ namespace win {
         RECT rect() const override;
         void move(const POINT & point) override;
 
-        void setManip(const std::optional<xobj::AttrManip>& manip) override;
+        void setManip(const std::optional<xobj::AttrManip> & manip) override;
 
         //-------------------------------------------------------------------------
 
