@@ -62,13 +62,13 @@ public:
 
 private:
 
-    static void save(sts::DataStreamO & stream, const xobj::AttrSet & inAttr);
-    static void save(sts::DataStreamO & stream, const xobj::AttrPolyOffset & inAttr);
-    static void save(sts::DataStreamO & stream, const xobj::AttrHard & inAttr);
-    static void save(sts::DataStreamO & stream, const xobj::AttrShiny & inAttr);
-    static void save(sts::DataStreamO & stream, const xobj::AttrBlend & inAttr);
-    static void save(sts::DataStreamO & stream, const xobj::AttrLightLevel & inAttr);
-    static void save(sts::DataStreamO & stream, const xobj::AttrCockpit & inAttr);
+    static void save(sts::DataStreamO & stream, const xobj::AttrSet & attrSet);
+    static void save(sts::DataStreamO & stream, const std::optional<xobj::AttrPolyOffset> & attr);
+    static void save(sts::DataStreamO & stream, const std::optional<xobj::AttrHard> & attr);
+    static void save(sts::DataStreamO & stream, const std::optional<xobj::AttrShiny> & attr);
+    static void save(sts::DataStreamO & stream, const std::optional<xobj::AttrBlend> & attr);
+    static void save(sts::DataStreamO & stream, const std::optional<xobj::AttrLightLevel> & attr);
+    static void save(sts::DataStreamO & stream, const std::optional<xobj::AttrCockpit> & attr);
 
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);
     static bool loadPolyOffset(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr);

@@ -27,15 +27,13 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "ObjAttrIO.h "
+#include "ObjAttrIO.h"
 #include "additional/stsio/DataStream.h"
-#include "objects/main/param-blocks/MainObjParams.h"
-#include "objects/lod/LodObjParams.h"
+#include "common/String.h"
+#include "common/Logger.h"
 #include "NodeIO.h"
 #include "models/eDataId.h"
-#include "common/String.h"
 #include "models/bwc/MdObjAttrIOOld.h"
-#include "common/Logger.h"
 #include "classes-desc/ClassesDescriptions.h"
 
 /**************************************************************************************************/
@@ -44,85 +42,85 @@
 
 bool ObjAttrIO::canApply(INode * node) {
     assert(node);
-    Class_ID id = node->GetObjectRef()->ClassID();
-    if (id == ClassesDescriptions::mainObj()->ClassID() ||
-        id == ClassesDescriptions::lodObj()->ClassID())
+    const Class_ID id = node->GetObjectRef()->ClassID();
+    if (id == ClassesDescriptions::mainObj()->ClassID() || id == ClassesDescriptions::lodObj()->ClassID()) {
         return false;
+    }
     SClass_ID sid = node->GetObjectRef()->SuperClassID();
-    if (sid == GEOMOBJECT_CLASS_ID)
+    if (sid == GEOMOBJECT_CLASS_ID) {
         return true;
+    }
     sid = node->EvalWorldState(GetCOREInterface()->GetTime()).obj->SuperClassID();
-    if (sid == GEOMOBJECT_CLASS_ID)
-        return true;
-    return false;
+    return sid == GEOMOBJECT_CLASS_ID;
 }
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-void ObjAttrIO::save(sts::DataStreamO & stream, const xobj::AttrSet & inAttr) {
+void ObjAttrIO::save(sts::DataStreamO & stream, const xobj::AttrSet & attrSet) {
     stream.setValue<uint8_t>(uint8_t(1)); // manip io version
 
     // the method was changed from isSunLight() to isTree(), that is why it is inverted.
-    stream.setValue<bool>(!inAttr.isTree());
+    stream.setValue<bool>(!attrSet.mIsTree);
 
-    stream.setValue<bool>(inAttr.isTwoSided());
-    stream.setValue<bool>(inAttr.isDraw());
-    stream.setValue<bool>(inAttr.isDraped());
-    stream.setValue<bool>(inAttr.isCastShadow());
-    stream.setValue<bool>(inAttr.isSolidForCamera());
+    stream.setValue<bool>(attrSet.mIsTwoSided);
+    stream.setValue<bool>(attrSet.mIsDraw);
+    stream.setValue<bool>(attrSet.mIsDraped);
+    stream.setValue<bool>(attrSet.mIsCastShadow);
+    stream.setValue<bool>(attrSet.mIsSolidForCamera);
 }
 
 bool ObjAttrIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
 
     // the method was changed from setSunLight() to setTree(), that is why it is inverted.
-    outAttr.setTree(!stream.value<bool>());
+    outAttr.mIsTree = !stream.value<bool>();
 
-    outAttr.setTwoSided(stream.value<bool>());
-    outAttr.setDraw(stream.value<bool>());
-    outAttr.setDraped(stream.value<bool>());
-    outAttr.setCastShadow(stream.value<bool>());
-    outAttr.setSolidForCamera(stream.value<bool>());
+    outAttr.mIsTwoSided = stream.value<bool>();
+    outAttr.mIsDraw = stream.value<bool>();
+    outAttr.mIsDraped = stream.value<bool>();
+    outAttr.mIsCastShadow = stream.value<bool>();
+    outAttr.mIsSolidForCamera = stream.value<bool>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ObjAttrIO::save(sts::DataStreamO & stream, const xobj::AttrPolyOffset & inAttr) {
+void ObjAttrIO::save(sts::DataStreamO & stream, const std::optional<xobj::AttrPolyOffset> & attr) {
     stream.setValue<uint8_t>(uint8_t(1)); // io version
-    stream.setValue<float>(inAttr.offset());
-    stream.setValue<bool>(inAttr);
+    const xobj::AttrPolyOffset actual(attr.value_or(xobj::AttrPolyOffset()));
+    stream.setValue<float>(actual.offset());
+    stream.setValue<bool>(attr.has_value());
 }
 
 bool ObjAttrIO::loadPolyOffset(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
     xobj::AttrPolyOffset out(stream.value<float>());
-    out.setEnabled(stream.value<bool>());
-    outAttr.setPolyOffset(out);
+    outAttr.mPolyOffset = stream.value<bool>() ? std::optional(out) : std::nullopt;
     return true;
 }
 
 /***************************************************************************************/
 
-void ObjAttrIO::save(sts::DataStreamO & stream, const xobj::AttrHard & inAttr) {
+void ObjAttrIO::save(sts::DataStreamO & stream, const std::optional<xobj::AttrHard> & attr) {
     stream.setValue<uint8_t>(uint8_t(1)); // io version
-    stream.setValue<std::string>(inAttr.surface().toString());
-    stream.setValue<bool>(inAttr.isDeck());
-    stream.setValue<bool>(inAttr);
+    const xobj::AttrHard actual(attr.value_or(xobj::AttrHard()));
+    stream.setValue<std::string>(actual.surface().toString());
+    stream.setValue<bool>(actual.isDeck());
+    stream.setValue<bool>(attr.has_value());
 }
 
 bool ObjAttrIO::loadHard(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
@@ -132,65 +130,65 @@ bool ObjAttrIO::loadHard(INode * node, sts::DataStreamI & stream, xobj::AttrSet 
 
     xobj::AttrHard out;
     out.setESurface(xobj::ESurface::fromString(str.c_str()), stream.value<bool>());
-    out.setEnabled(stream.value<bool>());
-    outAttr.setHard(out);
+    outAttr.mHard = stream.value<bool>() ? std::optional(out) : std::nullopt;
     return true;
 }
 
 /***************************************************************************************/
 
-void ObjAttrIO::save(sts::DataStreamO & stream, const xobj::AttrShiny & inAttr) {
+void ObjAttrIO::save(sts::DataStreamO & stream, const std::optional<xobj::AttrShiny> & attr) {
     stream.setValue<uint8_t>(uint8_t(1)); // io version
-    stream.setValue<float>(inAttr.ratio());
-    stream.setValue<bool>(inAttr);
+    const xobj::AttrShiny actual(attr.value_or(xobj::AttrShiny()));
+    stream.setValue<float>(actual.ratio());
+    stream.setValue<bool>(attr.has_value());
 }
 
 bool ObjAttrIO::loadShiny(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
     xobj::AttrShiny out(stream.value<float>());
-    out.setEnabled(stream.value<bool>());
-    outAttr.setShiny(out);
+    outAttr.mShiny = stream.value<bool>() ? std::optional(out) : std::nullopt;
     return true;
 }
 
 /***************************************************************************************/
 
-void ObjAttrIO::save(sts::DataStreamO & stream, const xobj::AttrBlend & inAttr) {
+void ObjAttrIO::save(sts::DataStreamO & stream, const std::optional<xobj::AttrBlend> & attr) {
     stream.setValue<uint8_t>(uint8_t(1)); // io version
-    stream.setValue<uint8_t>(inAttr.type());
-    stream.setValue<float>(inAttr.ratio());
-    stream.setValue<bool>(inAttr);
+    const xobj::AttrBlend actual(attr.value_or(xobj::AttrBlend()));
+    stream.setValue<uint8_t>(actual.type());
+    stream.setValue<float>(actual.ratio());
+    stream.setValue<bool>(attr.has_value());
 }
 
 bool ObjAttrIO::loadBlend(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    xobj::AttrBlend::eType type = static_cast<xobj::AttrBlend::eType>(stream.value<uint8_t>());
+    const auto type = static_cast<xobj::AttrBlend::eType>(stream.value<uint8_t>());
     xobj::AttrBlend out(type, stream.value<float>());
-    out.setEnabled(stream.value<bool>());
-    outAttr.setBlend(out);
+    outAttr.mBlend = stream.value<bool>() ? std::optional(out) : std::nullopt;
     return true;
 }
 
 /***************************************************************************************/
 
-void ObjAttrIO::save(sts::DataStreamO & stream, const xobj::AttrLightLevel & inAttr) {
+void ObjAttrIO::save(sts::DataStreamO & stream, const std::optional<xobj::AttrLightLevel> & attr) {
     stream.setValue<uint8_t>(uint8_t(1)); // io version
-    stream.setValue<float>(inAttr.val1());
-    stream.setValue<float>(inAttr.val2());
-    stream.setValue<std::string>(inAttr.dataref());
-    stream.setValue<bool>(inAttr);
+    const xobj::AttrLightLevel actual(attr.value_or(xobj::AttrLightLevel()));
+    stream.setValue<float>(actual.val1());
+    stream.setValue<float>(actual.val2());
+    stream.setValue<std::string>(actual.dataref());
+    stream.setValue<bool>(attr.has_value());
 }
 
 bool ObjAttrIO::loadLightLevel(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
@@ -199,28 +197,27 @@ bool ObjAttrIO::loadLightLevel(INode * node, sts::DataStreamI & stream, xobj::At
     out.setVal1(stream.value<float>());
     out.setVal2(stream.value<float>());
     out.setDataref(stream.value<std::string>());
-    out.setEnabled(stream.value<bool>());
-    outAttr.setLightLevel(out);
+    outAttr.mLightLevel = stream.value<bool>() ? std::optional(out) : std::nullopt;
     return true;
 }
 
 /***************************************************************************************/
 
-void ObjAttrIO::save(sts::DataStreamO & stream, const xobj::AttrCockpit & inAttr) {
+void ObjAttrIO::save(sts::DataStreamO & stream, const std::optional<xobj::AttrCockpit> & attr) {
     stream.setValue<uint8_t>(uint8_t(1)); // io version
-    stream.setValue<uint8_t>(inAttr.type());
-    stream.setValue<bool>(inAttr);
+    const xobj::AttrCockpit actual(attr.value_or(xobj::AttrCockpit()));
+    stream.setValue<uint8_t>(actual.type());
+    stream.setValue<bool>(attr.has_value());
 }
 
 bool ObjAttrIO::loadCockpit(INode * node, sts::DataStreamI & stream, xobj::AttrSet & outAttr) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
     xobj::AttrCockpit out(static_cast<xobj::AttrCockpit::eType>(stream.value<uint8_t>()));
-    out.setEnabled(stream.value<bool>());
-    outAttr.setCockpit(out);
+    outAttr.mCockpit = stream.value<bool>() ? std::optional(out) : std::nullopt;
     return true;
 }
 
@@ -271,7 +268,7 @@ bool ObjAttrIO::loadFromNode(INode * inNode, xobj::AttrSet & outAttrSet) {
     std::stringstream buf(std::string(reinterpret_cast<const char *>(chunk->data), chunk->length));
     sts::DataStream stream(&buf);
     stream.readAndSetFormatVersion();
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(inNode, version);
         return false;
@@ -300,12 +297,12 @@ void ObjAttrIO::saveToNode(INode * outNode, const xobj::AttrSet & inAttrSet) {
     stream.writeFormatVersion();
     stream.setValue<uint8_t>(uint8_t(1)); // node io version
     save(stream, inAttrSet);
-    save(stream, inAttrSet.polyOffset());
-    save(stream, inAttrSet.hard());
-    save(stream, inAttrSet.shiny());
-    save(stream, inAttrSet.blend());
-    save(stream, inAttrSet.lightLevel());
-    save(stream, inAttrSet.cockpit());
+    save(stream, inAttrSet.mPolyOffset);
+    save(stream, inAttrSet.mHard);
+    save(stream, inAttrSet.mShiny);
+    save(stream, inAttrSet.mBlend);
+    save(stream, inAttrSet.mLightLevel);
+    save(stream, inAttrSet.mCockpit);
     NodeIO::saveData(outNode, static_cast<DWORD>(eAttribuesIOID::OBJ_ATTRIBUTES), buf.str());
 }
 

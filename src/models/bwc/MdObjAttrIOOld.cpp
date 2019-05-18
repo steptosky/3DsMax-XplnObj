@@ -49,17 +49,16 @@ namespace bcw {
 
 bool MdObjAttrIOOld::canApply(INode * node) {
     assert(node);
-    Class_ID id = node->GetObjectRef()->ClassID();
-    if (id == ClassesDescriptions::mainObj()->ClassID() ||
-        id == ClassesDescriptions::lodObj()->ClassID())
+    const Class_ID id = node->GetObjectRef()->ClassID();
+    if (id == ClassesDescriptions::mainObj()->ClassID() || id == ClassesDescriptions::lodObj()->ClassID()) {
         return false;
+    }
     SClass_ID sid = node->GetObjectRef()->SuperClassID();
-    if (sid == GEOMOBJECT_CLASS_ID)
+    if (sid == GEOMOBJECT_CLASS_ID) {
         return true;
+    }
     sid = node->EvalWorldState(GetCOREInterface()->GetTime()).obj->SuperClassID();
-    if (sid == GEOMOBJECT_CLASS_ID)
-        return true;
-    return false;
+    return sid == GEOMOBJECT_CLASS_ID;
 }
 
 /**************************************************************************************************/
@@ -170,7 +169,7 @@ bool MdObjAttrIOOld::loadFromNode(INode * node, AppDataChunk * data, xobj::AttrS
     if (d.mChkMatShiny) {
         msgStream << LogNode(node) << "Shiny without the value is no longer supported "
                 << "and will be converted to shiny with 1.0" << std::endl;
-        outAttrSet.setShiny(xobj::AttrShiny(1.0f));
+        outAttrSet.mShiny = xobj::AttrShiny(1.0f);
     }
 
     if (d.mChkNoDepth) {
@@ -184,7 +183,7 @@ bool MdObjAttrIOOld::loadFromNode(INode * node, AppDataChunk * data, xobj::AttrS
     if (d.mChkNoCull) {
         msgStream << LogNode(node) << "No-cull is no longer supported "
                 << "and will be rewritten with \"Two sided\"" << LEOL;
-        outAttrSet.setTwoSided(true);
+        outAttrSet.mIsTwoSided = true;
     }
 
     std::string msg = msgStream.str();
@@ -196,27 +195,27 @@ bool MdObjAttrIOOld::loadFromNode(INode * node, AppDataChunk * data, xobj::AttrS
     //-------------------------------------------------------------------------
 
     if (d.mChkNoBlend) {
-        outAttrSet.setBlend(xobj::AttrBlend(xobj::AttrBlend::no_blend, float(d.mNoBlendRatio)));
+        outAttrSet.mBlend = xobj::AttrBlend(xobj::AttrBlend::no_blend, float(d.mNoBlendRatio));
     }
     if (d.mChkPolyOffset) {
-        outAttrSet.setPolyOffset(xobj::AttrPolyOffset(float(d.mPolyOffsetDist)));
+        outAttrSet.mPolyOffset = xobj::AttrPolyOffset(float(d.mPolyOffsetDist));
     }
     if (d.mChkLightLevel) {
-        outAttrSet.setLightLevel(xobj::AttrLightLevel(float(d.mLightLevelVal1),
+        outAttrSet.mLightLevel = xobj::AttrLightLevel(float(d.mLightLevelVal1),
                                                       float(d.mLightLevelVal2),
-                                                      d.mLightLevelDataref));
+                                                      d.mLightLevelDataref);
     }
     if (d.mChkCockpit) {
-        outAttrSet.setCockpit(xobj::AttrCockpit(xobj::AttrCockpit::cockpit));
+        outAttrSet.mCockpit = xobj::AttrCockpit(xobj::AttrCockpit::cockpit);
     }
     if (d.mChkHard) {
-        outAttrSet.setHard(xobj::AttrHard(xobj::ESurface()));
+        outAttrSet.mHard = xobj::AttrHard(xobj::ESurface());
     }
-    outAttrSet.setDraped(d.mChkDraped);
-    outAttrSet.setCastShadow(!d.mChkNoShadow);
-    outAttrSet.setSolidForCamera(d.mChkSolidCamera);
-    outAttrSet.setDraw(!d.mChkDrawDisable);
-    outAttrSet.setTree(d.mChkNoSunLight);
+    outAttrSet.mIsDraped = d.mChkDraped;
+    outAttrSet.mIsCastShadow = !d.mChkNoShadow;
+    outAttrSet.mIsSolidForCamera = d.mChkSolidCamera;
+    outAttrSet.mIsDraw = !d.mChkDrawDisable;
+    outAttrSet.mIsTree = d.mChkNoSunLight;
     return true;
 }
 
