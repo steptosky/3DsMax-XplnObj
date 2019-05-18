@@ -29,7 +29,6 @@
 
 #include "AnimTransView.h"
 #include "common/Logger.h"
-#include "resource/resource.h"
 #include "ui-win/Utils.h"
 #include "ui-win/AnimCalc.h"
 #include "resource/ResHelper.h"
@@ -134,7 +133,7 @@ namespace win {
         Tab<INode*> * nodeTab = reinterpret_cast<Tab<INode*>*>(info->callParam);
 
         if (view->mData.linkedNode()) {
-            int count = nodeTab->Count();
+            const auto count = nodeTab->Count();
             for (int i = 0; i < count; ++i) {
                 if (view->mData.linkedNode() == *nodeTab->Addr(i)) {
                     view->mData.clearLink();
@@ -145,7 +144,7 @@ namespace win {
 
     void AnimTransView::slotSelectionChange(void * param, NotifyInfo *) {
         AnimTransView * view = reinterpret_cast<AnimTransView*>(param);
-        int selectedCount = view->mIp->GetSelNodeCount();
+        const auto selectedCount = view->mIp->GetSelNodeCount();
         if (selectedCount == 0) {
             view->clearValues();
             view->mData.clearLink();
@@ -307,7 +306,7 @@ namespace win {
     /**************************************************************************************************/
 
     void AnimTransView::makeUiList() {
-        int sCurrSelected = cListKeys.currSelected();
+        const auto sCurrSelected = cListKeys.currSelected();
         cListKeys.clear();
         MdAnimTrans::KeyTimeList tList = mData.getKeyTimeList();
         MdAnimTrans::KeyValueList & vList = mData.mKeyList;
@@ -377,11 +376,11 @@ namespace win {
     }
 
     void AnimTransView::reverseValues() {
-        MdAnimTrans::KeyValueList newvList;
+        MdAnimTrans::KeyValueList keyValues;
         for (auto rIt = mData.mKeyList.rbegin(); rIt != mData.mKeyList.rend(); ++rIt) {
-            newvList.push_back(*rIt);
+            keyValues.push_back(*rIt);
         }
-        mData.mKeyList.swap(newvList);
+        mData.mKeyList.swap(keyValues);
         makeUiList();
     }
 
@@ -391,20 +390,20 @@ namespace win {
             mData.mKeyList.resize(tList.size());
         }
 
-        AnimCalc::KeyList klist;
+        AnimCalc::KeyList keys;
         size_t i = 0;
         for (auto & curr : tList) {
-            klist.push_back(AnimCalc::Key());
-            AnimCalc::Key & k = klist.back();
+            keys.push_back(AnimCalc::Key());
+            AnimCalc::Key & k = keys.back();
             k.keyTime = curr;
             k.datarefValue = mData.mKeyList[i];
             ++i;
         }
-        if (!AnimCalc().calculate(klist, cBtnCalculateValue.hwnd()))
+        if (!AnimCalc().calculate(keys, cBtnCalculateValue.hwnd()))
             return;
 
         i = 0;
-        for (auto & curr : klist) {
+        for (auto & curr : keys) {
             mData.mKeyList[i] = curr.datarefValue;
             ++i;
         }

@@ -29,7 +29,6 @@
 
 #include "AnimRotateAxisView.h"
 #include "common/Logger.h"
-#include "resource/resource.h"
 #include "ui-win/Utils.h"
 #include "ui-win/AnimCalc.h"
 #include "resource/ResHelper.h"
@@ -133,7 +132,7 @@ namespace win {
         Tab<INode*> * nodeTab = reinterpret_cast<Tab<INode*>*>(info->callParam);
 
         if (view->mData.linkedNode()) {
-            int count = nodeTab->Count();
+            const auto count = nodeTab->Count();
             for (int i = 0; i < count; ++i) {
                 if (view->mData.linkedNode() == *nodeTab->Addr(i)) {
                     view->mData.clearLink();
@@ -144,7 +143,7 @@ namespace win {
 
     void AnimRotateAxisView::slotSelectionChange(void * param, NotifyInfo *) {
         AnimRotateAxisView * view = reinterpret_cast<AnimRotateAxisView*>(param);
-        int selectedCount = view->mIp->GetSelNodeCount();
+        const auto selectedCount = view->mIp->GetSelNodeCount();
         if (selectedCount == 0) {
             view->clearValues();
             view->mData.clearLink();
@@ -334,7 +333,7 @@ namespace win {
     /**************************************************************************************************/
 
     void AnimRotateAxisView::makeUiList() {
-        int sCurrSelected = cListKeys.currSelected();
+        const auto sCurrSelected = cListKeys.currSelected();
         cListKeys.clear();
         MdAnimRot::KeyTimeList timeList = mData.getKeyTimeList();
 
@@ -342,7 +341,7 @@ namespace win {
             mData.mKeyList.resize(timeList.size());
         }
 
-        int tpt = GetTicksPerFrame();
+        const auto tpt = GetTicksPerFrame();
         for (size_t i = 0; i < timeList.size(); ++i) {
             cListKeys.addItem(sts::StrUtils::join(_T("#:"), i + 1, _T(" F:"), timeList[i] / tpt, _T(" V:"), mData.mKeyList[i]));
         }
@@ -404,11 +403,11 @@ namespace win {
     }
 
     void AnimRotateAxisView::reverseValues() {
-        MdAnimRot::KeyValueList newvList;
+        MdAnimRot::KeyValueList keyValues;
         for (auto rIt = mData.mKeyList.rbegin(); rIt != mData.mKeyList.rend(); ++rIt) {
-            newvList.push_back(*rIt);
+            keyValues.push_back(*rIt);
         }
-        mData.mKeyList.swap(newvList);
+        mData.mKeyList.swap(keyValues);
         mData.saveToNode();
         makeUiList();
     }
@@ -418,20 +417,20 @@ namespace win {
         if (tList.size() != mData.mKeyList.size()) {
             mData.mKeyList.resize(tList.size());
         }
-        AnimCalc::KeyList klist;
+        AnimCalc::KeyList keys;
         size_t i = 0;
         for (auto & curr : tList) {
-            klist.push_back(AnimCalc::Key());
-            AnimCalc::Key & k = klist.back();
+            keys.push_back(AnimCalc::Key());
+            AnimCalc::Key & k = keys.back();
             k.keyTime = curr;
             k.datarefValue = mData.mKeyList[i];
             ++i;
         }
-        if (!AnimCalc().calculate(klist, cBtnCalculateValue.hwnd()))
+        if (!AnimCalc().calculate(keys, cBtnCalculateValue.hwnd()))
             return;
 
         i = 0;
-        for (auto & curr : klist) {
+        for (auto & curr : keys) {
             mData.mKeyList[i] = curr.datarefValue;
             ++i;
         }
