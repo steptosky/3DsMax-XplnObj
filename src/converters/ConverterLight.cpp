@@ -313,7 +313,7 @@ INode * ConverterLight::toMaxLightNamed(const xobj::ObjLightNamed * xLight, cons
             return nullptr;
         }
         mdLight.saveToNode(*xLight);
-        setPosition(params.mCurrTime, node, xLight->transform()->pMatrix, xLight->position());
+        setPosition(params.mCurrTime, node, xLight->transform()->mMatrix, xLight->position());
         return node;
     }
     return nullptr;
@@ -339,7 +339,7 @@ INode * ConverterLight::toMaxLightParam(const xobj::ObjLightParam * xLight, cons
             return nullptr;
         }
         mdLight.saveToNode(*xLight);
-        setPosition(params.mCurrTime, node, xLight->transform()->pMatrix, xLight->position());
+        setPosition(params.mCurrTime, node, xLight->transform()->mMatrix, xLight->position());
         return node;
     }
     return nullptr;
@@ -365,7 +365,7 @@ INode * ConverterLight::toMaxLightCustom(const xobj::ObjLightCustom * xLight, co
             return nullptr;
         }
         mdLight.saveToNode(*xLight);
-        setPosition(params.mCurrTime, node, xLight->transform()->pMatrix, xLight->position());
+        setPosition(params.mCurrTime, node, xLight->transform()->mMatrix, xLight->position());
         return node;
     }
     return nullptr;
@@ -392,7 +392,7 @@ INode * ConverterLight::toMaxLightSpillCust(const xobj::ObjLightSpillCust * xLig
             return nullptr;
         }
         mdLight.saveToNode(*xLight);
-        setPosition(params.mCurrTime, node, xLight->transform()->pMatrix, xLight->position());
+        setPosition(params.mCurrTime, node, xLight->transform()->mMatrix, xLight->position());
 
         if (!xPoint.isEmpty()) {
             INode * targetNode = node->GetTarget();
@@ -431,7 +431,7 @@ INode * ConverterLight::toMaxLightPoint(const xobj::ObjLightPoint * xLight, cons
             return nullptr;
         }
         mdLight.saveToNode(*xLight);
-        setPosition(params.mCurrTime, node, xLight->transform()->pMatrix, xLight->position());
+        setPosition(params.mCurrTime, node, xLight->transform()->mMatrix, xLight->position());
         return node;
     }
     return nullptr;

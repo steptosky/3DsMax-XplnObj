@@ -70,7 +70,7 @@ void ConverterAnim::visibilityToXPLN(INode * node, xobj::Transform & transform, 
     if (!mdAnimVis.mEnable) {
         return;
     }
-    transform.pAnimVis.mKeys.swap(mdAnimVis.mKeyList);
+    transform.mAnimVis.mKeys.swap(mdAnimVis.mKeyList);
 }
 
 /**************************************************************************************************/
@@ -293,8 +293,8 @@ void ConverterAnim::objAnimTrans(INode * node, xobj::Transform & transform, cons
     transAnimValidation(node, zCtrl, "position", 'z');
     //----------------------------------------------
 
-    transform.pAnimTrans.emplace_back();
-    xobj::AnimTrans & anim = transform.pAnimTrans.back();
+    transform.mAnimTrans.emplace_back();
+    xobj::AnimTrans & anim = transform.mAnimTrans.back();
     const Point3 shift = translateValue(xCtrl, yCtrl, zCtrl, params.mCurrTime);
 
     anim.mKeys.resize(static_cast<size_t>(posControlKeyNum));
