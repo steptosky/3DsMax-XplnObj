@@ -110,8 +110,7 @@ Read the help for more information about this issue.");
                     if (mg.mHasManip) {
                         return true;
                     }
-                    xobj::AttrManipPanel panelManip;
-                    panelManip.setCockpit(*attrSet.mCockpit);
+                    const std::optional<xobj::AttrManip> panelManip = xobj::AttrManip(xobj::AttrManipPanel(*attrSet.mCockpit));
                     mdManip.saveToNode(panelManip);
                     nodes.emplace_back(node);
                 }
