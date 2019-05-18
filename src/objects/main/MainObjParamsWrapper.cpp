@@ -1013,7 +1013,7 @@ std::optional<xobj::AttrCockpitRegion> MainObjParamsWrapper::cockpitRegion(xobj:
 void MainObjParamsWrapper::setWetDry(const std::optional<xobj::AttrWetDry> & attr) {
     if (mPbAttr) {
         const auto actual = attr.value_or(xobj::AttrWetDry());
-        if (!mPbAttr->SetValue(MainObjAttr_DryWet, mT, attr ? int(actual.state()) : FALSE)) {
+        if (!mPbAttr->SetValue(MainObjAttr_DryWet, mT, attr ? int(actual.mState) : FALSE)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_DryWet);
         }
     }
@@ -1025,10 +1025,10 @@ void MainObjParamsWrapper::setWetDry(const std::optional<xobj::AttrWetDry> & att
 void MainObjParamsWrapper::setBlend(const std::optional<xobj::AttrBlend> & attr) {
     if (mPbAttr) {
         const auto actual = attr.value_or(xobj::AttrBlend());
-        if (!mPbAttr->SetValue(MainObjAttr_BlendingType, mT, attr ? int(actual.type()) : FALSE)) {
+        if (!mPbAttr->SetValue(MainObjAttr_BlendingType, mT, attr ? int(actual.mType) : FALSE)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_BlendingType);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_BlendingRatio, mT, actual.ratio())) {
+        if (!mPbAttr->SetValue(MainObjAttr_BlendingRatio, mT, actual.mRatio)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_BlendingRatio);
         }
     }
@@ -1041,7 +1041,7 @@ void MainObjParamsWrapper::setLayerGroup(const std::optional<xobj::AttrLayerGrou
     if (mPbAttr) {
         const auto actual = attr.value_or(xobj::AttrLayerGroup());
 
-        const auto str = sts::toString(actual.layer().toString());
+        const auto str = sts::toString(actual.mLayer.toString());
 #if MAX_VERSION_MAJOR < 12
         TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
 #else
@@ -1051,7 +1051,7 @@ void MainObjParamsWrapper::setLayerGroup(const std::optional<xobj::AttrLayerGrou
         if (!mPbAttr->SetValue(MainObjAttr_LayerGroupLayer, mT, strVal)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupLayer);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_LayerGroupOffset, mT, actual.offset())) {
+        if (!mPbAttr->SetValue(MainObjAttr_LayerGroupOffset, mT, actual.mOffset)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupOffset);
         }
     }
@@ -1064,7 +1064,7 @@ void MainObjParamsWrapper::setDrapedLayerGroup(const std::optional<xobj::AttrDra
     if (mPbAttr) {
         const auto actual = attr.value_or(xobj::AttrDrapedLayerGroup());
 
-        const auto str = sts::toString(actual.layer().toString());
+        const auto str = sts::toString(actual.mLayer.toString());
 #if MAX_VERSION_MAJOR < 12
         TCHAR * strVal = const_cast<TCHAR*>(str.c_str());
 #else
@@ -1074,7 +1074,7 @@ void MainObjParamsWrapper::setDrapedLayerGroup(const std::optional<xobj::AttrDra
         if (!mPbAttr->SetValue(MainObjAttr_LayerGroupDrapedLayer, mT, strVal)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupDrapedLayer);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_LayerGroupDrapedOffset, mT, actual.offset())) {
+        if (!mPbAttr->SetValue(MainObjAttr_LayerGroupDrapedOffset, mT, actual.mOffset)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupDrapedOffset);
         }
     }
@@ -1089,7 +1089,7 @@ void MainObjParamsWrapper::setLodDrap(const std::optional<xobj::AttrDrapedLod> &
         if (!mPbAttr->SetValue(MainObjAttr_LodDrapEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LodDrapEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_LodDrapDistance, mT, actual.distance())) {
+        if (!mPbAttr->SetValue(MainObjAttr_LodDrapDistance, mT, actual.mDistance)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LodDrapDistance);
         }
     }
@@ -1104,7 +1104,7 @@ void MainObjParamsWrapper::setSlungWeight(const std::optional<xobj::AttrSlungLoa
         if (!mPbAttr->SetValue(MainObjAttr_SlungLoadWeightEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlungLoadWeightEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlungLoadWeight, mT, actual.weight())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlungLoadWeight, mT, actual.mWeight)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlungLoadWeight);
         }
     }
@@ -1119,7 +1119,7 @@ void MainObjParamsWrapper::setSpecular(const std::optional<xobj::AttrSpecular> &
         if (!mPbAttr->SetValue(MainObjAttr_SpecularEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SpecularEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SpecularRatio, mT, actual.ratio())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SpecularRatio, mT, actual.mRatio)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SpecularRatio);
         }
     }
@@ -1134,10 +1134,10 @@ void MainObjParamsWrapper::setTint(const std::optional<xobj::AttrTint> & attr) {
         if (!mPbAttr->SetValue(MainObjAttr_TintEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_TintAlbedo, mT, actual.albedo())) {
+        if (!mPbAttr->SetValue(MainObjAttr_TintAlbedo, mT, actual.mAlbedo)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintAlbedo);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_TintEmissive, mT, actual.emissive())) {
+        if (!mPbAttr->SetValue(MainObjAttr_TintEmissive, mT, actual.mEmissive)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintEmissive);
         }
     }
@@ -1152,16 +1152,16 @@ void MainObjParamsWrapper::setSlopeLimit(const std::optional<xobj::AttrSlopeLimi
         if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitEnable, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitEnable);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMinPitch, mT, actual.minPitch())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMinPitch, mT, actual.mMinPitch)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMinPitch);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMaxPitch, mT, actual.maxPitch())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMaxPitch, mT, actual.mMaxPitch)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMaxPitch);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMinRoll, mT, actual.minRoll())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMinRoll, mT, actual.mMinRoll)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMinRoll);
         }
-        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMaxRoll, mT, actual.maxRoll())) {
+        if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMaxRoll, mT, actual.mMaxRoll)) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMaxRoll);
         }
     }
@@ -1221,16 +1221,16 @@ void MainObjParamsWrapper::setCockpitRegion(const std::optional<xobj::AttrCockpi
         if (!mPbAttr->SetValue(pEnabled, mT, int(static_cast<bool>(attr)))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pEnabled);
         }
-        if (!mPbAttr->SetValue(pLeft, mT, int(actual.left()))) {
+        if (!mPbAttr->SetValue(pLeft, mT, int(actual.mLeft))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pLeft);
         }
-        if (!mPbAttr->SetValue(pBottom, mT, int(actual.bottom()))) {
+        if (!mPbAttr->SetValue(pBottom, mT, int(actual.mBottom))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pBottom);
         }
-        if (!mPbAttr->SetValue(pRight, mT, int(actual.right()))) {
+        if (!mPbAttr->SetValue(pRight, mT, int(actual.mRight))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pRight);
         }
-        if (!mPbAttr->SetValue(pTop, mT, int(actual.top()))) {
+        if (!mPbAttr->SetValue(pTop, mT, int(actual.mTop))) {
             LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pTop);
         }
     }
