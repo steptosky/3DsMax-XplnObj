@@ -94,7 +94,7 @@ bool ObjAttrIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrSet & ou
 void ObjAttrIO::save(sts::DataStreamO & stream, const std::optional<xobj::AttrPolyOffset> & attr) {
     stream.setValue<uint8_t>(uint8_t(1)); // io version
     const xobj::AttrPolyOffset actual(attr.value_or(xobj::AttrPolyOffset()));
-    stream.setValue<float>(actual.offset());
+    stream.setValue<float>(actual.mOffset);
     stream.setValue<bool>(attr.has_value());
 }
 
@@ -114,8 +114,8 @@ bool ObjAttrIO::loadPolyOffset(INode * node, sts::DataStreamI & stream, xobj::At
 void ObjAttrIO::save(sts::DataStreamO & stream, const std::optional<xobj::AttrHard> & attr) {
     stream.setValue<uint8_t>(uint8_t(1)); // io version
     const xobj::AttrHard actual(attr.value_or(xobj::AttrHard()));
-    stream.setValue<std::string>(actual.surface().toString());
-    stream.setValue<bool>(actual.isDeck());
+    stream.setValue<std::string>(actual.mSurface.toString());
+    stream.setValue<bool>(actual.mIsDeck);
     stream.setValue<bool>(attr.has_value());
 }
 
@@ -128,8 +128,7 @@ bool ObjAttrIO::loadHard(INode * node, sts::DataStreamI & stream, xobj::AttrSet 
     std::string str;
     stream.value<std::string>(str);
 
-    xobj::AttrHard out;
-    out.setESurface(xobj::ESurface::fromString(str.c_str()), stream.value<bool>());
+    xobj::AttrHard out(xobj::ESurface::fromString(str.c_str()), stream.value<bool>());
     outAttr.mHard = stream.value<bool>() ? std::optional(out) : std::nullopt;
     return true;
 }
@@ -139,7 +138,7 @@ bool ObjAttrIO::loadHard(INode * node, sts::DataStreamI & stream, xobj::AttrSet 
 void ObjAttrIO::save(sts::DataStreamO & stream, const std::optional<xobj::AttrShiny> & attr) {
     stream.setValue<uint8_t>(uint8_t(1)); // io version
     const xobj::AttrShiny actual(attr.value_or(xobj::AttrShiny()));
-    stream.setValue<float>(actual.ratio());
+    stream.setValue<float>(actual.mRatio);
     stream.setValue<bool>(attr.has_value());
 }
 
@@ -159,8 +158,8 @@ bool ObjAttrIO::loadShiny(INode * node, sts::DataStreamI & stream, xobj::AttrSet
 void ObjAttrIO::save(sts::DataStreamO & stream, const std::optional<xobj::AttrBlend> & attr) {
     stream.setValue<uint8_t>(uint8_t(1)); // io version
     const xobj::AttrBlend actual(attr.value_or(xobj::AttrBlend()));
-    stream.setValue<uint8_t>(actual.type());
-    stream.setValue<float>(actual.ratio());
+    stream.setValue<uint8_t>(actual.mType);
+    stream.setValue<float>(actual.mRatio);
     stream.setValue<bool>(attr.has_value());
 }
 
@@ -181,9 +180,9 @@ bool ObjAttrIO::loadBlend(INode * node, sts::DataStreamI & stream, xobj::AttrSet
 void ObjAttrIO::save(sts::DataStreamO & stream, const std::optional<xobj::AttrLightLevel> & attr) {
     stream.setValue<uint8_t>(uint8_t(1)); // io version
     const xobj::AttrLightLevel actual(attr.value_or(xobj::AttrLightLevel()));
-    stream.setValue<float>(actual.val1());
-    stream.setValue<float>(actual.val2());
-    stream.setValue<std::string>(actual.dataref());
+    stream.setValue<float>(actual.mVal1);
+    stream.setValue<float>(actual.mVal2);
+    stream.setValue<std::string>(actual.mDataref);
     stream.setValue<bool>(attr.has_value());
 }
 
@@ -194,9 +193,9 @@ bool ObjAttrIO::loadLightLevel(INode * node, sts::DataStreamI & stream, xobj::At
         return false;
     }
     xobj::AttrLightLevel out;
-    out.setVal1(stream.value<float>());
-    out.setVal2(stream.value<float>());
-    out.setDataref(stream.value<std::string>());
+    out.mVal1 = stream.value<float>();
+    out.mVal2 = stream.value<float>();
+    out.mDataref = stream.value<std::string>();
     outAttr.mLightLevel = stream.value<bool>() ? std::optional(out) : std::nullopt;
     return true;
 }
@@ -206,7 +205,7 @@ bool ObjAttrIO::loadLightLevel(INode * node, sts::DataStreamI & stream, xobj::At
 void ObjAttrIO::save(sts::DataStreamO & stream, const std::optional<xobj::AttrCockpit> & attr) {
     stream.setValue<uint8_t>(uint8_t(1)); // io version
     const xobj::AttrCockpit actual(attr.value_or(xobj::AttrCockpit()));
-    stream.setValue<uint8_t>(actual.type());
+    stream.setValue<uint8_t>(actual.mType);
     stream.setValue<bool>(attr.has_value());
 }
 
