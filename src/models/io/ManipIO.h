@@ -36,24 +36,7 @@
 #include "common/Logger.h"
 #include "additional/stsio/DataStream.h"
 #include <xpln/enums/EManipulator.h>
-#include <xpln/obj/manipulators/AttrManipAxisKnob.h>
-#include <xpln/obj/manipulators/AttrManipAxisSwitchLeftRight.h>
-#include <xpln/obj/manipulators/AttrManipAxisSwitchUpDown.h>
-#include <xpln/obj/manipulators/AttrManipCmd.h>
-#include <xpln/obj/manipulators/AttrManipCmdKnob.h>
-#include <xpln/obj/manipulators/AttrManipCmdSwitchLeftRight.h>
-#include <xpln/obj/manipulators/AttrManipCmdSwitchUpDown.h>
-#include <xpln/obj/manipulators/AttrManipDragXy.h>
-#include <xpln/obj/manipulators/AttrManipDragAxisPix.h>
-#include <xpln/obj/manipulators/AttrManipCmdAxis.h>
-#include <xpln/obj/manipulators/AttrManipDragAxis.h>
-#include <xpln/obj/manipulators/AttrManipDelta.h>
-#include <xpln/obj/manipulators/AttrManipPanel.h>
-#include <xpln/obj/manipulators/AttrManipPush.h>
-#include <xpln/obj/manipulators/AttrManipRadio.h>
-#include <xpln/obj/manipulators/AttrManipToggle.h>
-#include <xpln/obj/manipulators/AttrManipWrap.h>
-#include <xpln/obj/manipulators/AttrManipNoop.h>
+#include <xpln/obj/manipulators/AttrManip.h>
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,13 +84,16 @@ public:
 
     static bool loadFromNode(INode * inNode, IManipIo * inCallback);
     static void removeFromNode(INode * node);
-    static void saveToNode(INode * outNode, const xobj::AttrManipBase * inManip);
+    static void saveToNode(INode * outNode, const std::optional<xobj::AttrManip> & manip);
 
     //-------------------------------------------------------------------------
 
 private:
 
     //-------------------------------------------------------------------------
+
+    class ManipSaver;
+    friend ManipSaver;
 
     template<typename T>
     static void saveToNodeInternal(INode * outNode, const T & inManip) {
@@ -120,32 +106,35 @@ private:
         sts::DataStream stream(&buf);
         stream.writeFormatVersion();
         stream.setValue<uint8_t>(uint8_t(1)); // node io version
-        xobj::EManipulator type = inManip.type();
-        stream.setValue<std::string>(type.toString());
+        stream.setValue<std::string>(inManip.mType.toString());
         save(stream, inManip);
         saveDataToNode(outNode, buf);
     }
 
     //-------------------------------------------------------------------------
 
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipAxisKnob & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipAxisSwitchLeftRight & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipAxisSwitchUpDown & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmd & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdAxis & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdKnob & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdSwitchLeftRight & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdSwitchUpDown & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipDelta & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipDragAxis & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipDragAxisPix & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipDragXy & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipNoop & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipAxisKnob & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipAxisSwitchLeftRight & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipAxisSwitchUpDown & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmd & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdAxis & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdKnob & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdKnob2 & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdSwitchLeftRight & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdSwitchLeftRight2 & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdSwitchUpDown & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipCmdSwitchUpDown2 & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipDelta & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipDragAxis & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipDragAxisPix & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipDragXy & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipDragRotate & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipNoop & manip);
     static void save(sts::DataStreamO & stream, const xobj::AttrManipPanel & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipPush & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipRadio & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipToggle & inManip);
-    static void save(sts::DataStreamO & stream, const xobj::AttrManipWrap & inManip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipPush & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipRadio & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipToggle & manip);
+    static void save(sts::DataStreamO & stream, const xobj::AttrManipWrap & manip);
 
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisKnob & outManip);
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisSwitchLeftRight & outManip);
@@ -153,12 +142,16 @@ private:
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmd & outManip);
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdAxis & outManip);
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdKnob & inManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdKnob2 & inManip);
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdSwitchLeftRight & inManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdSwitchLeftRight2 & inManip);
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdSwitchUpDown & inManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdSwitchUpDown2 & inManip);
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDelta & outManip);
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragAxis & outManip);
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragAxisPix & outManip);
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragXy & outManip);
+    static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragRotate & outManip);
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipNoop & outManip);
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipPanel & outManip);
     static bool load(INode * node, sts::DataStreamI & stream, xobj::AttrManipPush & outManip);
