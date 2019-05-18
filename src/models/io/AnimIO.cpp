@@ -35,7 +35,7 @@
 #include "objects/main/MainObj.h"
 
 #include "common/String.h"
-#include "models/bwc/MdAnimIoOld.h"
+#include "models/bwc/MdAnimIOOld.h"
 #include "classes-desc/ClassesDescriptions.h"
 #include "additional/stsio/DataStream.h"
 
@@ -45,7 +45,7 @@
 
 bool AnimIO::canApply(INode * node) {
     assert(node != nullptr);
-    Class_ID id = node->GetObjectRef()->ClassID();
+    const Class_ID id = node->GetObjectRef()->ClassID();
     return id != ClassesDescriptions::mainObj()->ClassID() &&
            id != ClassesDescriptions::lodObj()->ClassID();
 }
@@ -63,15 +63,15 @@ void AnimIO::saveRotateToNode(INode * outNode, const MdAnimRot & inAnimRot, eAni
     std::stringstream buf;
     sts::DataStreamO stream(&buf);
     stream.writeFormatVersion();
-    stream.setValue<uint8_t>(inAnimRot.mVersion);
+    stream.setValue<std::uint8_t>(inAnimRot.mVersion);
     stream.setValue<bool>(inAnimRot.mEnable);
     stream.setValue<bool>(inAnimRot.mReverse);
     stream.setValue<bool>(inAnimRot.mLoopEnable);
     stream.setValue<float>(inAnimRot.mLoopValue);
     stream.setValue<std::string>(inAnimRot.mDataref);
 
-    uint32_t size = static_cast<uint32_t>(inAnimRot.mKeyList.size());
-    stream.setValue<uint32_t>(size);
+    const auto size = static_cast<std::uint32_t>(inAnimRot.mKeyList.size());
+    stream.setValue<std::uint32_t>(size);
     if (size) {
         stream.writeRawData(reinterpret_cast<const char*>(inAnimRot.mKeyList.data()),
                             size * sizeof(MdAnimTrans::KeyValueList::value_type));
@@ -112,7 +112,7 @@ bool AnimIO::loadRotateFromNode(INode * inNode, MdAnimRot & outAnimRot, eAnimRot
     std::stringstream buf(std::string(reinterpret_cast<const char *>(chunk->data), chunk->length));
     sts::DataStreamI stream(&buf);
     stream.readAndSetFormatVersion();
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != outAnimRot.mVersion) {
         log_unexpected_version(inNode, version);
         return false;
@@ -124,7 +124,7 @@ bool AnimIO::loadRotateFromNode(INode * inNode, MdAnimRot & outAnimRot, eAnimRot
     stream.value<float>(outAnimRot.mLoopValue);
     stream.value<std::string>(outAnimRot.mDataref);
 
-    outAnimRot.mKeyList.resize(static_cast<size_t>(stream.value<uint32_t>()), 0.0f);
+    outAnimRot.mKeyList.resize(static_cast<size_t>(stream.value<std::uint32_t>()), 0.0f);
     if (!outAnimRot.mKeyList.empty()) {
         stream.readRawData(reinterpret_cast<char*>(outAnimRot.mKeyList.data()),
                            outAnimRot.mKeyList.size() * sizeof(MdAnimTrans::KeyValueList::value_type));
@@ -152,8 +152,8 @@ void AnimIO::saveTransToNode(INode * outNode, const MdAnimTrans & inAnimTrans) {
     stream.setValue<float>(inAnimTrans.mLoopValue);
     stream.setValue<std::string>(inAnimTrans.mDataref);
 
-    uint32_t size = static_cast<uint32_t>(inAnimTrans.mKeyList.size());
-    stream.setValue<uint32_t>(size);
+    const auto size = static_cast<std::uint32_t>(inAnimTrans.mKeyList.size());
+    stream.setValue<std::uint32_t>(size);
     if (size) {
         stream.writeRawData(reinterpret_cast<const char*>(inAnimTrans.mKeyList.data()),
                             size * sizeof(MdAnimTrans::KeyValueList::value_type));
@@ -193,7 +193,7 @@ bool AnimIO::loadTransFromNode(INode * inNode, MdAnimTrans & outAnimTrans) {
     std::stringstream buf(std::string(reinterpret_cast<const char *>(chunk->data), chunk->length));
     sts::DataStreamI stream(&buf);
     stream.readAndSetFormatVersion();
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != outAnimTrans.mVersion) {
         log_unexpected_version(inNode, version);
         return false;
@@ -205,7 +205,7 @@ bool AnimIO::loadTransFromNode(INode * inNode, MdAnimTrans & outAnimTrans) {
     stream.value<float>(outAnimTrans.mLoopValue);
     stream.value<std::string>(outAnimTrans.mDataref);
 
-    outAnimTrans.mKeyList.resize(static_cast<size_t>(stream.value<uint32_t>()), 0.0f);
+    outAnimTrans.mKeyList.resize(static_cast<size_t>(stream.value<std::uint32_t>()), 0.0f);
     if (!outAnimTrans.mKeyList.empty()) {
         stream.readRawData(reinterpret_cast<char*>(outAnimTrans.mKeyList.data()),
                            outAnimTrans.mKeyList.size() * sizeof(MdAnimTrans::KeyValueList::value_type));
@@ -226,15 +226,15 @@ void AnimIO::saveVisibilityToNode(INode * outNode, const MdAnimVis & inAnimVis) 
     std::stringstream buf;
     sts::DataStreamO stream(&buf);
     stream.writeFormatVersion();
-    stream.setValue<uint8_t>(inAnimVis.mVersion);
+    stream.setValue<std::uint8_t>(inAnimVis.mVersion);
     stream.setValue<bool>(inAnimVis.mEnable);
 
-    stream.setValue<uint32_t>(static_cast<uint32_t>(inAnimVis.mKeyList.size()));
+    stream.setValue<uint32_t>(static_cast<std::uint32_t>(inAnimVis.mKeyList.size()));
     for (auto & curr : inAnimVis.mKeyList) {
-        stream.setValue<uint8_t>(static_cast<uint8_t>(curr.pType));
-        stream.setValue<float>(curr.pValue1);
-        stream.setValue<float>(curr.pValue2);
-        stream.setValue<std::string>(curr.pDrf);
+        stream.setValue<std::uint8_t>(static_cast<std::uint8_t>(curr.mType));
+        stream.setValue<float>(curr.mValue1);
+        stream.setValue<float>(curr.mValue2);
+        stream.setValue<std::string>(curr.mDrf);
     }
     NodeIO::saveData(outNode, static_cast<DWORD>(eAnimVisIOID::ANIM_VISIBILITY), buf.str());
 }
@@ -270,19 +270,19 @@ bool AnimIO::loadVisibilityFromNode(INode * inNode, MdAnimVis & outAnimVis) {
     std::stringstream buf(std::string(reinterpret_cast<const char *>(chunk->data), chunk->length));
     sts::DataStreamI stream(&buf);
     stream.readAndSetFormatVersion();
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != outAnimVis.mVersion) {
         log_unexpected_version(inNode, version);
         return false;
     }
 
     stream.value<bool>(outAnimVis.mEnable);
-    outAnimVis.mKeyList.resize(static_cast<size_t>(stream.value<uint32_t>()));
+    outAnimVis.mKeyList.resize(static_cast<size_t>(stream.value<std::uint32_t>()));
     for (auto & curr : outAnimVis.mKeyList) {
-        curr.pType = static_cast<xobj::AnimVisibility::Key::eType>(stream.value<uint8_t>());
-        stream.value<float>(curr.pValue1);
-        stream.value<float>(curr.pValue2);
-        stream.value<std::string>(curr.pDrf);
+        curr.mType = static_cast<xobj::AnimVisibility::Key::eType>(stream.value<std::uint8_t>());
+        stream.value<float>(curr.mValue1);
+        stream.value<float>(curr.mValue2);
+        stream.value<std::string>(curr.mDrf);
     }
     return true;
 }
@@ -313,33 +313,33 @@ void AnimIO::removeVisibilityFromNode(INode * node) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool AnimIO::cloneData(INode * NodeFrom, INode * NodeTo, DWORD index) {
-    if (!canApply(NodeTo)) {
+bool AnimIO::cloneData(INode * from, INode * to, const DWORD index) {
+    if (!canApply(to)) {
         return false;
     }
-    NodeIO::cloneData(NodeFrom, NodeTo, index);
+    NodeIO::cloneData(from, to, index);
     return true;
 }
 
-bool AnimIO::cloneTransData(INode * NodeFrom, INode * NodeTo) {
-    return cloneData(NodeFrom, NodeTo, static_cast<DWORD>(eAnimTransIOID::ANIM_TRANS));
+bool AnimIO::cloneTransData(INode * from, INode * to) {
+    return cloneData(from, to, static_cast<DWORD>(eAnimTransIOID::ANIM_TRANS));
 }
 
-bool AnimIO::cloneRotateData(INode * NodeFrom, INode * NodeTo) {
-    if (!cloneData(NodeFrom, NodeTo, static_cast<DWORD>(eAnimRotateIOID::ANIM_X_ROTATE))) {
+bool AnimIO::cloneRotateData(INode * from, INode * to) {
+    if (!cloneData(from, to, static_cast<DWORD>(eAnimRotateIOID::ANIM_X_ROTATE))) {
         return false;
     }
-    if (!cloneData(NodeFrom, NodeTo, static_cast<DWORD>(eAnimRotateIOID::ANIM_Y_ROTATE))) {
+    if (!cloneData(from, to, static_cast<DWORD>(eAnimRotateIOID::ANIM_Y_ROTATE))) {
         return false;
     }
-    if (!cloneData(NodeFrom, NodeTo, static_cast<DWORD>(eAnimRotateIOID::ANIM_Z_ROTATE))) {
+    if (!cloneData(from, to, static_cast<DWORD>(eAnimRotateIOID::ANIM_Z_ROTATE))) {
         return false;
     }
     return true;
 }
 
-bool AnimIO::cloneVisibilityData(INode * NodeFrom, INode * NodeTo) {
-    return cloneData(NodeFrom, NodeTo, static_cast<DWORD>(eAnimVisIOID::ANIM_VISIBILITY));
+bool AnimIO::cloneVisibilityData(INode * from, INode * to) {
+    return cloneData(from, to, static_cast<DWORD>(eAnimVisIOID::ANIM_VISIBILITY));
 }
 
 /**************************************************************************************************/
