@@ -47,25 +47,25 @@
 struct ManipGetter : ManipIO::IManipIo {
 
     explicit ManipGetter(xobj::ObjMesh * mesh) { mMesh = mesh; }
-    void gotAttrManip(const xobj::AttrManipAxisKnob & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipAxisSwitchLeftRight & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipAxisSwitchUpDown & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipCmd & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipCmdAxis & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipCmdKnob & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipCmdSwitchLeftRight & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipCmdSwitchUpDown & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipDelta & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipDragAxis & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipDragAxisPix & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipDragXy & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipNoop & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipPanel & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipPush & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipRadio & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipToggle & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipWrap & inManip) override { mMesh->mAttr.mManipContainer = xobj::ManipContainer(inManip.clone()); }
-    void gotNoManip() override { mMesh->mAttr.mManipContainer = std::nullopt; }
+    void gotAttrManip(const xobj::AttrManipAxisKnob & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipAxisSwitchLeftRight & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipAxisSwitchUpDown & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipCmd & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipCmdAxis & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipCmdKnob & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipCmdSwitchLeftRight & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipCmdSwitchUpDown & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipDelta & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipDragAxis & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipDragAxisPix & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipDragXy & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipNoop & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipPanel & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipPush & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipRadio & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipToggle & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotAttrManip(const xobj::AttrManipWrap & inManip) override { mMesh->mAttr.mManip = xobj::AttrManip(inManip); }
+    void gotNoManip() override { mMesh->mAttr.mManip = std::nullopt; }
 
 private:
     xobj::ObjMesh * mMesh;
@@ -108,8 +108,8 @@ void ConverterAttr::toMax(INode * inNode, const xobj::ObjAbstract & inXObj, cons
     }
     MdManip mdManip;
     if (mdManip.linkNode(inNode)) {
-        if (m.mAttr.mManipContainer && m.mAttr.mManipContainer->hasManip()) {
-            mdManip.saveToNode(*m.mAttr.mManipContainer->mManip);
+        if (m.mAttr.mManip) {
+            mdManip.saveToNode(m.mAttr.mManip);
         }
     }
 }
