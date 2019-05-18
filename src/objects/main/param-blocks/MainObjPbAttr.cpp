@@ -174,8 +174,8 @@ public:
                         ComboBox_AddString(cbmLayerDrap, str.c_str());
                     }
                     MainObjParamsWrapper wrapper(ppb, nullptr, t, FOREVER);
-                    ComboBox_SetCurSel(cbmLayer, static_cast<int>(wrapper.layerGroup().value_or(xobj::AttrLayerGroup()).layer().id()));
-                    ComboBox_SetCurSel(cbmLayerDrap, static_cast<int>(wrapper.drapedLayerGroup().value_or(xobj::AttrDrapedLayerGroup()).layer().id()));
+                    ComboBox_SetCurSel(cbmLayer, static_cast<int>(wrapper.layerGroup().value_or(xobj::AttrLayerGroup()).mLayer.id()));
+                    ComboBox_SetCurSel(cbmLayerDrap, static_cast<int>(wrapper.drapedLayerGroup().value_or(xobj::AttrDrapedLayerGroup()).mLayer.id()));
                 }
                 if (cbmWetDry) {
                     ComboBox_AddString(cbmWetDry, _T("none"));
@@ -203,7 +203,7 @@ public:
                             else {
                                 auto attr = wrapper.layerGroup();
                                 if (attr) {
-                                    attr->setLayer(currLayer);
+                                    attr->mLayer = currLayer;
                                     wrapper.setLayerGroup(attr);
                                 }
                             }
@@ -220,7 +220,7 @@ public:
                             else {
                                 auto attr = wrapper.drapedLayerGroup();
                                 if (attr) {
-                                    attr->setLayer(currLayer);
+                                    attr->mLayer = currLayer;
                                     wrapper.setDrapedLayerGroup(attr);
                                 }
                             }
@@ -662,7 +662,7 @@ void MainObjPbAttr::postLoad(IParamBlock2 * paramBlock) {
         const auto masterScale = GetMasterScale(UNITS_METERS);
         auto attrDrap = wrapper.lodDrap();
         if (attrDrap) {
-            attrDrap->setDistance(float(attrDrap->distance() * masterScale));
+            attrDrap->mDistance = float(attrDrap->mDistance * masterScale);
             wrapper.setLodDrap(attrDrap);
         }
         //------------------------------------------------------
