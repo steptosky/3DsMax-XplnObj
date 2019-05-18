@@ -142,8 +142,8 @@ void MainObject::updateLayerGroupSpinEnabling() const {
     //DbgAssert(map);
     if (map) {
         MainObjParamsWrapper wrapper(mAttrParamsPb, nullptr, GetCOREInterface()->GetTime(), FOREVER);
-        map->Enable(MainObjAttr_LayerGroupOffset, wrapper.layerGroup().value_or(xobj::AttrLayerGroup()).layer().isValid() ? 1 : 0);
-        map->Enable(MainObjAttr_LayerGroupDrapedOffset, wrapper.drapedLayerGroup().value_or(xobj::AttrDrapedLayerGroup()).layer().isValid() ? 1 : 0);
+        map->Enable(MainObjAttr_LayerGroupOffset, wrapper.layerGroup().value_or(xobj::AttrLayerGroup()).mLayer.isValid() ? 1 : 0);
+        map->Enable(MainObjAttr_LayerGroupDrapedOffset, wrapper.drapedLayerGroup().value_or(xobj::AttrDrapedLayerGroup()).mLayer.isValid() ? 1 : 0);
     }
 }
 
