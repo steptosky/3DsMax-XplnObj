@@ -40,8 +40,6 @@
 #include "objects/main/MainObjParamsWrapper.h"
 #include "classes-desc/ClassesDescriptions.h"
 #include "ExportParams.h"
-#include "ImportParams.h"
-
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
@@ -52,7 +50,7 @@ bool ConverterMain::toXpln(INode * inNode, xobj::ObjMain & outMain, const Export
     }
 
     MainObjParamsWrapper attr(inNode, params.mCurrTime, FOREVER);
-    auto & xop = outMain.pExportOptions;
+    auto & xop = outMain.mExportOptions;
 
     xop.enable(xobj::XOBJ_EXP_APPLY_LOD_TM);
 
@@ -65,32 +63,41 @@ bool ConverterMain::toXpln(INode * inNode, xobj::ObjMain & outMain, const Export
     attr.isNameDummies() ? xop.enable(xobj::XOBJ_EXP_MARK_DUMMY) : xop.disable(xobj::XOBJ_EXP_MARK_DUMMY);
     attr.isTreeHierarchy() ? xop.enable(xobj::XOBJ_EXP_MARK_TREE_HIERARCHY) : xop.disable(xobj::XOBJ_EXP_MARK_TREE_HIERARCHY);
 
-    outMain.pAttr.setDebug(xop.isEnabled(xobj::XOBJ_EXP_DEBUG));
+    outMain.mAttr.mDebug = xop.isEnabled(xobj::XOBJ_EXP_DEBUG);
 
     const std::string prefix = attr.pathPrefix();
-    outMain.pAttr.setTexture(makeTexturePath(attr.texture(), prefix));
-    outMain.pAttr.setTextureLit(makeTexturePath(attr.textureLit(), prefix));
-    outMain.pAttr.setTextureNormal(makeTexturePath(attr.textureNormal(), prefix));
+    const auto texture = attr.texture();
+    if (texture) {
+        outMain.mAttr.mTexture = makeTexturePath(*texture, prefix);
+    }
+    const auto textureLit = attr.textureLit();
+    if (textureLit) {
+        outMain.mAttr.mTextureLit = makeTexturePath(*textureLit, prefix);
+    }
+    const auto textureNormal = attr.textureNormal();
+    if (textureNormal) {
+        outMain.mAttr.mTextureNormal = makeTexturePath(*textureNormal, prefix);
+    }
 
-    outMain.pAttr.setNoShadow(attr.isNoShadow());
-    outMain.pAttr.setTilted(attr.isTilted());
-    outMain.pAttr.setCockpitLit(attr.isCockpitLit());
+    outMain.mAttr.mDropShadow = !attr.isNoShadow();
+    outMain.mAttr.mTilted = attr.isTilted();
+    outMain.mAttr.mCockpitLit = attr.isCockpitLit();
 
-    outMain.pAttr.setBlendGlass(attr.isBlendGlass());
-    outMain.pAttr.setNormalMetalness(attr.isNormalMetalness());
-    outMain.pAttr.setWetDry(attr.wetDry());
-    outMain.pAttr.setBlend(attr.blend());
-    outMain.pAttr.setLayerGroup(attr.layerGroup());
-    outMain.pDraped.pAttr.setLayerGroup(attr.drapedLayerGroup());
-    outMain.pDraped.pAttr.setLod(attr.lodDrap());
-    outMain.pAttr.setSlungLoadWeight(attr.slungWeight());
-    outMain.pAttr.setSpecular(attr.specular());
-    outMain.pAttr.setTint(attr.tint());
-    outMain.pAttr.setSlopeLimit(attr.slopeLimit());
-    outMain.pAttr.setCockpitRegion(attr.cockpitRegion(xobj::AttrCockpitRegion::r1), xobj::AttrCockpitRegion::r1);
-    outMain.pAttr.setCockpitRegion(attr.cockpitRegion(xobj::AttrCockpitRegion::r2), xobj::AttrCockpitRegion::r2);
-    outMain.pAttr.setCockpitRegion(attr.cockpitRegion(xobj::AttrCockpitRegion::r3), xobj::AttrCockpitRegion::r3);
-    outMain.pAttr.setCockpitRegion(attr.cockpitRegion(xobj::AttrCockpitRegion::r4), xobj::AttrCockpitRegion::r4);
+    outMain.mAttr.mBlendClass = attr.isBlendGlass();
+    outMain.mAttr.mNormalMetalness = attr.isNormalMetalness();
+    outMain.mAttr.mWetDry = attr.wetDry();
+    outMain.mAttr.mBlend = attr.blend();
+    outMain.mAttr.mLayerGroup = attr.layerGroup();
+    outMain.mDraped.mAttr.mLayerGroup = attr.drapedLayerGroup();
+    outMain.mDraped.mAttr.mLod = attr.lodDrap();
+    outMain.mAttr.mSlungLoadWeight = attr.slungWeight();
+    outMain.mAttr.mSpecular = attr.specular();
+    outMain.mAttr.mTint = attr.tint();
+    outMain.mAttr.mSlopeLimit = attr.slopeLimit();
+    outMain.mAttr.mCockpitRegion1 = attr.cockpitRegion(xobj::AttrCockpitRegion::r1);
+    outMain.mAttr.mCockpitRegion2 = attr.cockpitRegion(xobj::AttrCockpitRegion::r2);
+    outMain.mAttr.mCockpitRegion3 = attr.cockpitRegion(xobj::AttrCockpitRegion::r3);
+    outMain.mAttr.mCockpitRegion4 = attr.cockpitRegion(xobj::AttrCockpitRegion::r4);
 
     outMain.setObjectName(sts::toMbString(inNode->GetName()));
     return true;
@@ -115,11 +122,11 @@ INode * ConverterMain::toMax(const xobj::ObjMain & inXObj) {
     }
 
     MainObjParamsWrapper attr(node, GetCOREInterface()->GetTime(), FOREVER);
-    auto & xop = inXObj.pExportOptions;
+    auto & xop = inXObj.mExportOptions;
 
     attr.setOptimization(xop.isEnabled(xobj::XOBJ_EXP_OPTIMIZATION));
     attr.setInstancing(xop.isEnabled(xobj::XOBJ_EXP_CHECK_INSTANCE));
-    attr.setDebug(xop.isEnabled(xobj::XOBJ_EXP_DEBUG) || inXObj.pAttr.isDebug());
+    attr.setDebug(xop.isEnabled(xobj::XOBJ_EXP_DEBUG) || inXObj.mAttr.mDebug);
     attr.setNameMesh(xop.isEnabled(xobj::XOBJ_EXP_MARK_MESH));
     attr.setNameLines(xop.isEnabled(xobj::XOBJ_EXP_MARK_LINE));
     attr.setNameLights(xop.isEnabled(xobj::XOBJ_EXP_MARK_LIGHT));
@@ -131,40 +138,46 @@ INode * ConverterMain::toMax(const xobj::ObjMain & inXObj) {
     const std::string resPrefix2;
     const std::string resPrefix3;
 
-    makeTexturePath(inXObj.pAttr.texture(), resTexture, resPrefix1);
-    attr.setPathPrefix(resPrefix1);
-    attr.setTexture(resTexture);
+    if (inXObj.mAttr.mTexture) {
+        makeTexturePath(*inXObj.mAttr.mTexture, resTexture, resPrefix1);
+        attr.setPathPrefix(resPrefix1);
+        attr.setTexture(resTexture);
+    }
 
-    makeTexturePath(inXObj.pAttr.textureLit(), resTexture, resPrefix1);
-    attr.setTextureLit(resTexture);
+    if (inXObj.mAttr.mTextureLit) {
+        makeTexturePath(*inXObj.mAttr.mTextureLit, resTexture, resPrefix1);
+        attr.setTextureLit(resTexture);
+    }
 
-    makeTexturePath(inXObj.pAttr.textureNormal(), resTexture, resPrefix1);
-    attr.setTextureNormal(resTexture);
+    if (inXObj.mAttr.mTextureNormal) {
+        makeTexturePath(*inXObj.mAttr.mTextureNormal, resTexture, resPrefix1);
+        attr.setTextureNormal(resTexture);
+    }
 
     if (resPrefix1 != resPrefix2 && resPrefix2 != resPrefix3) {
         CLWarning << "Textures have different prefix, only one <"
                 << resPrefix1 << "> prefix will be used.";
     }
 
-    attr.setNoShadow(inXObj.pAttr.isNoShadow());
-    attr.setTilted(inXObj.pAttr.isTilted());
-    attr.setCockpitLit(inXObj.pAttr.isCockpitLit());
+    attr.setNoShadow(!inXObj.mAttr.mDropShadow);
+    attr.setTilted(inXObj.mAttr.mTilted);
+    attr.setCockpitLit(inXObj.mAttr.mCockpitLit);
 
-    attr.setBlendGlass(inXObj.pAttr.isBlendGlass());
-    attr.setNormalMetalness(inXObj.pAttr.isNormalMetalness());
-    attr.setWetDry(inXObj.pAttr.wetDry());
-    attr.setBlend(inXObj.pAttr.blend());
-    attr.setLayerGroup(inXObj.pAttr.layerGroup());
-    attr.setDrapedLayerGroup(inXObj.pDraped.pAttr.layerGroup());
-    attr.setLodDrap(inXObj.pDraped.pAttr.lod());
-    attr.setSlungWeight(inXObj.pAttr.slungLoadWeight());
-    attr.setSpecular(inXObj.pAttr.specular());
-    attr.setTint(inXObj.pAttr.tint());
-    attr.setSlopeLimit(inXObj.pAttr.slopeLimit());
-    attr.setCockpitRegion(inXObj.pAttr.cockpitRegion(xobj::AttrCockpitRegion::r1), xobj::AttrCockpitRegion::r1);
-    attr.setCockpitRegion(inXObj.pAttr.cockpitRegion(xobj::AttrCockpitRegion::r2), xobj::AttrCockpitRegion::r2);
-    attr.setCockpitRegion(inXObj.pAttr.cockpitRegion(xobj::AttrCockpitRegion::r3), xobj::AttrCockpitRegion::r3);
-    attr.setCockpitRegion(inXObj.pAttr.cockpitRegion(xobj::AttrCockpitRegion::r4), xobj::AttrCockpitRegion::r4);
+    attr.setBlendGlass(inXObj.mAttr.mBlendClass);
+    attr.setNormalMetalness(inXObj.mAttr.mNormalMetalness);
+    attr.setWetDry(inXObj.mAttr.mWetDry);
+    attr.setBlend(inXObj.mAttr.mBlend);
+    attr.setLayerGroup(inXObj.mAttr.mLayerGroup);
+    attr.setDrapedLayerGroup(inXObj.mDraped.mAttr.mLayerGroup);
+    attr.setLodDrap(inXObj.mDraped.mAttr.mLod);
+    attr.setSlungWeight(inXObj.mAttr.mSlungLoadWeight);
+    attr.setSpecular(inXObj.mAttr.mSpecular);
+    attr.setTint(inXObj.mAttr.mTint);
+    attr.setSlopeLimit(inXObj.mAttr.mSlopeLimit);
+    attr.setCockpitRegion(inXObj.mAttr.mCockpitRegion1, xobj::AttrCockpitRegion::r1);
+    attr.setCockpitRegion(inXObj.mAttr.mCockpitRegion2, xobj::AttrCockpitRegion::r2);
+    attr.setCockpitRegion(inXObj.mAttr.mCockpitRegion3, xobj::AttrCockpitRegion::r3);
+    attr.setCockpitRegion(inXObj.mAttr.mCockpitRegion4, xobj::AttrCockpitRegion::r4);
 
     node->SetName(xobj::toMStr(inXObj.objectName()));
     return node;
