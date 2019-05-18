@@ -120,19 +120,19 @@ public:
                     case BTN_TEXTURE_DEL: {
                         MainObjParamsWrapper wrapper(ppb, nullptr, GetCOREInterface()->GetTime(), FOREVER);
                         wrapper.setTexture("");
-                        MainObject::updateButtonText(ppb, MainObjAttr_Texture, sts::toString(wrapper.texture()).c_str());;
+                        MainObject::updateButtonText(ppb, MainObjAttr_Texture, sts::toString(wrapper.texture().value_or(std::string())).c_str());;
                         break;
                     }
                     case BTN_TEXTURE_LIT_DEL: {
                         MainObjParamsWrapper wrapper(ppb, nullptr, GetCOREInterface()->GetTime(), FOREVER);
                         wrapper.setTextureLit("");
-                        MainObject::updateButtonText(ppb, MainObjAttr_TextureLit, sts::toString(wrapper.textureLit()).c_str());;
+                        MainObject::updateButtonText(ppb, MainObjAttr_TextureLit, sts::toString(wrapper.textureLit().value_or(std::string())).c_str());;
                         break;
                     }
                     case BTN_TEXTURE_NORMAL_DEL: {
                         MainObjParamsWrapper wrapper(ppb, nullptr, GetCOREInterface()->GetTime(), FOREVER);
                         wrapper.setTextureNormal("");
-                        MainObject::updateButtonText(ppb, MainObjAttr_TextureNormal, sts::toString(wrapper.textureNormal()).c_str());;
+                        MainObject::updateButtonText(ppb, MainObjAttr_TextureNormal, sts::toString(wrapper.textureNormal().value_or(std::string())).c_str());;
                         break;
                     }
                     default: break;
@@ -174,8 +174,8 @@ public:
                         ComboBox_AddString(cbmLayerDrap, str.c_str());
                     }
                     MainObjParamsWrapper wrapper(ppb, nullptr, t, FOREVER);
-                    ComboBox_SetCurSel(cbmLayer, static_cast<int>(wrapper.layerGroup().layer().id()));
-                    ComboBox_SetCurSel(cbmLayerDrap, static_cast<int>(wrapper.drapedLayerGroup().layer().id()));
+                    ComboBox_SetCurSel(cbmLayer, static_cast<int>(wrapper.layerGroup().value_or(xobj::AttrLayerGroup()).layer().id()));
+                    ComboBox_SetCurSel(cbmLayerDrap, static_cast<int>(wrapper.drapedLayerGroup().value_or(xobj::AttrLayerGroup()).layer().id()));
                 }
                 if (cbmWetDry) {
                     ComboBox_AddString(cbmWetDry, _T("none"));
@@ -196,18 +196,34 @@ public:
                     case CMB_LAYERGROUP: {
                         if (HIWORD(wParam) == CBN_SELCHANGE) {
                             MainObjParamsWrapper wrapper(ppb, nullptr, t, FOREVER);
-                            xobj::AttrLayerGroup attr = wrapper.layerGroup();
-                            attr.setLayer(xobj::ELayer(static_cast<xobj::ELayer::eId>(ComboBox_GetCurSel(GetDlgItem(hWnd, CMB_LAYERGROUP)))));
-                            wrapper.setLayerGroup(attr);
+                            const auto currLayer = xobj::ELayer(static_cast<xobj::ELayer::eId>(ComboBox_GetCurSel(GetDlgItem(hWnd, CMB_LAYERGROUP))));
+                            if (currLayer == xobj::ELayer::none) {
+                                wrapper.setLayerGroup(std::nullopt);
+                            }
+                            else {
+                                auto attr = wrapper.layerGroup();
+                                if (attr) {
+                                    attr->setLayer(currLayer);
+                                    wrapper.setLayerGroup(attr);
+                                }
+                            }
                         }
                         break;
                     }
                     case CMB_LAYERGROUP_DRAPED: {
                         if (HIWORD(wParam) == CBN_SELCHANGE) {
                             MainObjParamsWrapper wrapper(ppb, nullptr, t, FOREVER);
-                            xobj::AttrDrapedLayerGroup attr = wrapper.drapedLayerGroup();
-                            attr.setLayer(xobj::ELayer(static_cast<xobj::ELayer::eId>(ComboBox_GetCurSel(GetDlgItem(hWnd, CMB_LAYERGROUP_DRAPED)))));
-                            wrapper.setDrapedLayerGroup(attr);
+                            const auto currLayer = xobj::ELayer(static_cast<xobj::ELayer::eId>(ComboBox_GetCurSel(GetDlgItem(hWnd, CMB_LAYERGROUP_DRAPED))));
+                            if (currLayer == xobj::ELayer::none) {
+                                wrapper.setDrapedLayerGroup(std::nullopt);
+                            }
+                            else {
+                                auto attr = wrapper.drapedLayerGroup();
+                                if (attr) {
+                                    attr->setLayer(currLayer);
+                                    wrapper.setDrapedLayerGroup(attr);
+                                }
+                            }
                         }
                         break;
                     }
@@ -645,8 +661,10 @@ void MainObjPbAttr::postLoad(IParamBlock2 * paramBlock) {
         MainObjParamsWrapper wrapper(paramBlock, nullptr, GetCOREInterface()->GetTime(), FOREVER);
         const auto masterScale = GetMasterScale(UNITS_METERS);
         auto attrDrap = wrapper.lodDrap();
-        attrDrap.setDistance(float(attrDrap.distance() * masterScale));
-        wrapper.setLodDrap(attrDrap);
+        if (attrDrap) {
+            attrDrap->setDistance(float(attrDrap->distance() * masterScale));
+            wrapper.setLodDrap(attrDrap);
+        }
         //------------------------------------------------------
     }
 }
