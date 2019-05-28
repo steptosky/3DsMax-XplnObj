@@ -56,7 +56,7 @@ bool AnimIO::canApply(INode * node) {
 
 void AnimIO::saveRotateToNode(INode * outNode, const MdAnimRot & inAnimRot, eAnimRotateIOID axis) {
     if (!outNode) {
-        LError << "Node is nullptr";
+        XLError << "Node is nullptr";
         return;
     }
     assert(canApply(outNode));
@@ -86,7 +86,7 @@ bool AnimIO::loadRotateFromNode(INode * inNode, MdAnimRot & outAnimRot, eAnimRot
     // TODO implement for the choosing the correct axis for applying from previous version
     outAnimRot.reset();
     if (!inNode) {
-        LError << "Node is nullptr";
+        XLError << "Node is nullptr";
         return false;
     }
 
@@ -138,7 +138,7 @@ bool AnimIO::loadRotateFromNode(INode * inNode, MdAnimRot & outAnimRot, eAnimRot
 
 void AnimIO::saveTransToNode(INode * outNode, const MdAnimTrans & inAnimTrans) {
     if (!outNode) {
-        LError << "Node is nullptr";
+        XLError << "Node is nullptr";
         return;
     }
     assert(canApply(outNode));
@@ -167,7 +167,7 @@ void AnimIO::saveTransToNode(INode * outNode, const MdAnimTrans & inAnimTrans) {
 bool AnimIO::loadTransFromNode(INode * inNode, MdAnimTrans & outAnimTrans) {
     outAnimTrans.reset();
     if (!inNode) {
-        LError << "Node is nullptr";
+        XLError << "Node is nullptr";
         return false;
     }
 
@@ -219,7 +219,7 @@ bool AnimIO::loadTransFromNode(INode * inNode, MdAnimTrans & outAnimTrans) {
 
 void AnimIO::saveVisibilityToNode(INode * outNode, const MdAnimVis & inAnimVis) {
     if (!outNode) {
-        LError << "Node is nullptr";
+        XLError << "Node is nullptr";
         return;
     }
     assert(canApply(outNode));
@@ -244,7 +244,7 @@ void AnimIO::saveVisibilityToNode(INode * outNode, const MdAnimVis & inAnimVis) 
 bool AnimIO::loadVisibilityFromNode(INode * inNode, MdAnimVis & outAnimVis) {
     outAnimVis.reset();
     if (!inNode) {
-        LError << "Node is nullptr";
+        XLError << "Node is nullptr";
         return false;
     }
 

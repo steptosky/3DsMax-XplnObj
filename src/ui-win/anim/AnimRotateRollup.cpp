@@ -83,13 +83,13 @@ namespace win {
         mYView = new AnimRotateAxisView(MdAnimRot::Y);
         mZView = new AnimRotateAxisView(MdAnimRot::Z);
         if (!mXView->create(hWnd)) {
-            LError << "Can't create dialog for X rotation animation";
+            XLError << "Can't create dialog for X rotation animation";
         }
         if (!mYView->create(hWnd)) {
-            LError << "Can't create dialog for Y rotation animation";
+            XLError << "Can't create dialog for Y rotation animation";
         }
         if (!mZView->create(hWnd)) {
-            LError << "Can't create dialog for Z rotation animation";
+            XLError << "Can't create dialog for Z rotation animation";
         }
     }
 

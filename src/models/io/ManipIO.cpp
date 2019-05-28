@@ -791,7 +791,7 @@ void ManipIO::removeFromNode(INode * node) {
 
 bool ManipIO::loadFromNode(INode * inNode, IManipIo * inCallback) {
     if (!inNode || !inCallback) {
-        LError << "One or more of the input parameters is nullptr";
+        XLError << "One or more of the input parameters is nullptr";
         return false;
     }
 

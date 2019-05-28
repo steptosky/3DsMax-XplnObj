@@ -83,7 +83,7 @@ private:
     template<typename T>
     static void saveToNodeInternal(INode * outNode, const T & inLight) {
         if (!outNode) {
-            LError << "INode is nullptr";
+            XLError << "INode is nullptr";
             return;
         }
 

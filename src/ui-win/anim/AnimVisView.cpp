@@ -339,7 +339,7 @@ namespace win {
         auto list1 = sts::StrUtils::split<sts::StrUtils::Vector>(sts::toString(cListKeys.currSelectedText()), _T("="));
         if (list1.size() != 2) {
 #ifndef NDEBUG
-            LError << "Internal error 1";
+            XLError << "Internal error 1";
 #endif
             return;
         }
@@ -347,7 +347,7 @@ namespace win {
         auto list2 = sts::StrUtils::split<sts::StrUtils::Vector>(list1[1], _T(" "));
         if (list2.size() != 3) {
 #ifndef NDEBUG
-            LError << "Internal error 2";
+            XLError << "Internal error 2";
 #endif
             return;
         }

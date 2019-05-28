@@ -649,12 +649,12 @@ void MainObjPbAttr::postLoad(IParamBlock2 * paramBlock) {
 
     auto postLoadInfo = dynamic_cast<IParamBlock2PostLoadInfo*>(baseInterface);
     if (!postLoadInfo) {
-        LError << "Invalid cast";
+        XLError << "Invalid cast";
         return;
     }
 
     if (postLoadInfo->GetVersion() == 1) {
-        LInfo << "Updating Main Obj's attributes param block 1" << "->" << PbVersionAttr;
+        XLInfo << "Updating Main Obj's attributes param block 1" << "->" << PbVersionAttr;
         //------------------------------------------------------
         // updating from system units to abstract float units.
 

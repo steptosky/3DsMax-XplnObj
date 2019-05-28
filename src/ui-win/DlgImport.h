@@ -74,7 +74,7 @@ namespace win {
 
         //-------------------------------------------------------------------------
 
-        static void logCallback(sts::BaseLogger::eType type, const char * msg);
+        static void logCallback(std::size_t level, const char * msg);
 
         //-------------------------------------------------------------------------
 

@@ -189,7 +189,7 @@ bool MdObjAttrIOOld::loadFromNode(INode * node, AppDataChunk * data, xobj::AttrS
     std::string msg = msgStream.str();
     if (!msg.empty()) {
         ui::win::DlgMessageBox::warning(nullptr, "[Backward Compatibility]", msg);
-        LWarning << msg;
+        XLWarning << msg;
     }
 
     //-------------------------------------------------------------------------

@@ -239,7 +239,7 @@ bool ObjAttrIO::cloneData(INode * NodeFrom, INode * NodeTo) {
 bool ObjAttrIO::loadFromNode(INode * inNode, xobj::AttrSet & outAttrSet) {
     outAttrSet.reset();
     if (!inNode) {
-        LError << "INode is nullptr";
+        XLError << "INode is nullptr";
         return false;
     }
 
@@ -287,7 +287,7 @@ void ObjAttrIO::removeFromNode(INode * node) {
 
 void ObjAttrIO::saveToNode(INode * outNode, const xobj::AttrSet & inAttrSet) {
     if (!outNode) {
-        LError << "INode is nullptr";
+        XLError << "INode is nullptr";
         return;
     }
 

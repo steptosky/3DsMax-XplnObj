@@ -164,21 +164,21 @@ namespace win {
                 auto actualString = xobj::toMStr(std::to_string(counter));
                 item.pszText = const_cast<LPTSTR>(actualString.data());
                 if (ListView_InsertItem(listHWnd, &item) == -1) {
-                    LError << WinCode(GetLastError());
+                    XLError << WinCode(GetLastError());
                 }
 
                 item.iSubItem = 1;
                 actualString = xobj::toMStr(val.mKey);
                 item.pszText = const_cast<LPTSTR>(actualString.data());
                 if (ListView_SetItem(listHWnd, &item) == -1) {
-                    LError << WinCode(GetLastError());
+                    XLError << WinCode(GetLastError());
                 }
 
                 item.iSubItem = 2;
                 actualString = xobj::toMStr(val.mDescription);
                 item.pszText = const_cast<LPTSTR>(actualString.data());
                 if (!ListView_SetItem(listHWnd, &item)) {
-                    LError << WinCode(GetLastError());
+                    XLError << WinCode(GetLastError());
                 }
                 ++item.iItem;
             }
@@ -207,7 +207,7 @@ namespace win {
                 auto actualString = xobj::toMStr(std::to_string(counter));
                 item.pszText = const_cast<LPTSTR>(actualString.data());
                 if (ListView_InsertItem(listHWnd, &item) == -1) {
-                    LError << WinCode(GetLastError());
+                    XLError << WinCode(GetLastError());
                 }
 
                 item.iSubItem = 1;
@@ -217,21 +217,21 @@ namespace win {
                 }
                 item.pszText = const_cast<LPTSTR>(actualString.data());
                 if (ListView_SetItem(listHWnd, &item) == -1) {
-                    LError << WinCode(GetLastError());
+                    XLError << WinCode(GetLastError());
                 }
 
                 item.iSubItem = 2;
                 actualString = xobj::toMStr(val.mKey);
                 item.pszText = const_cast<LPTSTR>(actualString.data());
                 if (ListView_SetItem(listHWnd, &item) == -1) {
-                    LError << WinCode(GetLastError());
+                    XLError << WinCode(GetLastError());
                 }
 
                 item.iSubItem = 3;
                 actualString = xobj::toMStr(val.mDescription);
                 item.pszText = const_cast<LPTSTR>(actualString.data());
                 if (!ListView_SetItem(listHWnd, &item)) {
-                    LError << WinCode(GetLastError());
+                    XLError << WinCode(GetLastError());
                 }
                 ++item.iItem;
             }
@@ -256,7 +256,7 @@ namespace win {
                 setupSimListView(hwnd(), file->mData, filter);
             }
             else {
-                LError << "incorrect columns count: " << mColumnsCount;
+                XLError << "incorrect columns count: " << mColumnsCount;
                 return;
             }
             setSelected(selectedItem);
@@ -277,7 +277,7 @@ namespace win {
                 setupSimListView(hwnd(), file->mData, filter);
             }
             else {
-                LError << "incorrect columns count: " << mColumnsCount;
+                XLError << "incorrect columns count: " << mColumnsCount;
                 return;
             }
             setSelected(selectedItem);
@@ -328,7 +328,7 @@ namespace win {
                 return std::size_t(indexFromStr);
             }
             catch (const std::exception & e) {
-                LError << "Can't retrieve index from the item <" << index << ">. Reason: " << e.what();
+                XLError << "Can't retrieve index from the item <" << index << ">. Reason: " << e.what();
                 return std::nullopt;
             }
         }

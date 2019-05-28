@@ -243,7 +243,7 @@ xobj::Color ConverterLight::lightColor(INode * node, const TimeValue time) {
             const auto rgb = genLight->GetRGBColor(time);
             return xobj::Color(rgb.x, rgb.y, rgb.z);
         }
-        LError << LogNode(node) << "couldn't get GenLight";
+        XLError << LogNode(node) << "couldn't get GenLight";
     }
     return xobj::Color(1.0f, 1.0f, 1.0f);
 }
@@ -308,7 +308,7 @@ INode * ConverterLight::toMaxLightNamed(const xobj::ObjLightNamed * xLight, cons
         }
         MdLight mdLight;
         if (!mdLight.linkNode(node)) {
-            LError << "Internal logic error.";
+            XLError << "Internal logic error.";
             params.mCoreInterface->DeleteNode(node);
             return nullptr;
         }
@@ -334,7 +334,7 @@ INode * ConverterLight::toMaxLightParam(const xobj::ObjLightParam * xLight, cons
 
         MdLight mdLight;
         if (!mdLight.linkNode(node)) {
-            LError << "Internal logic error.";
+            XLError << "Internal logic error.";
             params.mCoreInterface->DeleteNode(node);
             return nullptr;
         }
@@ -360,7 +360,7 @@ INode * ConverterLight::toMaxLightCustom(const xobj::ObjLightCustom * xLight, co
 
         MdLight mdLight;
         if (!mdLight.linkNode(node)) {
-            LError << "Internal logic error.";
+            XLError << "Internal logic error.";
             params.mCoreInterface->DeleteNode(node);
             return nullptr;
         }
@@ -387,7 +387,7 @@ INode * ConverterLight::toMaxLightSpillCust(const xobj::ObjLightSpillCust * xLig
 
         MdLight mdLight;
         if (!mdLight.linkNode(node)) {
-            LError << "Internal logic error.";
+            XLError << "Internal logic error.";
             params.mCoreInterface->DeleteNode(node);
             return nullptr;
         }
@@ -426,7 +426,7 @@ INode * ConverterLight::toMaxLightPoint(const xobj::ObjLightPoint * xLight, cons
 
         MdLight mdLight;
         if (!mdLight.linkNode(node)) {
-            LError << "Internal logic error.";
+            XLError << "Internal logic error.";
             params.mCoreInterface->DeleteNode(node);
             return nullptr;
         }

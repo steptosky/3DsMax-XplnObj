@@ -85,11 +85,11 @@ bool MainObjParamsWrapper::isExportEnable() {
     BOOL val = TRUE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjAttr_ExportEnable, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_ExportEnable);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_ExportEnable);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -98,11 +98,11 @@ bool MainObjParamsWrapper::isMeshExport() {
     BOOL val = TRUE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_Meshes, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Meshes);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Meshes);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -111,11 +111,11 @@ bool MainObjParamsWrapper::isLinesExport() {
     BOOL val = TRUE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_Lines, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Lines);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Lines);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -124,11 +124,11 @@ bool MainObjParamsWrapper::isLightsExport() {
     BOOL val = TRUE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_Lights, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Lights);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Lights);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -137,11 +137,11 @@ bool MainObjParamsWrapper::isAnimationExport() {
     BOOL val = TRUE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_Animation, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Animation);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Animation);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -150,11 +150,11 @@ bool MainObjParamsWrapper::isOptimization() {
     BOOL val = TRUE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_Optimization, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Optimisation);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Optimisation);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -163,11 +163,11 @@ bool MainObjParamsWrapper::isInstancing() {
     BOOL val = FALSE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_Instancing, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Instancing);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Instancing);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -176,11 +176,11 @@ bool MainObjParamsWrapper::isDebug() {
     BOOL val = FALSE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_Debug, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Debug);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Debug);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -190,88 +190,88 @@ bool MainObjParamsWrapper::isDebug() {
 void MainObjParamsWrapper::setExportEnable(const bool state) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjAttr_ExportEnable, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_ExportEnable);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_ExportEnable);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setMeshExport(const bool state) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjGeom_Meshes, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Meshes);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Meshes);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setLinesExport(const bool state) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjGeom_Lines, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Lines);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Lines);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setLightsExport(const bool state) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjGeom_Lights, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Lights);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Lights);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setAnimationExport(const bool state) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjGeom_Animation, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Animation);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Animation);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setOptimization(const bool state) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjGeom_Optimization, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Optimisation);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Optimisation);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setInstancing(const bool state) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjGeom_Instancing, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Instancing);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Instancing);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setDebug(const bool state) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjGeom_Debug, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Debug);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Debug);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -283,11 +283,11 @@ bool MainObjParamsWrapper::isNameMesh() {
     BOOL val = TRUE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_NameMeshes, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameMeshes);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameMeshes);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -296,11 +296,11 @@ bool MainObjParamsWrapper::isNameLines() {
     BOOL val = TRUE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_NameLines, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameLines);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameLines);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -309,11 +309,11 @@ bool MainObjParamsWrapper::isNameLights() {
     BOOL val = TRUE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_NameLights, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameLights);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameLights);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -322,11 +322,11 @@ bool MainObjParamsWrapper::isNameDummies() {
     BOOL val = TRUE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_NameDummies, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameDummies);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameDummies);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -335,11 +335,11 @@ bool MainObjParamsWrapper::isTreeHierarchy() {
     BOOL val = TRUE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_TreeHierarchy, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_TreeHierarchy);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_TreeHierarchy);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -349,55 +349,55 @@ bool MainObjParamsWrapper::isTreeHierarchy() {
 void MainObjParamsWrapper::setNameMesh(const bool state) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjGeom_NameMeshes, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameMeshes);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameMeshes);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setNameLines(const bool state) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjGeom_NameLines, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameLines);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameLines);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setNameLights(const bool state) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjGeom_NameLights, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameLights);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameLights);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setNameDummies(const bool state) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjGeom_NameDummies, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameDummies);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameDummies);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setTreeHierarchy(const bool state) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjGeom_TreeHierarchy, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_TreeHierarchy);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_TreeHierarchy);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -409,11 +409,11 @@ bool MainObjParamsWrapper::isManualScale() {
     BOOL val = TRUE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_ScaleEnabled, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObj_ScaleEnabled);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObj_ScaleEnabled);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -422,11 +422,11 @@ float MainObjParamsWrapper::scale() {
     float val = TRUE;
     if (mPbExp) {
         if (!mPbExp->GetValue(MainObjGeom_ScaleValue, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObj_ScaleValue);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObj_ScaleValue);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val;
 }
@@ -436,14 +436,14 @@ float MainObjParamsWrapper::scale() {
 void MainObjParamsWrapper::setScale(const bool manual, const float value) {
     if (mPbExp) {
         if (!mPbExp->SetValue(MainObjGeom_ScaleEnabled, mT, int(manual))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObj_ScaleEnabled);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObj_ScaleEnabled);
         }
         if (!mPbExp->SetValue(MainObjGeom_ScaleValue, mT, value)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObj_ScaleValue);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObj_ScaleValue);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -459,12 +459,12 @@ std::string MainObjParamsWrapper::pathPrefix() {
 #endif
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_PathPrefix, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_PathPrefix);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_PathPrefix);
             return "";
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val ? std::string(sts::toMbString(val)) : "";
 }
@@ -477,12 +477,12 @@ std::optional<std::string> MainObjParamsWrapper::texture() {
 #endif
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_Texture, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_Texture);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_Texture);
             return std::nullopt;
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     const auto valStr = val ? sts::toMbString(val) : std::string();
     return !valStr.empty() ? std::optional(valStr) : std::nullopt;
@@ -496,12 +496,12 @@ std::optional<std::string> MainObjParamsWrapper::textureLit() {
 #endif
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_TextureLit, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TextureLit);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TextureLit);
             return std::nullopt;
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     const auto valStr = val ? sts::toMbString(val) : std::string();
     return !valStr.empty() ? std::optional(valStr) : std::nullopt;
@@ -515,12 +515,12 @@ std::optional<std::string> MainObjParamsWrapper::textureNormal() {
 #endif
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_TextureNormal, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TextureNormal);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TextureNormal);
             return std::nullopt;
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     const auto valStr = val ? sts::toMbString(val) : std::string();
     return !valStr.empty() ? std::optional(valStr) : std::nullopt;
@@ -538,11 +538,11 @@ void MainObjParamsWrapper::setPathPrefix(const std::string & str) {
 #endif
 
         if (!mPbAttr->SetValue(MainObjAttr_PathPrefix, mT, strVal)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_PathPrefix);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_PathPrefix);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -556,11 +556,11 @@ void MainObjParamsWrapper::setTexture(const std::optional<std::string> & str) {
 #endif
 
         if (!mPbAttr->SetValue(MainObjAttr_Texture, mT, strVal)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_Texture);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_Texture);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -574,11 +574,11 @@ void MainObjParamsWrapper::setTextureLit(const std::optional<std::string> & str)
 #endif
 
         if (!mPbAttr->SetValue(MainObjAttr_TextureLit, mT, strVal)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TextureLit);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TextureLit);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -592,11 +592,11 @@ void MainObjParamsWrapper::setTextureNormal(const std::optional<std::string> & s
 #endif
 
         if (!mPbAttr->SetValue(MainObjAttr_TextureNormal, mT, strVal)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TextureNormal);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TextureNormal);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -608,11 +608,11 @@ bool MainObjParamsWrapper::isBlendGlass() {
     BOOL val = TRUE;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_BlendGlass, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_BlendGlass);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_BlendGlass);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -621,11 +621,11 @@ bool MainObjParamsWrapper::isNormalMetalness() {
     BOOL val = TRUE;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_NormalMetalness, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_NormalMetalness);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_NormalMetalness);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -634,11 +634,11 @@ bool MainObjParamsWrapper::isNoShadow() {
     BOOL val = TRUE;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_NoShadow, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_NoShadow);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_NoShadow);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -647,11 +647,11 @@ bool MainObjParamsWrapper::isTilted() {
     BOOL val = TRUE;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_Tilted, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_Tilted);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_Tilted);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -660,11 +660,11 @@ bool MainObjParamsWrapper::isCockpitLit() {
     BOOL val = TRUE;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_CockpitLit, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_CockpitLit);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_CockpitLit);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val == TRUE;
 }
@@ -674,55 +674,55 @@ bool MainObjParamsWrapper::isCockpitLit() {
 void MainObjParamsWrapper::setBlendGlass(const bool state) {
     if (mPbAttr) {
         if (!mPbAttr->SetValue(MainObjAttr_BlendGlass, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_BlendGlass);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_BlendGlass);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setNormalMetalness(const bool state) {
     if (mPbAttr) {
         if (!mPbAttr->SetValue(MainObjAttr_NormalMetalness, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_NormalMetalness);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_NormalMetalness);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setNoShadow(const bool state) {
     if (mPbAttr) {
         if (!mPbAttr->SetValue(MainObjAttr_NoShadow, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_NoShadow);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_NoShadow);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setTilted(const bool state) {
     if (mPbAttr) {
         if (!mPbAttr->SetValue(MainObjAttr_Tilted, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_Tilted);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_Tilted);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void MainObjParamsWrapper::setCockpitLit(const bool state) {
     if (mPbAttr) {
         if (!mPbAttr->SetValue(MainObjAttr_CockpitLit, mT, int(state))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_CockpitLit);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_CockpitLit);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -734,11 +734,11 @@ std::optional<xobj::AttrWetDry> MainObjParamsWrapper::wetDry() {
     int val = 0;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_DryWet, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_DryWet);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_DryWet);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
         return std::nullopt;
     }
     return val == 0 ? std::nullopt : std::optional(xobj::AttrWetDry(static_cast<xobj::AttrWetDry::eState>(val)));
@@ -749,14 +749,14 @@ std::optional<xobj::AttrBlend> MainObjParamsWrapper::blend() {
     int type = 0;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_BlendingType, mT, type, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_BlendingType);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_BlendingType);
         }
         if (!mPbAttr->GetValue(MainObjAttr_BlendingRatio, mT, ratio, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_BlendingRatio);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_BlendingRatio);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
         return std::nullopt;
     }
 
@@ -776,16 +776,16 @@ std::optional<xobj::AttrLayerGroup> MainObjParamsWrapper::layerGroup() {
     int offset = 0;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_LayerGroupLayer, mT, layer, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupLayer);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupLayer);
             return std::nullopt;
         }
         if (!mPbAttr->GetValue(MainObjAttr_LayerGroupOffset, mT, offset, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupOffset);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupOffset);
             return std::nullopt;
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
         return std::nullopt;
     }
 
@@ -803,16 +803,16 @@ std::optional<xobj::AttrDrapedLayerGroup> MainObjParamsWrapper::drapedLayerGroup
     int offset = 0;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_LayerGroupDrapedLayer, mT, layer, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupDrapedLayer);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupDrapedLayer);
             return std::nullopt;
         }
         if (!mPbAttr->GetValue(MainObjAttr_LayerGroupDrapedOffset, mT, offset, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupDrapedOffset);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LayerGroupDrapedOffset);
             return std::nullopt;
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
         return std::nullopt;
     }
     const auto l = layer ? xobj::ELayer::fromString(sts::toMbString(layer).c_str()) : xobj::ELayer(xobj::ELayer::none);
@@ -825,14 +825,14 @@ std::optional<xobj::AttrDrapedLod> MainObjParamsWrapper::lodDrap() {
     BOOL enabled = TRUE;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_LodDrapEnable, mT, enabled, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LodDrapEnable);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LodDrapEnable);
         }
         if (!mPbAttr->GetValue(MainObjAttr_LodDrapDistance, mT, dist, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LodDrapDistance);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LodDrapDistance);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
         return std::nullopt;
     }
     const xobj::AttrDrapedLod out(dist);
@@ -844,14 +844,14 @@ std::optional<xobj::AttrSlungLoadWeight> MainObjParamsWrapper::slungWeight() {
     BOOL enabled = TRUE;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_SlungLoadWeightEnable, mT, enabled, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlungLoadWeightEnable);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlungLoadWeightEnable);
         }
         if (!mPbAttr->GetValue(MainObjAttr_SlungLoadWeight, mT, weight, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlungLoadWeight);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlungLoadWeight);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
         return std::nullopt;
     }
     const xobj::AttrSlungLoadWeight out(weight);
@@ -863,14 +863,14 @@ std::optional<xobj::AttrSpecular> MainObjParamsWrapper::specular() {
     BOOL enabled = TRUE;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_SpecularEnable, mT, enabled, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SpecularEnable);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SpecularEnable);
         }
         if (!mPbAttr->GetValue(MainObjAttr_SpecularRatio, mT, ratio, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SpecularRatio);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SpecularRatio);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
         return std::nullopt;
     }
     const xobj::AttrSpecular out(ratio);
@@ -883,17 +883,17 @@ std::optional<xobj::AttrTint> MainObjParamsWrapper::tint() {
     BOOL enabled = TRUE;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_TintEnable, mT, enabled, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TintEnable);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TintEnable);
         }
         if (!mPbAttr->GetValue(MainObjAttr_TintAlbedo, mT, albedo, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TintAlbedo);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TintAlbedo);
         }
         if (!mPbAttr->GetValue(MainObjAttr_TintEmissive, mT, emissive, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TintEmissive);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_TintEmissive);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
         return std::nullopt;
     }
     const xobj::AttrTint out(albedo, emissive);
@@ -908,23 +908,23 @@ std::optional<xobj::AttrSlopeLimit> MainObjParamsWrapper::slopeLimit() {
     BOOL enabled = TRUE;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(MainObjAttr_SlopeLimitEnable, mT, enabled, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitEnable);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitEnable);
         }
         if (!mPbAttr->GetValue(MainObjAttr_SlopeLimitMinPitch, mT, minPitch, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitMinPitch);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitMinPitch);
         }
         if (!mPbAttr->GetValue(MainObjAttr_SlopeLimitMaxPitch, mT, maxPitch, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitMaxPitch);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitMaxPitch);
         }
         if (!mPbAttr->GetValue(MainObjAttr_SlopeLimitMinRoll, mT, minRoll, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitMinRoll);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitMinRoll);
         }
         if (!mPbAttr->GetValue(MainObjAttr_SlopeLimitMaxRoll, mT, maxRoll, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitMaxRoll);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_SlopeLimitMaxRoll);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
         return std::nullopt;
     }
     const xobj::AttrSlopeLimit out(minPitch, maxPitch, minRoll, maxRoll);
@@ -939,7 +939,7 @@ std::optional<xobj::AttrCockpitRegion> MainObjParamsWrapper::cockpitRegion(xobj:
     ParamID pTop = 0;
 
     if (idx > 3) {
-        LError << "Cockpit region index must be between 0-3 inclusive";
+        XLError << "Cockpit region index must be between 0-3 inclusive";
     }
 
     switch (idx) {
@@ -985,23 +985,23 @@ std::optional<xobj::AttrCockpitRegion> MainObjParamsWrapper::cockpitRegion(xobj:
     BOOL enabled = TRUE;
     if (mPbAttr) {
         if (!mPbAttr->GetValue(pEnabled, mT, enabled, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pEnabled);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pEnabled);
         }
         if (!mPbAttr->GetValue(pLeft, mT, left, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pLeft);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pLeft);
         }
         if (!mPbAttr->GetValue(pBottom, mT, bottom, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pBottom);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pBottom);
         }
         if (!mPbAttr->GetValue(pRight, mT, right, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pRight);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pRight);
         }
         if (!mPbAttr->GetValue(pTop, mT, top, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pTop);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(pTop);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
         return std::nullopt;
     }
     const xobj::AttrCockpitRegion out(left, bottom, right, top);
@@ -1014,11 +1014,11 @@ void MainObjParamsWrapper::setWetDry(const std::optional<xobj::AttrWetDry> & att
     if (mPbAttr) {
         const auto actual = attr.value_or(xobj::AttrWetDry());
         if (!mPbAttr->SetValue(MainObjAttr_DryWet, mT, attr ? int(actual.mState) : FALSE)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_DryWet);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_DryWet);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -1026,14 +1026,14 @@ void MainObjParamsWrapper::setBlend(const std::optional<xobj::AttrBlend> & attr)
     if (mPbAttr) {
         const auto actual = attr.value_or(xobj::AttrBlend());
         if (!mPbAttr->SetValue(MainObjAttr_BlendingType, mT, attr ? int(actual.mType) : FALSE)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_BlendingType);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_BlendingType);
         }
         if (!mPbAttr->SetValue(MainObjAttr_BlendingRatio, mT, actual.mRatio)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_BlendingRatio);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_BlendingRatio);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -1049,14 +1049,14 @@ void MainObjParamsWrapper::setLayerGroup(const std::optional<xobj::AttrLayerGrou
 #endif
 
         if (!mPbAttr->SetValue(MainObjAttr_LayerGroupLayer, mT, strVal)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupLayer);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupLayer);
         }
         if (!mPbAttr->SetValue(MainObjAttr_LayerGroupOffset, mT, actual.mOffset)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupOffset);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupOffset);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -1072,14 +1072,14 @@ void MainObjParamsWrapper::setDrapedLayerGroup(const std::optional<xobj::AttrDra
 #endif
 
         if (!mPbAttr->SetValue(MainObjAttr_LayerGroupDrapedLayer, mT, strVal)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupDrapedLayer);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupDrapedLayer);
         }
         if (!mPbAttr->SetValue(MainObjAttr_LayerGroupDrapedOffset, mT, actual.mOffset)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupDrapedOffset);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LayerGroupDrapedOffset);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -1087,14 +1087,14 @@ void MainObjParamsWrapper::setLodDrap(const std::optional<xobj::AttrDrapedLod> &
     if (mPbAttr) {
         const auto actual = attr.value_or(xobj::AttrDrapedLod());
         if (!mPbAttr->SetValue(MainObjAttr_LodDrapEnable, mT, int(static_cast<bool>(attr)))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LodDrapEnable);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LodDrapEnable);
         }
         if (!mPbAttr->SetValue(MainObjAttr_LodDrapDistance, mT, actual.mDistance)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LodDrapDistance);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_LodDrapDistance);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -1102,14 +1102,14 @@ void MainObjParamsWrapper::setSlungWeight(const std::optional<xobj::AttrSlungLoa
     if (mPbAttr) {
         const auto actual = attr.value_or(xobj::AttrSlungLoadWeight());
         if (!mPbAttr->SetValue(MainObjAttr_SlungLoadWeightEnable, mT, int(static_cast<bool>(attr)))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlungLoadWeightEnable);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlungLoadWeightEnable);
         }
         if (!mPbAttr->SetValue(MainObjAttr_SlungLoadWeight, mT, actual.mWeight)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlungLoadWeight);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlungLoadWeight);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -1117,14 +1117,14 @@ void MainObjParamsWrapper::setSpecular(const std::optional<xobj::AttrSpecular> &
     if (mPbAttr) {
         const auto actual = attr.value_or(xobj::AttrSpecular());
         if (!mPbAttr->SetValue(MainObjAttr_SpecularEnable, mT, int(static_cast<bool>(attr)))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SpecularEnable);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SpecularEnable);
         }
         if (!mPbAttr->SetValue(MainObjAttr_SpecularRatio, mT, actual.mRatio)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SpecularRatio);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SpecularRatio);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -1132,17 +1132,17 @@ void MainObjParamsWrapper::setTint(const std::optional<xobj::AttrTint> & attr) {
     if (mPbAttr) {
         const auto actual = attr.value_or(xobj::AttrTint());
         if (!mPbAttr->SetValue(MainObjAttr_TintEnable, mT, int(static_cast<bool>(attr)))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintEnable);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintEnable);
         }
         if (!mPbAttr->SetValue(MainObjAttr_TintAlbedo, mT, actual.mAlbedo)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintAlbedo);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintAlbedo);
         }
         if (!mPbAttr->SetValue(MainObjAttr_TintEmissive, mT, actual.mEmissive)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintEmissive);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_TintEmissive);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -1150,23 +1150,23 @@ void MainObjParamsWrapper::setSlopeLimit(const std::optional<xobj::AttrSlopeLimi
     if (mPbAttr) {
         const auto actual = attr.value_or(xobj::AttrSlopeLimit());
         if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitEnable, mT, int(static_cast<bool>(attr)))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitEnable);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitEnable);
         }
         if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMinPitch, mT, actual.mMinPitch)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMinPitch);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMinPitch);
         }
         if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMaxPitch, mT, actual.mMaxPitch)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMaxPitch);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMaxPitch);
         }
         if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMinRoll, mT, actual.mMinRoll)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMinRoll);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMinRoll);
         }
         if (!mPbAttr->SetValue(MainObjAttr_SlopeLimitMaxRoll, mT, actual.mMaxRoll)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMaxRoll);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_SlopeLimitMaxRoll);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -1179,7 +1179,7 @@ void MainObjParamsWrapper::setCockpitRegion(const std::optional<xobj::AttrCockpi
     const auto actual = attr.value_or(xobj::AttrCockpitRegion());
 
     if (idx > 3) {
-        LError << "Cockpit region index must be between 0-3 inclusive";
+        XLError << "Cockpit region index must be between 0-3 inclusive";
     }
 
     switch (idx) {
@@ -1219,23 +1219,23 @@ void MainObjParamsWrapper::setCockpitRegion(const std::optional<xobj::AttrCockpi
     }
     if (mPbAttr) {
         if (!mPbAttr->SetValue(pEnabled, mT, int(static_cast<bool>(attr)))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pEnabled);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(pEnabled);
         }
         if (!mPbAttr->SetValue(pLeft, mT, int(actual.mLeft))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pLeft);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(pLeft);
         }
         if (!mPbAttr->SetValue(pBottom, mT, int(actual.mBottom))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pBottom);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(pBottom);
         }
         if (!mPbAttr->SetValue(pRight, mT, int(actual.mRight))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pRight);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(pRight);
         }
         if (!mPbAttr->SetValue(pTop, mT, int(actual.mTop))) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(pTop);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(pTop);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 

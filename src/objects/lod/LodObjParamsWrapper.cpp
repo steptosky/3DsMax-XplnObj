@@ -79,22 +79,22 @@ bool LodObjParamsWrapper::isLodObj(INode * inNode) {
 void LodObjParamsWrapper::setNearValue(const float val) {
     if (mPb2) {
         if (!mPb2->SetValue(PLodObjNear, mT, val)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void LodObjParamsWrapper::setFarValue(const float val) {
     if (mPb2) {
         if (!mPb2->SetValue(PLodObjFar, mT, val)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjFar);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjFar);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -106,11 +106,11 @@ float LodObjParamsWrapper::nearValue() {
     float val = 0.0f;
     if (mPb2) {
         if (!mPb2->GetValue(PLodObjNear, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(PLodObjNear);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val;
 }
@@ -119,11 +119,11 @@ float LodObjParamsWrapper::farValue() {
     float val = 0.0f;
     if (mPb2) {
         if (!mPb2->GetValue(PLodObjFar, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(PLodObjFar);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(PLodObjFar);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val;
 }

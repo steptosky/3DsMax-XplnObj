@@ -135,12 +135,12 @@ void LodObjParamBlocks::postLoadParams(IParamBlock2 * paramBlock) {
 
     auto postLoadInfo = dynamic_cast<IParamBlock2PostLoadInfo*>(baseInterface);
     if (!postLoadInfo) {
-        LError << "Invalid cast";
+        XLError << "Invalid cast";
         return;
     }
 
     if (postLoadInfo->GetVersion() == 1) {
-        LInfo << "Updating LOD's parameters param block 1" << "->" << PbVersionParams;
+        XLInfo << "Updating LOD's parameters param block 1" << "->" << PbVersionParams;
         //------------------------------------------------------
         // updating from system units to abstract float units.
 

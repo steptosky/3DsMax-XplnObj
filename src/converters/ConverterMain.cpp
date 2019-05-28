@@ -111,13 +111,13 @@ INode * ConverterMain::toMax(const xobj::ObjMain & inXObj) {
     auto coreInterface = GetCOREInterface();
     const auto mainObj = reinterpret_cast<Object*>(coreInterface->CreateInstance(HELPER_CLASS_ID, ClassesDescriptions::mainObj()->ClassID()));
     if (mainObj == nullptr) {
-        LCritical << "Main object <" << inXObj.objectName() << "> couldn't be created.";
+        XLCritical << "Main object <" << inXObj.objectName() << "> couldn't be created.";
         return nullptr;
     }
 
     auto node = coreInterface->CreateObjectNode(mainObj);
     if (node == nullptr) {
-        LCritical << "Max node for the object <" << inXObj.objectName() << "> couldn't be created.";
+        XLCritical << "Max node for the object <" << inXObj.objectName() << "> couldn't be created.";
         return nullptr;
     }
 
@@ -227,13 +227,13 @@ INode * ConverterMain::createBone(const xobj::Transform * xTransform) {
     auto coreInterface = GetCOREInterface();
     const auto boneObj = reinterpret_cast<Object*>(coreInterface->CreateInstance(BONE_CLASS_ID, BONE_OBJ_CLASSID));
     if (boneObj == nullptr) {
-        LCritical << "Bone object <" << xTransform->mName << "> couldn't be created.";
+        XLCritical << "Bone object <" << xTransform->mName << "> couldn't be created.";
         return nullptr;
     }
 
     auto node = coreInterface->CreateObjectNode(boneObj);
     if (node == nullptr) {
-        LCritical << "Max node for the object <" << xTransform->mName << "> couldn't be created.";
+        XLCritical << "Max node for the object <" << xTransform->mName << "> couldn't be created.";
         return nullptr;
     }
     node->SetBoneNodeOnOff(TRUE, GetCOREInterface()->GetTime());

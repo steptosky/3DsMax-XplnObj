@@ -55,7 +55,7 @@ bool CommandsFile::loadFile() {
         return xobj::CommandsFile::loadFile(xobj::fromMPath(mFilePath.GetString()), callback);
     }
     catch (std::exception & e) {
-        LError << "Can't load file <" << xobj::fromMStr(mFilePath.GetString()) << "> reason: " << e.what();
+        XLError << "Can't load file <" << xobj::fromMStr(mFilePath.GetString()) << "> reason: " << e.what();
         return false;
     }
 }
@@ -71,7 +71,7 @@ bool CommandsFile::loadData(const MaxSDK::Util::Path & filePath) {
     mData.clear();
     mGeneratorVal = 0;
     if (!pathConfMgr->DoesFileExist(filePath)) {
-        LError << "X-Plane commands file isn't found by the path: " << xobj::fromMStr(filePath.GetString());
+        XLError << "X-Plane commands file isn't found by the path: " << xobj::fromMStr(filePath.GetString());
         return false;
     }
     return loadFile();
@@ -123,7 +123,7 @@ bool CommandsFile::saveData(const MaxSDK::Util::Path & filePath) {
             return true;
         }
         catch (std::exception & e) {
-            LError << "Can't save file <" << xobj::fromMStr(filePath.GetString()) << "> reason: " << e.what();
+            XLError << "Can't save file <" << xobj::fromMStr(filePath.GetString()) << "> reason: " << e.what();
             return false;
         }
     }

@@ -99,13 +99,13 @@ void LodObject::loadMdDisplayObj(sts_bwc::DataStream & stream) const {
     id.load(stream.getStdStream());
 
     if (id != bcw::SerializationId(0x7f084ca4, 0x1f19134e)) {
-        LError << "Unexpected data input: " << id.toString();
+        XLError << "Unexpected data input: " << id.toString();
         return;
     }
     uint8_t version;
     stream >> version;
     if (version != 1) {
-        LError << "Unexpected data version: " << version;
+        XLError << "Unexpected data version: " << version;
         return;
     }
 
@@ -120,13 +120,13 @@ void LodObject::loadRawLod(sts_bwc::DataStream & stream) const {
     bcw::SerializationId id;
     id.load(stream.getStdStream());
     if (id != bcw::SerializationId(0x2b015c93, 0x11327f01)) {
-        LError << "Unexpected data input: " << id.toString();
+        XLError << "Unexpected data input: " << id.toString();
         return;
     }
     unsigned char version;
     stream >> version;
     if (version != 1) {
-        LError << "Unexpected data version: " << version;
+        XLError << "Unexpected data version: " << version;
         return;
     }
 
@@ -148,7 +148,7 @@ void LodObject::loadRawLod(sts_bwc::DataStream & stream) const {
 }
 
 void LodObject::load186(std::vector<char> & inByteArray) {
-    LMessage << "Object: <" << sts::toMbString(GetObjectName()) << "> has got data from previous version.";
+    XLMessage << "Object: <" << sts::toMbString(GetObjectName()) << "> has got data from previous version.";
     std::stringstream buf(std::string(reinterpret_cast<char*>(inByteArray.data()), inByteArray.size()));
     sts_bwc::DataStream stream(buf);
 
@@ -449,7 +449,7 @@ void LodObject::makeIcon() {
     float size = 1.0f;
     Interval interval = FOREVER;
     if (!mDisplayPb->GetValue(PLodObjIconScale, mIp ? mIp->GetTime() : 0, size, interval)) {
-        LError << "Can't retrieve scale value from param block";
+        XLError << "Can't retrieve scale value from param block";
     }
 
     if (stsff::math::isEqual(mLastIconScale, size, 0.001f) && mIconMesh.getNumVerts() != 0) {
@@ -462,7 +462,7 @@ void LodObject::makeIcon() {
         size = size * masterScale;
         if (size < 0.00001f) {
             size = 0.00001f;
-            LError << "The icon scale is too small";
+            XLError << "The icon scale is too small";
         }
     }
 

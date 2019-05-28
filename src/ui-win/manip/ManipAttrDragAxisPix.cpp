@@ -172,7 +172,7 @@ namespace win {
             mHwnd.show(true);
         }
         else {
-            LError << WinCode(GetLastError());
+            XLError << WinCode(GetLastError());
         }
     }
 
@@ -180,7 +180,7 @@ namespace win {
         if (mHwnd) {
             const BOOL res = DestroyWindow(mHwnd.hwnd());
             if (!res) {
-                LError << WinCode(GetLastError());
+                XLError << WinCode(GetLastError());
             }
             mHwnd.release();
         }
@@ -219,7 +219,7 @@ namespace win {
         const auto data = std::get_if<xobj::AttrManipDragAxisPix>(&*manip);
         if (!data) {
             const xobj::EManipulator type = std::visit([](auto && m) { return m.mType; }, *manip);
-            LError << "Incorrect manipulator type: " << type.toString();
+            XLError << "Incorrect manipulator type: " << type.toString();
             return;
         }
         mData = *data;

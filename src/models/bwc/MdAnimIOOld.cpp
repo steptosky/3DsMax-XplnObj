@@ -50,7 +50,7 @@ namespace bcw {
 bool MdAnimIoOld::loadRotateFromNode(INode * inNode, AppDataChunk * data, MdAnimRot & outAnimRot) {
     outAnimRot.reset();
     if (!inNode) {
-        LError << "Node is nullptr";
+        XLError << "Node is nullptr";
         return false;
     }
 
@@ -117,7 +117,7 @@ bool MdAnimIoOld::loadRotateFromNode(INode * inNode, AppDataChunk * data, MdAnim
 bool MdAnimIoOld::loadTransFromNode(INode * inNode, AppDataChunk * data, MdAnimTrans & outAnimTrans) {
     outAnimTrans.reset();
     if (!inNode) {
-        LError << "Node is nullptr";
+        XLError << "Node is nullptr";
         return false;
     }
 
@@ -184,7 +184,7 @@ bool MdAnimIoOld::loadTransFromNode(INode * inNode, AppDataChunk * data, MdAnimT
 bool MdAnimIoOld::loadVisibilityFromNode(INode * inNode, AppDataChunk * data, MdAnimVis & outAnimVis) {
     outAnimVis.reset();
     if (!inNode) {
-        LError << "Node is nullptr";
+        XLError << "Node is nullptr";
         return false;
     }
 

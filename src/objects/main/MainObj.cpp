@@ -449,7 +449,7 @@ void MainObject::makeIcon() {
     float size = 1.0f;
     Interval interval = FOREVER;
     if (!mDisplayPb->GetValue(MainObjDisp_IconScale, mIp ? mIp->GetTime() : 0, size, interval)) {
-        LError << "Can't retrieve scale value from param block";
+        XLError << "Can't retrieve scale value from param block";
     }
 
     if (stsff::math::isEqual(mLastIconScale, size, 0.001f) && mIconMesh.getNumVerts() != 0) {
@@ -462,7 +462,7 @@ void MainObject::makeIcon() {
         size = size * masterScale;
         if (size < 0.00001f) {
             size = 0.00001f;
-            LError << "The icon scale is too small";
+            XLError << "The icon scale is too small";
         }
     }
 
