@@ -160,12 +160,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisK
     outManip.mMax = stream.value<float>();
     //-------------------
     const auto wheelEnabled = stream.value<bool>();
-    if (wheelEnabled) {
-        outManip.mWheel = xobj::AttrManipWheel(stream.value<float>());
-    }
-    else {
-        outManip.mWheel = std::nullopt;
-    }
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
     //-------------------
     outManip.mDataref = stream.value<std::string>();
     return true;
@@ -200,12 +196,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisS
     outManip.mMax = stream.value<float>();
     //-------------------
     const auto wheelEnabled = stream.value<bool>();
-    if (wheelEnabled) {
-        outManip.mWheel = xobj::AttrManipWheel(stream.value<float>());
-    }
-    else {
-        outManip.mWheel = std::nullopt;
-    }
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
     //-------------------
     outManip.mDataref = stream.value<std::string>();
     return true;
@@ -240,12 +232,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisS
     outManip.mMax = stream.value<float>();
     //-------------------
     const auto wheelEnabled = stream.value<bool>();
-    if (wheelEnabled) {
-        outManip.mWheel = xobj::AttrManipWheel(stream.value<float>());
-    }
-    else {
-        outManip.mWheel = std::nullopt;
-    }
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
     //-------------------
     outManip.mDataref = stream.value<std::string>();
     return true;
@@ -432,12 +420,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDelta
     outManip.mMax = stream.value<float>();
     //-------------------
     const auto wheelEnabled = stream.value<bool>();
-    if (wheelEnabled) {
-        outManip.mWheel = xobj::AttrManipWheel(stream.value<float>());
-    }
-    else {
-        outManip.mWheel = std::nullopt;
-    }
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
     //-------------------
     outManip.mDataref = stream.value<std::string>();
     return true;
@@ -474,12 +458,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragA
     outManip.mVal2 = stream.value<float>();
     //-------------------
     const auto wheelEnabled = stream.value<bool>();
-    if (wheelEnabled) {
-        outManip.mWheel = xobj::AttrManipWheel(stream.value<float>());
-    }
-    else {
-        outManip.mWheel = std::nullopt;
-    }
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
     //-------------------
     outManip.mDataref = stream.value<std::string>();
     return true;
@@ -516,12 +496,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragA
     outManip.mVal2 = stream.value<float>();
     //-------------------
     const auto wheelEnabled = stream.value<bool>();
-    if (wheelEnabled) {
-        outManip.mWheel = xobj::AttrManipWheel(stream.value<float>());
-    }
-    else {
-        outManip.mWheel = std::nullopt;
-    }
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
     //-------------------
     outManip.mDataref = stream.value<std::string>();
     return true;
@@ -632,12 +608,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipPush 
     outManip.mUp = stream.value<float>();
     //-------------------
     const auto wheelEnabled = stream.value<bool>();
-    if (wheelEnabled) {
-        outManip.mWheel = xobj::AttrManipWheel(stream.value<float>());
-    }
-    else {
-        outManip.mWheel = std::nullopt;
-    }
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
     //-------------------
     outManip.mDataref = stream.value<std::string>();
     return true;
@@ -666,12 +638,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipRadio
     outManip.mDown = stream.value<float>();
     //-------------------
     const auto wheelEnabled = stream.value<bool>();
-    if (wheelEnabled) {
-        outManip.mWheel = xobj::AttrManipWheel(stream.value<float>());
-    }
-    else {
-        outManip.mWheel = std::nullopt;
-    }
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
     //-------------------
     outManip.mDataref = stream.value<std::string>();
     return true;
@@ -702,12 +670,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipToggl
     outManip.mOff = stream.value<float>();
     //-------------------
     const auto wheelEnabled = stream.value<bool>();
-    if (wheelEnabled) {
-        outManip.mWheel = xobj::AttrManipWheel(stream.value<float>());
-    }
-    else {
-        outManip.mWheel = std::nullopt;
-    }
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
     //-------------------
     outManip.mDataref = stream.value<std::string>();
     return true;
@@ -742,12 +706,8 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipWrap 
     outManip.mMax = stream.value<float>();
     //-------------------
     const auto wheelEnabled = stream.value<bool>();
-    if (wheelEnabled) {
-        outManip.mWheel = xobj::AttrManipWheel(stream.value<float>());
-    }
-    else {
-        outManip.mWheel = std::nullopt;
-    }
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
     //-------------------
     outManip.mDataref = stream.value<std::string>();
     return true;
