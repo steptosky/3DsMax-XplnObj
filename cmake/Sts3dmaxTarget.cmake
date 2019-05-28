@@ -110,6 +110,9 @@ function(SETUP_MAX_TERGET)
             find_package(Qt5Widgets)
             find_package(Qt5Core)
             find_package(Qt5Gui)
+
+            set_property(DIRECTORY PROPERTY Qt5Core_VERSION_MAJOR ${Qt5Core_VERSION_MAJOR})
+            set_property(DIRECTORY PROPERTY Qt5Core_VERSION_MINOR ${Qt5Core_VERSION_MINOR})
         endif()
         
         #--------------------------------------------------------------------------#
