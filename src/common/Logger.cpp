@@ -112,7 +112,7 @@ Logger::Logger() {
     printInformation();
     xobj::Logger::mInstance.setLevel(LOG_LEVEL);
     //--------------------------------
-    const auto printer = [](const BaseLogger & l, const BaseLogger::LogMsg & m, const DWORD msgType, const bool printLocation) {
+    const auto printer = [](const BaseLogger &, const BaseLogger::LogMsg & m, const DWORD msgType, const bool printLocation) {
         BOOL dialog = NO_DIALOG;
         if (!m.mCategory.empty()) {
             if (strcmp(m.mCategory.data(), LOG_CATEGORY_DIALOG) == 0 || m.mLevel == BaseLogger::LvlCritical) {
@@ -135,7 +135,7 @@ Logger::Logger() {
                               _M("%s\t\t<%s -> %s(%d)>"),
                               _M(LOG_PREFIX),
                               m.mFunction.empty() ? _M("") : sts::toString(m.mFunction.data()).c_str(),
-                              m.mFile.empty() ? _M("") : sts::toString(stsff::logging::sourceFileName(m.mFile.data())).c_str(),
+                              m.mFile.empty() ? _M("") : sts::toString(sourceFileName(m.mFile.data())).c_str(),
                               m.mLine);
         }
     };
