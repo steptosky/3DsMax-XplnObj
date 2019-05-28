@@ -98,7 +98,7 @@ private:
     template<typename T>
     static void saveToNodeInternal(INode * outNode, const T & inManip) {
         if (!outNode) {
-            LError << "INode is nullptr";
+            XLError << "INode is nullptr";
             return;
         }
 
