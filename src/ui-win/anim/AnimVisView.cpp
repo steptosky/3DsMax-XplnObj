@@ -29,8 +29,6 @@
 
 #include "AnimVisView.h"
 #include "common/Logger.h"
-#include "resource/resource.h"
-#include "ui-win/AnimCalc.h"
 #include "ui-win/Utils.h"
 #include "resource/ResHelper.h"
 #include "presenters/Datarefs.h"
@@ -128,11 +126,11 @@ namespace win {
     /**************************************************************************************************/
 
     void AnimVisView::slotObjectsDeleted(void * param, NotifyInfo * info) {
-        AnimVisView * view = reinterpret_cast<AnimVisView*>(param);
-        Tab<INode*> * nodeTab = reinterpret_cast<Tab<INode*>*>(info->callParam);
+        auto * view = reinterpret_cast<AnimVisView*>(param);
+        const auto * nodeTab = reinterpret_cast<Tab<INode*>*>(info->callParam);
 
         if (view->mData.linkedNode()) {
-            int count = nodeTab->Count();
+            const auto count = nodeTab->Count();
             for (int i = 0; i < count; ++i) {
                 if (view->mData.linkedNode() == *nodeTab->Addr(i)) {
                     view->mData.clearLink();
@@ -142,8 +140,8 @@ namespace win {
     }
 
     void AnimVisView::slotSelectionChange(void * param, NotifyInfo *) {
-        AnimVisView * view = reinterpret_cast<AnimVisView*>(param);
-        int selectedCount = view->mIp->GetSelNodeCount();
+        auto view = reinterpret_cast<AnimVisView*>(param);
+        const auto selectedCount = view->mIp->GetSelNodeCount();
         if (selectedCount == 0) {
             view->clearValues();
             view->mData.clearLink();
@@ -285,7 +283,7 @@ namespace win {
     ///////////////////////////////////////////* Functions *////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void AnimVisView::addItem(MdAnimVis::Key::eType type) {
+    void AnimVisView::addItem(const MdAnimVis::Key::eType type) {
         mData.mKeyList.push_back(MdAnimVis::Key(type,
                                                 cSpnValue1->GetFVal(),
                                                 cSpnValue2->GetFVal(),
@@ -295,7 +293,7 @@ namespace win {
     }
 
     void AnimVisView::deleteItem() {
-        int index = cListKeys.currSelected();
+        const auto index = cListKeys.currSelected();
         if (index == -1)
             return;
         cListKeys.removeCurr();
@@ -304,7 +302,7 @@ namespace win {
     }
 
     void AnimVisView::makeUiList() {
-        int sCurrSelected = cListKeys.currSelected();
+        const auto sCurrSelected = cListKeys.currSelected();
         cListKeys.clear();
         for (auto & curr : mData.mKeyList) {
             cListKeys.addItem(toText(curr));
@@ -313,12 +311,12 @@ namespace win {
         cListKeys.setCurrSelected(sCurrSelected);
     }
 
-    sts::Str AnimVisView::toText(MdAnimVis::Key & inKey) {
+    sts::Str AnimVisView::toText(const MdAnimVis::Key & inKey) {
         sts::Str strTmp;
-        strTmp.append(1, inKey.pType);
-        strTmp.append(_T(" = ")).append(sts::toString(inKey.pValue1, 4)).append(_T(" "));
-        strTmp.append(sts::toString(inKey.pValue2, 4));
-        sts::Str strTmp2 = sts::toString(inKey.pDrf);
+        strTmp.append(1, inKey.mType);
+        strTmp.append(_T(" = ")).append(sts::toString(inKey.mValue1, 4)).append(_T(" "));
+        strTmp.append(sts::toString(inKey.mValue2, 4));
+        const auto strTmp2 = sts::toString(inKey.mDrf);
         strTmp.append(_T(" ")).append(strTmp2.empty() ? _T("none") : strTmp2);
         return strTmp;
     }
@@ -329,9 +327,9 @@ namespace win {
         }
         if (mCurrSelected < mData.mKeyList.size()) {
             MdAnimVis::Key & key = mData.mKeyList[static_cast<size_t>(mCurrSelected)];
-            key.pValue1 = cSpnValue1->GetFVal();
-            key.pValue2 = cSpnValue2->GetFVal();
-            key.pDrf = sts::toMbString(Utils::getText(cEditDataRef));
+            key.mValue1 = cSpnValue1->GetFVal();
+            key.mValue2 = cSpnValue2->GetFVal();
+            key.mDrf = sts::toMbString(Utils::getText(cEditDataRef));
         }
         makeUiList();
     }
@@ -341,7 +339,7 @@ namespace win {
         auto list1 = sts::StrUtils::split<sts::StrUtils::Vector>(sts::toString(cListKeys.currSelectedText()), _T("="));
         if (list1.size() != 2) {
 #ifndef NDEBUG
-            LError << "Internal error 1";
+            XLError << "Internal error 1";
 #endif
             return;
         }
@@ -349,7 +347,7 @@ namespace win {
         auto list2 = sts::StrUtils::split<sts::StrUtils::Vector>(list1[1], _T(" "));
         if (list2.size() != 3) {
 #ifndef NDEBUG
-            LError << "Internal error 2";
+            XLError << "Internal error 2";
 #endif
             return;
         }

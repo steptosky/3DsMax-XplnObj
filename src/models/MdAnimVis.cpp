@@ -92,7 +92,7 @@ void MdAnimVis::saveToNode(INode * node) const {
             AnimIO::saveVisibilityToNode(node, *this);
         }
         catch (std::exception & e) {
-            LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
+            XLCritical << "Can't save data to <" << sts::toMbString(node->GetName())
                     << "> object. Reason: <" << e.what() << ">";
         }
     }
@@ -104,7 +104,7 @@ bool MdAnimVis::loadFromNode(INode * node) {
             return AnimIO::loadVisibilityFromNode(node, *this);
         }
         catch (std::exception & e) {
-            LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
+            XLCritical << "Can't load data from <" << sts::toMbString(node->GetName())
                     << "> object. Reason: <" << e.what() << ">";
         }
     }

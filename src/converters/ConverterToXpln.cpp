@@ -147,7 +147,7 @@ bool ConverterToXpln::processNode(INode * node, xobj::Transform * xTransform, co
     static ObjAbstractList xObjList;
     toXpln(node, Matrix3(1), xObjList, params);
     for (auto curr : xObjList) {
-        tr.addObject(curr);
+        tr.mObjects.emplace_back(curr);
     }
     //-------------------------------------------------------------------------
     // translate children

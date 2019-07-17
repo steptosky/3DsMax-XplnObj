@@ -72,22 +72,22 @@ bool SmokeObjParamsWrapper::isSmokeObj(INode * inNode) {
 void SmokeObjParamsWrapper::setType(const xobj::ObjSmoke::eSmokeType val) {
     if (mPb2) {
         if (!mPb2->SetValue(PSmokeObjAttr_SmokeType, int(mT), val)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PSmokeObjAttr_SmokeType);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(PSmokeObjAttr_SmokeType);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
 void SmokeObjParamsWrapper::setSize(const float val) {
     if (mPb2) {
         if (!mPb2->SetValue(PSmokeObjAttr_Size, mT, val)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PSmokeObjAttr_Size);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(PSmokeObjAttr_Size);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
 }
 
@@ -99,11 +99,11 @@ xobj::ObjSmoke::eSmokeType SmokeObjParamsWrapper::type() {
     int val = 0;
     if (mPb2) {
         if (!mPb2->GetValue(PSmokeObjAttr_SmokeType, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't save value:" << TOTEXT(PSmokeObjAttr_SmokeType);
+            XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(PSmokeObjAttr_SmokeType);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return xobj::ObjSmoke::eSmokeType(val);
 }
@@ -112,11 +112,11 @@ float SmokeObjParamsWrapper::size() {
     float val = 0.0f;
     if (mPb2) {
         if (!mPb2->GetValue(PSmokeObjAttr_Size, mT, val, mInterval)) {
-            LError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(PSmokeObjAttr_Size);
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(PSmokeObjAttr_Size);
         }
     }
     else {
-        LError << "Pointer to IParamBlock2 is nullptr";
+        XLError << "Pointer to IParamBlock2 is nullptr";
     }
     return val;
 }

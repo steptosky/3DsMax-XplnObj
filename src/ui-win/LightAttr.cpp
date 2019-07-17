@@ -245,7 +245,7 @@ namespace win {
             recalculateSize();
         }
         else {
-            LError << "Internal error. There is no 'Custom' in the container.";
+            XLError << "Internal error. There is no 'Custom' in the container.";
         }
     }
 
@@ -264,7 +264,7 @@ namespace win {
             recalculateSize();
         }
         else {
-            LError << "Internal error. There is no 'Named' in the container.";
+            XLError << "Internal error. There is no 'Named' in the container.";
         }
     }
 
@@ -283,7 +283,7 @@ namespace win {
             recalculateSize();
         }
         else {
-            LError << "Internal error. There is no 'Param' in the container.";
+            XLError << "Internal error. There is no 'Param' in the container.";
         }
     }
 
@@ -304,7 +304,7 @@ namespace win {
             recalculateSize();
         }
         else {
-            LError << "Internal error. There is no 'Spill Custom' in the container.";
+            XLError << "Internal error. There is no 'Spill Custom' in the container.";
         }
     }
 

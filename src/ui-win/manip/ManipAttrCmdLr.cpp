@@ -35,7 +35,6 @@
 
 #include <xpln/enums/ECursor.h>
 #include "ui-win/Utils.h"
-#include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
 #include "presenters/Commands.h"
@@ -75,7 +74,7 @@ namespace win {
                         Utils::getText(theDlg->cEdtCmdPos, str);
                         str = presenters::Commands::selectData(str);
                         theDlg->cEdtCmdPos->SetText(str);
-                        theDlg->mData.setCmdPositive(xobj::fromMStr(str));
+                        theDlg->mData.mPosCommand = xobj::fromMStr(str);
                         theDlg->save();
                         break;
                     }
@@ -84,13 +83,13 @@ namespace win {
                         Utils::getText(theDlg->cEdtCmdNeg, str);
                         str = presenters::Commands::selectData(str);
                         theDlg->cEdtCmdNeg->SetText(str);
-                        theDlg->mData.setCmdNegative(xobj::fromMStr(str));
+                        theDlg->mData.mNegCommand = xobj::fromMStr(str);
                         theDlg->save();
                         break;
                     }
                     case CMB_CURSOR: {
                         if (HIWORD(wParam) == CBN_SELCHANGE) {
-                            theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
+                            theDlg->mData.mCursor = xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str());
                             theDlg->save();
                         }
                         break;
@@ -102,17 +101,17 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case EDIT_COMMAND: {
-                        theDlg->mData.setCmdPositive(sts::toMbString(Utils::getText(theDlg->cEdtCmdPos)));
+                        theDlg->mData.mPosCommand = sts::toMbString(Utils::getText(theDlg->cEdtCmdPos));
                         theDlg->save();
                         break;
                     }
                     case EDIT_COMMAND2: {
-                        theDlg->mData.setCmdNegative(sts::toMbString(Utils::getText(theDlg->cEdtCmdNeg)));
+                        theDlg->mData.mNegCommand = sts::toMbString(Utils::getText(theDlg->cEdtCmdNeg));
                         theDlg->save();
                         break;
                     }
                     case EDIT_TOOLTIP: {
-                        theDlg->mData.setToolTip(sts::toMbString(Utils::getText(theDlg->cEdtToolType)));
+                        theDlg->mData.mToolType = sts::toMbString(Utils::getText(theDlg->cEdtToolType));
                         theDlg->save();
                         break;
                     }
@@ -154,7 +153,7 @@ namespace win {
             mHwnd.show(true);
         }
         else {
-            LError << WinCode(GetLastError());
+            XLError << WinCode(GetLastError());
         }
     }
 
@@ -162,7 +161,7 @@ namespace win {
         if (mHwnd) {
             BOOL res = DestroyWindow(mHwnd.hwnd());
             if (!res) {
-                LError << WinCode(GetLastError());
+                XLError << WinCode(GetLastError());
             }
             mHwnd.release();
         }
@@ -186,12 +185,15 @@ namespace win {
     //////////////////////////////////////////* Functions */////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void ManipAttrCmdLr::setManip(const xobj::AttrManipBase & manip) {
-        if (manip.type() != mData.type()) {
-            LError << "Incorrect manipulator: " << manip.type().toString();
+    void ManipAttrCmdLr::setManip(const std::optional<xobj::AttrManip> & manip) {
+        assert(manip);
+        const auto data = std::get_if<xobj::AttrManipCmdSwitchLeftRight>(&*manip);
+        if (!data) {
+            const xobj::EManipulator type = std::visit([](auto && m) { return m.mType; }, *manip);
+            XLError << "Incorrect manipulator type: " << type.toString();
             return;
         }
-        mData = static_cast<const xobj::AttrManipCmdSwitchLeftRight &>(manip);
+        mData = *data;
     }
 
     /**************************************************************************************************/
@@ -226,10 +228,10 @@ namespace win {
     }
 
     void ManipAttrCmdLr::toWindow() {
-        cEdtCmdPos->SetText(xobj::toMStr(mData.cmdPositive()));
-        cEdtCmdNeg->SetText(xobj::toMStr(mData.cmdNegative()));
-        cEdtToolType->SetText(xobj::toMStr(mData.toolTip()));
-        cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
+        cEdtCmdPos->SetText(xobj::toMStr(mData.mPosCommand));
+        cEdtCmdNeg->SetText(xobj::toMStr(mData.mNegCommand));
+        cEdtToolType->SetText(xobj::toMStr(mData.mToolType));
+        cCmbCursor.setCurrSelected(sts::toString(mData.mCursor.toUiString()));
     }
 
     /********************************************************************************************************/

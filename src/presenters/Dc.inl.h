@@ -141,7 +141,7 @@ void Dc<T>::loadSimDatarefs() {
     }
 
     if (!pathConfMgr->DoesFileExist(datarefFile)) {
-        LError << "X-Plane datarefs file isn't found by the path: " << xobj::fromMStr(datarefFile.GetString());
+        XLError << "X-Plane datarefs file isn't found by the path: " << xobj::fromMStr(datarefFile.GetString());
         return;
     }
 
@@ -200,7 +200,7 @@ inline void __readSettings(md::DatarefsFile::Ptr & file, Settings & settings) {
                     file->loadData(file->mFilePath);
                 }
                 catch (const std::exception & e) {
-                    LError << "Can't load file <" << xobj::fromMStr(file->mFilePath.GetString()) << "> reason: " << e.what();
+                    XLError << "Can't load file <" << xobj::fromMStr(file->mFilePath.GetString()) << "> reason: " << e.what();
                 }
             }
             else {
@@ -223,7 +223,7 @@ inline void __readSettings(md::CommandsFile::Ptr & file, Settings & settings) {
                     file->loadData(file->mFilePath);
                 }
                 catch (const std::exception & e) {
-                    LError << "Can't load file <" << xobj::fromMStr(file->mFilePath.GetString()) << "> reason: " << e.what();
+                    XLError << "Can't load file <" << xobj::fromMStr(file->mFilePath.GetString()) << "> reason: " << e.what();
                 }
             }
             else {
@@ -261,7 +261,7 @@ void Dc<T>::onViewReady() {
                     index = file->indexOfId(xobj::Dataref::keyToId(xobj::fromMStr(mCurrKey)));
                 }
                 catch (const std::exception & e) {
-                    LError << "Can't extract id from dataref. Reason: " << e.what();
+                    XLError << "Can't extract id from dataref. Reason: " << e.what();
                     break;
                 }
             }
@@ -300,7 +300,7 @@ void Dc<T>::onKeyChanged(const typename IView::FilePtr & file, const MStr & key)
         file->loadData(file->mFilePath);
     }
     catch (const std::exception & e) {
-        LError << "Can't load file <" << xobj::fromMStr(file->mFilePath.GetString()) << "> reason: " << e.what();
+        XLError << "Can't load file <" << xobj::fromMStr(file->mFilePath.GetString()) << "> reason: " << e.what();
     }
 
     const auto index = file->indexOfKey(xobj::fromMStr(key));
@@ -316,7 +316,7 @@ void Dc<T>::onKeyChanged(const typename IView::FilePtr & file, const MStr & key)
                 file->saveData(file->mFilePath);
             }
             catch (const std::exception & e) {
-                LError << "Can't save file <" << xobj::fromMStr(file->mFilePath.GetString()) << "> reason: " << e.what();
+                XLError << "Can't save file <" << xobj::fromMStr(file->mFilePath.GetString()) << "> reason: " << e.what();
             }
         }
     }

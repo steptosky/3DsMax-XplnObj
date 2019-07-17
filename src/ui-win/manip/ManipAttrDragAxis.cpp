@@ -35,7 +35,6 @@
 
 #include <xpln/enums/ECursor.h>
 #include "ui-win/Utils.h"
-#include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
 #include "presenters/Datarefs.h"
@@ -75,13 +74,13 @@ namespace win {
                         Utils::getText(theDlg->cEdtDataRef, str);
                         str = presenters::Datarefs::selectData(str);
                         theDlg->cEdtDataRef->SetText(str);
-                        theDlg->mData.setDataref(xobj::fromMStr(str));
+                        theDlg->mData.mDataref = xobj::fromMStr(str);
                         theDlg->save();
                         break;
                     }
                     case CMB_CURSOR: {
                         if (HIWORD(wParam) == CBN_SELCHANGE) {
-                            theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
+                            theDlg->mData.mCursor = xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str());
                             theDlg->save();
                         }
                         break;
@@ -93,12 +92,12 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case EDIT_DATAREF: {
-                        theDlg->mData.setDataref(sts::toMbString(Utils::getText(theDlg->cEdtDataRef)));
+                        theDlg->mData.mDataref = sts::toMbString(Utils::getText(theDlg->cEdtDataRef));
                         theDlg->save();
                         break;
                     }
                     case EDIT_TOOLTIP: {
-                        theDlg->mData.setToolTip(sts::toMbString(Utils::getText(theDlg->cEdtToolType)));
+                        theDlg->mData.mToolType = sts::toMbString(Utils::getText(theDlg->cEdtToolType));
                         theDlg->save();
                         break;
                     }
@@ -109,27 +108,27 @@ namespace win {
             case CC_SPINNER_CHANGE: {
                 switch (LOWORD(wParam)) {
                     case SPN_V1: {
-                        theDlg->mData.setVal1(theDlg->mSpnVal1->GetFVal());
+                        theDlg->mData.mVal1 = theDlg->mSpnVal1->GetFVal();
                         theDlg->save();
                         break;
                     }
                     case SPN_V2: {
-                        theDlg->mData.setVal2(theDlg->mSpnVal2->GetFVal());
+                        theDlg->mData.mVal2 = theDlg->mSpnVal2->GetFVal();
                         theDlg->save();
                         break;
                     }
                     case SPN_X: {
-                        theDlg->mData.setDirectionX(theDlg->mSpnX->GetFVal());
+                        theDlg->mData.mDirX = theDlg->mSpnX->GetFVal();
                         theDlg->save();
                         break;
                     }
                     case SPN_Y: {
-                        theDlg->mData.setDirectionY(theDlg->mSpnY->GetFVal());
+                        theDlg->mData.mDirY = theDlg->mSpnY->GetFVal();
                         theDlg->save();
                         break;
                     }
                     case SPN_Z: {
-                        theDlg->mData.setDirectionZ(theDlg->mSpnZ->GetFVal());
+                        theDlg->mData.mDirZ = theDlg->mSpnZ->GetFVal();
                         theDlg->save();
                         break;
                     }
@@ -173,15 +172,15 @@ namespace win {
             mHwnd.show(true);
         }
         else {
-            LError << WinCode(GetLastError());
+            XLError << WinCode(GetLastError());
         }
     }
 
     void ManipAttrDragAxis::destroy() {
         if (mHwnd) {
-            BOOL res = DestroyWindow(mHwnd.hwnd());
+            const BOOL res = DestroyWindow(mHwnd.hwnd());
             if (!res) {
-                LError << WinCode(GetLastError());
+                XLError << WinCode(GetLastError());
             }
             mHwnd.release();
         }
@@ -206,7 +205,7 @@ namespace win {
         if (mHwnd) {
             mSize = mHwnd.rect();
             mWheel.move(POINT{0, mSize.bottom});
-            RECT wheelRect = mWheel.rect();
+            const RECT wheelRect = mWheel.rect();
             mSize.bottom += (wheelRect.bottom - wheelRect.top);
         }
     }
@@ -215,13 +214,16 @@ namespace win {
     //////////////////////////////////////////* Functions */////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void ManipAttrDragAxis::setManip(const xobj::AttrManipBase & manip) {
-        if (manip.type() != mData.type()) {
-            LError << "Incorrect manipulator: " << manip.type().toString();
+    void ManipAttrDragAxis::setManip(const std::optional<xobj::AttrManip> & manip) {
+        assert(manip);
+        const auto data = std::get_if<xobj::AttrManipDragAxis>(&*manip);
+        if (!data) {
+            const xobj::EManipulator type = std::visit([](auto && m) { return m.mType; }, *manip);
+            XLError << "Incorrect manipulator type: " << type.toString();
             return;
         }
-        mData = static_cast<const xobj::AttrManipDragAxis &>(manip);
-        mWheel.setManip(mData.wheel());
+        mData = *data;
+        mWheel.setManip(mData.mWheel);
     }
 
     /**************************************************************************************************/
@@ -229,9 +231,9 @@ namespace win {
     /**************************************************************************************************/
 
     void ManipAttrDragAxis::initWindow(HWND hWnd) {
-        std::function<void(const xobj::AttrManipWheel &)> callback = [this](const xobj::AttrManipWheel & wheel) mutable {
-            mData.setWheel(wheel);
-            mModelData->saveToNode(mData);
+        const auto callback = [this](const std::optional<xobj::AttrManipWheel> & wheel) mutable {
+            mData.mWheel = wheel;
+            save();
         };
         mWheel.setCallBack(callback);
 
@@ -267,16 +269,16 @@ namespace win {
     }
 
     void ManipAttrDragAxis::toWindow() {
-        mSpnVal1->SetValue(mData.val1(), FALSE);
-        mSpnVal2->SetValue(mData.val2(), FALSE);
+        mSpnVal1->SetValue(mData.mVal1, FALSE);
+        mSpnVal2->SetValue(mData.mVal2, FALSE);
 
-        mSpnX->SetValue(mData.directionX(), FALSE);
-        mSpnY->SetValue(mData.directionY(), FALSE);
-        mSpnZ->SetValue(mData.directionZ(), FALSE);
+        mSpnX->SetValue(mData.mDirX, FALSE);
+        mSpnY->SetValue(mData.mDirY, FALSE);
+        mSpnZ->SetValue(mData.mDirZ, FALSE);
 
-        cEdtDataRef->SetText(xobj::toMStr(mData.dataref()));
-        cEdtToolType->SetText(xobj::toMStr(mData.toolTip()));
-        cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
+        cEdtDataRef->SetText(xobj::toMStr(mData.mDataref));
+        cEdtToolType->SetText(xobj::toMStr(mData.mToolType));
+        cCmbCursor.setCurrSelected(sts::toString(mData.mCursor.toUiString()));
     }
 
     /********************************************************************************************************/

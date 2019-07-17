@@ -51,18 +51,18 @@ INode * ConverterMesh::toMax(const xobj::ObjAbstract * inXObj, const ImportParam
     }
     const xobj::ObjMesh & inXMesh = *static_cast<const xobj::ObjMesh*>(inXObj);
 
-    TriObject * mobj = CreateNewTriObject();
+    const auto mobj = CreateNewTriObject();
     if (mobj == nullptr) {
         return nullptr;
     }
 
-    INode * pnode = params.mCoreInterface->CreateObjectNode(mobj);
+    const auto pnode = params.mCoreInterface->CreateObjectNode(mobj);
     if (pnode == nullptr) {
         return nullptr;
     }
 
-    size_t numVert = inXMesh.pVertices.size();
-    size_t numFace = inXMesh.pFaces.size();
+    const auto numVert = inXMesh.mVertices.size();
+    const auto numFace = inXMesh.mFaces.size();
 
     mobj->mesh.setNumVerts(static_cast<int>(numVert));
     mobj->mesh.setNumTVerts(static_cast<int>(numVert));
@@ -73,24 +73,24 @@ INode * ConverterMesh::toMax(const xobj::ObjAbstract * inXObj, const ImportParam
 
     // vertex
     Point3 vert;
-    for (auto & xVert : inXMesh.pVertices) {
-        vert = Point3(xVert.pPosition.x, xVert.pPosition.y, xVert.pPosition.z);
+    for (auto & xVert : inXMesh.mVertices) {
+        vert = Point3(xVert.mPosition.x, xVert.mPosition.y, xVert.mPosition.z);
         mobj->mesh.setVert(counter, vert);
-        mobj->mesh.setTVert(counter, xVert.pTexture.x, xVert.pTexture.y, 0.0f);
+        mobj->mesh.setTVert(counter, xVert.mTexture.x, xVert.mTexture.y, 0.0f);
         ++counter;
     }
 
     counter = 0;
 
     // Faces
-    for (auto & xFace : inXMesh.pFaces) {
-        mobj->mesh.faces[counter].setVerts(static_cast<int>(xFace.pV2),
-                                           static_cast<int>(xFace.pV1),
-                                           static_cast<int>(xFace.pV0));
+    for (auto & xFace : inXMesh.mFaces) {
+        mobj->mesh.faces[counter].setVerts(static_cast<int>(xFace.mV2),
+                                           static_cast<int>(xFace.mV1),
+                                           static_cast<int>(xFace.mV0));
         mobj->mesh.faces[counter].setEdgeVisFlags(1, 1, 1);
-        mobj->mesh.tvFace[counter].setTVerts(static_cast<int>(xFace.pV2),
-                                             static_cast<int>(xFace.pV1),
-                                             static_cast<int>(xFace.pV0));
+        mobj->mesh.tvFace[counter].setTVerts(static_cast<int>(xFace.mV2),
+                                             static_cast<int>(xFace.mV1),
+                                             static_cast<int>(xFace.mV0));
         ++counter;
     }
 
@@ -101,17 +101,17 @@ INode * ConverterMesh::toMax(const xobj::ObjAbstract * inXObj, const ImportParam
     MeshNormalSpec * meshNorm = mobj->mesh.GetSpecifiedNormals();
     if (meshNorm) {
         meshNorm->CheckNormals();
-        for (auto & xFace : inXMesh.pFaces) {
-            auto & xVert1 = inXMesh.pVertices.at(xFace.pV2);
-            Point3 p1(xVert1.pNormal.x, xVert1.pNormal.y, xVert1.pNormal.z);
+        for (auto & xFace : inXMesh.mFaces) {
+            const auto & xVert1 = inXMesh.mVertices.at(xFace.mV2);
+            Point3 p1(xVert1.mNormal.x, xVert1.mNormal.y, xVert1.mNormal.z);
             meshNorm->SetNormal(counter, 0, p1);
 
-            auto & xVert2 = inXMesh.pVertices.at(xFace.pV1);
-            Point3 p2(xVert2.pNormal.x, xVert2.pNormal.y, xVert2.pNormal.z);
+            const auto & xVert2 = inXMesh.mVertices.at(xFace.mV1);
+            Point3 p2(xVert2.mNormal.x, xVert2.mNormal.y, xVert2.mNormal.z);
             meshNorm->SetNormal(counter, 1, p2);
 
-            auto & xVert3 = inXMesh.pVertices.at(xFace.pV0);
-            Point3 p3(xVert3.pNormal.x, xVert3.pNormal.y, xVert3.pNormal.z);
+            const auto & xVert3 = inXMesh.mVertices.at(xFace.mV0);
+            Point3 p3(xVert3.mNormal.x, xVert3.mNormal.y, xVert3.mNormal.z);
             meshNorm->SetNormal(counter, 2, p3);
             ++counter;
         }
@@ -137,7 +137,7 @@ xobj::ObjMesh * ConverterMesh::toXpln(INode * inNode, const ExportParams & param
     FaceList faces;
     VertList vertices;
 
-    xobj::ObjMesh * xMesh = new xobj::ObjMesh;
+    const auto xMesh = new xobj::ObjMesh;
     xMesh->setObjectName(sts::toMbString(inNode->GetName()));
 
     for (int i = 0; i < mesh->numFaces; ++i) {
@@ -149,7 +149,7 @@ xobj::ObjMesh * ConverterMesh::toXpln(INode * inNode, const ExportParams & param
     //-----------------------------------------------------
     // Correct position if pivot is chenged
 
-    Matrix3 objTm = ConverterUtils::offsetMatrix(inNode);
+    const auto objTm = ConverterUtils::offsetMatrix(inNode);
     if (!objTm.IsIdentity()) {
         xMesh->applyTransform(ConverterUtils::toXTMatrix(objTm));
     }
@@ -225,7 +225,7 @@ Point3 ConverterMesh::vertexNormal(Mesh * mesh, int faceNo, RVertex * rv) {
         outVertNormal = rv->rn.getNormal();
     }
     else {
-        int numNormals = rv->rFlags & NORCT_MASK;
+        const int numNormals = rv->rFlags & NORCT_MASK;
         if (numNormals && f->smGroup) {
             if (numNormals == 1) {
                 outVertNormal = rv->rn.getNormal();
@@ -248,8 +248,8 @@ Point3 ConverterMesh::vertexNormal(Mesh * mesh, int faceNo, RVertex * rv) {
 //-------------------------------------------------------------------------
 
 size_t ConverterMesh::idx(VertList & vertices, const MPoint & inMPoint) {
-    size_t num = vertices.size();
-    for (size_t i = 0; i < num; ++i) {
+    const auto num = vertices.size();
+    for (std::size_t i = 0; i < num; ++i) {
         if (vertices[i].vertexIdx == inMPoint.vertexIdx &&
             vertices[i].TextureVertexIdx == inMPoint.TextureVertexIdx &&
             vertices[i].normal == inMPoint.normal) {
@@ -266,7 +266,7 @@ void ConverterMesh::addFace(FaceList & faces, VertList & vertices, int inFaceIdx
     MFace mf;
     Face * f = &inMesh->faces[inFaceIdx];
     TVFace * tvFace = &inMesh->tvFace[inFaceIdx];
-    int numtv = inMesh->getNumTVerts();
+    const auto numtv = inMesh->getNumTVerts();
     mf.smGroupIdx = f->smGroup;
     mf.materialIdx = f->getMatID();
     for (int i = 0; i < 3; ++i) {
@@ -288,30 +288,30 @@ void ConverterMesh::addFace(FaceList & faces, VertList & vertices, int inFaceIdx
 
 void ConverterMesh::saveFaces(FaceList & faces, xobj::ObjMesh * inXMesh) {
     xobj::ObjMesh::FaceList fList;
-    size_t numf = faces.size();
-    for (int i = 0; i < numf; ++i) {
-        MFace & f = faces[i];
+    const auto numF = faces.size();
+    for (std::size_t i = 0; i < numF; ++i) {
+        const MFace & f = faces[i];
         fList.emplace_back(xobj::ObjMesh::Face(f.vertices[2], f.vertices[1], f.vertices[0]));
     }
-    inXMesh->pFaces.swap(fList);
+    inXMesh->mFaces.swap(fList);
 }
 
 //-------------------------------------------------------------------------
 
 void ConverterMesh::saveVerts(VertList & vertices, xobj::ObjMesh * inXMesh, Mesh * inMesh) {
     xobj::ObjMesh::VertexList vList;
-    size_t numv = vertices.size();
+    const auto numv = vertices.size();
     UVVert UVzero(0, 0, 0);
-    for (int i = 0; i < numv; ++i) {
+    for (std::size_t i = 0; i < numv; ++i) {
         MPoint & point = vertices[i];
-        Point3 mp = inMesh->verts[point.vertexIdx];
-        Point3 nn = point.normal;
-        UVVert uv = point.TextureVertexIdx == -1 ? UVzero : inMesh->tVerts[point.TextureVertexIdx];
+        const Point3 mp = inMesh->verts[point.vertexIdx];
+        const Point3 nn = point.normal;
+        const UVVert uv = point.TextureVertexIdx == -1 ? UVzero : inMesh->tVerts[point.TextureVertexIdx];
         vList.emplace_back(xobj::ObjMesh::Vertex(xobj::Point3(mp.x, mp.y, mp.z),
                                                  xobj::Point3(nn.x, nn.y, nn.z),
                                                  xobj::Point2(uv.x, uv.y)));
     }
-    inXMesh->pVertices.swap(vList);
+    inXMesh->mVertices.swap(vList);
 }
 
 /**************************************************************************************************/

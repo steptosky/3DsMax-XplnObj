@@ -51,7 +51,7 @@
 
 void SceneUpdater::update(const sts::semver::SemVersion & versionFrom, const sts::semver::SemVersion & versionTo) {
     if (versionFrom < versionTo) {
-        LMessage << LOG_PREFIX << "from " << versionFrom.toString(false, false) << " to " << versionTo.toString(false, false);
+        XLMessage << LOG_PREFIX << "from " << versionFrom.toString(false, false) << " to " << versionTo.toString(false, false);
         panelManipulators(versionFrom);
     }
 }
@@ -91,7 +91,7 @@ Read the help for more information about this issue.");
     };
     //-------------------------------
     if (versionFrom < sts::semver::SemVersion(2, 2, 0)) {
-        LMessage << LOG_PREFIX << msg;
+        XLMessage << LOG_PREFIX << msg;
         std::vector<INode*> nodes;
         ui::win::Factory::sceneUpdateInfo(msgStartUpdate);
         //-------------------------------
@@ -102,7 +102,7 @@ Read the help for more information about this issue.");
                 return true;
             }
             mdBaseAttr.loadFromNode(attrSet);
-            if (attrSet.cockpit()) {
+            if (attrSet.mCockpit) {
                 MdManip mdManip;
                 if (mdManip.linkNode(node)) {
                     ManipGetter mg;
@@ -110,8 +110,7 @@ Read the help for more information about this issue.");
                     if (mg.mHasManip) {
                         return true;
                     }
-                    xobj::AttrManipPanel panelManip;
-                    panelManip.setCockpit(attrSet.cockpit());
+                    const std::optional<xobj::AttrManip> panelManip(xobj::AttrManipPanel(*attrSet.mCockpit));
                     mdManip.saveToNode(panelManip);
                     nodes.emplace_back(node);
                 }
@@ -120,7 +119,7 @@ Read the help for more information about this issue.");
         };
         //-------------------------------
         NodeUtils::visitAll(fn);
-        LMessage << LOG_PREFIX << msg << " " << nodes.size() << " objects updated";
+        XLMessage << LOG_PREFIX << msg << " " << nodes.size() << " objects updated";
         ui::win::Factory::showUpdatedObjects(nodes);
         //-------------------------------
     }

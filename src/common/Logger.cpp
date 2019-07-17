@@ -37,15 +37,17 @@
 #pragma warning(pop)
 
 #include "common/String.h"
-#include <xpln/common/ExternalLog.h>
+#include <xpln/Info.h>
 
 #ifndef NDEBUG
-#	define LOG_LEVEL sts::BaseLogger::eType::Debug
+#	define LOG_LEVEL stsff::logging::BaseLogger::eLevel::LvlDebug
 #else
-#	define LOG_LEVEL sts::BaseLogger::eType::Msg
+#	define LOG_LEVEL stsff::logging::BaseLogger::eLevel::LvlMsg
 #endif
 
 #define LOG_PREFIX "[X-Obj]"
+
+using namespace stsff::logging;
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
@@ -58,83 +60,21 @@ std::string Logger::mVersionString;
 std::string Logger::mVersionShortString;
 
 /**************************************************************************************************/
-//////////////////////////////////////////* Static area *///////////////////////////////////////////
-/**************************************************************************************************/
-
-/*!
- * \note Example path to the log file "C:\Users\%username%\AppData\Local\Autodesk\3dsMax\2016 - 64bit\ENU\Network\Max.log"
- */
-void Logger::logCallBack(sts::BaseLogger::eType inType, const char * inMsg,
-                         const char * inFile, int inLine, const char * inFunction, const char * inCategory) {
-
-    if (inType > LOG_LEVEL) {
-        return;
-    }
-
-    DWORD msgType = SYSLOG_INFO;
-    BOOL dialog = NO_DIALOG;
-    if (inCategory) {
-        if (strcmp(inCategory, LOG_CATEGORY_DIALOG) == 0) {
-            dialog = DISPLAY_DIALOG;
-        }
-        else if (strcmp(inCategory, LOG_CATEGORY_CONSOLE) == 0 || strcmp(inCategory, LOG_CATEGORY_FOR_USER) == 0) {
-            for (auto c : mCallbacks) {
-                c(inType, inMsg);
-            }
-        }
-    }
-    if (inType == sts::BaseLogger::eType::Warning) {
-        msgType = SYSLOG_WARN;
-    }
-    else if (inType == sts::BaseLogger::eType::Error) {
-        msgType = SYSLOG_ERROR;
-    }
-    else if (inType == sts::BaseLogger::eType::Critical) {
-        msgType = SYSLOG_ERROR;
-    }
-    else if (inType == sts::BaseLogger::eType::Fatal) {
-        msgType = SYSLOG_ERROR;
-        dialog = DISPLAY_DIALOG;
-    }
-    else if (inType == sts::BaseLogger::eType::Debug) {
-        msgType = SYSLOG_DEBUG;
-    }
-
-    if (msgType == SYSLOG_INFO) {
-        mMaxLog->LogEntry(msgType, dialog, _M(XIO_PROJECT_NAME), inCategory ? _M("%s %s %s") : _M("%s%s %s"),
-                          _M(LOG_PREFIX), inCategory ? sts::toString(inCategory).c_str() : _M(""), sts::toString(inMsg).c_str());
-        Debug(std::cout << sts::BaseLogger::typeAsString(inType) << ": "
-            << (inCategory ? inCategory : "") << (inCategory ? " " : "") << (inMsg ? inMsg : "") << std::endl);
-    }
-    else {
-        mMaxLog->LogEntry(msgType, dialog, _M(XIO_PROJECT_NAME), inCategory ? _M("%s %s %s") : _M("%s%s %s"),
-                          _M(LOG_PREFIX), inCategory ? sts::toString(inCategory).c_str() : _M(""), sts::toString(inMsg).c_str());
-        mMaxLog->LogEntry(msgType, NO_DIALOG, _M(XIO_PROJECT_NAME), _M("%s\t\t<%s -> %s(%d)>"),
-                          _M(LOG_PREFIX), sts::toString(inFunction).c_str(), sts::toString(inFile).c_str(), inLine);
-        Debug(std::cout << sts::BaseLogger::typeAsString(inType) << ": "
-            << (inCategory ? inCategory : "") << (inCategory ? " " : "") << (inMsg ? inMsg : "") << LEOL <<"\t<"
-            << (inFunction ? inFunction : "") << " -> " << (inFile ? inFile : "")
-            << "(" << inLine << ")>" << std::endl);
-    }
-}
-
-/**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
 void Logger::saveLog(const MSTR & where) const {
     IPathConfigMgr * paths = IPathConfigMgr::GetPathConfigMgr();
-    MaxSDK::Util::Path p(mLogFile);
+    const MaxSDK::Util::Path p(mLogFile);
     if (!paths->DoesFileExist(p)) {
         MessageBoxA(GetActiveWindow(),
-                    "The log file does not exist. For some reason the 3DsMax or the plug-in did not provide this file.\r\nCheck 3DsMax log settings.",
+                    "The log file does not exist. For some reason the 3DsMax or the plug-in didn't provide this file.\r\nCheck 3DsMax log settings.",
                     "Error", MB_ICONERROR);
     }
     else {
         if (!CopyFile(p.GetCStr(), where.data(),FALSE)) {
-            DWORD err = GetLastError();
-            MessageBoxA(GetActiveWindow(),
-                        sts::MbStrUtils::join("Can't save log file. code: ", err).c_str(),
+            const auto error = GetLastError();
+            MessageBoxA(GetActiveWindow(), sts::MbStrUtils::join("Can't save log file. code: ", error).c_str(),
                         "Error", MB_ICONERROR);
         }
     }
@@ -169,42 +109,154 @@ Logger::Logger() {
     p.Append(_T("Max.log"));
     mLogFile = p.GetString();
     //--------------------------------
-    sts::BaseLogger & log = sts::BaseLogger::instance();
-    log.setCallBack(&Logger::logCallBack);
-    log.setLevel(sts::BaseLogger::eType::Debug);
     printInformation();
-    log.setLevel(LOG_LEVEL);
+    xobj::Logger::mInstance.setLevel(LOG_LEVEL);
+    //--------------------------------
+    const auto printer = [](const BaseLogger &, const BaseLogger::LogMsg & m, const DWORD msgType, const bool printLocation) {
+        BOOL dialog = NO_DIALOG;
+        if (!m.mCategory.empty()) {
+            if (strcmp(m.mCategory.data(), LOG_CATEGORY_DIALOG) == 0 || m.mLevel == BaseLogger::LvlCritical) {
+                dialog = DISPLAY_DIALOG;
+            }
+            else if (strcmp(m.mCategory.data(), LOG_CATEGORY_CONSOLE) == 0 || strcmp(m.mCategory.data(), LOG_CATEGORY_FOR_USER) == 0) {
+                for (auto & c : mCallbacks) {
+                    c(m.mLevel, m.mMsg.data());
+                }
+            }
+        }
+
+        mMaxLog->LogEntry(msgType, dialog, _M(XIO_PROJECT_NAME),
+                          m.mCategory.empty() ? _M("%s%s %s") : _M("%s %s %s"),
+                          _M(LOG_PREFIX),
+                          m.mCategory.empty() ? _M("") : sts::toString(m.mCategory.data()).c_str(),
+                          sts::toString(m.mMsg.data()).c_str());
+        if (printLocation) {
+            mMaxLog->LogEntry(msgType, NO_DIALOG, _M(XIO_PROJECT_NAME),
+                              _M("%s\t\t<%s -> %s(%d)>"),
+                              _M(LOG_PREFIX),
+                              m.mFunction.empty() ? _M("") : sts::toString(m.mFunction.data()).c_str(),
+                              m.mFile.empty() ? _M("") : sts::toString(sourceFileName(m.mFile.data())).c_str(),
+                              m.mLine);
+        }
+    };
+    //--------------------------------
+    xobj::Logger::mInstance.setHandler(BaseLogger::LvlDebug, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
+        BaseLogger::defaultHandler(l, m, std::clog, "DBG: %LN %MC %MS", colorize::magenta);
+        Debug(printer(l, m, SYSLOG_DEBUG, false));
+    });
+    xobj::Logger::mInstance.setHandler(BaseLogger::LvlMsg, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
+        BaseLogger::defaultHandler(l, m, std::clog, "%LN %MC %MS", nullptr);
+        Debug(printer(l, m, SYSLOG_INFO, false));
+    });
+    xobj::Logger::mInstance.setHandler(BaseLogger::LvlInfo, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
+        BaseLogger::defaultHandler(l, m, std::clog, "INF: %LN %MC %MS", colorize::cyan);
+        Debug(printer(l, m, SYSLOG_INFO, false));
+    });
+    xobj::Logger::mInstance.setHandler(BaseLogger::LvlSuccess, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
+        BaseLogger::defaultHandler(l, m, std::clog, "INF: %LN %MC %MS | OK", colorize::green);
+        Debug(printer(l, m, SYSLOG_INFO, false));
+    });
+    xobj::Logger::mInstance.setHandler(BaseLogger::LvlWarning, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
+        BaseLogger::defaultHandler(l, m, std::clog, "WRN: %LN %MC %MS", colorize::yellow);
+        Debug(printer(l, m, SYSLOG_WARN, false));
+    });
+    xobj::Logger::mInstance.setHandler(BaseLogger::LvlFail, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
+        BaseLogger::defaultHandler(l, m, std::cerr, "ERR: %LN %MC %MS | FAIL\n\t[%TM(%Y-%m-%d] [%T)] [%FN -> %FI(%LI)]", colorize::red);
+        Debug(printer(l, m, SYSLOG_ERROR, false));
+    });
+    xobj::Logger::mInstance.setHandler(BaseLogger::LvlError, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
+        BaseLogger::defaultHandler(l, m, std::cerr, "ERR: %LN %MC %MS \n\t[%TM(%Y-%m-%d] [%T)] [%FN -> %FI(%LI)]", colorize::red);
+        Debug(printer(l, m, SYSLOG_ERROR, true));
+    });
+    xobj::Logger::mInstance.setHandler(BaseLogger::LvlCritical, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
+        BaseLogger::defaultHandler(l, m, std::cerr, "ERR: %LN %MC %MS \n\t[%TM(%Y-%m-%d] [%T)] [%FN -> %FI(%LI)]", colorize::red);
+        Debug(printer(l, m, SYSLOG_ERROR, true));
+    });
     //--------------------------------
 }
 
-Logger::~Logger() {}
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
 void Logger::createVersionStrings() {
-    std::stringstream strstream;
-    strstream << XIO_VERSION_STRING;
+    std::stringstream stream;
+    stream << XIO_VERSION_STRING;
     if (strlen(XIO_RELEASE_TYPE) > 0) {
-        strstream << "-" << XIO_RELEASE_TYPE;
+        stream << "-" << XIO_RELEASE_TYPE;
     }
-    mVersionShortString = strstream.str();
+    mVersionShortString = stream.str();
 
-    strstream << "+" << XIO_VCS_REVISION << " (" << XIO_VCS_BRANCH << ") " << XIO_COMPILE_DATE;
+    stream << "+" << XIO_VCS_REVISION << " (" << XIO_VCS_BRANCH << ") " << XIO_COMPILE_DATE;
 #ifndef NDEBUG
-    strstream << " (" << XIO_COMPILE_TIME << ") " << "DEBUG";
+    stream << " (" << XIO_COMPILE_TIME << ") " << "DEBUG";
 #endif
 
-    mVersionString = strstream.str();
+    mVersionString = stream.str();
 }
 
 /**************************************************************************************************/
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-std::string Logger::aboutXLibInfo(bool inUseWinEol) {
-    return xobj::ExternalLog::about(inUseWinEol);
+const char * Logger::levelAsString(const std::size_t level) {
+    switch (level) {
+        case BaseLogger::LvlDebug: return "DBG";
+        case BaseLogger::LvlMsg: return "";
+        case BaseLogger::LvlInfo: return "INF";
+        case BaseLogger::LvlSuccess: return "INF";
+        case BaseLogger::LvlWarning: return "WRN";
+        case BaseLogger::LvlFail: return "ERR";
+        case BaseLogger::LvlError: return "ERR";
+        case BaseLogger::LvlCritical: return "ERR";
+        default: return "";
+    }
 }
 
-std::string Logger::shortAboutXLibInfo(bool inUseWinEol) {
-    return xobj::ExternalLog::shortAbout(inUseWinEol);
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+std::string Logger::aboutXLibInfo(const bool winEol) {
+    std::stringstream stream;
+    const char * eol = winEol ? "\r\n" : "\n";
+    //-------------------------------------------------------------------------
+
+    stream << "Project: " << XOBJ_PROJECT_NAME << eol;
+    stream << "Organization: " << XOBJ_ORGANIZATION_NAME << " (" << XOBJ_ORGANIZATION_WEBLINK << ")" << eol;
+    stream << "Desc: " << XOBJ_PROJECT_DESCRIPTION << eol;
+    stream << "Link: " << XOBJ_PROJECT_WEBLINK << eol;
+
+    stream << "Version: " XOBJ_VERSION_STRING << "-" << XOBJ_RELEASE_TYPE << "+" << XOBJ_VCS_REVISION << " (" << XOBJ_VCS_BRANCH << ") "
+            << XOBJ_COMPILE_DATE << Debug(" (" << XOBJ_COMPILE_TIME << ") " << "DEBUG" <<) eol;
+
+    stream << "Compiler: " << XOBJ_COMPILER_NAME << " " << XOBJ_COMPILER_VERSION << eol;
+    stream << XOBJ_COPYRIGHT << eol;
+    stream << "Contacts: " << XOBJ_ORGANIZATION_WEBLINK << eol;
+    stream << "License: " << XOBJ_LICENSE_TYPE << eol;
+    stream << "Sources: " << XOBJ_PROJECT_SOURCES_WEBLINK << eol;
+
+    stream << "Contributors: " << eol;
+    for (size_t i = 0; i < XOBJ_ARRAY_LENGTH(XOBJ_CONTRIBUTORS); ++i) {
+        stream << "    " << XOBJ_CONTRIBUTORS[i] << eol;
+    }
+
+    //-------------------------------------------------------------------------
+    return stream.str();
+}
+
+std::string Logger::shortAboutXLibInfo(const bool winEol) {
+    std::stringstream stream;
+    const char * eol = winEol ? "\r\n" : "\n";
+    //-------------------------------------------------------------------------
+
+    stream << "Project: " << XOBJ_PROJECT_NAME << eol;
+    stream << "Version: " XOBJ_VERSION_STRING << "-" << XOBJ_RELEASE_TYPE << "+" << XOBJ_VCS_REVISION << " (" << XOBJ_VCS_BRANCH << ") "
+            << XOBJ_COMPILE_DATE << Debug(" (" << XOBJ_COMPILE_TIME << ") " << "DEBUG" <<) eol;
+    stream << "Compiler: " << XOBJ_COMPILER_NAME << " " << XOBJ_COMPILER_VERSION << eol;
+
+    //-------------------------------------------------------------------------
+    return stream.str();
 }
 
 std::string Logger::aboutInfo(bool inUseWinEol) {
@@ -276,15 +328,15 @@ std::string Logger::shortAboutInfo(bool inUseWinEol) {
 void Logger::printInformation() {
     auto msg1 = sts::MbStrUtils::splitToList(shortAboutInfo(false), "\n");
     auto msg2 = sts::MbStrUtils::splitToList(shortAboutXLibInfo(false), "\n");
-    LMessage << "************************************************************";
-    for (auto s : msg1) {
-        LMessage << s;
+    XLMessage << "************************************************************";
+    for (const auto & s : msg1) {
+        XLMessage << s;
     }
-    LMessage << "************************************************************";
-    for (auto s : msg2) {
-        LMessage << s;
+    XLMessage << "************************************************************";
+    for (const auto & s : msg2) {
+        XLMessage << s;
     }
-    LMessage << "************************************************************";
+    XLMessage << "************************************************************";
 }
 
 /**************************************************************************************************/

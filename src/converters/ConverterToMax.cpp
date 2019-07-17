@@ -97,8 +97,8 @@ bool ConverterToMax::processXTransformHierarchy(INode * parent, xobj::Transform 
     //---------------------------
     processXTransformObjects(parent, xTransform, params);
     //---------------------------
-    for (size_t i = 0; i < xTransform->childrenNum(); ++i) {
-        if (!processXTransformHierarchy(parent, xTransform->childAt(i), params)) {
+    for (auto & child : *xTransform) {
+        if (!processXTransformHierarchy(parent, child.get(), params)) {
             return false;
         }
     }
@@ -106,7 +106,7 @@ bool ConverterToMax::processXTransformHierarchy(INode * parent, xobj::Transform 
 }
 
 void ConverterToMax::processXTransformObjects(INode * parent, xobj::Transform * xTransform, const ImportParams & params) {
-    for (auto & obj : xTransform->objList()) {
+    for (auto & obj : xTransform->mObjects) {
         INode * node = processXObjects(*obj, params);
         if (node) {
             ConverterUtils::toMaxTransform(*xTransform, node);

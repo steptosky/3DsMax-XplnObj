@@ -78,21 +78,24 @@ namespace win {
     //////////////////////////////////////////* Static area *///////////////////////////////////////////
     /**************************************************************************************************/
 
-    void DlgExport::logCallback(sts::BaseLogger::eType type, const char * msg) {
+    void DlgExport::logCallback(const std::size_t level, const char * msg) {
         if (gExportDlg) {
             if (msg) {
-                if (type == sts::BaseLogger::Msg) {
+                if (level == stsff::logging::BaseLogger::LvlMsg) {
                     gExportDlg->mLogText.append("- - - -   ").append(msg).append("\r\n");
                 }
                 else {
-                    if (type == sts::BaseLogger::Warning) {
+                    if (level == stsff::logging::BaseLogger::LvlWarning) {
                         ++gExportDlg->mWarningCount;
                     }
                     else {
                         ++gExportDlg->mErrorCount;
                     }
-                    gExportDlg->mLogText.append(sts::BaseLogger::typeAsString(type))
-                              .append(": ").append(msg).append("\r\n");
+                    gExportDlg->mLogText
+                              .append(Logger::levelAsString(level))
+                              .append(": ")
+                              .append(msg)
+                              .append("\r\n");
                 }
                 gExportDlg->mEdtLog.setXObjText(gExportDlg->mLogText);
             }
@@ -232,9 +235,9 @@ namespace win {
 
         mTime = GetCOREInterface()->GetTime();
 
-        LMessage << "====================== Export obj ======================";
+        XLMessage << "====================== Export obj ======================";
         CLMessage << "File to process: " << sts::toMbString(mExpFileName);
-        LMessage << "SuppressPrompts: " << (mSuppressPrompts ? "true" : "false");
+        XLMessage << "SuppressPrompts: " << (mSuppressPrompts ? "true" : "false");
         CLMessage << "SelectedOnly: " << (mSelectedOnly ? "true" : "false");
         CLMessage << "Current time: " << mTime;
 
@@ -293,7 +296,7 @@ namespace win {
             }
 
             xobj::ObjMain xMain;
-            ConverterUtils::toXTMatrix(ConverterUtils::TOOGL_MTX, xMain.pMatrix);
+            ConverterUtils::toXTMatrix(ConverterUtils::TOOGL_MTX, xMain.mMatrix);
             MainObjParamsWrapper mwrapper(currMainNode.first, GetCOREInterface()->GetTime(), FOREVER);
             result = mConverterer.toXpln(&mwrapper, xMain) ? TRUE : FALSE;
             if (result == FALSE) {
