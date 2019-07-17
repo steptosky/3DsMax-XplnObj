@@ -31,7 +31,7 @@
 
 #include "common/String.h"
 #include "models/MdAnimVis.h"
-#include "ui-win/Controls/CheckBox.h"
+#include "ui-win/controls/CheckBox.h"
 #include "ui-win/controls/List.h"
 #include "ui-win/controls/RollupBase.h"
 
@@ -59,9 +59,7 @@ namespace win {
 
         void create() override;
 
-        IRollupWindow * getInterface() override {
-            return mRollupIp;
-        }
+        IRollupWindow * getInterface() override { return mRollupIp; }
 
         INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
         void initWindow(HWND hWnd) override;
@@ -74,20 +72,15 @@ namespace win {
         void disableControls();
         void clearValues();
 
-        void addHideItem() {
-            addItem(MdAnimVis::Key::HIDE);
-        }
-
-        void addShowItem() {
-            addItem(MdAnimVis::Key::SHOW);
-        }
+        void addHideItem() { addItem(MdAnimVis::Key::HIDE); }
+        void addShowItem() { addItem(MdAnimVis::Key::SHOW); }
 
         void addItem(MdAnimVis::Key::eType type);
         void deleteItem();
         void selectionChanged();
         void selectedDataChanged();
         void makeUiList();
-        static sts::Str toText(MdAnimVis::Key & curr);
+        static sts::Str toText(const MdAnimVis::Key & inKey);
         void setDataRefValueAsToolType();
 
         int mCurrSelected = 0;

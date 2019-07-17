@@ -86,7 +86,7 @@ void MdLight::saveToNode(INode * node, const xobj::ObjAbstract & inObj) const {
             LightIO::saveToNode(node, &inObj);
         }
         catch (std::exception & e) {
-            LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
+            XLCritical << "Can't save data to <" << sts::toMbString(node->GetName())
                     << "> object. Reason: <" << e.what() << ">";
         }
     }
@@ -98,7 +98,7 @@ bool MdLight::loadFromNode(INode * node, LightIO::ILightIO * callBack) {
             return LightIO::loadFromNode(node, callBack);
         }
         catch (std::exception & e) {
-            LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
+            XLCritical << "Can't load data from <" << sts::toMbString(node->GetName())
                     << "> object. Reason: <" << e.what() << ">";
         }
     }

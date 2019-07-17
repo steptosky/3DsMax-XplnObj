@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include <xpln/obj/manipulators/AttrManipNone.h>
 #include "ManipInterface.h"
 #include "ui-win/controls/Base.h"
 #include "models/MdManip.h"
@@ -54,7 +53,7 @@ namespace win {
         RECT rect() const override;
         void move(const POINT & point) override;
 
-        void setManip(const xobj::AttrManipBase & manip) override;
+        void setManip(const std::optional<xobj::AttrManip> & manip) override;
 
         //-------------------------------------------------------------------------
 
@@ -65,9 +64,7 @@ namespace win {
         void destroyWindow(HWND hWnd);
         void toWindow();
 
-        void save() const {
-            mModelData->saveToNode(mData);
-        }
+        void save() const { mModelData->saveToNode(mData); }
 
         ctrl::Base mHwnd;
         MdManip * mModelData;

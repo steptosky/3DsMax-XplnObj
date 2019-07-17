@@ -28,7 +28,6 @@
 */
 
 #include "MdManip.h"
-#include "models/io/NodeIO.h"
 #include "common/String.h"
 
 /**************************************************************************************************/
@@ -80,13 +79,13 @@ bool MdManip::linkNode(INode * node) {
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-void MdManip::saveToNode(INode * node, const xobj::AttrManipBase & inManip) const {
+void MdManip::saveToNode(INode * node, const std::optional<xobj::AttrManip> & inManip) const {
     if (node) {
         try {
-            ManipIO::saveToNode(node, &inManip);
+            ManipIO::saveToNode(node, inManip);
         }
         catch (std::exception & e) {
-            LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
+            XLCritical << "Can't save data to <" << sts::toMbString(node->GetName())
                     << "> object. Reason: <" << e.what() << ">";
         }
     }
@@ -98,7 +97,7 @@ bool MdManip::loadFromNode(INode * node, ManipIO::IManipIo * callBack) {
             return ManipIO::loadFromNode(node, callBack);
         }
         catch (std::exception & e) {
-            LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
+            XLCritical << "Can't load data from <" << sts::toMbString(node->GetName())
                     << "> object. Reason: <" << e.what() << ">";
         }
     }

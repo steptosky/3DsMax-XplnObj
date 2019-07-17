@@ -100,7 +100,7 @@ namespace win {
             item.iItem = mLastFreeId;
 
             if (ListView_InsertItem(hwnd(), &item) == -1) {
-                LError << WinCode(GetLastError());
+                XLError << WinCode(GetLastError());
                 return -1;
             }
             ++mLastFreeId;
@@ -110,7 +110,7 @@ namespace win {
             item.pszText = const_cast<LPTSTR>(name.data());
 
             if (ListView_SetItem(hwnd(), &item) == -1) {
-                LError << WinCode(GetLastError());
+                XLError << WinCode(GetLastError());
             }
             return mLastFreeId - 1;
         }

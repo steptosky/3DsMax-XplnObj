@@ -77,13 +77,13 @@ INode * ConverterSmoke::toMax(const xobj::ObjAbstract * object, const ImportPara
     HelperObject * pobj = reinterpret_cast<SmokeObject*>(params.mCoreInterface->CreateInstance(HELPER_CLASS_ID,
                                                                                                ClassesDescriptions::smokeObj()->ClassID()));
     if (pobj == nullptr) {
-        LCritical << "Lod object <" << object->objectName() << "> couldn't be created.";
+        XLCritical << "Lod object <" << object->objectName() << "> couldn't be created.";
         return nullptr;
     }
 
     INode * pnode = params.mCoreInterface->CreateObjectNode(pobj);
     if (pnode == nullptr) {
-        LCritical << "Max node for the object <" << object->objectName() << "> couldn't be created.";
+        XLCritical << "Max node for the object <" << object->objectName() << "> couldn't be created.";
         return nullptr;
     }
 

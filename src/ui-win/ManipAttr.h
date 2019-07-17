@@ -85,9 +85,8 @@ namespace win {
 
         //-------------------------------------------------------------------------
 
-        void setCurrManip(xobj::AttrManipBase * inManip) {
-            delete mCurrManip;
-            mCurrManip = inManip;
+        void setCurrManip(const std::optional<xobj::AttrManip> & manip) {
+            mCurrManip = manip;
         }
 
         template<typename T>
@@ -95,7 +94,7 @@ namespace win {
             return dynamic_cast<T*>(mCurrManip);
         }
 
-        xobj::AttrManipBase * mCurrManip = nullptr;
+        std::optional<xobj::AttrManip> mCurrManip;
 
         //-------------------------------------------------------------------------
 
@@ -141,16 +140,16 @@ namespace win {
 
         template<typename T, typename W>
         void createSubWin(const T & inManip) {
-            auto item = mChildren.find(sts::toString(inManip.type().toUiString()));
+            auto item = mChildren.find(sts::toString(inManip.mType.toUiString()));
             assert(item != mChildren.end());
-            setCurrManip(inManip.clone());
+            setCurrManip(inManip);
             W * ui = new W(&mData);
             delete item->second;
             item->second = ui;
             currSubWin = ui;
             ui->setManip(inManip);
             ui->create(hwnd());
-            cCmbManipType.setCurrSelected(sts::toString(inManip.type().toUiString()));
+            cCmbManipType.setCurrSelected(sts::toString(inManip.mType.toUiString()));
             recalculateSize();
         }
 

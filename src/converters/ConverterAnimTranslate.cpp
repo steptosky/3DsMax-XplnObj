@@ -136,26 +136,25 @@ void ConverterAnimTranslate::objAnimTrans(INode * node, xobj::Transform & transf
     transAnimValidation(node, zCtrl, "position", 'z');
     //----------------------------------------------
 
-    transform.pAnimTrans.emplace_back();
-    xobj::AnimTrans & anim = transform.pAnimTrans.back();
+    transform.mAnimTrans.emplace_back();
+    xobj::AnimTrans & anim = transform.mAnimTrans.back();
     const Point3 shift = translateValue(xCtrl, yCtrl, zCtrl, params.mCurrTime);
 
-    anim.pKeys.resize(static_cast<size_t>(posControlKeyNum));
+    anim.mKeys.resize(static_cast<size_t>(posControlKeyNum));
     for (int keyNum = 0; keyNum < posControlKeyNum; ++keyNum) {
         Point3 pos = translateValue(xCtrl, yCtrl, zCtrl, posControl->GetKeyTime(keyNum));
         pos = pos - shift;
         if (mdAnimTrans.mReverse) {
             pos = shift - (pos - shift);
         }
-        xobj::AnimTrans::Key & key = anim.pKeys[static_cast<size_t>(keyNum)];
-        key.pPosition.set(pos.x, pos.y, pos.z);
-        key.pDrfValue = keyValueList[keyNum];
+        xobj::AnimTrans::Key & key = anim.mKeys[static_cast<size_t>(keyNum)];
+        key.mPosition.set(pos.x, pos.y, pos.z);
+        key.mDrfValue = keyValueList[keyNum];
     }
 
-    anim.pDrf = sts::toMbString(mdAnimTrans.mDataref);
-    anim.pHasLoop = mdAnimTrans.mLoopEnable;
-    anim.pLoopValue = mdAnimTrans.mLoopValue;
-    checkTransKeysValue(node, anim.pKeys, "position");
+    anim.mDrf = sts::toMbString(mdAnimTrans.mDataref);
+    anim.mLoop = mdAnimTrans.mLoopEnable ? std::optional(mdAnimTrans.mLoopValue) : std::nullopt;
+    checkTransKeysValue(node, anim.mKeys, "position");
 }
 
 /**************************************************************************************************/
@@ -219,12 +218,12 @@ bool ConverterAnimTranslate::checkTransKeysValue(INode * node, const xobj::AnimT
     }
     //-------------------------------------------------------------------------
     if (size == 2) {
-        if (keyList[0].pPosition == keyList[1].pPosition) {
+        if (keyList[0].mPosition == keyList[1].mPosition) {
             CLWarning << LogNode(node) << "has the same position value [0:1] on \"" << ctrlName << "\" controller.";
             return false;
         }
 
-        if (keyList[0].pDrfValue == keyList[1].pDrfValue) {
+        if (keyList[0].mDrfValue == keyList[1].mDrfValue) {
             CLWarning << LogNode(node) << "has the same dataref value [0:1] on \"" << ctrlName << "\" controller.";
             return false;
         }
@@ -239,15 +238,15 @@ bool ConverterAnimTranslate::checkTransKeysValue(INode * node, const xobj::AnimT
             return true;
         }
 
-        if (keyList[k1].pPosition == keyList[k2].pPosition &&
-            keyList[k2].pPosition == keyList[k3].pPosition) {
+        if (keyList[k1].mPosition == keyList[k2].mPosition &&
+            keyList[k2].mPosition == keyList[k3].mPosition) {
             CLWarning << LogNode(node) << "has the same position value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
                     << ctrlName << "\" controller.";
             return false;
         }
 
-        if (stsff::math::isEqual(keyList[k1].pDrfValue, keyList[k2].pDrfValue, threshold) &&
-            stsff::math::isEqual(keyList[k2].pDrfValue, keyList[k3].pDrfValue, threshold)) {
+        if (stsff::math::isEqual(keyList[k1].mDrfValue, keyList[k2].mDrfValue, threshold) &&
+            stsff::math::isEqual(keyList[k2].mDrfValue, keyList[k3].mDrfValue, threshold)) {
             CLWarning << LogNode(node) << "has the same dataref value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
                     << ctrlName << "\" controller.";
             return false;

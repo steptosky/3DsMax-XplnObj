@@ -49,79 +49,79 @@ namespace bcw {
 struct ManipGetter : ManipIO::IManipIo {
 
     void gotAttrManip(const xobj::AttrManipAxisKnob & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipAxisSwitchLeftRight & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipAxisSwitchUpDown & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipCmd & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipCmdAxis & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipCmdKnob & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipCmdSwitchLeftRight & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipCmdSwitchUpDown & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipDelta & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipDragAxis & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipDragAxisPix & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipDragXy & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipNoop & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipPanel & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipPush & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipRadio & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipToggle & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotAttrManip(const xobj::AttrManipWrap & inManip) override {
-        mAttr.setManipulator(inManip.clone());
+        mAttr.mManip = inManip;
     }
 
     void gotNoManip() override {
-        mAttr.setManipulator(nullptr);
+        mAttr.mManip = std::nullopt;
     }
 
     xobj::AttrSet mAttr;
@@ -133,371 +133,433 @@ struct ManipGetter : ManipIO::IManipIo {
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipAxisKnob & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<float>(inManip.clickDelta());
-    stream.setValue<float>(inManip.holdDelta());
-    stream.setValue<float>(inManip.minimum());
-    stream.setValue<float>(inManip.maximum());
-    stream.setValue<bool>(inManip.wheel().isEnabled());
-    stream.setValue<float>(inManip.wheel().delta());
-    stream.setValue<std::string>(inManip.dataref());
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipAxisKnob & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<float>(manip.mClickDelta);
+    stream.setValue<float>(manip.mHoldDelta);
+    stream.setValue<float>(manip.mMin);
+    stream.setValue<float>(manip.mMax);
+    stream.setValue<bool>(manip.mWheel.has_value());
+    stream.setValue<float>(manip.mWheel.value_or(xobj::AttrManipWheel()).mWheelDelta);
+    stream.setValue<std::string>(manip.mDataref);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisKnob & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setClickDelta(stream.value<float>());
-    outManip.setHoldDelta(stream.value<float>());
-    outManip.setMinimum(stream.value<float>());
-    outManip.setMaximum(stream.value<float>());
-    outManip.wheel().setEnabled(stream.value<bool>());
-    outManip.wheel().setDelta(stream.value<float>());
-    outManip.setDataref(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mClickDelta = stream.value<float>();
+    outManip.mHoldDelta = stream.value<float>();
+    outManip.mMin = stream.value<float>();
+    outManip.mMax = stream.value<float>();
+    //-------------------
+    const auto wheelEnabled = stream.value<bool>();
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
+    //-------------------
+    outManip.mDataref = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipAxisSwitchLeftRight & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<float>(inManip.clickDelta());
-    stream.setValue<float>(inManip.holdDelta());
-    stream.setValue<float>(inManip.minimum());
-    stream.setValue<float>(inManip.maximum());
-    stream.setValue<bool>(inManip.wheel().isEnabled());
-    stream.setValue<float>(inManip.wheel().delta());
-    stream.setValue<std::string>(inManip.dataref());
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipAxisSwitchLeftRight & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<float>(manip.mClickDelta);
+    stream.setValue<float>(manip.mHoldDelta);
+    stream.setValue<float>(manip.mMin);
+    stream.setValue<float>(manip.mMax);
+    stream.setValue<bool>(manip.mWheel.has_value());
+    stream.setValue<float>(manip.mWheel.value_or(xobj::AttrManipWheel()).mWheelDelta);
+    stream.setValue<std::string>(manip.mDataref);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisSwitchLeftRight & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setClickDelta(stream.value<float>());
-    outManip.setHoldDelta(stream.value<float>());
-    outManip.setMinimum(stream.value<float>());
-    outManip.setMaximum(stream.value<float>());
-    outManip.wheel().setEnabled(stream.value<bool>());
-    outManip.wheel().setDelta(stream.value<float>());
-    outManip.setDataref(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mClickDelta = stream.value<float>();
+    outManip.mHoldDelta = stream.value<float>();
+    outManip.mMin = stream.value<float>();
+    outManip.mMax = stream.value<float>();
+    //-------------------
+    const auto wheelEnabled = stream.value<bool>();
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
+    //-------------------
+    outManip.mDataref = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipAxisSwitchUpDown & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<float>(inManip.clickDelta());
-    stream.setValue<float>(inManip.holdDelta());
-    stream.setValue<float>(inManip.minimum());
-    stream.setValue<float>(inManip.maximum());
-    stream.setValue<bool>(inManip.wheel().isEnabled());
-    stream.setValue<float>(inManip.wheel().delta());
-    stream.setValue<std::string>(inManip.dataref());
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipAxisSwitchUpDown & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<float>(manip.mClickDelta);
+    stream.setValue<float>(manip.mHoldDelta);
+    stream.setValue<float>(manip.mMin);
+    stream.setValue<float>(manip.mMax);
+    stream.setValue<bool>(manip.mWheel.has_value());
+    stream.setValue<float>(manip.mWheel.value_or(xobj::AttrManipWheel()).mWheelDelta);
+    stream.setValue<std::string>(manip.mDataref);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipAxisSwitchUpDown & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setClickDelta(stream.value<float>());
-    outManip.setHoldDelta(stream.value<float>());
-    outManip.setMinimum(stream.value<float>());
-    outManip.setMaximum(stream.value<float>());
-    outManip.wheel().setEnabled(stream.value<bool>());
-    outManip.wheel().setDelta(stream.value<float>());
-    outManip.setDataref(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mClickDelta = stream.value<float>();
+    outManip.mHoldDelta = stream.value<float>();
+    outManip.mMin = stream.value<float>();
+    outManip.mMax = stream.value<float>();
+    //-------------------
+    const auto wheelEnabled = stream.value<bool>();
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
+    //-------------------
+    outManip.mDataref = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipCmd & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<std::string>(inManip.cmd());
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipCmd & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<std::string>(manip.mCommand);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmd & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setCmd(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mCommand = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipCmdAxis & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<float>(inManip.directionX());
-    stream.setValue<float>(inManip.directionY());
-    stream.setValue<float>(inManip.directionZ());
-    stream.setValue<std::string>(inManip.cmdPositive());
-    stream.setValue<std::string>(inManip.cmdNegative());
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipCmdAxis & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<float>(manip.mDirX);
+    stream.setValue<float>(manip.mDirY);
+    stream.setValue<float>(manip.mDirZ);
+    stream.setValue<std::string>(manip.mPosCommand);
+    stream.setValue<std::string>(manip.mNegCommand);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdAxis & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setDirectionX(stream.value<float>());
-    outManip.setDirectionY(stream.value<float>());
-    outManip.setDirectionZ(stream.value<float>());
-    outManip.setCmdPositive(stream.value<std::string>());
-    outManip.setCmdNegative(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mDirX = stream.value<float>();
+    outManip.mDirY = stream.value<float>();
+    outManip.mDirZ = stream.value<float>();
+    outManip.mPosCommand = stream.value<std::string>();
+    outManip.mNegCommand = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipCmdKnob & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<std::string>(inManip.cmdPositive());
-    stream.setValue<std::string>(inManip.cmdNegative());
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipCmdKnob & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<std::string>(manip.mPosCommand);
+    stream.setValue<std::string>(manip.mNegCommand);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdKnob & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setCmdPositive(stream.value<std::string>());
-    outManip.setCmdNegative(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mPosCommand = stream.value<std::string>();
+    outManip.mNegCommand = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipCmdSwitchLeftRight & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<std::string>(inManip.cmdPositive());
-    stream.setValue<std::string>(inManip.cmdNegative());
+void ManipIO::save(sts::DataStreamO & /*stream*/, const xobj::AttrManipCmdKnob2 & /*manip*/) {
+    // todo implementation
+}
+
+bool ManipIO::load(INode * /*node*/, sts::DataStreamI & /*stream*/, xobj::AttrManipCmdKnob2 & /*outManip*/) {
+    // todo implementation
+    return true;
+}
+
+/***************************************************************************************/
+
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipCmdSwitchLeftRight & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<std::string>(manip.mPosCommand);
+    stream.setValue<std::string>(manip.mNegCommand);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdSwitchLeftRight & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setCmdPositive(stream.value<std::string>());
-    outManip.setCmdNegative(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mPosCommand = stream.value<std::string>();
+    outManip.mNegCommand = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipCmdSwitchUpDown & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<std::string>(inManip.cmdPositive());
-    stream.setValue<std::string>(inManip.cmdNegative());
+void ManipIO::save(sts::DataStreamO & /*stream*/, const xobj::AttrManipCmdSwitchLeftRight2 & /*manip*/) {
+    // todo implementation
+}
+
+bool ManipIO::load(INode * /*node*/, sts::DataStreamI & /*stream*/, xobj::AttrManipCmdSwitchLeftRight2 & /*outManip*/) {
+    // todo implementation
+    return true;
+}
+
+/***************************************************************************************/
+
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipCmdSwitchUpDown & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<std::string>(manip.mPosCommand);
+    stream.setValue<std::string>(manip.mNegCommand);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipCmdSwitchUpDown & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setCmdPositive(stream.value<std::string>());
-    outManip.setCmdNegative(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mPosCommand = stream.value<std::string>();
+    outManip.mNegCommand = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipDelta & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<float>(inManip.down());
-    stream.setValue<float>(inManip.hold());
-    stream.setValue<float>(inManip.minimum());
-    stream.setValue<float>(inManip.maximum());
-    stream.setValue<bool>(inManip.wheel().isEnabled());
-    stream.setValue<float>(inManip.wheel().delta());
-    stream.setValue<std::string>(inManip.dataref());
+void ManipIO::save(sts::DataStreamO & /*stream*/, const xobj::AttrManipCmdSwitchUpDown2 & /*manip*/) {
+    // todo implementation
+}
+
+bool ManipIO::load(INode * /*node*/, sts::DataStreamI & /*stream*/, xobj::AttrManipCmdSwitchUpDown2 & /*outManip*/) {
+    // todo implementation
+    return true;
+}
+
+/***************************************************************************************/
+
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipDelta & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<float>(manip.mDown);
+    stream.setValue<float>(manip.mHold);
+    stream.setValue<float>(manip.mMin);
+    stream.setValue<float>(manip.mMax);
+    stream.setValue<bool>(manip.mWheel.has_value());
+    stream.setValue<float>(manip.mWheel.value_or(xobj::AttrManipWheel()).mWheelDelta);
+    stream.setValue<std::string>(manip.mDataref);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDelta & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setDown(stream.value<float>());
-    outManip.setHold(stream.value<float>());
-    outManip.setMinimum(stream.value<float>());
-    outManip.setMaximum(stream.value<float>());
-    outManip.wheel().setEnabled(stream.value<bool>());
-    outManip.wheel().setDelta(stream.value<float>());
-    outManip.setDataref(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mDown = stream.value<float>();
+    outManip.mHold = stream.value<float>();
+    outManip.mMin = stream.value<float>();
+    outManip.mMax = stream.value<float>();
+    //-------------------
+    const auto wheelEnabled = stream.value<bool>();
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
+    //-------------------
+    outManip.mDataref = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipDragAxis & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<float>(inManip.directionX());
-    stream.setValue<float>(inManip.directionY());
-    stream.setValue<float>(inManip.directionZ());
-    stream.setValue<float>(inManip.val1());
-    stream.setValue<float>(inManip.val2());
-    stream.setValue<bool>(inManip.wheel().isEnabled());
-    stream.setValue<float>(inManip.wheel().delta());
-    stream.setValue<std::string>(inManip.dataref());
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipDragAxis & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<float>(manip.mDirX);
+    stream.setValue<float>(manip.mDirY);
+    stream.setValue<float>(manip.mDirZ);
+    stream.setValue<float>(manip.mVal1);
+    stream.setValue<float>(manip.mVal2);
+    stream.setValue<bool>(manip.mWheel.has_value());
+    stream.setValue<float>(manip.mWheel.value_or(xobj::AttrManipWheel()).mWheelDelta);
+    stream.setValue<std::string>(manip.mDataref);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragAxis & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setDirectionX(stream.value<float>());
-    outManip.setDirectionY(stream.value<float>());
-    outManip.setDirectionZ(stream.value<float>());
-    outManip.setVal1(stream.value<float>());
-    outManip.setVal2(stream.value<float>());
-    outManip.wheel().setEnabled(stream.value<bool>());
-    outManip.wheel().setDelta(stream.value<float>());
-    outManip.setDataref(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mDirX = stream.value<float>();
+    outManip.mDirY = stream.value<float>();
+    outManip.mDirZ = stream.value<float>();
+    outManip.mVal1 = stream.value<float>();
+    outManip.mVal2 = stream.value<float>();
+    //-------------------
+    const auto wheelEnabled = stream.value<bool>();
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
+    //-------------------
+    outManip.mDataref = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipDragAxisPix & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<int>(inManip.dxPix());
-    stream.setValue<int>(inManip.step());
-    stream.setValue<float>(inManip.exp());
-    stream.setValue<float>(inManip.val1());
-    stream.setValue<float>(inManip.val2());
-    stream.setValue<bool>(inManip.wheel().isEnabled());
-    stream.setValue<float>(inManip.wheel().delta());
-    stream.setValue<std::string>(inManip.dataref());
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipDragAxisPix & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<int>(manip.mDxPix);
+    stream.setValue<int>(manip.mStep);
+    stream.setValue<float>(manip.mExp);
+    stream.setValue<float>(manip.mVal1);
+    stream.setValue<float>(manip.mVal2);
+    stream.setValue<bool>(manip.mWheel.has_value());
+    stream.setValue<float>(manip.mWheel.value_or(xobj::AttrManipWheel()).mWheelDelta);
+    stream.setValue<std::string>(manip.mDataref);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragAxisPix & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setDxPix(stream.value<int>());
-    outManip.setStep(stream.value<int>());
-    outManip.setExp(stream.value<float>());
-    outManip.setVal1(stream.value<float>());
-    outManip.setVal2(stream.value<float>());
-    outManip.wheel().setEnabled(stream.value<bool>());
-    outManip.wheel().setDelta(stream.value<float>());
-    outManip.setDataref(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mDxPix = stream.value<int>();
+    outManip.mStep = stream.value<int>();
+    outManip.mExp = stream.value<float>();
+    outManip.mVal1 = stream.value<float>();
+    outManip.mVal2 = stream.value<float>();
+    //-------------------
+    const auto wheelEnabled = stream.value<bool>();
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
+    //-------------------
+    outManip.mDataref = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipDragXy & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<float>(inManip.x());
-    stream.setValue<float>(inManip.xMin());
-    stream.setValue<float>(inManip.xMax());
-    stream.setValue<std::string>(inManip.xDataref());
-    stream.setValue<float>(inManip.y());
-    stream.setValue<float>(inManip.yMin());
-    stream.setValue<float>(inManip.yMax());
-    stream.setValue<std::string>(inManip.yDataref());
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipDragXy & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<float>(manip.mX);
+    stream.setValue<float>(manip.mXMin);
+    stream.setValue<float>(manip.mXMax);
+    stream.setValue<std::string>(manip.mXDataref);
+    stream.setValue<float>(manip.mY);
+    stream.setValue<float>(manip.mYMin);
+    stream.setValue<float>(manip.mYMax);
+    stream.setValue<std::string>(manip.mYDataref);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipDragXy & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setX(stream.value<float>());
-    outManip.setXMin(stream.value<float>());
-    outManip.setXMax(stream.value<float>());
-    outManip.setXDataref(stream.value<std::string>());
-    outManip.setY(stream.value<float>());
-    outManip.setYMin(stream.value<float>());
-    outManip.setYMax(stream.value<float>());
-    outManip.setYDataref(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mX = stream.value<float>();
+    outManip.mXMin = stream.value<float>();
+    outManip.mXMax = stream.value<float>();
+    outManip.mXDataref = stream.value<std::string>();
+    outManip.mY = stream.value<float>();
+    outManip.mYMin = stream.value<float>();
+    outManip.mYMax = stream.value<float>();
+    outManip.mYDataref = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipNoop & inManip) {
+void ManipIO::save(sts::DataStreamO & /*stream*/, const xobj::AttrManipDragRotate & /*manip*/) {
+    // todo implementation
+}
+
+bool ManipIO::load(INode * /*node*/, sts::DataStreamI & /*stream*/, xobj::AttrManipDragRotate & /*outManip*/) {
+    // todo implementation
+    return true;
+}
+
+/***************************************************************************************/
+
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipNoop & manip) {
     stream.setValue<std::uint8_t>(std::uint8_t(2));
-    stream.setValue<std::string>(inManip.toolTip());
+    stream.setValue<std::string>(manip.mToolType);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipNoop & outManip) {
     const auto version = stream.value<std::uint8_t>();
     if (version == 2) {
-        outManip.setToolTip(stream.value<std::string>());
+        outManip.mToolType = stream.value<std::string>();
     }
     else if (version != 1) {
         log_unexpected_version(node, version);
@@ -509,11 +571,11 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipNoop 
 /***************************************************************************************/
 
 void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipPanel & /*inManip*/) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipPanel & /*outManip*/) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
@@ -523,119 +585,131 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipPanel
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipPush & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<float>(inManip.down());
-    stream.setValue<float>(inManip.up());
-    stream.setValue<bool>(inManip.wheel().isEnabled());
-    stream.setValue<float>(inManip.wheel().delta());
-    stream.setValue<std::string>(inManip.dataref());
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipPush & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<float>(manip.mDown);
+    stream.setValue<float>(manip.mUp);
+    stream.setValue<bool>(manip.mWheel.has_value());
+    stream.setValue<float>(manip.mWheel.value_or(xobj::AttrManipWheel()).mWheelDelta);
+    stream.setValue<std::string>(manip.mDataref);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipPush & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setDown(stream.value<float>());
-    outManip.setUp(stream.value<float>());
-    outManip.wheel().setEnabled(stream.value<bool>());
-    outManip.wheel().setDelta(stream.value<float>());
-    outManip.setDataref(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mDown = stream.value<float>();
+    outManip.mUp = stream.value<float>();
+    //-------------------
+    const auto wheelEnabled = stream.value<bool>();
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
+    //-------------------
+    outManip.mDataref = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipRadio & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<float>(inManip.down());
-    stream.setValue<bool>(inManip.wheel().isEnabled());
-    stream.setValue<float>(inManip.wheel().delta());
-    stream.setValue<std::string>(inManip.dataref());
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipRadio & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<float>(manip.mDown);
+    stream.setValue<bool>(manip.mWheel.has_value());
+    stream.setValue<float>(manip.mWheel.value_or(xobj::AttrManipWheel()).mWheelDelta);
+    stream.setValue<std::string>(manip.mDataref);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipRadio & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setDown(stream.value<float>());
-    outManip.wheel().setEnabled(stream.value<bool>());
-    outManip.wheel().setDelta(stream.value<float>());
-    outManip.setDataref(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mDown = stream.value<float>();
+    //-------------------
+    const auto wheelEnabled = stream.value<bool>();
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
+    //-------------------
+    outManip.mDataref = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipToggle & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<float>(inManip.on());
-    stream.setValue<float>(inManip.off());
-    stream.setValue<bool>(inManip.wheel().isEnabled());
-    stream.setValue<float>(inManip.wheel().delta());
-    stream.setValue<std::string>(inManip.dataref());
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipToggle & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<float>(manip.mOn);
+    stream.setValue<float>(manip.mOff);
+    stream.setValue<bool>(manip.mWheel.has_value());
+    stream.setValue<float>(manip.mWheel.value_or(xobj::AttrManipWheel()).mWheelDelta);
+    stream.setValue<std::string>(manip.mDataref);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipToggle & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setOn(stream.value<float>());
-    outManip.setOff(stream.value<float>());
-    outManip.wheel().setEnabled(stream.value<bool>());
-    outManip.wheel().setDelta(stream.value<float>());
-    outManip.setDataref(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mOn = stream.value<float>();
+    outManip.mOff = stream.value<float>();
+    //-------------------
+    const auto wheelEnabled = stream.value<bool>();
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
+    //-------------------
+    outManip.mDataref = stream.value<std::string>();
     return true;
 }
 
 /***************************************************************************************/
 
-void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipWrap & inManip) {
-    stream.setValue<uint8_t>(uint8_t(1)); // manip io version
-    stream.setValue<int32_t>(inManip.cursor().id());
-    stream.setValue<std::string>(inManip.toolTip());
-    stream.setValue<float>(inManip.down());
-    stream.setValue<float>(inManip.hold());
-    stream.setValue<float>(inManip.minimum());
-    stream.setValue<float>(inManip.maximum());
-    stream.setValue<bool>(inManip.wheel().isEnabled());
-    stream.setValue<float>(inManip.wheel().delta());
-    stream.setValue<std::string>(inManip.dataref());
+void ManipIO::save(sts::DataStreamO & stream, const xobj::AttrManipWrap & manip) {
+    stream.setValue<std::uint8_t>(std::uint8_t(1)); // manip io version
+    stream.setValue<std::int32_t>(manip.mCursor.id());
+    stream.setValue<std::string>(manip.mToolType);
+    stream.setValue<float>(manip.mDown);
+    stream.setValue<float>(manip.mHold);
+    stream.setValue<float>(manip.mMin);
+    stream.setValue<float>(manip.mMax);
+    stream.setValue<bool>(manip.mWheel.has_value());
+    stream.setValue<float>(manip.mWheel.value_or(xobj::AttrManipWheel()).mWheelDelta);
+    stream.setValue<std::string>(manip.mDataref);
 }
 
 bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipWrap & outManip) {
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(node, version);
         return false;
     }
-    outManip.setCursor(xobj::ECursor(xobj::ECursor::eId(stream.value<int32_t>())));
-    outManip.setToolTip(stream.value<std::string>());
-    outManip.setDown(stream.value<float>());
-    outManip.setHold(stream.value<float>());
-    outManip.setMinimum(stream.value<float>());
-    outManip.setMaximum(stream.value<float>());
-    outManip.wheel().setEnabled(stream.value<bool>());
-    outManip.wheel().setDelta(stream.value<float>());
-    outManip.setDataref(stream.value<std::string>());
+    outManip.mCursor = xobj::ECursor(xobj::ECursor::eId(stream.value<std::int32_t>()));
+    outManip.mToolType = stream.value<std::string>();
+    outManip.mDown = stream.value<float>();
+    outManip.mHold = stream.value<float>();
+    outManip.mMin = stream.value<float>();
+    outManip.mMax = stream.value<float>();
+    //-------------------
+    const auto wheelEnabled = stream.value<bool>();
+    xobj::AttrManipWheel wheel(stream.value<float>()); // we always have to read the value from the stream
+    outManip.mWheel = wheelEnabled ? std::optional(wheel) : std::nullopt;
+    //-------------------
+    outManip.mDataref = stream.value<std::string>();
     return true;
 }
 
@@ -644,7 +718,7 @@ bool ManipIO::load(INode * node, sts::DataStreamI & stream, xobj::AttrManipWrap 
 /**************************************************************************************************/
 
 bool ManipIO::canApply(INode * node) {
-    TimeValue t = GetCOREInterface()->GetTime();
+    const auto t = GetCOREInterface()->GetTime();
     ObjectState os = node->EvalWorldState(t);
     if (os.obj->SuperClassID() == SHAPE_CLASS_ID) {
         return false;
@@ -677,7 +751,7 @@ void ManipIO::removeFromNode(INode * node) {
 
 bool ManipIO::loadFromNode(INode * inNode, IManipIo * inCallback) {
     if (!inNode || !inCallback) {
-        LError << "One or more of the input parameters is nullptr";
+        XLError << "One or more of the input parameters is nullptr";
         return false;
     }
 
@@ -689,10 +763,10 @@ bool ManipIO::loadFromNode(INode * inNode, IManipIo * inCallback) {
             return true;
         }
         if (bcw::MdManipIoOld::loadFromNode(inNode, chunk, inCallback)) {
-            bcw::ManipGetter gettr;
-            bcw::MdManipIoOld::loadFromNode(inNode, chunk, &gettr);
-            if (gettr.mAttr.manipulator()) {
-                saveToNode(inNode, gettr.mAttr.manipulator());
+            bcw::ManipGetter getter;
+            bcw::MdManipIoOld::loadFromNode(inNode, chunk, &getter);
+            if (getter.mAttr.mManip) {
+                saveToNode(inNode, getter.mAttr.mManip);
                 bcw::MdManipIoOld::removeDataFromNode(inNode);
             }
             return true;
@@ -711,7 +785,7 @@ bool ManipIO::loadFromNode(INode * inNode, IManipIo * inCallback) {
     std::stringstream buf(std::string(reinterpret_cast<const char *>(chunk->data), chunk->length));
     sts::DataStream stream(&buf);
     stream.readAndSetFormatVersion();
-    uint8_t version = stream.value<uint8_t>();
+    const auto version = stream.value<std::uint8_t>();
     if (version != 1) {
         log_unexpected_version(inNode, version);
         inCallback->gotNoManip();
@@ -896,71 +970,37 @@ bool ManipIO::loadFromNode(INode * inNode, IManipIo * inCallback) {
     return true;
 }
 
-void ManipIO::saveToNode(INode * outNode, const xobj::AttrManipBase * inManip) {
-    if (inManip == nullptr) {
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+class ManipIO::ManipSaver {
+    template<class V>
+    struct always_false : std::false_type {};
+
+public:
+
+    template<typename MANIP>
+    void operator()(MANIP && manip) {
+        using T = std::decay_t<decltype(manip)>;
+
+        if constexpr (std::is_same_v<T, xobj::AttrManipNone>) {
+            ManipIO::removeFromNode(mNode);
+        }
+        else {
+            ManipIO::saveToNodeInternal(mNode, manip);
+        }
+    }
+
+    INode * mNode = nullptr;
+};
+
+void ManipIO::saveToNode(INode * outNode, const std::optional<xobj::AttrManip> & manip) {
+    if (!manip) {
         removeFromNode(outNode);
         return;
     }
-    switch (inManip->type().id()) {
-        case xobj::EManipulator::none:
-            removeFromNode(outNode);
-            break;
-        case xobj::EManipulator::axis_knob:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipAxisKnob *>(inManip));
-            break;
-        case xobj::EManipulator::axis_switch_lr:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipAxisSwitchLeftRight *>(inManip));
-            break;
-        case xobj::EManipulator::axis_switch_ud:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipAxisSwitchUpDown *>(inManip));
-            break;
-        case xobj::EManipulator::command:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipCmd *>(inManip));
-            break;
-        case xobj::EManipulator::command_axis:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipCmdAxis *>(inManip));
-            break;
-        case xobj::EManipulator::command_knob:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipCmdKnob *>(inManip));
-            break;
-        case xobj::EManipulator::command_switch_lr:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipCmdSwitchLeftRight *>(inManip));
-            break;
-        case xobj::EManipulator::command_switch_ud:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipCmdSwitchUpDown *>(inManip));
-            break;
-        case xobj::EManipulator::delta:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipDelta *>(inManip));
-            break;
-        case xobj::EManipulator::drag_axis:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipDragAxis *>(inManip));
-            break;
-        case xobj::EManipulator::drag_axis_pix:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipDragAxisPix *>(inManip));
-            break;
-        case xobj::EManipulator::drag_xy:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipDragXy *>(inManip));
-            break;
-        case xobj::EManipulator::noop:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipNoop *>(inManip));
-            break;
-        case xobj::EManipulator::panel:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipPanel *>(inManip));
-            break;
-        case xobj::EManipulator::push:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipPush *>(inManip));
-            break;
-        case xobj::EManipulator::radio:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipRadio *>(inManip));
-            break;
-        case xobj::EManipulator::toggle:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipToggle *>(inManip));
-            break;
-        case xobj::EManipulator::wrap:
-            saveToNodeInternal(outNode, *static_cast<const xobj::AttrManipWrap *>(inManip));
-            break;
-        default: break;
-    }
+    std::visit(ManipIO::ManipSaver{outNode}, *manip);
 }
 
 /**************************************************************************************************/

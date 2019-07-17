@@ -56,21 +56,24 @@ namespace win {
     //////////////////////////////////////////* Static area *///////////////////////////////////////////
     /**************************************************************************************************/
 
-    void DlgImport::logCallback(sts::BaseLogger::eType type, const char * msg) {
+    void DlgImport::logCallback(const std::size_t level, const char * msg) {
         if (gImportDlg) {
             if (msg) {
-                if (type == sts::BaseLogger::Msg) {
+                if (level == stsff::logging::BaseLogger::LvlMsg) {
                     gImportDlg->mLogText.append("- - - -   ").append(msg).append("\r\n");
                 }
                 else {
-                    if (type == sts::BaseLogger::Warning) {
+                    if (level == stsff::logging::BaseLogger::LvlWarning) {
                         ++gImportDlg->mWarningCount;
                     }
                     else {
                         ++gImportDlg->mErrorCount;
                     }
-                    gImportDlg->mLogText.append(sts::BaseLogger::typeAsString(type))
-                              .append(": ").append(msg).append("\r\n");
+                    gImportDlg->mLogText
+                              .append(Logger::levelAsString(level))
+                              .append(": ")
+                              .append(msg)
+                              .append("\r\n");
                 }
                 gImportDlg->mEdtLog.setXObjText(gImportDlg->mLogText);
             }
@@ -126,7 +129,7 @@ namespace win {
         mTime = GetCOREInterface()->GetTime();
         std::string mainFileName(sts::toMbString(mFileName));
 
-        LMessage << "====================== Import obj ======================";
+        XLMessage << "====================== Import obj ======================";
         CLMessage << "File to process: " << mainFileName;
 
         if (mSuppressPrompts) {
@@ -160,7 +163,7 @@ namespace win {
             context.setCommandsFile(xobj::fromMPath(projectCommands));
         }
 
-        ConverterUtils::toXTMatrix(ConverterUtils::FROMOGL_MTX, xMain.pMatrix);
+        ConverterUtils::toXTMatrix(ConverterUtils::FROMOGL_MTX, xMain.mMatrix);
         if (!xMain.importObj(context)) {
             finish(true);
             return false;

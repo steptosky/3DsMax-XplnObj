@@ -66,13 +66,13 @@ bool ConverterLod::toXpln(INode * inNode, xobj::ObjLodGroup & outLod, const Expo
 INode * ConverterLod::toMax(const xobj::ObjLodGroup & inXObj, const ImportParams & params) {
     const auto lodObj = reinterpret_cast<Object*>(params.mCoreInterface->CreateInstance(HELPER_CLASS_ID, ClassesDescriptions::lodObj()->ClassID()));
     if (lodObj == nullptr) {
-        LCritical << "Lod object <" << inXObj.objectName() << "> couldn't be created.";
+        XLCritical << "Lod object <" << inXObj.objectName() << "> couldn't be created.";
         return nullptr;
     }
 
     auto node = params.mCoreInterface->CreateObjectNode(lodObj);
     if (node == nullptr) {
-        LCritical << "Max node for the object <" << inXObj.objectName() << "> couldn't be created.";
+        XLCritical << "Max node for the object <" << inXObj.objectName() << "> couldn't be created.";
         return nullptr;
     }
 

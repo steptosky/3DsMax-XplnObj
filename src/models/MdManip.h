@@ -52,7 +52,7 @@ public:
 
     //-------------------------------------------------------------------------
 
-    void saveToNode(const xobj::AttrManipBase & inManip) const { saveToNode(mNode, inManip); }
+    void saveToNode(const std::optional<xobj::AttrManip> & inManip) const { saveToNode(mNode, inManip); }
     bool loadFromNode(ManipIO::IManipIo * callBack) { return loadFromNode(mNode, callBack); }
 
     //-------------------------------------------------------------------------
@@ -70,7 +70,7 @@ private:
 
     //-------------------------------------------------------------------------
 
-    void saveToNode(INode * node, const xobj::AttrManipBase & inManip) const;
+    void saveToNode(INode * node, const std::optional<xobj::AttrManip> & inManip) const;
     bool loadFromNode(INode * node, ManipIO::IManipIo * callBack);
 
     INode * mNode = nullptr;

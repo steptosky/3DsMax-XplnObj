@@ -108,7 +108,7 @@ namespace ctrl {
             RECT r{0, 0, 0, 0};
             BOOL res = GetWindowRect(mHwnd, &r);
             if (!res) {
-                LError << WinCode(GetLastError());
+                XLError << WinCode(GetLastError());
             }
             return r;
         }
@@ -118,7 +118,7 @@ namespace ctrl {
             RECT r{0, 0, 0, 0};
             BOOL res = GetClientRect(mHwnd, &r);
             if (!res) {
-                LError << WinCode(GetLastError());
+                XLError << WinCode(GetLastError());
             }
             return r;
         }
@@ -135,7 +135,7 @@ namespace ctrl {
             SIZE s = size();
             BOOL res = MoveWindow(mHwnd, point.x, point.y, s.cx, s.cy, static_cast<int>(repaint));
             if (!res) {
-                LError << WinCode(GetLastError());
+                XLError << WinCode(GetLastError());
             }
         }
 
@@ -143,7 +143,7 @@ namespace ctrl {
             assert(mHwnd);
             BOOL res = MoveWindow(mHwnd, rect.left, rect.top, rect.right, rect.bottom, static_cast<int>(repaint));
             if (!res) {
-                LError << WinCode(GetLastError());
+                XLError << WinCode(GetLastError());
             }
         }
 

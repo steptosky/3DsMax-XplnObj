@@ -35,7 +35,6 @@
 
 #include <xpln/enums/ECursor.h>
 #include "ui-win/Utils.h"
-#include "resource/resource.h"
 #include "common/Logger.h"
 #include "resource/ResHelper.h"
 #include "presenters/Datarefs.h"
@@ -75,13 +74,13 @@ namespace win {
                         Utils::getText(theDlg->cEdtDataRef, str);
                         str = presenters::Datarefs::selectData(str);
                         theDlg->cEdtDataRef->SetText(str);
-                        theDlg->mData.setDataref(xobj::fromMStr(str));
+                        theDlg->mData.mDataref = xobj::fromMStr(str);
                         theDlg->save();
                         break;
                     }
                     case CMB_CURSOR: {
                         if (HIWORD(wParam) == CBN_SELCHANGE) {
-                            theDlg->mData.setCursor(xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
+                            theDlg->mData.mCursor = (xobj::ECursor::fromUiString(sts::toMbString(theDlg->cCmbCursor.currSelectedText()).c_str()));
                             theDlg->save();
                         }
                         break;
@@ -93,12 +92,12 @@ namespace win {
             case WM_CUSTEDIT_ENTER: {
                 switch (LOWORD(wParam)) {
                     case EDIT_DATAREF: {
-                        theDlg->mData.setDataref(sts::toMbString(Utils::getText(theDlg->cEdtDataRef)));
+                        theDlg->mData.mDataref = (sts::toMbString(Utils::getText(theDlg->cEdtDataRef)));
                         theDlg->save();
                         break;
                     }
                     case EDIT_TOOLTIP: {
-                        theDlg->mData.setToolTip(sts::toMbString(Utils::getText(theDlg->cEdtToolType)));
+                        theDlg->mData.mToolType = (sts::toMbString(Utils::getText(theDlg->cEdtToolType)));
                         theDlg->save();
                         break;
                     }
@@ -109,22 +108,22 @@ namespace win {
             case CC_SPINNER_CHANGE: {
                 switch (LOWORD(wParam)) {
                     case SPN_DOWN: {
-                        theDlg->mData.setDown(theDlg->mSpnDown->GetFVal());
+                        theDlg->mData.mDown = (theDlg->mSpnDown->GetFVal());
                         theDlg->save();
                         break;
                     }
                     case SPN_HOLD: {
-                        theDlg->mData.setHold(theDlg->mSpnHold->GetFVal());
+                        theDlg->mData.mHold = (theDlg->mSpnHold->GetFVal());
                         theDlg->save();
                         break;
                     }
                     case SPN_MIN: {
-                        theDlg->mData.setMinimum(theDlg->mSpnMim->GetFVal());
+                        theDlg->mData.mMin = (theDlg->mSpnMim->GetFVal());
                         theDlg->save();
                         break;
                     }
                     case SPN_MAX: {
-                        theDlg->mData.setMaximum(theDlg->mSpnMax->GetFVal());
+                        theDlg->mData.mMax = (theDlg->mSpnMax->GetFVal());
                         theDlg->save();
                         break;
                     }
@@ -168,7 +167,7 @@ namespace win {
             mHwnd.show(true);
         }
         else {
-            LError << WinCode(GetLastError());
+            XLError << WinCode(GetLastError());
         }
     }
 
@@ -176,7 +175,7 @@ namespace win {
         if (mHwnd) {
             BOOL res = DestroyWindow(mHwnd.hwnd());
             if (!res) {
-                LError << WinCode(GetLastError());
+                XLError << WinCode(GetLastError());
             }
             mHwnd.release();
         }
@@ -210,13 +209,16 @@ namespace win {
     //////////////////////////////////////////* Functions */////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void ManipAttrDelta::setManip(const xobj::AttrManipBase & manip) {
-        if (manip.type() != mData.type()) {
-            LError << "Incorrect manipulator: " << manip.type().toString();
+    void ManipAttrDelta::setManip(const std::optional<xobj::AttrManip> & manip) {
+        assert(manip);
+        const auto data = std::get_if<xobj::AttrManipDelta>(&*manip);
+        if (!data) {
+            const xobj::EManipulator type = std::visit([](auto && m) { return m.mType; }, *manip);
+            XLError << "Incorrect manipulator type: " << type.toString();
             return;
         }
-        mData = static_cast<const xobj::AttrManipDelta &>(manip);
-        mWheel.setManip(mData.wheel());
+        mData = *data;
+        mWheel.setManip(mData.mWheel);
     }
 
     /**************************************************************************************************/
@@ -224,9 +226,9 @@ namespace win {
     /**************************************************************************************************/
 
     void ManipAttrDelta::initWindow(HWND hWnd) {
-        std::function<void(const xobj::AttrManipWheel &)> callback = [this](const xobj::AttrManipWheel & wheel) mutable {
-            mData.setWheel(wheel);
-            mModelData->saveToNode(mData);
+        const auto callback = [this](const std::optional<xobj::AttrManipWheel> & wheel) mutable {
+            mData.mWheel = wheel;
+            save();
         };
         mWheel.setCallBack(callback);
 
@@ -259,13 +261,13 @@ namespace win {
     }
 
     void ManipAttrDelta::toWindow() {
-        mSpnDown->SetValue(mData.down(), FALSE);
-        mSpnHold->SetValue(mData.hold(), FALSE);
-        mSpnMim->SetValue(mData.minimum(), FALSE);
-        mSpnMax->SetValue(mData.maximum(), FALSE);
-        cEdtDataRef->SetText(xobj::toMStr(mData.dataref()));
-        cEdtToolType->SetText(xobj::toMStr(mData.toolTip()));
-        cCmbCursor.setCurrSelected(sts::toString(mData.cursor().toUiString()));
+        mSpnDown->SetValue(mData.mDown, FALSE);
+        mSpnHold->SetValue(mData.mHold, FALSE);
+        mSpnMim->SetValue(mData.mMin, FALSE);
+        mSpnMax->SetValue(mData.mMax, FALSE);
+        cEdtDataRef->SetText(xobj::toMStr(mData.mDataref));
+        cEdtToolType->SetText(xobj::toMStr(mData.mToolType));
+        cCmbCursor.setCurrSelected(sts::toString(mData.mCursor.toUiString()));
     }
 
     /********************************************************************************************************/

@@ -109,7 +109,7 @@ bool Config::load() {
         return true;
     }
     catch (const std::exception & e) {
-        LError << e.what();
+        XLError << e.what();
         return false;
     }
 }
@@ -120,7 +120,7 @@ bool Config::save() const {
         return true;
     }
     catch (const std::exception & e) {
-        LError << e.what();
+        XLError << e.what();
         return false;
     }
 }

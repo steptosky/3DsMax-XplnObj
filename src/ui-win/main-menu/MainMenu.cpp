@@ -128,7 +128,7 @@ namespace win {
             // add the menu itself
             auto menu = GetIMenu();
             if (!menu) {
-                LError << "Couldn't get menu";
+                XLError << "Couldn't get menu";
                 return;
             }
             menu->SetTitle(_T(MENU_NAME));
@@ -156,13 +156,13 @@ namespace win {
                 //--------------------
             }
             else {
-                LError << "Action table is not set";
+                XLError << "Action table is not set";
             }
             //------------------------------------------------------
             // Make a new "sub" menu item that will be installed to the menu bar
             auto mainMenuItem = GetIMenuItem();
             if (!mainMenuItem) {
-                LError << "Couldn't get menu item";
+                XLError << "Couldn't get menu item";
                 return;
             }
             mainMenuItem->SetSubMenu(menu);
@@ -171,7 +171,7 @@ namespace win {
             auto mainMenuBarContext = static_cast<IMenuBarContext*>(menuManager->GetContext(kMainMenuBar));
             auto mainMenu = mainMenuBarContext->GetMenu();
             if (!mainMenu) {
-                LError << "Main menu bar context returned nullptr for the main menu";
+                XLError << "Main menu bar context returned nullptr for the main menu";
                 return;
             }
             mainMenu->AddItem(mainMenuItem, -1);

@@ -29,12 +29,12 @@
 
 #pragma once
 
-#include <xpln/obj/manipulators/AttrManipBase.h>
+#include <xpln/obj/manipulators/AttrManip.h>
 #include "ui-win/IWindow.h"
 
 namespace ui {
 namespace win {
-
+    
     /********************************************************************************************************/
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /********************************************************************************************************/
@@ -47,7 +47,7 @@ namespace win {
 
         //-------------------------------------------------------------------------
 
-        virtual void setManip(const xobj::AttrManipBase & manip) = 0;
+        virtual void setManip(const std::optional<xobj::AttrManip> & manip) = 0;
 
         //-------------------------------------------------------------------------
 

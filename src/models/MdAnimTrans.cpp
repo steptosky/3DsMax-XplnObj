@@ -63,7 +63,7 @@ void MdAnimTrans::cloneData(INode * from, INode * to) {
 
 MdAnimTrans::KeyTimeList MdAnimTrans::getKeyTimeList(INode * inNode) {
     if (!inNode) {
-        LError << "Node is nullptr";
+        XLError << "Node is nullptr";
         return KeyTimeList();
     }
 
@@ -122,7 +122,7 @@ void MdAnimTrans::saveToNode(INode * node) const {
             AnimIO::saveTransToNode(node, *this);
         }
         catch (std::exception & e) {
-            LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
+            XLCritical << "Can't save data to <" << sts::toMbString(node->GetName())
                     << "> object. Reason: <" << e.what() << ">";
         }
     }
@@ -134,7 +134,7 @@ bool MdAnimTrans::loadFromNode(INode * node) {
             return AnimIO::loadTransFromNode(node, *this);
         }
         catch (std::exception & e) {
-            LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
+            XLCritical << "Can't load data from <" << sts::toMbString(node->GetName())
                     << "> object. Reason: <" << e.what() << ">";
         }
     }

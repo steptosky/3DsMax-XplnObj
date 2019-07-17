@@ -81,8 +81,8 @@ xobj::AnimRotate::KeyList * ConverterAnimRotate::getRotateAxisAnimation(Control 
             value = -value;
         }
         xobj::AnimRotate::Key & key = (*xAnim)[static_cast<size_t>(currentKey)];
-        key.pAngleDegrees = stsff::math::radToDeg(value);
-        key.pDrfValue = keys[currentKey];
+        key.mAngleDegrees = stsff::math::radToDeg(value);
+        key.mDrfValue = keys[currentKey];
     }
     //------------------------------------------------------------
 
@@ -137,7 +137,7 @@ void ConverterAnimRotate::objAnimRotateAxis(INode * node, Control * control, cha
                     << "\" rotate animation export but the object does not have any animation keys.";
         }
         const float value = rotateValue(rotateControl, params.mCurrTime);
-        outXAnim.pKeys.emplace_back(xobj::AnimRotate::Key(stsff::math::radToDeg(value), 0.0f));
+        outXAnim.mKeys.emplace_back(xobj::AnimRotate::Key(stsff::math::radToDeg(value), 0.0f));
         return;
     }
     //------------------------------------------------------------
@@ -150,12 +150,11 @@ void ConverterAnimRotate::objAnimRotateAxis(INode * node, Control * control, cha
 
     xobj::AnimRotate::KeyList * keyList = getRotateAxisAnimation(rotateControl, mdAnimRot->mKeyList, mdAnimRot->mReverse, params);
     if (keyList) {
-        outXAnim.pDrf = sts::toMbString(mdAnimRot->mDataref);
-        outXAnim.pHasLoop = mdAnimRot->mLoopEnable;
-        outXAnim.pLoopValue = mdAnimRot->mLoopValue;
-        outXAnim.pKeys.swap(*keyList);
+        outXAnim.mDrf = sts::toMbString(mdAnimRot->mDataref);
+        outXAnim.mLoop = mdAnimRot->mLoopEnable ? std::optional(mdAnimRot->mLoopValue) : std::nullopt;
+        outXAnim.mKeys.swap(*keyList);
         delete keyList;
-        checkRotateKeysValue(node, outXAnim.pKeys, "rotate", axis);
+        checkRotateKeysValue(node, outXAnim.mKeys, "rotate", axis);
     }
 }
 
@@ -179,13 +178,13 @@ void ConverterAnimRotate::objAnimRotate(INode * node, xobj::Transform & transfor
     objAnimRotateAxis(node, rotateControl, 'z', xEuler.pZ, params);
 
     size_t animCount = 0;
-    if (xEuler.pX.pKeys.size() > 1) {
+    if (xEuler.pX.mKeys.size() > 1) {
         ++animCount;
     }
-    if (xEuler.pY.pKeys.size() > 1) {
+    if (xEuler.pY.mKeys.size() > 1) {
         ++animCount;
     }
-    if (xEuler.pZ.pKeys.size() > 1) {
+    if (xEuler.pZ.mKeys.size() > 1) {
         ++animCount;
     }
     if (animCount > 1) {
@@ -251,12 +250,12 @@ bool ConverterAnimRotate::checkRotateKeysValue(INode * node, const xobj::AnimRot
     }
     //-------------------------------------------------------------------------
     if (size == 2) {
-        if (stsff::math::isEqual(keys[0].pAngleDegrees, keys[1].pAngleDegrees, threshold)) {
+        if (stsff::math::isEqual(keys[0].mAngleDegrees, keys[1].mAngleDegrees, threshold)) {
             CLWarning << LogNode(node) << "has the same key value [0:1] on \"" << axis << "-" << ctrlName << "\" controller.";
             return false;
         }
 
-        if (stsff::math::isEqual(keys[0].pDrfValue, keys[1].pDrfValue, threshold)) {
+        if (stsff::math::isEqual(keys[0].mDrfValue, keys[1].mDrfValue, threshold)) {
             CLWarning << LogNode(node) << "has the same dataref value [0:1] on \"" << axis << "-" << ctrlName << "\" controller.";
             return false;
         }
@@ -271,15 +270,15 @@ bool ConverterAnimRotate::checkRotateKeysValue(INode * node, const xobj::AnimRot
             return true;
         }
 
-        if (stsff::math::isEqual(keys[k1].pAngleDegrees, keys[k2].pAngleDegrees, threshold) &&
-            stsff::math::isEqual(keys[k2].pAngleDegrees, keys[k3].pAngleDegrees, threshold)) {
+        if (stsff::math::isEqual(keys[k1].mAngleDegrees, keys[k2].mAngleDegrees, threshold) &&
+            stsff::math::isEqual(keys[k2].mAngleDegrees, keys[k3].mAngleDegrees, threshold)) {
             CLWarning << LogNode(node) << "has the same key value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
                     << axis << "-" << ctrlName << "\" controller.";
             return false;
         }
 
-        if (stsff::math::isEqual(keys[k1].pDrfValue, keys[k2].pDrfValue, threshold) &&
-            stsff::math::isEqual(keys[k2].pDrfValue, keys[k3].pDrfValue, threshold)) {
+        if (stsff::math::isEqual(keys[k1].mDrfValue, keys[k2].mDrfValue, threshold) &&
+            stsff::math::isEqual(keys[k2].mDrfValue, keys[k3].mDrfValue, threshold)) {
             CLWarning << LogNode(node) << "has the same dataref value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
                     << axis << "-" << ctrlName << "\" controller.";
             return false;

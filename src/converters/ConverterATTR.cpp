@@ -47,25 +47,25 @@
 struct ManipGetter : ManipIO::IManipIo {
 
     explicit ManipGetter(xobj::ObjMesh * mesh) { mMesh = mesh; }
-    void gotAttrManip(const xobj::AttrManipAxisKnob & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipAxisSwitchLeftRight & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipAxisSwitchUpDown & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipCmd & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipCmdAxis & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipCmdKnob & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipCmdSwitchLeftRight & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipCmdSwitchUpDown & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipDelta & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipDragAxis & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipDragAxisPix & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipDragXy & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipNoop & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipPanel & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipPush & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipRadio & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipToggle & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotAttrManip(const xobj::AttrManipWrap & inManip) override { mMesh->pAttr.setManipulator(inManip.clone()); }
-    void gotNoManip() override { mMesh->pAttr.setManipulator(nullptr); }
+    void gotAttrManip(const xobj::AttrManipAxisKnob & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipAxisSwitchLeftRight & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipAxisSwitchUpDown & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipCmd & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipCmdAxis & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipCmdKnob & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipCmdSwitchLeftRight & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipCmdSwitchUpDown & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipDelta & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipDragAxis & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipDragAxisPix & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipDragXy & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipNoop & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipPanel & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipPush & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipRadio & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipToggle & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotAttrManip(const xobj::AttrManipWrap & inManip) override { mMesh->mAttr.mManip = inManip; }
+    void gotNoManip() override { mMesh->mAttr.mManip = std::nullopt; }
 
 private:
     xobj::ObjMesh * mMesh;
@@ -76,14 +76,14 @@ private:
 /**************************************************************************************************/
 
 void ConverterAttr::toXpln(xobj::ObjAbstract & outXObj, INode * inNode, const ExportParams &) {
-    xobj::eObjectType xType = outXObj.objType();
+    const auto xType = outXObj.objType();
     if (xType != xobj::OBJ_MESH) {
         return;
     }
-    xobj::ObjMesh & m = static_cast<xobj::ObjMesh&>(outXObj);
+    auto & m = static_cast<xobj::ObjMesh&>(outXObj);
     MdObjAttr mdBaseAttr;
     if (mdBaseAttr.linkNode(inNode)) {
-        mdBaseAttr.loadFromNode(m.pAttr);
+        mdBaseAttr.loadFromNode(m.mAttr);
     }
     MdManip mdManip;
     if (mdManip.linkNode(inNode)) {
@@ -97,19 +97,19 @@ void ConverterAttr::toXpln(xobj::ObjAbstract & outXObj, INode * inNode, const Ex
 /**************************************************************************************************/
 
 void ConverterAttr::toMax(INode * inNode, const xobj::ObjAbstract & inXObj, const ImportParams &) {
-    xobj::eObjectType xType = inXObj.objType();
+    const auto xType = inXObj.objType();
     if (xType != xobj::OBJ_MESH) {
         return;
     }
-    const xobj::ObjMesh & m = static_cast<const xobj::ObjMesh&>(inXObj);
+    const auto & m = static_cast<const xobj::ObjMesh&>(inXObj);
     MdObjAttr mdBaseAttr;
     if (mdBaseAttr.linkNode(inNode)) {
-        mdBaseAttr.saveToNode(m.pAttr);
+        mdBaseAttr.saveToNode(m.mAttr);
     }
     MdManip mdManip;
     if (mdManip.linkNode(inNode)) {
-        if (m.pAttr.manipulator()) {
-            mdManip.saveToNode(*m.pAttr.manipulator());
+        if (m.mAttr.mManip) {
+            mdManip.saveToNode(m.mAttr.mManip);
         }
     }
 }

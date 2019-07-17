@@ -53,13 +53,13 @@ void MainObject::loadMdDisplayObj(sts_bwc::DataStream & stream) const {
     id.load(stream.getStdStream());
 
     if (id != bcw::SerializationId(0x7f084ca4, 0x1f19134e)) {
-        LError << "Unexpected data input: " << id.toString();
+        XLError << "Unexpected data input: " << id.toString();
         return;
     }
     uint8_t version;
     stream >> version;
     if (version != 1) {
-        LError << "Unexpected data version: " << version;
+        XLError << "Unexpected data version: " << version;
         return;
     }
 
@@ -74,13 +74,13 @@ void MainObject::loadRawGlobAttr(sts_bwc::DataStream & stream) const {
     bcw::SerializationId id;
     id.load(stream.getStdStream());
     if (id != bcw::SerializationId(0x37af3f56, 0x7eae24ae)) {
-        LError << "Unexpected data input: " << id.toString();
+        XLError << "Unexpected data input: " << id.toString();
         return;
     }
     unsigned char version;
     stream >> version;
     if (version != 1) {
-        LError << "Unexpected data version: " << version;
+        XLError << "Unexpected data version: " << version;
         return;
     }
 
@@ -172,7 +172,7 @@ void MainObject::loadRawGlobAttr(sts_bwc::DataStream & stream) const {
     if (data.chkNoBlend && data.chkShadowBlend) {
         const std::string msg(R"("shadow blend" and "no blend" can not be enabled at same time. Only data about "no blend" will be loaded.)");
         ui::win::DlgMessageBox::warning(nullptr, "[Backward Compatibility]", msg);
-        LWarning << msg;
+        XLWarning << msg;
     }
     MainObjParamsWrapper wrapper(mAttrParamsPb, mGeomPb, TimeValue(0), FOREVER);
     if (data.chkNoBlend) {
@@ -261,13 +261,13 @@ void MainObject::loadRawExpOption(sts_bwc::DataStream & stream) const {
     bcw::SerializationId id;
     id.load(stream.getStdStream());
     if (id != bcw::SerializationId(0xf34588f, 0x1863592b)) {
-        LError << "Unexpected data input: " << id.toString();
+        XLError << "Unexpected data input: " << id.toString();
         return;
     }
     unsigned char version;
     stream >> version;
     if (version != 1) {
-        LError << "Unexpected data version: " << version;
+        XLError << "Unexpected data version: " << version;
         return;
     }
 
@@ -281,13 +281,13 @@ void MainObject::loadRawExpOption(sts_bwc::DataStream & stream) const {
         bcw::SerializationId idx;
         idx.load(stream.getStdStream());
         if (idx != bcw::SerializationId(0x3b0318d2, 0x7b7e3761)) {
-            LError << "Unexpected data input: " << idx.toString();
+            XLError << "Unexpected data input: " << idx.toString();
             return;
         }
         unsigned char ver;
         stream >> ver;
         if (version != 1) {
-            LError << "Unexpected data version: " << version;
+            XLError << "Unexpected data version: " << version;
             return;
         }
 
@@ -342,7 +342,7 @@ void MainObject::loadRawExpOption(sts_bwc::DataStream & stream) const {
 }
 
 void MainObject::load186(std::vector<char> & inByteArray) {
-    LMessage << "Object: <" << sts::toMbString(GetObjectName()) << "> has got data from previous version.";
+    XLMessage << "Object: <" << sts::toMbString(GetObjectName()) << "> has got data from previous version.";
     std::stringbuf buf(std::string(reinterpret_cast<char*>(inByteArray.data()), inByteArray.size()));
     sts_bwc::DataStream stream(buf);
 

@@ -55,7 +55,7 @@ bool ConverterAnimVisibility::toXpln(INode & node, xobj::Transform & transform, 
     if (!mdAnimVis.mEnable) {
         return true;
     }
-    transform.pAnimVis.pKeys.swap(mdAnimVis.mKeyList);
+    transform.mAnimVis.mKeys.swap(mdAnimVis.mKeyList);
 
     return true;
 }
