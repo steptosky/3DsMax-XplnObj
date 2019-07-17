@@ -34,7 +34,9 @@
 #include "ConverterMesh.h"
 #include "ConverterMain.h"
 #include "ConverterLight.h"
-#include "ConverterAnim.h"
+#include "ConverterAnimVisibility.h"
+#include "ConverterAnimTranslate.h"
+#include "ConverterAnimRotate.h"
 #include "ConverterUtils.h"
 #include "ConverterSmoke.h"
 #include "ConverterLod.h"
@@ -87,7 +89,9 @@ bool ConverterToMax::processXTransformHierarchy(INode * parent, xobj::Transform 
         if (!animNode) {
             return false;
         }
-        if (!ConverterAnim::toMax(animNode, xTransform, params)) {
+        if (!ConverterAnimVisibility::toMax(animNode, xTransform, params) &&
+            !ConverterAnimTranslate::toMax(animNode, xTransform, params) &&
+            !ConverterAnimRotate::toMax(animNode, xTransform, params)) {
             return false;
         }
         ConverterUtils::toMaxTransform(*xTransform, animNode);
