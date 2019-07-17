@@ -39,19 +39,16 @@
 //////////////////////////////////////////////* Functions *///////////////////////////////////////////////
 /********************************************************************************************************/
 
-bool ConverterAnimTranslate::toXpln(INode * node, xobj::Transform * transform, const ExportParams & params) {
-    DbgAssert(node);
-    DbgAssert(transform);
-    //-------------------------------
-    if (!AnimIO::canApply(node)) {
+bool ConverterAnimTranslate::toXpln(INode & node, xobj::Transform & transform, const ExportParams & params) {
+    if (!AnimIO::canApply(&node)) {
         return false;
     }
-    objAnimTrans(node, *transform, params);
+    objAnimTrans(&node, transform, params);
     //-------------------------------
     return true;
 }
 
-bool ConverterAnimTranslate::toMax(INode *, xobj::Transform *, const ImportParams &) {
+bool ConverterAnimTranslate::toMax(INode &, xobj::Transform &, const ImportParams &) {
     // TODO Implementation
     return true;
 }

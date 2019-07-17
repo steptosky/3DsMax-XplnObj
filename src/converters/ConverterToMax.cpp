@@ -89,9 +89,11 @@ bool ConverterToMax::processXTransformHierarchy(INode * parent, xobj::Transform 
         if (!animNode) {
             return false;
         }
-        if (!ConverterAnimVisibility::toMax(animNode, xTransform, params) &&
-            !ConverterAnimTranslate::toMax(animNode, xTransform, params) &&
-            !ConverterAnimRotate::toMax(animNode, xTransform, params)) {
+        DbgAssert(parent);
+        DbgAssert(xTransform);
+        if (!ConverterAnimVisibility::toMax(*animNode, *xTransform, params) &&
+            !ConverterAnimTranslate::toMax(*animNode, *xTransform, params) &&
+            !ConverterAnimRotate::toMax(*animNode, *xTransform, params)) {
             return false;
         }
         ConverterUtils::toMaxTransform(*xTransform, animNode);

@@ -49,8 +49,8 @@ public:
 
     ConverterAnimRotate() = delete;
 
-    static bool toXpln(INode * node, xobj::Transform * transform, const ExportParams & params);
-    static bool toMax(INode * node, xobj::Transform * transform, const ImportParams & params);
+    static bool toXpln(INode & node, xobj::Transform & transform, const ExportParams & params);
+    static bool toMax(INode & node, xobj::Transform & transform, const ImportParams & params);
 
 private:
 

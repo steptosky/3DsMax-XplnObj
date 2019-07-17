@@ -141,10 +141,11 @@ bool ConverterToXpln::processNode(INode * node, xobj::Transform * xTransform, co
     ConverterUtils::toXTransform(node->GetNodeTM(mMainObj->timeValue()), tr);
     //-------------------------------------------------------------------------
     // animation
+    DbgAssert(node);
     if (mMainObj->isAnimationExport()) {
-        ConverterAnimVisibility::toXpln(node, &tr, params);
-        ConverterAnimTranslate::toXpln(node, &tr, params);
-        ConverterAnimRotate::toXpln(node, &tr, params);
+        ConverterAnimVisibility::toXpln(*node, tr, params);
+        ConverterAnimTranslate::toXpln(*node, tr, params);
+        ConverterAnimRotate::toXpln(*node, tr, params);
     }
     //-------------------------------------------------------------------------
     // translate object

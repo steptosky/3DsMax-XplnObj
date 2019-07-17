@@ -42,28 +42,25 @@
 //////////////////////////////////////////////* Functions *///////////////////////////////////////////////
 /********************************************************************************************************/
 
-bool ConverterAnimVisibility::toXpln(INode * node, xobj::Transform * transform, const ExportParams & /*params*/) {
-    DbgAssert(node);
-    DbgAssert(transform);
-    //-------------------------------
-    if (!AnimIO::canApply(node)) {
+bool ConverterAnimVisibility::toXpln(INode & node, xobj::Transform & transform, const ExportParams & /*params*/) {
+    if (!AnimIO::canApply(&node)) {
         return false;
     }
-    //-------------------------------
+
     MdAnimVis mdAnimVis;
-    if (!mdAnimVis.linkNode(node, true)) {
+    if (!mdAnimVis.linkNode(&node, true)) {
         return true;
     }
 
     if (!mdAnimVis.mEnable) {
         return true;
     }
-    transform->pAnimVis.pKeys.swap(mdAnimVis.mKeyList);
-    //-------------------------------
+    transform.pAnimVis.pKeys.swap(mdAnimVis.mKeyList);
+
     return true;
 }
 
-bool ConverterAnimVisibility::toMax(INode *, xobj::Transform *, const ImportParams &) {
+bool ConverterAnimVisibility::toMax(INode &, xobj::Transform &, const ImportParams &) {
     // TODO Implementation
     return true;
 }

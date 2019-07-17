@@ -42,19 +42,16 @@
 //////////////////////////////////////////////* Functions *///////////////////////////////////////////////
 /********************************************************************************************************/
 
-bool ConverterAnimRotate::toXpln(INode * node, xobj::Transform * transform, const ExportParams & params) {
-    DbgAssert(node);
-    DbgAssert(transform);
-    //-------------------------------
-    if (!AnimIO::canApply(node)) {
+bool ConverterAnimRotate::toXpln(INode & node, xobj::Transform & transform, const ExportParams & params) {
+    if (!AnimIO::canApply(&node)) {
         return false;
     }
-    objAnimRotate(node, *transform, params);
+    objAnimRotate(&node, transform, params);
     //-------------------------------
     return true;
 }
 
-bool ConverterAnimRotate::toMax(INode *, xobj::Transform *, const ImportParams &) {
+bool ConverterAnimRotate::toMax(INode &, xobj::Transform &, const ImportParams &) {
     // TODO Implementation
     return true;
 }
