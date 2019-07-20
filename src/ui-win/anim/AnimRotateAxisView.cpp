@@ -33,6 +33,7 @@
 #include "ui-win/AnimCalc.h"
 #include "resource/ResHelper.h"
 #include "presenters/Datarefs.h"
+#include "converters/ConverterAnimRotate.h"
 
 namespace ui {
 namespace win {
@@ -221,6 +222,8 @@ namespace win {
         cBtnUpdate.setToolTip(sts::toString("Update animation keys. Use it to update your animation keys when you have changed your animation without pressing auto-key button."));
 
         switch (mData.mAxis) {
+            case MdAnimRot::LINEAR: cStcName.setText("Linear");
+                break;
             case MdAnimRot::X: cStcName.setText("X axis");
                 break;
             case MdAnimRot::Y: cStcName.setText("Y axis");
@@ -346,6 +349,11 @@ namespace win {
             cListKeys.addItem(sts::StrUtils::join(_T("#:"), i + 1, _T(" F:"), timeList[i] / tpt, _T(" V:"), mData.mKeyList[i]));
         }
         cListKeys.setCurrSelected(sCurrSelected);
+
+        if (mData.mAxis == MdAnimRot::LINEAR) {
+            const auto axisNum = ConverterAnimRotate::calculateLinearAxisNum(mData.linkedNode());
+            cStcName.setText("Linear (got "s.append(std::to_string(axisNum)).append(" axis)"));
+        }
     }
 
     void AnimRotateAxisView::setEnable() {
