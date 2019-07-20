@@ -51,6 +51,8 @@ public:
     static bool toXpln(INode & node, xobj::Transform & transform, const ExportParams & params);
     static bool toMax(INode & node, xobj::Transform & transform, const ImportParams & params);
 
+    static std::size_t calculateLinearAxisNum(INode * node);
+
 private:
 
     static void processLinearRotate(INode & node, xobj::Transform & transform, Control & control, const ExportParams & params);

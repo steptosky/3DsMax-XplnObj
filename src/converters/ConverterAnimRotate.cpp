@@ -51,6 +51,7 @@ bool ConverterAnimRotate::toXpln(INode & node, xobj::Transform & transform, cons
     }
     //-------------------------------
     Control * controller = node.GetTMController();
+    DbgAssert(controller);
     Control * rotation = controller->GetRotationController();
     if (!rotation) {
         return false;
@@ -68,6 +69,42 @@ bool ConverterAnimRotate::toXpln(INode & node, xobj::Transform & transform, cons
 bool ConverterAnimRotate::toMax(INode &, xobj::Transform &, const ImportParams &) {
     // TODO Implementation
     return true;
+}
+
+/********************************************************************************************************/
+//////////////////////////////////////////////* Functions *///////////////////////////////////////////////
+/********************************************************************************************************/
+
+std::size_t ConverterAnimRotate::calculateLinearAxisNum(INode * node) {
+    if (!node) {
+        return 0;
+    }
+    Control * controller = node->GetTMController();
+    DbgAssert(controller);
+    Control * rotation = controller->GetRotationController();
+    if (!rotation) {
+        return 0;
+    }
+    if (rotation->ClassID() != Class_ID(LININTERP_ROTATION_CLASS_ID, 0)) {
+        return 0;
+    }
+    const auto numKeys = rotation->NumKeys();
+    if (numKeys < 2) {
+        return 0;
+    }
+
+    Interval interval(FOREVER);
+    xobj::LinearRotateHelper::Input keys;
+    keys.reserve(std::size_t(numKeys));
+
+    for (int i = 0; i < numKeys; ++i) {
+        Quat quat;
+        rotation->GetValue(rotation->GetKeyTime(i), quat, interval);
+        keys.emplace_back(xobj::LinearRotateHelper::Key{xobj::Quat(quat.w, quat.x, quat.y, quat.z), 0});
+    }
+
+    const auto animList = xobj::LinearRotateHelper::makeAnimations(keys, xobj::TMatrix());
+    return animList.size();
 }
 
 /********************************************************************************************************/
