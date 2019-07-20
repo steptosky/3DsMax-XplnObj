@@ -150,6 +150,7 @@ private:
 /**************************************************************************************************/
 
 #define LogNode(x) "Object: \"" << (x == nullptr ? "nullptr" : sts::toMbString(x->GetName())) << "\" - "
+#define LogNodeRef(x) "Object: \"" << sts::toMbString(x.GetName()) << "\" - "
 #define WinCode(x) "win code:" << x
 
 /**************************************************************************************************/

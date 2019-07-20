@@ -34,7 +34,6 @@
 #pragma warning(pop)
 
 #include <xpln/obj/Transform.h>
-#include <xpln/common/EulerXyzHelper.h>
 #include "models/MdAnimRot.h"
 
 class ExportParams;
@@ -54,7 +53,9 @@ public:
 
 private:
 
-    static void objAnimRotate(INode * node, xobj::Transform & transform, const ExportParams & params);
+    static void processLinearRotate(INode & node, xobj::Transform & transform, Control & control, const ExportParams & params);
+
+    static void objAnimRotate(INode * node, xobj::Transform & transform, Control & control, const ExportParams & params);
     static void objAnimRotateAxis(INode * node, Control * control, char axis,
                                   xobj::AnimRotate & outXAnim, const ExportParams & params);
     static xobj::AnimRotate::KeyList * getRotateAxisAnimation(Control * ctrlAxis, const MdAnimRot::KeyValueList & keys,

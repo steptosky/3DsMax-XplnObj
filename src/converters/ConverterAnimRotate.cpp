@@ -28,7 +28,10 @@
 */
 
 #include <memory>
+#include <decomp.h>
 
+#include <xpln/utils/LinearRotateHelper.h>
+#include <xpln/utils/EulerXyzRotateHelper.h>
 #include "ConverterAnimRotate.h"
 #include "ConverterUtils.h"
 #include "common/Logger.h"
@@ -46,14 +49,79 @@ bool ConverterAnimRotate::toXpln(INode & node, xobj::Transform & transform, cons
     if (!AnimIO::canApply(&node)) {
         return false;
     }
-    objAnimRotate(&node, transform, params);
     //-------------------------------
+    Control * controller = node.GetTMController();
+    Control * rotation = controller->GetRotationController();
+    if (!rotation) {
+        return false;
+    }
+    if (!rotation->IsAnimated()) {
+        return false;
+    }
+
+    const Class_ID controlId = rotation->ClassID();
+
+    if (controlId == Class_ID(LININTERP_ROTATION_CLASS_ID, 0)) {
+        processLinearRotate(node, transform, *rotation, params);
+    }
+    else {
+        objAnimRotate(&node, transform, *rotation, params);
+    }
     return true;
 }
 
 bool ConverterAnimRotate::toMax(INode &, xobj::Transform &, const ImportParams &) {
     // TODO Implementation
     return true;
+}
+
+/********************************************************************************************************/
+//////////////////////////////////////////////* Functions *///////////////////////////////////////////////
+/********************************************************************************************************/
+
+void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & transform, Control & control, const ExportParams & /*params*/) {
+    const auto numKeys = control.NumKeys();
+    if (numKeys == 1) {
+        CLError << LogNodeRef(node) << "has animation rotate with one key, supported number 2 and more.";
+        return;
+    }
+
+    const auto getQuat = [](Control & control, const TimeValue time) ->Quat {
+        Quat q;
+        Interval interval(FOREVER);
+        control.GetValue(time, q, interval);
+        return q;
+    };
+    Interval interval(FOREVER);
+
+    if (numKeys != 0) {
+        xobj::LinearRotateHelper::Input keys;
+        keys.reserve(std::size_t(numKeys));
+
+        const float valAdd = 1.0f / float(numKeys - 1);
+
+        for (int i = 0; i < numKeys; ++i) {
+            auto quat = getQuat(control, control.GetKeyTime(i));
+            const AngAxis a1(quat);
+            keys.emplace_back(xobj::LinearRotateHelper::Key{xobj::Quat(quat.w, quat.x, quat.y, quat.z), valAdd * float(i)});
+            // CLInfo << "[" << mzbt(a1.axis.x) << " : " << mzbt(a1.axis.y) << " : " << mzbt(a1.axis.z) << " : " << mzbt(a1.angle) << "]  "
+            //         << "[" << quat.x << " : " << quat.y << " : " << quat.z << " : " << quat.w << "]  ";
+            CLInfo << "[" << quat.w << " : " << quat.x << " : " << quat.y << " : " << quat.z << "]  ";
+
+        }
+
+        const auto mtx = ConverterUtils::toXTMatrix(node.GetNodeTM(GetCOREInterface()->GetTime(), &interval)).toRotation();
+        auto animList = xobj::LinearRotateHelper::makeAnimations(keys, mtx);
+        for (auto & a : animList) {
+            a.mDrf = "sim/cockpit2/controls/yoke_pitch_ratio";
+            LVar(msg, xobj::Logger::mInstance).info() << "[" << a.mVector.x << " : " << a.mVector.y << " : " << a.mVector.z;
+            for (auto & k : a.mKeys) {
+                msg << " : (" << k.mAngleDegrees << "/" << k.mDrfValue << ")";
+            }
+            msg << "]";
+            transform.mAnimRotate.emplace_back(std::move(a));
+        }
+    }
 }
 
 /**************************************************************************************************/
@@ -160,24 +228,14 @@ void ConverterAnimRotate::objAnimRotateAxis(INode * node, Control * control, cha
 
 //-------------------------------------------------------------------------
 
-void ConverterAnimRotate::objAnimRotate(INode * node, xobj::Transform & transform, const ExportParams & params) {
-    DbgAssert(node);
+void ConverterAnimRotate::objAnimRotate(INode * node, xobj::Transform & transform, Control & control, const ExportParams & params) {
+    xobj::EulerXyzRotateHelper xEuler;
 
-    Control * tmControl = node->GetTMController();
-    if (!tmControl) {
-        return;
-    }
-    Control * rotateControl = tmControl->GetRotationController();
-    if (!rotateControl || !rotateControl->IsAnimated()) {
-        return;
-    }
-    xobj::EulerXyzHelper xEuler;
+    objAnimRotateAxis(node, &control, 'x', xEuler.pX, params);
+    objAnimRotateAxis(node, &control, 'y', xEuler.pY, params);
+    objAnimRotateAxis(node, &control, 'z', xEuler.pZ, params);
 
-    objAnimRotateAxis(node, rotateControl, 'x', xEuler.pX, params);
-    objAnimRotateAxis(node, rotateControl, 'y', xEuler.pY, params);
-    objAnimRotateAxis(node, rotateControl, 'z', xEuler.pZ, params);
-
-    size_t animCount = 0;
+    std::size_t animCount = 0;
     if (xEuler.pX.mKeys.size() > 1) {
         ++animCount;
     }
