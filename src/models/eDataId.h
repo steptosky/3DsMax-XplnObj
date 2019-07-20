@@ -43,6 +43,7 @@ enum class eAnimRotateIOID : uint32_t {
     ANIM_X_ROTATE = 1100,
     ANIM_Y_ROTATE = 1101,
     ANIM_Z_ROTATE = 1102,
+    ANIM_LINEAR_ROTATE = 1103,
 };
 
 enum class eAnimTransIOID : uint32_t {

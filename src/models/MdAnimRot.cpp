@@ -71,6 +71,13 @@ MdAnimRot::KeyTimeList MdAnimRot::getKeyTimeList(INode * inNode, eAxis inAxis) {
     KeyTimeList keyTimeList;
     Control * rotateConrol = nullptr;
     switch (inAxis) {
+        case LINEAR: {
+            Control * tmctrl = inNode->GetTMController();
+            if (tmctrl) {
+                rotateConrol = tmctrl->GetRotationController();
+            }
+            break;
+        }
         case X: {
             Control * tmctrl = inNode->GetTMController();
             if (tmctrl) {

@@ -55,13 +55,8 @@ bool ConverterAnimRotate::toXpln(INode & node, xobj::Transform & transform, cons
     if (!rotation) {
         return false;
     }
-    if (!rotation->IsAnimated()) {
-        return false;
-    }
 
-    const Class_ID controlId = rotation->ClassID();
-
-    if (controlId == Class_ID(LININTERP_ROTATION_CLASS_ID, 0)) {
+    if (rotation->ClassID() == Class_ID(LININTERP_ROTATION_CLASS_ID, 0)) {
         processLinearRotate(node, transform, *rotation, params);
     }
     else {
@@ -85,40 +80,44 @@ void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & tr
         CLError << LogNodeRef(node) << "has animation rotate with one key, supported number 2 and more.";
         return;
     }
+    //------------------------------------------------------------
+    MdAnimRot animRotate(MdAnimRot::LINEAR);
+    if (!animRotate.linkNode(&node, true)) {
+        return;
+    }
+    if (!control.IsAnimated()) {
+        if (animRotate.mEnable) {
+            CLError << LogNodeRef(node) << "has animation export but the object does not have any animation keys.";
+        }
+        return;
+    }
+    if (!animRotate.mEnable) {
+        CLError << LogNodeRef(node) << "has animation rotate but the animation export isn't enabled, this may lead to wrong animation result.";
+        return;
+    }
 
-    const auto getQuat = [](Control & control, const TimeValue time) ->Quat {
-        Quat q;
-        Interval interval(FOREVER);
-        control.GetValue(time, q, interval);
-        return q;
-    };
+    if (numKeys != static_cast<int>(animRotate.mKeyList.size())) {
+        CLError << LogNodeRef(node) << "mismatch animation keys and dataref values number";
+        return;
+    }
+    //------------------------------------------------------------
     Interval interval(FOREVER);
-
     if (numKeys != 0) {
         xobj::LinearRotateHelper::Input keys;
         keys.reserve(std::size_t(numKeys));
 
-        const float valAdd = 1.0f / float(numKeys - 1);
-
         for (int i = 0; i < numKeys; ++i) {
-            auto quat = getQuat(control, control.GetKeyTime(i));
-            const AngAxis a1(quat);
-            keys.emplace_back(xobj::LinearRotateHelper::Key{xobj::Quat(quat.w, quat.x, quat.y, quat.z), valAdd * float(i)});
-            // CLInfo << "[" << mzbt(a1.axis.x) << " : " << mzbt(a1.axis.y) << " : " << mzbt(a1.axis.z) << " : " << mzbt(a1.angle) << "]  "
-            //         << "[" << quat.x << " : " << quat.y << " : " << quat.z << " : " << quat.w << "]  ";
-            CLInfo << "[" << quat.w << " : " << quat.x << " : " << quat.y << " : " << quat.z << "]  ";
-
+            Quat quat;
+            control.GetValue(control.GetKeyTime(i), quat, interval);
+            keys.emplace_back(xobj::LinearRotateHelper::Key{xobj::Quat(quat.w, quat.x, quat.y, quat.z), animRotate.mKeyList.at(i)});
         }
 
-        const auto mtx = ConverterUtils::toXTMatrix(node.GetNodeTM(GetCOREInterface()->GetTime(), &interval)).toRotation();
-        auto animList = xobj::LinearRotateHelper::makeAnimations(keys, mtx);
+        const auto mtx = ConverterUtils::toXTMatrix(node.GetNodeTM(GetCOREInterface()->GetTime(), &interval));
+        auto animList = xobj::LinearRotateHelper::makeAnimations(keys, mtx.toRotation());
+
         for (auto & a : animList) {
-            a.mDrf = "sim/cockpit2/controls/yoke_pitch_ratio";
-            LVar(msg, xobj::Logger::mInstance).info() << "[" << a.mVector.x << " : " << a.mVector.y << " : " << a.mVector.z;
-            for (auto & k : a.mKeys) {
-                msg << " : (" << k.mAngleDegrees << "/" << k.mDrfValue << ")";
-            }
-            msg << "]";
+            a.mDrf = sts::toMbString(animRotate.mDataref);
+            a.mLoop = animRotate.mLoopEnable ? std::optional(animRotate.mLoopValue) : std::nullopt;
             transform.mAnimRotate.emplace_back(std::move(a));
         }
     }
