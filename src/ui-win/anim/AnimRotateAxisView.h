@@ -1,5 +1,5 @@
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2019, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -55,7 +55,8 @@ namespace win {
 
         void setWindowPos(const RECT & size);
         RECT clientRect() const;
-
+        void active(bool state);
+        bool isActive() const;
     private:
 
         INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
@@ -80,6 +81,8 @@ namespace win {
         void calculateValues();
         void setDataRefValueAsToolType();
 
+        void loadSelection();
+
         int mCurrSelected = 0;
         ctrl::Base cStcName;
         ctrl::Base cBtnDataRef;
@@ -97,6 +100,7 @@ namespace win {
         ISpinnerControl * cSpnLoopValue = nullptr;
 
         Interface * mIp = nullptr;
+        bool mIsActive = false;
         //-------------------------------------------------------------------------
 
         void registerCallbacks();

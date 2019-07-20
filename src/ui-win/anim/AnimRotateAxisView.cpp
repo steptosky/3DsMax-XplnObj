@@ -1,5 +1,5 @@
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2019, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -142,22 +142,26 @@ namespace win {
         }
     }
 
-    void AnimRotateAxisView::slotSelectionChange(void * param, NotifyInfo *) {
-        AnimRotateAxisView * view = reinterpret_cast<AnimRotateAxisView*>(param);
-        const auto selectedCount = view->mIp->GetSelNodeCount();
+    void AnimRotateAxisView::loadSelection() {
+        const auto selectedCount = mIp->GetSelNodeCount();
         if (selectedCount == 0) {
-            view->clearValues();
-            view->mData.clearLink();
+            clearValues();
+            mData.clearLink();
         }
         else if (selectedCount == 1) {
-            view->cSpnValue->SetValue(0.0f, FALSE);
-            view->mData.linkNode(view->mIp->GetSelNode(0));
+            cSpnValue->SetValue(0.0f, FALSE);
+            mData.linkNode(mIp->GetSelNode(0));
         }
         else {
-            view->clearValues();
-            view->mData.clearLink();
+            clearValues();
+            mData.clearLink();
         }
-        view->toWindow();
+        toWindow();
+    }
+
+    void AnimRotateAxisView::slotSelectionChange(void * param, NotifyInfo *) {
+        auto view = reinterpret_cast<AnimRotateAxisView*>(param);
+        view->loadSelection();
     }
 
     void AnimRotateAxisView::slotAnimationModeOff(void * param, NotifyInfo *) {
@@ -185,6 +189,32 @@ namespace win {
     void AnimRotateAxisView::destroy() {
         unRegisterCallbacks();
         DestroyWindow(hwnd());
+    }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void AnimRotateAxisView::active(const bool state) {
+        if (mIsActive == state) {
+            return;
+        }
+        mIsActive = state;
+
+        if (!mIsActive) {
+            ctrl::Base(hwnd()).hide();
+            unRegisterCallbacks();
+            mData.clearLink();
+        }
+        else {
+            registerCallbacks();
+            loadSelection();
+            ctrl::Base(hwnd()).show();
+        }
+    }
+
+    bool AnimRotateAxisView::isActive() const {
+        return mIsActive;
     }
 
     /**************************************************************************************************/
