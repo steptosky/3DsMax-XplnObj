@@ -180,8 +180,6 @@ namespace win {
                                      reinterpret_cast<LPARAM>(this));
         if (res != nullptr) {
             registerCallbacks();
-            ctrl::Base win(res);
-            win.show();
         }
         return res != nullptr;
     }
@@ -196,11 +194,7 @@ namespace win {
     /**************************************************************************************************/
 
     void AnimRotateAxisView::active(const bool state) {
-        if (mIsActive == state) {
-            return;
-        }
         mIsActive = state;
-
         if (!mIsActive) {
             ctrl::Base(hwnd()).hide();
             unRegisterCallbacks();

@@ -81,10 +81,13 @@ namespace win {
     /**************************************************************************************************/
 
     void AnimRotateRollup::initWindow(HWND hWnd) {
+        mLinearView = std::make_unique<AnimRotateAxisView>(MdAnimRot::LINEAR);
         mXView = std::make_unique<AnimRotateAxisView>(MdAnimRot::X);
         mYView = std::make_unique<AnimRotateAxisView>(MdAnimRot::Y);
         mZView = std::make_unique<AnimRotateAxisView>(MdAnimRot::Z);
-        mLinearView = std::make_unique<AnimRotateAxisView>(MdAnimRot::LINEAR);
+        if (!mLinearView->create(hWnd)) {
+            XLError << "Can't create dialog for linear rotation animation";
+        }
         if (!mXView->create(hWnd)) {
             XLError << "Can't create dialog for X rotation animation";
         }
@@ -93,9 +96,6 @@ namespace win {
         }
         if (!mZView->create(hWnd)) {
             XLError << "Can't create dialog for Z rotation animation";
-        }
-        if (!mLinearView->create(hWnd)) {
-            XLError << "Can't create dialog for linear rotation animation";
         }
         RegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
         RegisterNotification(slotSelectionChange, this, NOTIFY_ANIMATE_OFF);
