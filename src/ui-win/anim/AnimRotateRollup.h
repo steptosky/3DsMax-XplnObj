@@ -37,6 +37,7 @@
 
 #include "ui-win/controls/RollupBase.h"
 #include "AnimRotateAxisView.h"
+#include "ChangeControllerWatcher.h"
 
 namespace ui {
 namespace win {
@@ -45,7 +46,7 @@ namespace win {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /********************************************************************************************************/
 
-    class AnimRotateRollup : public max::ctrl::RollupBase {
+    class AnimRotateRollup final : public max::ctrl::RollupBase {
     public:
 
         void create(IRollupWindow * rollWin);
@@ -70,6 +71,7 @@ namespace win {
         Interface * mIp = nullptr;
         //-------------------------------------------------------------------------
         void nodeSelected(INode * node);
+        void nodeChanged();
 
         static void slotSelectionChange(void * param, NotifyInfo *);
 
@@ -90,6 +92,8 @@ namespace win {
         std::unique_ptr<AnimRotateAxisView> mXView;
         std::unique_ptr<AnimRotateAxisView> mYView;
         std::unique_ptr<AnimRotateAxisView> mZView;
+
+        ChangeControllerWatcher mWatcher;
         //-------------------------------------------------------------------------
     };
 

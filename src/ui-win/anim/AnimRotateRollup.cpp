@@ -100,12 +100,14 @@ namespace win {
         RegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
         RegisterNotification(slotSelectionChange, this, NOTIFY_ANIMATE_OFF);
         RegisterNotification(slotSelectionChange, this, NOTIFY_ANIMATE_ON);
+        mWatcher.setCallback(std::bind(&AnimRotateRollup::nodeChanged, this));
     }
 
     void AnimRotateRollup::destroyWindow(HWND /*hWnd*/) {
         UnRegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
         UnRegisterNotification(slotSelectionChange, this, NOTIFY_ANIMATE_OFF);
         UnRegisterNotification(slotSelectionChange, this, NOTIFY_ANIMATE_ON);
+        mWatcher.removeReference();
         deleteView(mLinearView);
         deleteView(mXView);
         deleteView(mYView);
@@ -116,17 +118,26 @@ namespace win {
     //////////////////////////////////////////* Functions */////////////////////////////////////////////
     /**************************************************************************************************/
 
+    void AnimRotateRollup::nodeChanged() {
+        const auto node = mIp->GetSelNode(0);
+        nodeSelected(node);
+    }
+
     void AnimRotateRollup::slotSelectionChange(void * param, NotifyInfo *) {
         auto view = reinterpret_cast<AnimRotateRollup*>(param);
         const auto selectedCount = view->mIp->GetSelNodeCount();
         if (selectedCount == 0) {
             view->nodeSelected(nullptr);
+            view->mWatcher.removeReference();
         }
         else if (selectedCount == 1) {
-            view->nodeSelected(view->mIp->GetSelNode(0));
+            const auto node = view->mIp->GetSelNode(0);
+            view->nodeSelected(node);
+            view->mWatcher.createReference(node);
         }
         else {
             view->nodeSelected(nullptr);
+            view->mWatcher.removeReference();
         }
     }
 
