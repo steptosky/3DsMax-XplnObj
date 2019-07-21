@@ -111,7 +111,7 @@ std::size_t ConverterAnimRotate::calculateLinearAxisNum(INode * node) {
 //////////////////////////////////////////////* Functions *///////////////////////////////////////////////
 /********************************************************************************************************/
 
-void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & transform, Control & control, const ExportParams & /*params*/) {
+void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & transform, Control & control, const ExportParams & params) {
     const auto numKeys = control.NumKeys();
     if (numKeys == 1) {
         CLError << LogNodeRef(node) << "has animation rotate with one key, supported number 2 and more.";
@@ -149,7 +149,7 @@ void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & tr
             keys.emplace_back(xobj::LinearRotateHelper::Key{xobj::Quat(quat.w, quat.x, quat.y, quat.z), animRotate.mKeyList.at(i)});
         }
 
-        const auto mtx = ConverterUtils::toXTMatrix(node.GetNodeTM(GetCOREInterface()->GetTime(), &interval));
+        const auto mtx = ConverterUtils::toXTMatrix(node.GetNodeTM(params.mCurrTime, &interval));
         auto animList = xobj::LinearRotateHelper::makeAnimations(keys, mtx.toRotation());
 
         for (auto & a : animList) {
