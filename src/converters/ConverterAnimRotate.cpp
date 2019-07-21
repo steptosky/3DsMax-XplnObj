@@ -149,6 +149,13 @@ void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & tr
             keys.emplace_back(xobj::LinearRotateHelper::Key{xobj::Quat(quat.w, quat.x, quat.y, quat.z), animRotate.mKeyList.at(i)});
         }
 
+        const auto check = xobj::LinearRotateHelper::checkDatarefValuesOrder(keys);
+        if (check) {
+            CLError << LogNodeRef(node) << "has unexpected dataref value for the rotation key:"
+                    << check.value() + 1 << " value:" << keys.at(check.value()).mDrfValue;
+            return;
+        }
+
         const auto mtx = ConverterUtils::toXTMatrix(node.GetNodeTM(params.mCurrTime, &interval));
         auto animList = xobj::LinearRotateHelper::makeAnimations(keys, mtx.toRotation());
 
