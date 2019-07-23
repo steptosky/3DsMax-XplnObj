@@ -36,7 +36,7 @@
 #include <xpln/obj/Transform.h>
 #include "additional/utils/Single.h"
 #include "models/MdAnimRot.h"
-#include "xpln/common/EulerXyzHelper.h"
+#include "xpln/utils/EulerXyzRotateHelper.h"
 
 class ExportParams;
 class ImportParams;

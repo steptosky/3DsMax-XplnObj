@@ -189,7 +189,7 @@ void ConverterAnim::objAnimRotate(INode * node, xobj::Transform & transform, con
     if (!rotateControl || !rotateControl->IsAnimated())
         return;
 
-    xobj::EulerXyzHelper xEuler;
+    xobj::EulerXyzRotateHelper xEuler;
 
     objAnimRotateAxis(node, rotateControl, 'x', xEuler.pX, params);
     objAnimRotateAxis(node, rotateControl, 'y', xEuler.pY, params);

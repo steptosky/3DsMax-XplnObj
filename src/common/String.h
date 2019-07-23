@@ -36,7 +36,7 @@
 #pragma warning(pop)
 
 #include "additional/utils/StringUtils.h"
-#include <xpln/utils/Path.h>
+#include <xpln/common/Path.h>
 
 /**************************************************************************************************/
 /////////////////////////////////////* UNICODE UTILS *//////////////////////////////////////////////
