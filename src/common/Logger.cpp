@@ -141,35 +141,35 @@ Logger::Logger() {
     };
     //--------------------------------
     xobj::Logger::mInstance.setHandler(BaseLogger::LvlDebug, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
-        BaseLogger::defaultHandler(l, m, std::clog, "DBG: %LN %MC %MS", colorize::magenta);
+        BaseLogger::defaultHandler(l, m, std::clog, "DBG: %LN %MS", colorize::magenta);
         Debug(printer(l, m, SYSLOG_DEBUG, false));
     });
     xobj::Logger::mInstance.setHandler(BaseLogger::LvlMsg, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
-        BaseLogger::defaultHandler(l, m, std::clog, "%LN %MC %MS", nullptr);
+        BaseLogger::defaultHandler(l, m, std::clog, "%LN %MS", nullptr);
         Debug(printer(l, m, SYSLOG_INFO, false));
     });
     xobj::Logger::mInstance.setHandler(BaseLogger::LvlInfo, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
-        BaseLogger::defaultHandler(l, m, std::clog, "INF: %LN %MC %MS", colorize::cyan);
+        BaseLogger::defaultHandler(l, m, std::clog, "INF: %LN %MS", colorize::cyan);
         Debug(printer(l, m, SYSLOG_INFO, false));
     });
     xobj::Logger::mInstance.setHandler(BaseLogger::LvlSuccess, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
-        BaseLogger::defaultHandler(l, m, std::clog, "INF: %LN %MC %MS | OK", colorize::green);
+        BaseLogger::defaultHandler(l, m, std::clog, "INF: %LN %MS | OK", colorize::green);
         Debug(printer(l, m, SYSLOG_INFO, false));
     });
     xobj::Logger::mInstance.setHandler(BaseLogger::LvlWarning, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
-        BaseLogger::defaultHandler(l, m, std::clog, "WRN: %LN %MC %MS", colorize::yellow);
+        BaseLogger::defaultHandler(l, m, std::clog, "WRN: %LN %MS", colorize::yellow);
         Debug(printer(l, m, SYSLOG_WARN, false));
     });
     xobj::Logger::mInstance.setHandler(BaseLogger::LvlFail, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
-        BaseLogger::defaultHandler(l, m, std::cerr, "ERR: %LN %MC %MS | FAIL\n\t[%TM(%Y-%m-%d] [%T)] [%FN -> %FI(%LI)]", colorize::red);
+        BaseLogger::defaultHandler(l, m, std::cerr, "ERR: %LN %MS | FAIL\n\t[%TM(%Y-%m-%d] [%T)] [%FN -> %FI(%LI)]", colorize::red);
         Debug(printer(l, m, SYSLOG_ERROR, false));
     });
     xobj::Logger::mInstance.setHandler(BaseLogger::LvlError, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
-        BaseLogger::defaultHandler(l, m, std::cerr, "ERR: %LN %MC %MS \n\t[%TM(%Y-%m-%d] [%T)] [%FN -> %FI(%LI)]", colorize::red);
+        BaseLogger::defaultHandler(l, m, std::cerr, "ERR: %LN %MS \n\t[%TM(%Y-%m-%d] [%T)] [%FN -> %FI(%LI)]", colorize::red);
         Debug(printer(l, m, SYSLOG_ERROR, true));
     });
     xobj::Logger::mInstance.setHandler(BaseLogger::LvlCritical, [&printer](const BaseLogger & l, const BaseLogger::LogMsg & m) {
-        BaseLogger::defaultHandler(l, m, std::cerr, "ERR: %LN %MC %MS \n\t[%TM(%Y-%m-%d] [%T)] [%FN -> %FI(%LI)]", colorize::red);
+        BaseLogger::defaultHandler(l, m, std::cerr, "ERR: %LN %MS \n\t[%TM(%Y-%m-%d] [%T)] [%FN -> %FI(%LI)]", colorize::red);
         Debug(printer(l, m, SYSLOG_ERROR, true));
     });
     //--------------------------------
