@@ -57,15 +57,12 @@ private:
 
     static void processLinearRotate(INode & node, xobj::Transform & transform, Control & control, const ExportParams & params);
 
-    static void objAnimRotate(INode * node, xobj::Transform & transform, Control & control, const ExportParams & params);
-    static void objAnimRotateAxis(INode * node, Control * control, char axis,
-                                  xobj::AnimRotate & outXAnim, const ExportParams & params);
-    static xobj::AnimRotate::KeyList * getRotateAxisAnimation(Control * ctrlAxis, const MdAnimRot::KeyValueList & keys,
-                                                              int isReversed, const ExportParams & params);
-
-    static bool rotAnimValidation(INode * node, Control * control, const char * inCtrlName, char axis);
-    static bool checkRotateKeysValue(INode * node, const xobj::AnimRotate::KeyList & keys, const char * ctrlName, char axis);
-    static float rotateValue(Control * inAxis, TimeValue t);
+    static void processEuler(INode * node, xobj::Transform & transform, Control & control, const ExportParams & params);
+    static void processEulerAxis(INode * node, Control * control, char axis,
+                                 xobj::RotationAxis & outAnim, const ExportParams & params);
+    static bool validateCtrl(INode * node, Control * control, const char * inCtrlName, char axis);
+    static bool checkKeys(INode * node, const xobj::RotationAxis::KeyList & keys,
+                                     const char * ctrlName, char axis);
 
 };
 

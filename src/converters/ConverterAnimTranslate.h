@@ -55,7 +55,7 @@ private:
     static void objAnimTrans(INode * node, xobj::Transform & transform, const ExportParams & params);
     static Point3 translateValue(Control * xCtrl, Control * yCtrl, Control * zCtrl, TimeValue time);
     static bool transAnimValidation(INode * node, Control * control, const char * ctrlName, char axis);
-    static bool checkTransKeysValue(INode * node, const xobj::AnimTrans::KeyList & keyList, const char * ctrlName);
+    static bool checkTransKeysValue(INode * node, const xobj::Translate::KeyList & keyList, const char * ctrlName);
 
 };
 

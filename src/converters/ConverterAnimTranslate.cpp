@@ -44,7 +44,6 @@ bool ConverterAnimTranslate::toXpln(INode & node, xobj::Transform & transform, c
         return false;
     }
     objAnimTrans(&node, transform, params);
-    //-------------------------------
     return true;
 }
 
@@ -77,7 +76,6 @@ Point3 ConverterAnimTranslate::translateValue(Control * xCtrl, Control * yCtrl, 
 void ConverterAnimTranslate::objAnimTrans(INode * node, xobj::Transform & transform, const ExportParams & params) {
     DbgAssert(node);
     //----------------------------------------------
-
     Control * tmControl = node->GetTMController();
     if (!tmControl) {
         return;
@@ -87,46 +85,36 @@ void ConverterAnimTranslate::objAnimTrans(INode * node, xobj::Transform & transf
         return;
     }
     //----------------------------------------------
-
     MdAnimTrans mdAnimTrans;
     if (!mdAnimTrans.linkNode(node, true)) {
         return;
     }
-
     //----------------------------------------------
-
     if (posControl->IsAnimated()) {
         if (!mdAnimTrans.mEnable) {
-            CLError << LogNode(node) << "has the animated position controller but the animation export is not enabled,"
-                    << " this may lead to wrong animation result.";
+            CLError << LogNode(node) << "has enabled translate animation export but the object does not have any animation keys.";
             return;
         }
     }
-    else {
-        if (mdAnimTrans.mEnable) {
-            CLError << LogNode(node) << "has enabled the position animation export but the object does not have any animation keys.";
-        }
+    if (!mdAnimTrans.mEnable) {
+        CLError << LogNode(node) << "has animation translate but the animation export isn't enabled, this may lead to wrong animation result.";
         return;
     }
-
+    if (mdAnimTrans.mReverse) {
+        CLError << LogNode(node) << "uses removed 'reverse' checkbox in translation, you have to fix your animation.";
+    }
     //----------------------------------------------
-
     const int posControlKeyNum = posControl->NumKeys();
     if (posControlKeyNum < 2) {
-        CLError << LogNode(node) << "has animation translate keys count less 2!";
+        CLError << LogNode(node) << "has translation keys less than 2.";
         return;
     }
-
-    //----------------------------------------------
-
     MdAnimTrans::KeyValueList & keyValueList = mdAnimTrans.mKeyList;
-    // If Values count not equaled key count
     if (posControlKeyNum != int(keyValueList.size())) {
-        CLError << LogNode(node) << "animation keys and animation key values in the object are not equaled!";
+        CLError << LogNode(node) << "mismatch animation keys and dataref values number on translation.";
         return;
     }
     //----------------------------------------------
-
     Control * xCtrl = posControl->GetXController();
     Control * yCtrl = posControl->GetYController();
     Control * zCtrl = posControl->GetZController();
@@ -135,24 +123,32 @@ void ConverterAnimTranslate::objAnimTrans(INode * node, xobj::Transform & transf
     transAnimValidation(node, yCtrl, "position", 'y');
     transAnimValidation(node, zCtrl, "position", 'z');
     //----------------------------------------------
+    xobj::Translate & anim = transform.mPosition.mAnimation.emplace_back();
 
-    transform.mAnimTrans.emplace_back();
-    xobj::AnimTrans & anim = transform.mAnimTrans.back();
-    const Point3 shift = translateValue(xCtrl, yCtrl, zCtrl, params.mCurrTime);
+    /*
+     *    p - parent position
+     *    k - anim key
+     *    o - object position that is set by time
+     *    
+     *              [offsetRelativeParent]
+     *    |---------------------------------------|
+     *    P-------------------K-------------------O-------------------K
+     *    0                   1                   2                   3
+     *    |-------------------|-------------------|
+     *   [firstRelativePosition]      [diff]
+     */
 
-    anim.mKeys.resize(static_cast<size_t>(posControlKeyNum));
+    const Point3 offsetRelativeParent = translateValue(xCtrl, yCtrl, zCtrl, params.mCurrTime);
+
+    anim.mKeys.reserve(static_cast<std::size_t>(posControlKeyNum));
     for (int keyNum = 0; keyNum < posControlKeyNum; ++keyNum) {
-        Point3 pos = translateValue(xCtrl, yCtrl, zCtrl, posControl->GetKeyTime(keyNum));
-        pos = pos - shift;
-        if (mdAnimTrans.mReverse) {
-            pos = shift - (pos - shift);
-        }
-        xobj::AnimTrans::Key & key = anim.mKeys[static_cast<size_t>(keyNum)];
-        key.mPosition.set(pos.x, pos.y, pos.z);
-        key.mDrfValue = keyValueList[keyNum];
+        const Point3 pos = translateValue(xCtrl, yCtrl, zCtrl, posControl->GetKeyTime(keyNum)) - offsetRelativeParent;
+        xobj::Translate::Key & key = anim.mKeys.emplace_back();
+        key.position.set(pos.x, pos.y, pos.z);
+        key.value = keyValueList.at(keyNum);
     }
 
-    anim.mDrf = sts::toMbString(mdAnimTrans.mDataref);
+    anim.mDataRef = xobj::String::from(mdAnimTrans.mDataref);
     anim.mLoop = mdAnimTrans.mLoopEnable ? std::optional(mdAnimTrans.mLoopValue) : std::nullopt;
     checkTransKeysValue(node, anim.mKeys, "position");
 }
@@ -161,7 +157,7 @@ void ConverterAnimTranslate::objAnimTrans(INode * node, xobj::Transform & transf
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool ConverterAnimTranslate::transAnimValidation(INode * node, Control * control, const char * ctrlName, char axis) {
+bool ConverterAnimTranslate::transAnimValidation(INode * node, Control * control, const char * ctrlName, const char axis) {
     if (!control) {
         CLError << LogNode(node) << "does not have valid \"" << axis << " " << ctrlName << "\" controller";
         return false;
@@ -207,7 +203,8 @@ bool ConverterAnimTranslate::transAnimValidation(INode * node, Control * control
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool ConverterAnimTranslate::checkTransKeysValue(INode * node, const xobj::AnimTrans::KeyList & keyList, const char * ctrlName) {
+// todo can be moved into the library
+bool ConverterAnimTranslate::checkTransKeysValue(INode * node, const xobj::Translate::KeyList & keyList, const char * ctrlName) {
     DbgAssert(node);
     DbgAssert(ctrlName);
     const float threshold = 0.0001f;
@@ -218,12 +215,12 @@ bool ConverterAnimTranslate::checkTransKeysValue(INode * node, const xobj::AnimT
     }
     //-------------------------------------------------------------------------
     if (size == 2) {
-        if (keyList[0].mPosition == keyList[1].mPosition) {
+        if (keyList[0].position == keyList[1].position) {
             CLWarning << LogNode(node) << "has the same position value [0:1] on \"" << ctrlName << "\" controller.";
             return false;
         }
 
-        if (keyList[0].mDrfValue == keyList[1].mDrfValue) {
+        if (keyList[0].value == keyList[1].value) {
             CLWarning << LogNode(node) << "has the same dataref value [0:1] on \"" << ctrlName << "\" controller.";
             return false;
         }
@@ -238,15 +235,15 @@ bool ConverterAnimTranslate::checkTransKeysValue(INode * node, const xobj::AnimT
             return true;
         }
 
-        if (keyList[k1].mPosition == keyList[k2].mPosition &&
-            keyList[k2].mPosition == keyList[k3].mPosition) {
+        if (keyList[k1].position == keyList[k2].position &&
+            keyList[k2].position == keyList[k3].position) {
             CLWarning << LogNode(node) << "has the same position value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
                     << ctrlName << "\" controller.";
             return false;
         }
 
-        if (stsff::math::isEqual(keyList[k1].mDrfValue, keyList[k2].mDrfValue, threshold) &&
-            stsff::math::isEqual(keyList[k2].mDrfValue, keyList[k3].mDrfValue, threshold)) {
+        if (stsff::math::isEqual(keyList[k1].value, keyList[k2].value, threshold) &&
+            stsff::math::isEqual(keyList[k2].value, keyList[k3].value, threshold)) {
             CLWarning << LogNode(node) << "has the same dataref value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
                     << ctrlName << "\" controller.";
             return false;

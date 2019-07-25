@@ -33,7 +33,7 @@
 #include <max.h>
 #pragma warning(pop)
 
-#include <xpln/obj/animation/AnimVisibility.h>
+#include <xpln/obj/animation/VisibilityController.h>
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,8 +45,8 @@ struct MdAnimVis {
 
     //-------------------------------------------------------------------------
 
-    typedef xobj::AnimVisibility::Key Key;
-    typedef xobj::AnimVisibility::KeyList KeyList;
+    typedef xobj::VisibilityKey Key;
+    typedef xobj::VisibilityController::KeyList KeyList;
 
     //-------------------------------------------------------------------------
 

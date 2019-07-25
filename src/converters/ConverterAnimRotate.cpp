@@ -30,14 +30,11 @@
 #include <memory>
 #include <decomp.h>
 
-#include <xpln/utils/LinearRotateHelper.h>
-#include <xpln/utils/EulerXyzRotateHelper.h>
 #include "ConverterAnimRotate.h"
 #include "ConverterUtils.h"
 #include "common/Logger.h"
 #include "models/io/AnimIO.h"
 #include "additional/math/Compare.h"
-#include "additional/math/Rad.h"
 #include "ExportParams.h"
 #include "ImportParams.h"
 
@@ -51,7 +48,10 @@ bool ConverterAnimRotate::toXpln(INode & node, xobj::Transform & transform, cons
     }
     //-------------------------------
     Control * controller = node.GetTMController();
-    DbgAssert(controller);
+    if (!controller) {
+        return false;
+    }
+
     Control * rotation = controller->GetRotationController();
     if (!rotation) {
         return false;
@@ -59,9 +59,10 @@ bool ConverterAnimRotate::toXpln(INode & node, xobj::Transform & transform, cons
 
     if (rotation->ClassID() == Class_ID(LININTERP_ROTATION_CLASS_ID, 0)) {
         processLinearRotate(node, transform, *rotation, params);
+        DbgAssert(false);
     }
     else {
-        objAnimRotate(&node, transform, *rotation, params);
+        processEuler(&node, transform, *rotation, params);
     }
     return true;
 }
@@ -94,17 +95,16 @@ std::size_t ConverterAnimRotate::calculateLinearAxisNum(INode * node) {
     }
 
     Interval interval(FOREVER);
-    xobj::LinearRotateHelper::Input keys;
-    keys.reserve(std::size_t(numKeys));
+    xobj::LinearRotation anim;
+    anim.mKeys.reserve(std::size_t(numKeys));
 
     for (int i = 0; i < numKeys; ++i) {
         Quat quat;
         rotation->GetValue(rotation->GetKeyTime(i), quat, interval);
-        keys.emplace_back(xobj::LinearRotateHelper::Key{xobj::Quat(quat.w, quat.x, quat.y, quat.z), 0});
+        anim.mKeys.emplace_back(xobj::LinearRotation::Key{xobj::Quat(quat.w, quat.x, quat.y, quat.z), 0});
     }
 
-    const auto animList = xobj::LinearRotateHelper::makeAnimations(keys, xobj::TMatrix());
-    return animList.size();
+    return anim.retrieveAxes().mAxes.size();
 }
 
 /********************************************************************************************************/
@@ -124,7 +124,7 @@ void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & tr
     }
     if (!control.IsAnimated()) {
         if (animRotate.mEnable) {
-            CLError << LogNodeRef(node) << "has animation export but the object does not have any animation keys.";
+            CLError << LogNodeRef(node) << "has enabled rotate animation export but the object does not have any animation keys.";
         }
         return;
     }
@@ -132,37 +132,45 @@ void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & tr
         CLError << LogNodeRef(node) << "has animation rotate but the animation export isn't enabled, this may lead to wrong animation result.";
         return;
     }
-
+    if (animRotate.mReverse) {
+        CLError << LogNodeRef(node) << "uses removed 'reverse' checkbox in rotation, you have to fix your animation.";
+    }
+    //----------------------------------------------
+    if (numKeys < 2) {
+        CLError << LogNodeRef(node) << "has rotation keys less than 2.";
+        return;
+    }
+    //----------------------------------------------
     if (numKeys != static_cast<int>(animRotate.mKeyList.size())) {
-        CLError << LogNodeRef(node) << "mismatch animation keys and dataref values number";
+        CLError << LogNodeRef(node) << "mismatch animation keys and dataref values number on rotation";
         return;
     }
     //------------------------------------------------------------
     Interval interval(FOREVER);
     if (numKeys != 0) {
-        xobj::LinearRotateHelper::Input keys;
-        keys.reserve(std::size_t(numKeys));
+        xobj::LinearRotation & linearAnim = transform.mRotation.mAnimation.emplace<xobj::LinearRotation>();
 
+        AffineParts offsetRelativeParent;
+        decomp_affine(node.GetNodeTM(params.mCurrTime), &offsetRelativeParent);
+        const Quat offset = (offsetRelativeParent.q * offsetRelativeParent.q).Inverse();
+        linearAnim.mOffset = xobj::Quat(offset.w, offset.x, offset.y, offset.z);
+        linearAnim.mLoop = animRotate.mLoopEnable ? std::optional(animRotate.mLoopValue) : std::nullopt;
+        linearAnim.mDataRef = xobj::String::from(animRotate.mDataref);
+
+        linearAnim.mKeys.reserve(std::size_t(numKeys));
         for (int i = 0; i < numKeys; ++i) {
             Quat quat;
             control.GetValue(control.GetKeyTime(i), quat, interval);
-            keys.emplace_back(xobj::LinearRotateHelper::Key{xobj::Quat(quat.w, quat.x, quat.y, quat.z), animRotate.mKeyList.at(i)});
+            linearAnim.mKeys.emplace_back(xobj::LinearRotation::Key{
+                xobj::Quat(quat.w, quat.x, quat.y, quat.z),
+                animRotate.mKeyList.at(i)
+            });
         }
 
-        const auto check = xobj::LinearRotateHelper::checkDatarefValuesOrder(keys);
+        const auto check = linearAnim.checkDatarefValuesOrder();
         if (check) {
             CLError << LogNodeRef(node) << "has unexpected dataref value for the rotation key:"
-                    << check.value() + 1 << " value:" << keys.at(check.value()).mDrfValue;
-            return;
-        }
-
-        const auto mtx = ConverterUtils::toXTMatrix(node.GetNodeTM(params.mCurrTime, &interval));
-        auto animList = xobj::LinearRotateHelper::makeAnimations(keys, mtx.toRotation());
-
-        for (auto & a : animList) {
-            a.mDrf = sts::toMbString(animRotate.mDataref);
-            a.mLoop = animRotate.mLoopEnable ? std::optional(animRotate.mLoopValue) : std::nullopt;
-            transform.mAnimRotate.emplace_back(std::move(a));
+                    << check.value() + 1 << " value:" << linearAnim.mKeys.at(check.value()).value;
         }
     }
 }
@@ -171,134 +179,130 @@ void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & tr
 //////////////////////////////////////////* Static area *///////////////////////////////////////////
 /**************************************************************************************************/
 
-float ConverterAnimRotate::rotateValue(Control * inAxis, const TimeValue t) {
+inline float axisValueAt(Control * inAxis, const TimeValue t) {
     Quat q;
     Interval interval(FOREVER);
     inAxis->GetValue(t, q, interval);
     return q.x;
 }
 
-xobj::AnimRotate::KeyList * ConverterAnimRotate::getRotateAxisAnimation(Control * ctrlAxis, const MdAnimRot::KeyValueList & keys,
-                                                                        const int isReversed, const ExportParams & params) {
-    const int rotateKeyCount = ctrlAxis->NumKeys();
-    xobj::AnimRotate::KeyList * xAnim = new xobj::AnimRotate::KeyList(static_cast<size_t>(rotateKeyCount));
-    //------------------------------------------------------------
-
-    const float shift = rotateValue(ctrlAxis, params.mCurrTime);
-    for (int currentKey = 0; currentKey < rotateKeyCount; ++currentKey) {
-        float value = rotateValue(ctrlAxis, ctrlAxis->GetKeyTime(currentKey));
-        value -= shift;
-        if (isReversed) {
-            value = -value;
-        }
-        xobj::AnimRotate::Key & key = (*xAnim)[static_cast<size_t>(currentKey)];
-        key.mAngleDegrees = stsff::math::radToDeg(value);
-        key.mDrfValue = keys[currentKey];
-    }
-    //------------------------------------------------------------
-
-    return xAnim;
-}
-
-//-------------------------------------------------------------------------
-
-void ConverterAnimRotate::objAnimRotateAxis(INode * node, Control * control, char axis,
-                                            xobj::AnimRotate & outXAnim, const ExportParams & params) {
-    Control * rotateControl = nullptr;
+void ConverterAnimRotate::processEulerAxis(INode * node, Control * control, const char axis,
+                                           xobj::RotationAxis & outAnim, const ExportParams & params) {
+    Control * ctrl = nullptr;
     std::unique_ptr<MdAnimRot> mdAnimRot = nullptr;
     switch (axis) {
         case 'x': {
-            rotateControl = control->GetXController();
+            ctrl = control->GetXController();
             mdAnimRot = std::make_unique<MdAnimRot>(MdAnimRot::X);
             break;
         }
         case 'y': {
-            rotateControl = control->GetYController();
+            ctrl = control->GetYController();
             mdAnimRot = std::make_unique<MdAnimRot>(MdAnimRot::Y);
             break;
         }
         case 'z': {
-            rotateControl = control->GetZController();
+            ctrl = control->GetZController();
             mdAnimRot = std::make_unique<MdAnimRot>(MdAnimRot::Z);
             break;
         }
         default: return;
     }
     //------------------------------------------------------------
-
-    if (!rotAnimValidation(node, rotateControl, "rotate", axis)) {
+    if (!validateCtrl(node, ctrl, "rotate", axis)) {
         return;
     }
     //------------------------------------------------------------
-
     if (!mdAnimRot->linkNode(node, true)) {
         return;
     }
-
-    if (rotateControl->IsAnimated()) {
-        if (!mdAnimRot->mEnable) {
-            CLError << LogNode(node) << "has the animated \"" << axis << "\" rotate controller but the animation export is not enabled,"
-                    << " this may lead to wrong animation result.";
-            return;
-        }
-    }
-    else {
+    if (!ctrl->IsAnimated()) {
         if (mdAnimRot->mEnable) {
-            CLError << LogNode(node) << "has enabled the \"" << axis
-                    << "\" rotate animation export but the object does not have any animation keys.";
+            CLError << LogNode(node) << "has enabled rotate animation export but the object does not have any animation keys.";
         }
-        const float value = rotateValue(rotateControl, params.mCurrTime);
-        outXAnim.mKeys.emplace_back(xobj::AnimRotate::Key(stsff::math::radToDeg(value), 0.0f));
+        return;
+    }
+    if (!mdAnimRot->mEnable) {
+        CLError << LogNode(node) << "has animation rotate but the animation export isn't enabled, this may lead to wrong animation result.";
+        return;
+    }
+    if (mdAnimRot->mReverse) {
+        CLError << LogNode(node) << "uses removed 'reverse' checkbox in rotation, you have to fix your animation.";
+    }
+    //------------------------------------------------------------
+    const int keysNum = ctrl->NumKeys();
+    if (keysNum < 2) {
+        CLError << LogNode(node) << "has rotation keys less than 2.";
+        return;
+    }
+    if (keysNum != static_cast<int>(mdAnimRot->mKeyList.size())) {
+        CLError << LogNode(node) << "mismatch animation keys and dataref values number on rotation.";
         return;
     }
     //------------------------------------------------------------
+    outAnim.mKeys.reserve(static_cast<size_t>(keysNum));
+    const float offset = axisValueAt(ctrl, params.mCurrTime);
 
-    const int rotateKeyCount = rotateControl->NumKeys();
-    if (rotateKeyCount != static_cast<int>(mdAnimRot->mKeyList.size())) {
-        CLError << LogNode(node) << "animation keys and animation key values in the object are not equaled!";
-        return;
+    for (int currentKey = 0; currentKey < keysNum; ++currentKey) {
+        const float value = axisValueAt(ctrl, ctrl->GetKeyTime(currentKey));
+        xobj::RotationAxis::Key & key = outAnim.mKeys.emplace_back();
+        key.angleDeg.setRad(value - offset);
+        key.value = mdAnimRot->mKeyList.at(currentKey);
     }
-
-    xobj::AnimRotate::KeyList * keyList = getRotateAxisAnimation(rotateControl, mdAnimRot->mKeyList, mdAnimRot->mReverse, params);
-    if (keyList) {
-        outXAnim.mDrf = sts::toMbString(mdAnimRot->mDataref);
-        outXAnim.mLoop = mdAnimRot->mLoopEnable ? std::optional(mdAnimRot->mLoopValue) : std::nullopt;
-        outXAnim.mKeys.swap(*keyList);
-        delete keyList;
-        checkRotateKeysValue(node, outXAnim.mKeys, "rotate", axis);
-    }
+    //------------------------------------------------------------
+    outAnim.mDataRef = xobj::String::from(mdAnimRot->mDataref);
+    outAnim.mLoop = mdAnimRot->mLoopEnable ? std::optional(mdAnimRot->mLoopValue) : std::nullopt;
+    checkKeys(node, outAnim.mKeys, "rotate", axis);
 }
 
 //-------------------------------------------------------------------------
 
-void ConverterAnimRotate::objAnimRotate(INode * node, xobj::Transform & transform, Control & control, const ExportParams & params) {
-    xobj::EulerXyzRotateHelper xEuler;
+void ConverterAnimRotate::processEuler(INode * node, xobj::Transform & transform, Control & control, const ExportParams & params) {
+    xobj::AxisSetRotation & euler = transform.mRotation.mAnimation.emplace<xobj::AxisSetRotation>();
 
-    objAnimRotateAxis(node, &control, 'x', xEuler.pX, params);
-    objAnimRotateAxis(node, &control, 'y', xEuler.pY, params);
-    objAnimRotateAxis(node, &control, 'z', xEuler.pZ, params);
+    euler.mAxes.reserve(3);
+    auto & x = euler.mAxes.emplace_back(xobj::RotationAxis::makeX());
+    auto & y = euler.mAxes.emplace_back(xobj::RotationAxis::makeY());
+    auto & z = euler.mAxes.emplace_back(xobj::RotationAxis::makeZ());
+
+    processEulerAxis(node, &control, 'x', x, params);
+    processEulerAxis(node, &control, 'y', y, params);
+    processEulerAxis(node, &control, 'z', z, params);
 
     std::size_t animCount = 0;
-    if (xEuler.pX.mKeys.size() > 1) {
+    if (x.isAnimated()) {
         ++animCount;
     }
-    if (xEuler.pY.mKeys.size() > 1) {
+    if (y.isAnimated()) {
         ++animCount;
     }
-    if (xEuler.pZ.mKeys.size() > 1) {
+    if (z.isAnimated()) {
         ++animCount;
     }
     if (animCount > 1) {
-        CLError << LogNode(node) << "the plugin does not support more than one axis of rotate animation at the same time";
+        CLError << LogNode(node) << "the plugin doesn't support more than one axis of rotate animation at the same time";
+        return;
     }
-    xEuler.addToTransform(transform);
+
+    if (x.isAnimated()) {
+        xobj::TMatrix mtx;
+        mtx.rotateRadiansY(axisValueAt(control.GetYController(), params.mCurrTime));
+        mtx.rotateRadiansZ(axisValueAt(control.GetZController(), params.mCurrTime));
+        mtx.transformVector(x.mVector);
+    }
+
+    if (y.isAnimated()) {
+        xobj::TMatrix mtx;
+        mtx.rotateRadiansZ(axisValueAt(control.GetZController(), params.mCurrTime));
+        mtx.transformVector(y.mVector);
+    }
 }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool ConverterAnimRotate::rotAnimValidation(INode * node, Control * control, const char * inCtrlName, const char axis) {
+bool ConverterAnimRotate::validateCtrl(INode * node, Control * control, const char * inCtrlName, const char axis) {
     if (!control) {
         CLError << LogNode(node) << "does not have valid \"" << axis << " " << inCtrlName << "\" controller";
         return false;
@@ -340,7 +344,10 @@ bool ConverterAnimRotate::rotAnimValidation(INode * node, Control * control, con
     return true;
 }
 
-bool ConverterAnimRotate::checkRotateKeysValue(INode * node, const xobj::AnimRotate::KeyList & keys, const char * ctrlName, const char axis) {
+// todo this can be moved into the library
+bool ConverterAnimRotate::checkKeys(INode * node, const xobj::RotationAxis::KeyList & keys,
+                                    const char * ctrlName, const char axis) {
+
     DbgAssert(node);
     DbgAssert(ctrlName);
     const float threshold = 0.0001f;
@@ -351,12 +358,12 @@ bool ConverterAnimRotate::checkRotateKeysValue(INode * node, const xobj::AnimRot
     }
     //-------------------------------------------------------------------------
     if (size == 2) {
-        if (stsff::math::isEqual(keys[0].mAngleDegrees, keys[1].mAngleDegrees, threshold)) {
+        if (stsff::math::isEqual(keys[0].angleDeg.value(), keys[1].angleDeg.value(), threshold)) {
             CLWarning << LogNode(node) << "has the same key value [0:1] on \"" << axis << "-" << ctrlName << "\" controller.";
             return false;
         }
 
-        if (stsff::math::isEqual(keys[0].mDrfValue, keys[1].mDrfValue, threshold)) {
+        if (stsff::math::isEqual(keys[0].value, keys[1].value, threshold)) {
             CLWarning << LogNode(node) << "has the same dataref value [0:1] on \"" << axis << "-" << ctrlName << "\" controller.";
             return false;
         }
@@ -371,15 +378,15 @@ bool ConverterAnimRotate::checkRotateKeysValue(INode * node, const xobj::AnimRot
             return true;
         }
 
-        if (stsff::math::isEqual(keys[k1].mAngleDegrees, keys[k2].mAngleDegrees, threshold) &&
-            stsff::math::isEqual(keys[k2].mAngleDegrees, keys[k3].mAngleDegrees, threshold)) {
+        if (stsff::math::isEqual(keys[k1].angleDeg.value(), keys[k2].angleDeg.value(), threshold) &&
+            stsff::math::isEqual(keys[k2].angleDeg.value(), keys[k3].angleDeg.value(), threshold)) {
             CLWarning << LogNode(node) << "has the same key value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
                     << axis << "-" << ctrlName << "\" controller.";
             return false;
         }
 
-        if (stsff::math::isEqual(keys[k1].mDrfValue, keys[k2].mDrfValue, threshold) &&
-            stsff::math::isEqual(keys[k2].mDrfValue, keys[k3].mDrfValue, threshold)) {
+        if (stsff::math::isEqual(keys[k1].value, keys[k2].value, threshold) &&
+            stsff::math::isEqual(keys[k2].value, keys[k3].value, threshold)) {
             CLWarning << LogNode(node) << "has the same dataref value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
                     << axis << "-" << ctrlName << "\" controller.";
             return false;
