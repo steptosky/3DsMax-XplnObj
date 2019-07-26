@@ -279,8 +279,8 @@ bool MdAnimIoOld::loadVisibilityFromNode(INode * inNode, AppDataChunk * data, Md
     outAnimVis.mKeyList.resize(size);
     for (size_t i = 0; i < outAnimVis.mKeyList.size(); ++i) {
         outAnimVis.mKeyList[i].mDataRef = xobj::String::from(animData.mKeyList[i].mDataref);
-        outAnimVis.mKeyList[i].mValue1 = animData.mKeyList[i].mValue1;
-        outAnimVis.mKeyList[i].mValue2 = animData.mKeyList[i].mValue2;
+        outAnimVis.mKeyList[i].mDrfValue1 = animData.mKeyList[i].mValue1;
+        outAnimVis.mKeyList[i].mDrfValue2 = animData.mKeyList[i].mValue2;
 
         switch (animData.mKeyList[i].mType) {
             case AnimData::UNDEFINED: outAnimVis.mKeyList[i].mType = xobj::VisibilityKey::UNDEFINED;

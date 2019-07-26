@@ -312,8 +312,8 @@ namespace win {
     sts::Str AnimVisView::toText(const MdAnimVis::Key & inKey) {
         sts::Str strTmp;
         strTmp.append(1, char(inKey.mType));
-        strTmp.append(_T(" = ")).append(sts::toString(inKey.mValue1, 4)).append(_T(" "));
-        strTmp.append(sts::toString(inKey.mValue2, 4));
+        strTmp.append(_T(" = ")).append(sts::toString(inKey.mDrfValue1, 4)).append(_T(" "));
+        strTmp.append(sts::toString(inKey.mDrfValue2, 4));
         const auto strTmp2 = sts::toString(inKey.mDataRef.mString);
         strTmp.append(_T(" ")).append(strTmp2.empty() ? _T("none") : strTmp2);
         return strTmp;
@@ -325,8 +325,8 @@ namespace win {
         }
         if (mCurrSelected < mData.mKeyList.size()) {
             MdAnimVis::Key & key = mData.mKeyList[static_cast<size_t>(mCurrSelected)];
-            key.mValue1 = cSpnValue1->GetFVal();
-            key.mValue2 = cSpnValue2->GetFVal();
+            key.mDrfValue1 = cSpnValue1->GetFVal();
+            key.mDrfValue2 = cSpnValue2->GetFVal();
             key.mDataRef = xobj::String::from(sts::toMbString(Utils::getText(cEditDataRef)));
         }
         makeUiList();

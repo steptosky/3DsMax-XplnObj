@@ -170,7 +170,7 @@ void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & tr
         const auto check = linearAnim.checkDatarefValuesOrder();
         if (check) {
             CLError << LogNodeRef(node) << "has unexpected dataref value for the rotation key:"
-                    << check.value() + 1 << " value:" << linearAnim.mKeys.at(check.value()).value;
+                    << check.value() + 1 << " value:" << linearAnim.mKeys.at(check.value()).mDrfValue;
         }
     }
 }
@@ -246,8 +246,8 @@ void ConverterAnimRotate::processEulerAxis(INode * node, Control * control, cons
     for (int currentKey = 0; currentKey < keysNum; ++currentKey) {
         const float value = axisValueAt(ctrl, ctrl->GetKeyTime(currentKey));
         xobj::RotationAxis::Key & key = outAnim.mKeys.emplace_back();
-        key.angleDeg.setRad(value - offset);
-        key.value = mdAnimRot->mKeyList.at(currentKey);
+        key.mAngle.setRad(value - offset);
+        key.mDrfValue = mdAnimRot->mKeyList.at(currentKey);
     }
     //------------------------------------------------------------
     outAnim.mDataRef = xobj::String::from(mdAnimRot->mDataref);
@@ -358,12 +358,12 @@ bool ConverterAnimRotate::checkKeys(INode * node, const xobj::RotationAxis::KeyL
     }
     //-------------------------------------------------------------------------
     if (size == 2) {
-        if (stsff::math::isEqual(keys[0].angleDeg.value(), keys[1].angleDeg.value(), threshold)) {
+        if (stsff::math::isEqual(keys[0].mAngle.value(), keys[1].mAngle.value(), threshold)) {
             CLWarning << LogNode(node) << "has the same key value [0:1] on \"" << axis << "-" << ctrlName << "\" controller.";
             return false;
         }
 
-        if (stsff::math::isEqual(keys[0].value, keys[1].value, threshold)) {
+        if (stsff::math::isEqual(keys[0].mDrfValue, keys[1].mDrfValue, threshold)) {
             CLWarning << LogNode(node) << "has the same dataref value [0:1] on \"" << axis << "-" << ctrlName << "\" controller.";
             return false;
         }
@@ -378,15 +378,15 @@ bool ConverterAnimRotate::checkKeys(INode * node, const xobj::RotationAxis::KeyL
             return true;
         }
 
-        if (stsff::math::isEqual(keys[k1].angleDeg.value(), keys[k2].angleDeg.value(), threshold) &&
-            stsff::math::isEqual(keys[k2].angleDeg.value(), keys[k3].angleDeg.value(), threshold)) {
+        if (stsff::math::isEqual(keys[k1].mAngle.value(), keys[k2].mAngle.value(), threshold) &&
+            stsff::math::isEqual(keys[k2].mAngle.value(), keys[k3].mAngle.value(), threshold)) {
             CLWarning << LogNode(node) << "has the same key value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
                     << axis << "-" << ctrlName << "\" controller.";
             return false;
         }
 
-        if (stsff::math::isEqual(keys[k1].value, keys[k2].value, threshold) &&
-            stsff::math::isEqual(keys[k2].value, keys[k3].value, threshold)) {
+        if (stsff::math::isEqual(keys[k1].mDrfValue, keys[k2].mDrfValue, threshold) &&
+            stsff::math::isEqual(keys[k2].mDrfValue, keys[k3].mDrfValue, threshold)) {
             CLWarning << LogNode(node) << "has the same dataref value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
                     << axis << "-" << ctrlName << "\" controller.";
             return false;

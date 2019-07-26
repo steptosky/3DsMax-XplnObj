@@ -144,8 +144,8 @@ void ConverterAnimTranslate::objAnimTrans(INode * node, xobj::Transform & transf
     for (int keyNum = 0; keyNum < posControlKeyNum; ++keyNum) {
         const Point3 pos = translateValue(xCtrl, yCtrl, zCtrl, posControl->GetKeyTime(keyNum)) - offsetRelativeParent;
         xobj::Translate::Key & key = anim.mKeys.emplace_back();
-        key.position.set(pos.x, pos.y, pos.z);
-        key.value = keyValueList.at(keyNum);
+        key.mPos.set(pos.x, pos.y, pos.z);
+        key.mDrfValue = keyValueList.at(keyNum);
     }
 
     anim.mDataRef = xobj::String::from(mdAnimTrans.mDataref);
@@ -215,12 +215,12 @@ bool ConverterAnimTranslate::checkTransKeysValue(INode * node, const xobj::Trans
     }
     //-------------------------------------------------------------------------
     if (size == 2) {
-        if (keyList[0].position == keyList[1].position) {
+        if (keyList[0].mPos == keyList[1].mPos) {
             CLWarning << LogNode(node) << "has the same position value [0:1] on \"" << ctrlName << "\" controller.";
             return false;
         }
 
-        if (keyList[0].value == keyList[1].value) {
+        if (keyList[0].mDrfValue == keyList[1].mDrfValue) {
             CLWarning << LogNode(node) << "has the same dataref value [0:1] on \"" << ctrlName << "\" controller.";
             return false;
         }
@@ -235,15 +235,15 @@ bool ConverterAnimTranslate::checkTransKeysValue(INode * node, const xobj::Trans
             return true;
         }
 
-        if (keyList[k1].position == keyList[k2].position &&
-            keyList[k2].position == keyList[k3].position) {
+        if (keyList[k1].mPos == keyList[k2].mPos &&
+            keyList[k2].mPos == keyList[k3].mPos) {
             CLWarning << LogNode(node) << "has the same position value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
                     << ctrlName << "\" controller.";
             return false;
         }
 
-        if (stsff::math::isEqual(keyList[k1].value, keyList[k2].value, threshold) &&
-            stsff::math::isEqual(keyList[k2].value, keyList[k3].value, threshold)) {
+        if (stsff::math::isEqual(keyList[k1].mDrfValue, keyList[k2].mDrfValue, threshold) &&
+            stsff::math::isEqual(keyList[k2].mDrfValue, keyList[k3].mDrfValue, threshold)) {
             CLWarning << LogNode(node) << "has the same dataref value [" << k1 << ":" << k2 << ":" << k3 << "] on \""
                     << ctrlName << "\" controller.";
             return false;
