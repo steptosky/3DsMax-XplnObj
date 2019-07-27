@@ -31,6 +31,7 @@
 #include <decomp.h>
 
 #include "ConverterAnimRotate.h"
+#include "xpln/obj/animation/LinearRotation.h"
 #include "ConverterUtils.h"
 #include "common/Logger.h"
 #include "models/io/AnimIO.h"
@@ -59,7 +60,6 @@ bool ConverterAnimRotate::toXpln(INode & node, xobj::Transform & transform, cons
 
     if (rotation->ClassID() == Class_ID(LININTERP_ROTATION_CLASS_ID, 0)) {
         processLinearRotate(node, transform, *rotation, params);
-        DbgAssert(false);
     }
     else {
         processEuler(&node, transform, *rotation, params);
@@ -93,18 +93,25 @@ std::size_t ConverterAnimRotate::calculateLinearAxisNum(INode * node) {
     if (numKeys < 2) {
         return 0;
     }
-
+    //------------------------------------------------------------
+    const auto quatFromMtx = [](const Matrix3 & mtx) ->Quat {
+        AffineParts affParts;
+        decomp_affine(mtx, &affParts);
+        return affParts.q;
+    };
+    //------------------------------------------------------------
     Interval interval(FOREVER);
-    xobj::LinearRotation anim;
-    anim.mKeys.reserve(std::size_t(numKeys));
+    xobj::LinearRotation::KeyList keys;
+    keys.reserve(std::size_t(numKeys));
 
     for (int i = 0; i < numKeys; ++i) {
         Quat quat;
         rotation->GetValue(rotation->GetKeyTime(i), quat, interval);
-        anim.mKeys.emplace_back(xobj::LinearRotation::Key{xobj::Quat(quat.w, quat.x, quat.y, quat.z), 0});
+        keys.emplace_back(xobj::LinearRotation::Key{xobj::Quat(quat.w, quat.x, quat.y, quat.z), 0});
     }
-
-    return anim.retrieveAxes().mAxes.size();
+    const TimeValue time = GetCOREInterface()->GetTime();
+    const Quat fullOffsetMtx = quatFromMtx(Inverse(node->GetNodeTM(time)) * node->GetParentTM(time));
+    return xobj::LinearRotation::retrieveAxes(keys, xobj::Quat(fullOffsetMtx.w, fullOffsetMtx.x, fullOffsetMtx.y, fullOffsetMtx.z)).mAxes.size();
 }
 
 /********************************************************************************************************/
@@ -142,35 +149,73 @@ void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & tr
     }
     //----------------------------------------------
     if (numKeys != static_cast<int>(animRotate.mKeyList.size())) {
-        CLError << LogNodeRef(node) << "mismatch animation keys and dataref values number on rotation";
+        CLError << LogNodeRef(node) << "mismatch animation keys and dataref values number on rotation: "
+                << numKeys << "/" << animRotate.mKeyList.size() << ".";
         return;
     }
     //------------------------------------------------------------
-    Interval interval(FOREVER);
+    // const auto printQuat = [](const Quat & q, const std::string & text = std::string()) {
+    //     const AngAxis a(q);
+    //     CLInfo << std::fixed << "[" << text << "] Q[" << q.w << " " << q.x << " " << q.y << " " << q.z << "] "
+    //             << "A[" << xobj::degrees(a.angle) << " " << a.axis.x << " " << a.axis.y << " " << a.axis.z << "]";
+    // };
+    //------------------------------------------------------------
+    const auto getQuat = [&control](const int time) {
+        static Interval interval(FOREVER);
+        Quat q;
+        control.GetValue(time, q, interval);
+        return q;
+    };
+
+    const auto quatFromMtx = [](const Matrix3 & mtx) ->Quat {
+        AffineParts affParts;
+        decomp_affine(mtx, & affParts);
+        return affParts.q;
+    };
+
+    const auto quatDiff = [](const Quat & q1, const Quat & q2) ->Quat {
+        return q1 * q2.Inverse();
+    };
+    //------------------------------------------------------------
+
     if (numKeys != 0) {
-        xobj::LinearRotation & linearAnim = transform.mRotation.mAnimation.emplace<xobj::LinearRotation>();
+        xobj::AxisSetRotation & rotate = transform.mRotation.mAnimation;
 
-        AffineParts offsetRelativeParent;
-        decomp_affine(node.GetNodeTM(params.mCurrTime), &offsetRelativeParent);
-        const Quat offset = (offsetRelativeParent.q * offsetRelativeParent.q).Inverse();
-        linearAnim.mOffset = xobj::Quat(offset.w, offset.x, offset.y, offset.z);
-        linearAnim.mLoop = animRotate.mLoopEnable ? std::optional(animRotate.mLoopValue) : std::nullopt;
-        linearAnim.mDataRef = xobj::String::from(animRotate.mDataref);
+        // this offset doesn't take into account the time position and is always constant.
+        const Quat offset = quatFromMtx(Inverse(node.GetNodeTM(0)) * node.GetParentTM(0));
+        const Quat fullOffsetMtx = quatFromMtx(Inverse(node.GetNodeTM(params.mCurrTime)) * node.GetParentTM(params.mCurrTime));
 
-        linearAnim.mKeys.reserve(std::size_t(numKeys));
+        // the library considers one key as just a rotation, this code just rotate object back taking into account curr time.
+        const AngAxis aaOffset(quatDiff(offset, fullOffsetMtx));
+        // it doesn't make a sense to write this key if there is no rotation that is made by sliding time position.
+        if (!stsff::math::isEqual(aaOffset.angle, 0.0f) && !stsff::math::isEqual(aaOffset.angle, 360.0f)) {
+            auto & axis = rotate.mAxes.emplace_back();
+            axis.mVector.set(aaOffset.axis.x, aaOffset.axis.y, aaOffset.axis.z);
+            axis.mKeys.emplace_back(xobj::RotationAxis::Key{xobj::Degrees::fromRad(aaOffset.angle), 0.0f});
+        }
+
+        xobj::LinearRotation::KeyList keys;
+        keys.reserve(std::size_t(numKeys));
+
         for (int i = 0; i < numKeys; ++i) {
-            Quat quat;
-            control.GetValue(control.GetKeyTime(i), quat, interval);
-            linearAnim.mKeys.emplace_back(xobj::LinearRotation::Key{
+            const Quat quat = getQuat(control.GetKeyTime(i));
+            keys.emplace_back(xobj::LinearRotation::Key{
                 xobj::Quat(quat.w, quat.x, quat.y, quat.z),
                 animRotate.mKeyList.at(i)
             });
         }
 
-        const auto check = linearAnim.checkDatarefValuesOrder();
+        const auto check = xobj::LinearRotation::checkDatarefValuesOrder(keys);
         if (check) {
             CLError << LogNodeRef(node) << "has unexpected dataref value for the rotation key:"
-                    << check.value() + 1 << " value:" << linearAnim.mKeys.at(check.value()).mDrfValue;
+                    << check.value() + 1 << " value:" << keys.at(check.value()).mDrfValue;
+        }
+
+        xobj::AxisSetRotation axes = xobj::LinearRotation::retrieveAxes(keys, xobj::Quat(fullOffsetMtx.w, fullOffsetMtx.x, fullOffsetMtx.y, fullOffsetMtx.z));
+        for (auto & a : axes.mAxes) {
+            a.mLoop = animRotate.mLoopEnable ? std::optional(animRotate.mLoopValue) : std::nullopt;
+            a.mDataRef = xobj::String::from(animRotate.mDataref);
+            rotate.mAxes.emplace_back(std::move(a));
         }
     }
 }
@@ -258,7 +303,7 @@ void ConverterAnimRotate::processEulerAxis(INode * node, Control * control, cons
 //-------------------------------------------------------------------------
 
 void ConverterAnimRotate::processEuler(INode * node, xobj::Transform & transform, Control & control, const ExportParams & params) {
-    xobj::AxisSetRotation & euler = transform.mRotation.mAnimation.emplace<xobj::AxisSetRotation>();
+    xobj::AxisSetRotation & euler = transform.mRotation.mAnimation;
 
     euler.mAxes.reserve(3);
     auto & x = euler.mAxes.emplace_back(xobj::RotationAxis::makeX());

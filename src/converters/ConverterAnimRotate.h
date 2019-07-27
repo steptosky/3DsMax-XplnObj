@@ -34,7 +34,6 @@
 #pragma warning(pop)
 
 #include <xpln/obj/Transform.h>
-#include "models/MdAnimRot.h"
 
 class ExportParams;
 class ImportParams;
