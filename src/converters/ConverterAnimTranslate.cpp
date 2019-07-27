@@ -111,7 +111,8 @@ void ConverterAnimTranslate::objAnimTrans(INode * node, xobj::Transform & transf
     }
     MdAnimTrans::KeyValueList & keyValueList = mdAnimTrans.mKeyList;
     if (posControlKeyNum != int(keyValueList.size())) {
-        CLError << LogNode(node) << "mismatch animation keys and dataref values number on translation.";
+        CLError << LogNode(node) << "mismatch animation keys and dataref values number on translation: "
+                << posControlKeyNum << "/" << keyValueList.size() << ".";
         return;
     }
     //----------------------------------------------
