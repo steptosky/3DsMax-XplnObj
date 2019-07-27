@@ -149,7 +149,7 @@ void ConverterAnimTranslate::objAnimTrans(INode * node, xobj::Transform & transf
         key.mDrfValue = keyValueList.at(keyNum);
     }
 
-    anim.mDataRef = xobj::String::from(mdAnimTrans.mDataref);
+    anim.mDataRef.set(mdAnimTrans.mDataref);
     anim.mLoop = mdAnimTrans.mLoopEnable ? std::optional(mdAnimTrans.mLoopValue) : std::nullopt;
     checkTransKeysValue(node, anim.mKeys, "position");
 }

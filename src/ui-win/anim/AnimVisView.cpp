@@ -314,7 +314,7 @@ namespace win {
         strTmp.append(1, char(inKey.mType));
         strTmp.append(_T(" = ")).append(sts::toString(inKey.mDrfValue1, 4)).append(_T(" "));
         strTmp.append(sts::toString(inKey.mDrfValue2, 4));
-        const auto strTmp2 = sts::toString(inKey.mDataRef.mString);
+        const auto strTmp2 = sts::toString(inKey.mDataRef.str());
         strTmp.append(_T(" ")).append(strTmp2.empty() ? _T("none") : strTmp2);
         return strTmp;
     }

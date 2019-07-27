@@ -234,7 +234,7 @@ void AnimIO::saveVisibilityToNode(INode * outNode, const MdAnimVis & inAnimVis) 
         stream.setValue<std::uint8_t>(static_cast<std::uint8_t>(curr.mType));
         stream.setValue<float>(curr.mDrfValue1);
         stream.setValue<float>(curr.mDrfValue2);
-        stream.setValue<std::string>(curr.mDataRef);
+        stream.setValue<std::string>(curr.mDataRef.str());
     }
     NodeIO::saveData(outNode, static_cast<DWORD>(eAnimVisIOID::ANIM_VISIBILITY), buf.str());
 }
@@ -282,7 +282,7 @@ bool AnimIO::loadVisibilityFromNode(INode * inNode, MdAnimVis & outAnimVis) {
         curr.mType = static_cast<xobj::VisibilityKey::eType>(stream.value<std::uint8_t>());
         stream.value<float>(curr.mDrfValue1);
         stream.value<float>(curr.mDrfValue2);
-        stream.value<std::string>(curr.mDataRef);
+        stream.value<std::string>(curr.mDataRef.str());
     }
     return true;
 }
