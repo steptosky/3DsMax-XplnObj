@@ -58,6 +58,7 @@
 #include <vector>
 #include <map>
 #include <list>
+#include <unordered_set>
 
 #include <functional>
 #include <utility>

@@ -28,6 +28,11 @@
 */
 
 #include <cassert>
+#include <algorithm>
+
+#pragma warning(push, 0)
+#include <ilayer.h>
+#pragma warning(pop)
 
 #include "ConverterToXpln.h"
 #include "common/Logger.h"
@@ -53,16 +58,13 @@
 #include "objects/main/MainObjParamsWrapper.h"
 #include "common/String.h"
 
-#include "ExportParams.h"
-#include "ImportParams.h"
+#include "common/NodeUtils.h"
 
 /**************************************************************************************************/
 ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
 /**************************************************************************************************/
 
 ConverterToXpln::ConverterToXpln() {
-    mIp = GetCOREInterface();
-
     mXObjMain = nullptr;
     mMainObj = nullptr;
 }
@@ -75,23 +77,51 @@ bool ConverterToXpln::toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xO
     assert(mainNode);
     mXObjMain = &xObjMain;
     mMainObj = mainNode;
-
-    //-------------------------------------------------------------------------
-    ExportParams exportParams;
-    exportParams.mCurrTime = mainNode->timeValue();
+    //-----------------------------------------------
+    mExportOptions.mCurrTime = mainNode->timeValue();
 
     if (mainNode->isManualScale()) {
         // TODO Needs implementation of auto-scale value relative system units
-        exportParams.mScale = mainNode->scale();
+        mExportOptions.mScale = mainNode->scale();
     }
 
-    if (exportParams.mScale < 0.00001) {
-        CLError << "<" << xObjMain.objectName() << "> has too small scale <" << exportParams.mScale << ">";
+    if (mExportOptions.mScale < 0.00001) {
+        CLError << "<" << xObjMain.objectName() << "> has too small scale <" << mExportOptions.mScale << ">";
         return false;
     }
-    //-------------------------------------------------------------------------
+    //-----------------------------------------------
+    ConverterMain::toXpln(mainNode->node(), xObjMain, mExportOptions);
+    if (mainNode->useLayersObjects()) {
+        std::unordered_set<ILayer*> geometryLayers = mainNode->geometryLayers(mainNode->node()->GetName());
+        if (geometryLayers.empty()) {
+            CLError << LogNode(mainNode->node()) << "has enabled using layers objects but hasn't layers specified.";
+            return false;
+        }
+        return byLayer(mainNode, geometryLayers, xObjMain);
+    }
+    return byLink(mainNode, xObjMain);
+}
 
-    ConverterMain::toXpln(mainNode->node(), xObjMain, exportParams);
+bool ConverterToXpln::byLayer(MainObjParamsWrapper * mainNode, const std::unordered_set<ILayer*> & layers, xobj::ObjMain & xObjMain) {
+    const auto rootNodes = rootNodesFromLayers(layers);
+    //-----------------------------------------------
+    xobj::ObjLodGroup & lod = xObjMain.addLod();
+    xobj::Transform & currObjTransform = lod.transform();
+    //-----------------------------------------------
+    Matrix3 ttm = Inverse(mainNode->node()->GetNodeTM(mExportOptions.mCurrTime));
+    ttm.Scale(Point3(mExportOptions.mScale, mExportOptions.mScale, mExportOptions.mScale), TRUE);
+    ConverterUtils::toXTransform(ttm, currObjTransform);
+    //-----------------------------------------------
+    for (const auto rootNode : rootNodes) {
+        if (!processNode(rootNode, &currObjTransform, mExportOptions, layers)) {
+            return false;
+        }
+    }
+    //-----------------------------------------------
+    return true;
+}
+
+bool ConverterToXpln::byLink(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMain) {
     mLods.clear();
     if (!collectLods(mainNode->node(), mainNode->node(), mLods)) {
         return false;
@@ -106,26 +136,25 @@ bool ConverterToXpln::toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xO
             CLWarning << "The lod: <" << sts::toMbString(currLodNode->GetName()) << "> does not have any objects.";
             continue;
         }
-        //-------------------------------------------------------------------------
+        //-----------------------------------------------
         xobj::ObjLodGroup & lod = xObjMain.addLod();
         xobj::Transform & currObjTransform = lod.transform();
 
         if (mainNode->node() != currLodNode) {
-            ConverterLod::toXpln(currLodNode, lod, exportParams);
+            ConverterLod::toXpln(currLodNode, lod, mExportOptions);
         }
-        //-------------------------------------------------------------------------
-        Matrix3 ttm = Inverse(currLodNode->GetNodeTM(exportParams.mCurrTime));
-        ttm.Scale(Point3(exportParams.mScale, exportParams.mScale, exportParams.mScale), TRUE);
-        //-------------------------------------------------------------------------
+        //-----------------------------------------------
+        Matrix3 ttm = Inverse(currLodNode->GetNodeTM(mExportOptions.mCurrTime));
+        ttm.Scale(Point3(mExportOptions.mScale, mExportOptions.mScale, mExportOptions.mScale), TRUE);
         ConverterUtils::toXTransform(ttm, currObjTransform);
-
+        //-----------------------------------------------
         const auto numChildren = currLodNode->NumberOfChildren();
         for (int idx = 0; idx < numChildren; ++idx) {
-            if (!processNode(currLodNode->GetChildNode(idx), &currObjTransform, exportParams)) {
+            if (!processNode(currLodNode->GetChildNode(idx), &currObjTransform, mExportOptions, std::unordered_set<ILayer*>())) {
                 return false;
             }
         }
-        //-------------------------------------------------------------------------
+        //-----------------------------------------------
     }
     return true;
 }
@@ -134,7 +163,8 @@ bool ConverterToXpln::toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xO
 ///////////////////////////////////////////* Functions *////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool ConverterToXpln::processNode(INode * node, xobj::Transform * xTransform, const ExportParams & params) const {
+bool ConverterToXpln::processNode(INode * node, xobj::Transform * xTransform,
+                                  const ExportParams & params, const std::unordered_set<ILayer*> & layers) const {
     xobj::Transform & tr = xTransform->newChild(sts::toMbString(node->GetName()).c_str());
     ConverterUtils::toXTransform(node->GetNodeTM(mMainObj->timeValue()), tr);
     //-------------------------------------------------------------------------
@@ -143,17 +173,19 @@ bool ConverterToXpln::processNode(INode * node, xobj::Transform * xTransform, co
         ConverterAnim::toXPLN(node, &tr, params);
     }
     //-------------------------------------------------------------------------
-    // translate object
-    static ObjAbstractList xObjList;
-    toXpln(node, Matrix3(1), xObjList, params);
-    for (auto curr : xObjList) {
-        tr.mObjects.emplace_back(curr);
+    // transform object
+    const auto nodeLayer = layerFromNode(node);
+    if (layers.empty() || std::any_of(layers.begin(), layers.end(), [&](const auto layer) { return layer == nodeLayer; })) {
+        ObjAbstractList xObjList = xplnObj(node, params);
+        for (auto curr : xObjList) {
+            tr.addObject(curr);
+        }
     }
     //-------------------------------------------------------------------------
     // translate children
     const auto numChildren = node->NumberOfChildren();
     for (int idx = 0; idx < numChildren; ++idx) {
-        if (!processNode(node->GetChildNode(idx), &tr, params)) {
+        if (!processNode(node->GetChildNode(idx), &tr, params, layers)) {
             return false;
         }
     }
@@ -163,22 +195,21 @@ bool ConverterToXpln::processNode(INode * node, xobj::Transform * xTransform, co
 
 //-------------------------------------------------------------------------
 
-void ConverterToXpln::toXpln(INode * inNode, const Matrix3 & baseTm,
-                             ObjAbstractList & outList, const ExportParams & params) const {
-    outList.clear();
+ConverterToXpln::ObjAbstractList ConverterToXpln::xplnObj(INode * inNode, const ExportParams & params) const {
+    ObjAbstractList outList;
 
     if (mMainObj->isMeshExport()) {
         xobj::ObjAbstract * xObj = ConverterMesh::toXpln(inNode, params);
         if (xObj) {
             ConverterAttr::toXpln(*xObj, inNode, params);
             outList.emplace_back(xObj);
-            return;
+            return outList;
         }
     }
     if (mMainObj->isLinesExport()) {
-        outList = ConverterLine::toXpln(inNode, baseTm, params);
+        outList = ConverterLine::toXpln(inNode, Matrix3(1), params);
         if (!outList.empty()) {
-            return;
+            return outList;
         }
     }
     if (mMainObj->isLightsExport()) {
@@ -186,22 +217,24 @@ void ConverterToXpln::toXpln(INode * inNode, const Matrix3 & baseTm,
         if (xObj) {
             ConverterAttr::toXpln(*xObj, inNode, params);
             outList.emplace_back(xObj);
-            return;
+            return outList;
         }
     }
 
     xobj::ObjSmoke * xSmokeObj = ConverterSmoke::toXpln(inNode, params);
     if (xSmokeObj) {
         outList.emplace_back(xSmokeObj);
-        return;
+        return outList;
     }
 
     xobj::ObjAbstract * xDummyObj = ConverterDummy::toXpln(inNode, params);
     if (xDummyObj) {
         ConverterAttr::toXpln(*xDummyObj, inNode, params);
         outList.emplace_back(xDummyObj);
-        return;
+        return outList;
     }
+
+    return outList;
 }
 
 /**************************************************************************************************/
@@ -226,6 +259,29 @@ bool ConverterToXpln::collectLods(INode * ownerNode, INode * currNode, std::vect
         }
     }
     return true;
+}
+
+ILayer * ConverterToXpln::layerFromNode(INode * node) {
+    const auto pointer = node->GetReference(NODE_LAYER_REF);
+    DbgAssert(pointer);
+    DbgAssert(dynamic_cast<const ILayer*>(pointer));
+    return static_cast<ILayer*>(pointer);
+}
+
+std::unordered_set<INode*> ConverterToXpln::rootNodesFromLayers(const std::unordered_set<ILayer*> & layers) {
+    std::unordered_set<INode*> out;
+    NodeUtils::visitAll([&](INode * node) ->bool {
+        const auto nodeLayer = layerFromNode(node);
+        for (const auto l : layers) {
+            if (nodeLayer == l) {
+                auto root = NodeUtils::root(node);
+                DbgAssert(root);
+                out.insert(root);
+            }
+        }
+        return true;
+    });
+    return out;
 }
 
 /**************************************************************************************************/

@@ -50,6 +50,28 @@ bool NodeUtils::visitChildrenOf(INode * root, const Function & fn) {
     return true;
 }
 
+INode * NodeUtils::root(INode * child) {
+    DbgAssert(child);
+    if (!child) {
+        return nullptr;
+    }
+
+    const INode * sceneRootNode = GetCOREInterface()->GetRootNode();
+    DbgAssert(child != sceneRootNode);
+    if (child == sceneRootNode) {
+        return child;
+    }
+
+    INode * currNode = child;
+    while (true) {
+        INode * parent = currNode->GetParentNode();
+        if (parent == sceneRootNode || !parent) {
+            return currNode;
+        }
+        currNode = parent;
+    }
+}
+
 bool NodeUtils::visitAllOf(INode * root, const Function & fn) {
     DbgAssert(fn);
     const auto numChildren = root->NumberOfChildren();

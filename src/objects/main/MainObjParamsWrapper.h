@@ -29,6 +29,8 @@
 
 #pragma once
 
+#include <unordered_set>
+
 #pragma warning(push, 0)
 #include <max.h>
 #pragma warning(pop)
@@ -45,6 +47,7 @@
 #include <xpln/obj/attributes/AttrCockpitRegion.h>
 
 class IParamBlock2;
+class ILayer;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,7 +59,7 @@ class IParamBlock2;
 class MainObjParamsWrapper {
 public:
 
-    MainObjParamsWrapper(IParamBlock2 * pbAttr, IParamBlock2 * pbExp, TimeValue t, const Interval & interval);
+    MainObjParamsWrapper(IParamBlock2 * pbAttr, IParamBlock2 * pbGeom, TimeValue t, const Interval & interval);
     MainObjParamsWrapper(INode * node, TimeValue t, const Interval & interval);
     ~MainObjParamsWrapper() = default;
 
@@ -155,6 +158,11 @@ public:
 
     /***************************************************************************************/
 
+    bool useLayersObjects();
+    static std::unordered_set<ILayer*> geometryLayers(const MStr & startsWith);
+
+    /***************************************************************************************/
+
     INode * node() const {
         return mNode;
     }
@@ -167,7 +175,7 @@ private:
 
     Interval mInterval;
     TimeValue mT = 0;
-    IParamBlock2 * mPbExp = nullptr;
+    IParamBlock2 * mPbGeom = nullptr;
     IParamBlock2 * mPbAttr = nullptr;
     INode * mNode = nullptr;
 

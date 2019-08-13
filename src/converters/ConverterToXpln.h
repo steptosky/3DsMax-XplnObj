@@ -30,6 +30,9 @@
 #pragma once
 
 #include <vector>
+#include <unordered_set>
+
+#include "ExportParams.h"
 
 namespace xobj {
 class ObjAbstract;
@@ -40,6 +43,7 @@ class Transform;
 class MainObjParamsWrapper;
 
 class INode;
+class ILayer;
 class Interface;
 class Matrix3;
 class StdMat;
@@ -53,9 +57,6 @@ class ConverterLight;
 class ConverterAttr;
 class ConverterAnim;
 
-class ExportParams;
-class ImportParams;
-
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
@@ -63,27 +64,33 @@ class ImportParams;
 class ConverterToXpln {
 public:
 
-    bool toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMain);
-
     ConverterToXpln();
     ~ConverterToXpln() = default;
+
+    bool toXpln(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMain);
+
 private:
 
+    bool byLayer(MainObjParamsWrapper * mainNode, const std::unordered_set<ILayer*> & layers, xobj::ObjMain & xObjMain);
+    bool byLink(MainObjParamsWrapper * mainNode, xobj::ObjMain & xObjMain);
+
     //-------------------------------------------------------------------------
 
-    bool processNode(INode * node, xobj::Transform * xTransform, const ExportParams & params) const;
+    bool processNode(INode * node, xobj::Transform * xTransform,
+                     const ExportParams & params, const std::unordered_set<ILayer*> & layers) const;
 
     typedef std::vector<xobj::ObjAbstract*> ObjAbstractList;
-    void toXpln(INode * inNode, const Matrix3 & baseTm,
-                ObjAbstractList & outList, const ExportParams & params) const;
+    ObjAbstractList xplnObj(INode * inNode, const ExportParams & params) const;
 
     static bool collectLods(INode * ownerNode, INode * currNode, std::vector<INode*> & outLods);
+    static std::unordered_set<INode*> rootNodesFromLayers(const std::unordered_set<ILayer*> & layers);
+    static ILayer * layerFromNode(INode * node);
 
     //-------------------------------------------------------------------------
 
+    ExportParams mExportOptions;
     MainObjParamsWrapper * mMainObj;
     xobj::ObjMain * mXObjMain;
-    Interface * mIp;
     std::vector<INode *> mLods;
 
     //-------------------------------------------------------------------------

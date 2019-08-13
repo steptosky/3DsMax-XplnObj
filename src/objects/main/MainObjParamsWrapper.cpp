@@ -30,7 +30,11 @@
 #include "MainObjParamsWrapper.h"
 
 #pragma warning(push, 0)
+#include <max.h>
 #include <iparamb2.h>
+#include <ilayermanager.h>
+#include <ilayer.h>
+#include <ILayerProperties.h>
 #pragma warning(pop)
 
 #include "objects/main/param-blocks/MainObjParams.h"
@@ -50,9 +54,9 @@ MainObjParamsWrapper::MainObjParamsWrapper(INode * node, const TimeValue t, cons
     DbgAssert(node);
     DbgAssert(isMainObj(node));
 
-    mPbExp = node->GetObjectRef()->GetParamBlockByID(static_cast<BlockID>(eMainObjParamsBlocks::MainObjGeometryParams));
+    mPbGeom = node->GetObjectRef()->GetParamBlockByID(static_cast<BlockID>(eMainObjParamsBlocks::MainObjGeometryParams));
     mPbAttr = node->GetObjectRef()->GetParamBlockByID(static_cast<BlockID>(eMainObjParamsBlocks::MainObjAttrParams));
-    DbgAssert(mPbExp);
+    DbgAssert(mPbGeom);
     DbgAssert(mPbAttr);
 }
 
@@ -61,7 +65,7 @@ MainObjParamsWrapper::MainObjParamsWrapper(IParamBlock2 * pbAttr, IParamBlock2 *
       mT(t),
       mNode(nullptr) {
 
-    mPbExp = pbExp;
+    mPbGeom = pbExp;
     mPbAttr = pbAttr;
 }
 
@@ -83,8 +87,8 @@ bool MainObjParamsWrapper::isMainObj(INode * inNode) {
 
 bool MainObjParamsWrapper::isExportEnable() {
     BOOL val = TRUE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjAttr_ExportEnable, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjAttr_ExportEnable, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_ExportEnable);
         }
     }
@@ -96,8 +100,8 @@ bool MainObjParamsWrapper::isExportEnable() {
 
 bool MainObjParamsWrapper::isMeshExport() {
     BOOL val = TRUE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjGeom_Meshes, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjGeom_Meshes, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Meshes);
         }
     }
@@ -109,8 +113,8 @@ bool MainObjParamsWrapper::isMeshExport() {
 
 bool MainObjParamsWrapper::isLinesExport() {
     BOOL val = TRUE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjGeom_Lines, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjGeom_Lines, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Lines);
         }
     }
@@ -122,8 +126,8 @@ bool MainObjParamsWrapper::isLinesExport() {
 
 bool MainObjParamsWrapper::isLightsExport() {
     BOOL val = TRUE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjGeom_Lights, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjGeom_Lights, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Lights);
         }
     }
@@ -135,8 +139,8 @@ bool MainObjParamsWrapper::isLightsExport() {
 
 bool MainObjParamsWrapper::isAnimationExport() {
     BOOL val = TRUE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjGeom_Animation, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjGeom_Animation, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Animation);
         }
     }
@@ -148,8 +152,8 @@ bool MainObjParamsWrapper::isAnimationExport() {
 
 bool MainObjParamsWrapper::isOptimization() {
     BOOL val = TRUE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjGeom_Optimization, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjGeom_Optimization, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Optimisation);
         }
     }
@@ -161,8 +165,8 @@ bool MainObjParamsWrapper::isOptimization() {
 
 bool MainObjParamsWrapper::isInstancing() {
     BOOL val = FALSE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjGeom_Instancing, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjGeom_Instancing, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Instancing);
         }
     }
@@ -174,8 +178,8 @@ bool MainObjParamsWrapper::isInstancing() {
 
 bool MainObjParamsWrapper::isDebug() {
     BOOL val = FALSE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjGeom_Debug, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjGeom_Debug, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_Debug);
         }
     }
@@ -188,8 +192,8 @@ bool MainObjParamsWrapper::isDebug() {
 //-------------------------------------------------------------------------
 
 void MainObjParamsWrapper::setExportEnable(const bool state) {
-    if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjAttr_ExportEnable, mT, int(state))) {
+    if (mPbGeom) {
+        if (!mPbGeom->SetValue(MainObjAttr_ExportEnable, mT, int(state))) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjAttr_ExportEnable);
         }
     }
@@ -199,8 +203,8 @@ void MainObjParamsWrapper::setExportEnable(const bool state) {
 }
 
 void MainObjParamsWrapper::setMeshExport(const bool state) {
-    if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjGeom_Meshes, mT, int(state))) {
+    if (mPbGeom) {
+        if (!mPbGeom->SetValue(MainObjGeom_Meshes, mT, int(state))) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Meshes);
         }
     }
@@ -210,8 +214,8 @@ void MainObjParamsWrapper::setMeshExport(const bool state) {
 }
 
 void MainObjParamsWrapper::setLinesExport(const bool state) {
-    if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjGeom_Lines, mT, int(state))) {
+    if (mPbGeom) {
+        if (!mPbGeom->SetValue(MainObjGeom_Lines, mT, int(state))) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Lines);
         }
     }
@@ -221,8 +225,8 @@ void MainObjParamsWrapper::setLinesExport(const bool state) {
 }
 
 void MainObjParamsWrapper::setLightsExport(const bool state) {
-    if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjGeom_Lights, mT, int(state))) {
+    if (mPbGeom) {
+        if (!mPbGeom->SetValue(MainObjGeom_Lights, mT, int(state))) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Lights);
         }
     }
@@ -232,8 +236,8 @@ void MainObjParamsWrapper::setLightsExport(const bool state) {
 }
 
 void MainObjParamsWrapper::setAnimationExport(const bool state) {
-    if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjGeom_Animation, mT, int(state))) {
+    if (mPbGeom) {
+        if (!mPbGeom->SetValue(MainObjGeom_Animation, mT, int(state))) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Animation);
         }
     }
@@ -243,8 +247,8 @@ void MainObjParamsWrapper::setAnimationExport(const bool state) {
 }
 
 void MainObjParamsWrapper::setOptimization(const bool state) {
-    if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjGeom_Optimization, mT, int(state))) {
+    if (mPbGeom) {
+        if (!mPbGeom->SetValue(MainObjGeom_Optimization, mT, int(state))) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Optimisation);
         }
     }
@@ -254,8 +258,8 @@ void MainObjParamsWrapper::setOptimization(const bool state) {
 }
 
 void MainObjParamsWrapper::setInstancing(const bool state) {
-    if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjGeom_Instancing, mT, int(state))) {
+    if (mPbGeom) {
+        if (!mPbGeom->SetValue(MainObjGeom_Instancing, mT, int(state))) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Instancing);
         }
     }
@@ -265,8 +269,8 @@ void MainObjParamsWrapper::setInstancing(const bool state) {
 }
 
 void MainObjParamsWrapper::setDebug(const bool state) {
-    if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjGeom_Debug, mT, int(state))) {
+    if (mPbGeom) {
+        if (!mPbGeom->SetValue(MainObjGeom_Debug, mT, int(state))) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_Debug);
         }
     }
@@ -281,8 +285,8 @@ void MainObjParamsWrapper::setDebug(const bool state) {
 
 bool MainObjParamsWrapper::isNameMesh() {
     BOOL val = TRUE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjGeom_NameMeshes, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjGeom_NameMeshes, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameMeshes);
         }
     }
@@ -294,8 +298,8 @@ bool MainObjParamsWrapper::isNameMesh() {
 
 bool MainObjParamsWrapper::isNameLines() {
     BOOL val = TRUE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjGeom_NameLines, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjGeom_NameLines, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameLines);
         }
     }
@@ -307,8 +311,8 @@ bool MainObjParamsWrapper::isNameLines() {
 
 bool MainObjParamsWrapper::isNameLights() {
     BOOL val = TRUE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjGeom_NameLights, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjGeom_NameLights, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameLights);
         }
     }
@@ -320,8 +324,8 @@ bool MainObjParamsWrapper::isNameLights() {
 
 bool MainObjParamsWrapper::isNameDummies() {
     BOOL val = TRUE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjGeom_NameDummies, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjGeom_NameDummies, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_NameDummies);
         }
     }
@@ -333,8 +337,8 @@ bool MainObjParamsWrapper::isNameDummies() {
 
 bool MainObjParamsWrapper::isTreeHierarchy() {
     BOOL val = TRUE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjGeom_TreeHierarchy, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjGeom_TreeHierarchy, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjExp_TreeHierarchy);
         }
     }
@@ -347,8 +351,8 @@ bool MainObjParamsWrapper::isTreeHierarchy() {
 //-------------------------------------------------------------------------
 
 void MainObjParamsWrapper::setNameMesh(const bool state) {
-    if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjGeom_NameMeshes, mT, int(state))) {
+    if (mPbGeom) {
+        if (!mPbGeom->SetValue(MainObjGeom_NameMeshes, mT, int(state))) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameMeshes);
         }
     }
@@ -358,8 +362,8 @@ void MainObjParamsWrapper::setNameMesh(const bool state) {
 }
 
 void MainObjParamsWrapper::setNameLines(const bool state) {
-    if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjGeom_NameLines, mT, int(state))) {
+    if (mPbGeom) {
+        if (!mPbGeom->SetValue(MainObjGeom_NameLines, mT, int(state))) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameLines);
         }
     }
@@ -369,8 +373,8 @@ void MainObjParamsWrapper::setNameLines(const bool state) {
 }
 
 void MainObjParamsWrapper::setNameLights(const bool state) {
-    if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjGeom_NameLights, mT, int(state))) {
+    if (mPbGeom) {
+        if (!mPbGeom->SetValue(MainObjGeom_NameLights, mT, int(state))) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameLights);
         }
     }
@@ -380,8 +384,8 @@ void MainObjParamsWrapper::setNameLights(const bool state) {
 }
 
 void MainObjParamsWrapper::setNameDummies(const bool state) {
-    if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjGeom_NameDummies, mT, int(state))) {
+    if (mPbGeom) {
+        if (!mPbGeom->SetValue(MainObjGeom_NameDummies, mT, int(state))) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_NameDummies);
         }
     }
@@ -391,8 +395,8 @@ void MainObjParamsWrapper::setNameDummies(const bool state) {
 }
 
 void MainObjParamsWrapper::setTreeHierarchy(const bool state) {
-    if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjGeom_TreeHierarchy, mT, int(state))) {
+    if (mPbGeom) {
+        if (!mPbGeom->SetValue(MainObjGeom_TreeHierarchy, mT, int(state))) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObjExp_TreeHierarchy);
         }
     }
@@ -407,8 +411,8 @@ void MainObjParamsWrapper::setTreeHierarchy(const bool state) {
 
 bool MainObjParamsWrapper::isManualScale() {
     BOOL val = TRUE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjGeom_ScaleEnabled, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjGeom_ScaleEnabled, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObj_ScaleEnabled);
         }
     }
@@ -420,8 +424,8 @@ bool MainObjParamsWrapper::isManualScale() {
 
 float MainObjParamsWrapper::scale() {
     float val = TRUE;
-    if (mPbExp) {
-        if (!mPbExp->GetValue(MainObjGeom_ScaleValue, mT, val, mInterval)) {
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjGeom_ScaleValue, mT, val, mInterval)) {
             XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObj_ScaleValue);
         }
     }
@@ -434,11 +438,11 @@ float MainObjParamsWrapper::scale() {
 //-------------------------------------------------------------------------
 
 void MainObjParamsWrapper::setScale(const bool manual, const float value) {
-    if (mPbExp) {
-        if (!mPbExp->SetValue(MainObjGeom_ScaleEnabled, mT, int(manual))) {
+    if (mPbGeom) {
+        if (!mPbGeom->SetValue(MainObjGeom_ScaleEnabled, mT, int(manual))) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObj_ScaleEnabled);
         }
-        if (!mPbExp->SetValue(MainObjGeom_ScaleValue, mT, value)) {
+        if (!mPbGeom->SetValue(MainObjGeom_ScaleValue, mT, value)) {
             XLError << LogNode(mNode) << "Can't save value:" << TOTEXT(MainObj_ScaleValue);
         }
     }
@@ -1237,6 +1241,63 @@ void MainObjParamsWrapper::setCockpitRegion(const std::optional<xobj::AttrCockpi
     else {
         XLError << "Pointer to IParamBlock2 is nullptr";
     }
+}
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+
+bool MainObjParamsWrapper::useLayersObjects() {
+    int val = 0;
+    if (mPbGeom) {
+        if (!mPbGeom->GetValue(MainObjAttr_LinkingType, mT, val, mInterval)) {
+            XLError << LogNode(mNode) << "Can't retrieve value:" << TOTEXT(MainObjAttr_LinkingType);
+        }
+    }
+    else {
+        XLError << "Pointer to IParamBlock2 is nullptr";
+    }
+    return val == 1;
+}
+
+std::unordered_set<ILayer*> MainObjParamsWrapper::geometryLayers(const MStr & startsWith) {
+    std::unordered_set<ILayer*> out;
+    //----------------------
+    auto fpLayerManager = static_cast<IFPLayerManager*>(GetCOREInterface(LAYERMANAGER_INTERFACE));
+    if (!fpLayerManager) {
+        return out;
+    }
+    //----------------------
+    // From 3Ds Max SDK
+    // Note, passing in the value of 10 to the GetReference function may look like a hack,
+    // but it is the only way at this time to get the pointer we need
+    const auto pointer = GetCOREInterface()->GetScenePointer()->GetReference(10);
+    const auto layerManager = dynamic_cast<ILayerManager*>(pointer);
+    //----------------------
+#if MAX_VERSION_MAJOR > 14 // 14 - 2012
+    const auto startWithFn = [](MStr & layerName, const MStr & nodeName) {
+        return layerName.StartsWith(nodeName);
+    };
+#else
+    const auto startWithFn = [](MStr & layerName, const MStr & nodeName) {
+        return sts::MbStrUtils::startsWith(xobj::fromMStr(layerName), xobj::fromMStr(nodeName));
+    };
+#endif
+    //----------------------
+    const auto layerNum = fpLayerManager->getCount();
+    for (int i = 0; i < layerNum; ++i) {
+        auto layerProperty = fpLayerManager->getLayer(i);
+        MStr name(layerProperty->getName());
+
+        if (startWithFn(name, startsWith)) {
+            const auto layer = layerManager->GetLayer(layerProperty->getName());
+            if (layer) {
+                out.insert(layer);
+            }
+        }
+    }
+    //----------------------
+    return out;
 }
 
 /**************************************************************************************************/
