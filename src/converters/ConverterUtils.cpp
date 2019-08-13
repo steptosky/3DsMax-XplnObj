@@ -52,10 +52,10 @@ void ConverterUtils::toXTMatrix(const Matrix3 & inTm, xobj::TMatrix & outMtx) {
 }
 
 void ConverterUtils::toMaxTransform(const xobj::Transform & inTransform, INode * outNode) {
-    xobj::Point3 row1 = inTransform.pMatrix.row(0);
-    xobj::Point3 row2 = inTransform.pMatrix.row(1);
-    xobj::Point3 row3 = inTransform.pMatrix.row(2);
-    xobj::Point3 row4 = inTransform.pMatrix.row(3);
+    const xobj::Point3 row1 = inTransform.mMatrix.row(0);
+    const xobj::Point3 row2 = inTransform.mMatrix.row(1);
+    const xobj::Point3 row3 = inTransform.mMatrix.row(2);
+    const xobj::Point3 row4 = inTransform.mMatrix.row(3);
     Matrix3 mtx(Point3(row1.x, row1.y, row1.z),
                 Point3(row2.x, row2.y, row2.z),
                 Point3(row3.x, row3.y, row3.z),

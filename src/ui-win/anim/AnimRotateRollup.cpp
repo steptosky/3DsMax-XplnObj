@@ -83,13 +83,13 @@ namespace win {
         mYView = new AnimRotateAxisView(MdAnimRot::Y);
         mZView = new AnimRotateAxisView(MdAnimRot::Z);
         if (!mXView->create(hWnd)) {
-            LError << "Can't create dialog for X roatation animation";
+            XLError << "Can't create dialog for X rotation animation";
         }
         if (!mYView->create(hWnd)) {
-            LError << "Can't create dialog for Y roatation animation";
+            XLError << "Can't create dialog for Y rotation animation";
         }
         if (!mZView->create(hWnd)) {
-            LError << "Can't create dialog for Z roatation animation";
+            XLError << "Can't create dialog for Z rotation animation";
         }
     }
 
@@ -104,7 +104,7 @@ namespace win {
 
     void AnimRotateRollup::adjustSize() {
         RECT size = mXView->clientRect();
-        LONG height = (size.bottom - size.top) * 3;
+        const auto height = (size.bottom - size.top) * 3;
 
         size.top += size.bottom - size.top;
         size.left = 0;

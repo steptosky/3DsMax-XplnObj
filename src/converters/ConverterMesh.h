@@ -72,11 +72,10 @@ private:
             TextureVertexIdx = inTextureVertexIdx;
         }
 
-        ~MPoint() { }
+        ~MPoint() = default;
     };
 
     struct MFace {
-
         int vertices[3];
         int smGroupIdx;
         int materialIdx;

@@ -74,7 +74,7 @@ public:
     void setLinesExport(bool state);
     void setLightsExport(bool state);
     void setAnimationExport(bool state);
-    void setOptimisation(bool state);
+    void setOptimization(bool state);
     void setInstancing(bool state);
     void setDebug(bool state);
 
@@ -83,7 +83,7 @@ public:
     bool isLinesExport();
     bool isLightsExport();
     bool isAnimationExport();
-    bool isOptimisation();
+    bool isOptimization();
     bool isInstancing();
     bool isDebug();
     //-------------------------------------------------------------------------
@@ -109,14 +109,14 @@ public:
     /***************************************************************************************/
 
     void setPathPrefix(const std::string & str);
-    void setTexture(const std::string & str);
-    void setTextureLit(const std::string & str);
-    void setTextureNormal(const std::string & str);
+    void setTexture(const std::optional<std::string> & str);
+    void setTextureLit(const std::optional<std::string> & str);
+    void setTextureNormal(const std::optional<std::string> & str);
 
     std::string pathPrefix();
-    std::string texture();
-    std::string textureLit();
-    std::string textureNormal();
+    std::optional<std::string> texture();
+    std::optional<std::string> textureLit();
+    std::optional<std::string> textureNormal();
 
     //-------------------------------------------------------------------------
 
@@ -134,27 +134,27 @@ public:
 
     //-------------------------------------------------------------------------
 
-    void setWetDry(const xobj::AttrWetDry & attr);
-    void setBlend(const xobj::AttrBlend & attr);
-    void setLayerGroup(const xobj::AttrLayerGroup & attr);
-    void setDrapedLayerGroup(const xobj::AttrDrapedLayerGroup & attr);
-    void setLodDrap(const xobj::AttrDrapedLod & attr);
-    void setSlungWeight(const xobj::AttrSlungLoadWeight & attr);
-    void setSpecular(const xobj::AttrSpecular & attr);
-    void setTint(const xobj::AttrTint & attr);
-    void setSlopeLimit(const xobj::AttrSlopeLimit & attr);
-    void setCockpitRegion(const xobj::AttrCockpitRegion & attr, xobj::AttrCockpitRegion::eNum idx);
+    void setWetDry(const std::optional<xobj::AttrWetDry> & attr);
+    void setBlend(const std::optional<xobj::AttrBlend> & attr);
+    void setLayerGroup(const std::optional<xobj::AttrLayerGroup> & attr);
+    void setDrapedLayerGroup(const std::optional<xobj::AttrDrapedLayerGroup> & attr);
+    void setLodDrap(const std::optional<xobj::AttrDrapedLod> & attr);
+    void setSlungWeight(const std::optional<xobj::AttrSlungLoadWeight> & attr);
+    void setSpecular(const std::optional<xobj::AttrSpecular> & attr);
+    void setTint(const std::optional<xobj::AttrTint> & attr);
+    void setSlopeLimit(const std::optional<xobj::AttrSlopeLimit> & attr);
+    void setCockpitRegion(const std::optional<xobj::AttrCockpitRegion> & attr, xobj::AttrCockpitRegion::eNum idx);
 
-    xobj::AttrWetDry wetDry();
-    xobj::AttrBlend blend();
-    xobj::AttrLayerGroup layerGroup();
-    xobj::AttrDrapedLayerGroup drapedLayerGroup();
-    xobj::AttrDrapedLod lodDrap();
-    xobj::AttrSlungLoadWeight slungWeight();
-    xobj::AttrSpecular specular();
-    xobj::AttrTint tint();
-    xobj::AttrSlopeLimit slopeLimit();
-    xobj::AttrCockpitRegion cockpitRegion(xobj::AttrCockpitRegion::eNum idx);
+    std::optional<xobj::AttrWetDry> wetDry();
+    std::optional<xobj::AttrBlend> blend();
+    std::optional<xobj::AttrLayerGroup> layerGroup();
+    std::optional<xobj::AttrDrapedLayerGroup> drapedLayerGroup();
+    std::optional<xobj::AttrDrapedLod> lodDrap();
+    std::optional<xobj::AttrSlungLoadWeight> slungWeight();
+    std::optional<xobj::AttrSpecular> specular();
+    std::optional<xobj::AttrTint> tint();
+    std::optional<xobj::AttrSlopeLimit> slopeLimit();
+    std::optional<xobj::AttrCockpitRegion> cockpitRegion(xobj::AttrCockpitRegion::eNum idx);
 
     /***************************************************************************************/
 

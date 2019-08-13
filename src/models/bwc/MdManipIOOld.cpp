@@ -226,7 +226,7 @@ namespace xpln_bwc {
         }
 
         bool load(sts_bwc::DataStreamI & stream) override {
-            std::streampos begPos = stream.getStdIStream().tellg();
+            const auto begPos = stream.getStdIStream().tellg();
 
             SerializationId id1;
             id1.load(stream.getStdIStream());
@@ -242,7 +242,7 @@ namespace xpln_bwc {
                 // Certain manip data (version 1)
                 std::string str;
                 stream >> str;
-                mManip.setCmd(str);
+                mManip.mCommand = str;
                 //--------------------------------------------
                 // From parent class (ObjAbstractManip sts x-plane lib 0.1.0)
                 SerializationId id;
@@ -260,9 +260,9 @@ namespace xpln_bwc {
 
                 int32_t ct = 0;
                 stream >> ct;
-                mManip.setCursor(xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str()));
+                mManip.mCursor = xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str());
                 stream >> str;
-                mManip.setToolTip(str);
+                mManip.mToolType = str;
                 return true;
                 //--------------------------------------------
             }
@@ -273,9 +273,9 @@ namespace xpln_bwc {
             if (! AbstractCommand::load(stream)) {
                 return false;
             }
-            mManip.setCursor(xobj::ECursor::fromString(mValues[0].c_str()));
-            mManip.setCmd(mValues[1]);
-            mManip.setToolTip(mValues[2]);
+            mManip.mCursor = xobj::ECursor::fromString(mValues[0].c_str());
+            mManip.mCommand = mValues[1];
+            mManip.mToolType = mValues[2];
             return true;
             //--------------------------------------------
         }
@@ -301,7 +301,7 @@ namespace xpln_bwc {
         }
 
         bool load(sts_bwc::DataStreamI & stream) override {
-            std::streampos begPos = stream.getStdIStream().tellg();
+            const auto begPos = stream.getStdIStream().tellg();
 
             SerializationId id1;
             id1.load(stream.getStdIStream());
@@ -318,17 +318,17 @@ namespace xpln_bwc {
                 // Certain manip data (version 1)
                 float val = 0.0f;
                 stream >> val;
-                mManip.setDirectionX(val);
+                mManip.mDirX = val;
                 stream >> val;
-                mManip.setDirectionY(val);
+                mManip.mDirY = val;
                 stream >> val;
-                mManip.setDirectionZ(val);
+                mManip.mDirZ = val;
 
                 std::string str;
                 stream >> str;
-                mManip.setCmdNegative(str);
+                mManip.mNegCommand = str;
                 stream >> str;
-                mManip.setCmdPositive(str);
+                mManip.mPosCommand = str;
                 //--------------------------------------------
                 // From parent class (ObjAbstractManip sts x-plane lib 0.1.0)
                 SerializationId id;
@@ -347,9 +347,9 @@ namespace xpln_bwc {
 
                 int32_t ct = 0;
                 stream >> ct;
-                mManip.setCursor(xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str()));
+                mManip.mCursor = xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str());
                 stream >> str;
-                mManip.setToolTip(str);
+                mManip.mToolType = str;
                 return true;
                 //--------------------------------------------
             }
@@ -360,13 +360,13 @@ namespace xpln_bwc {
             if (!AbstractCommand::load(stream)) {
                 return false;
             }
-            mManip.setCursor(xobj::ECursor::fromString(mValues[0].c_str()));
-            mManip.setDirectionX(sts::toFloat(mValues[1]));
-            mManip.setDirectionY(sts::toFloat(mValues[2]));
-            mManip.setDirectionZ(sts::toFloat(mValues[3]));
-            mManip.setCmdNegative(mValues[5]);
-            mManip.setCmdPositive(mValues[4]);
-            mManip.setToolTip(mValues[6]);
+            mManip.mCursor = xobj::ECursor::fromString(mValues[0].c_str());
+            mManip.mDirX = sts::toFloat(mValues[1]);
+            mManip.mDirY = sts::toFloat(mValues[2]);
+            mManip.mDirZ = sts::toFloat(mValues[3]);
+            mManip.mNegCommand = mValues[5];
+            mManip.mPosCommand = mValues[4];
+            mManip.mToolType = mValues[6];
             return true;
             //--------------------------------------------
         }
@@ -392,7 +392,7 @@ namespace xpln_bwc {
         }
 
         bool load(sts_bwc::DataStreamI & stream) override {
-            std::streampos begPos = stream.getStdIStream().tellg();
+            const auto begPos = stream.getStdIStream().tellg();
 
             SerializationId id1;
             id1.load(stream.getStdIStream());
@@ -409,16 +409,16 @@ namespace xpln_bwc {
                 // Certain manip data (version 1)
                 float val = 0.0f;
                 stream >> val;
-                mManip.setDown(val);
+                mManip.mDown = val;
                 stream >> val;
-                mManip.setHold(val);
+                mManip.mHold = val;
                 stream >> val;
-                mManip.setMinimum(val);
+                mManip.mMin = val;
                 stream >> val;
-                mManip.setMaximum(val);
+                mManip.mMax = val;
                 std::string str;
                 stream >> str;
-                mManip.setDataref(str);
+                mManip.mDataref = str;
                 //--------------------------------------------
                 // From parent class (ObjAbstractManip sts x-plane lib 0.1.0)
                 SerializationId id;
@@ -437,9 +437,9 @@ namespace xpln_bwc {
 
                 int32_t ct = 0;
                 stream >> ct;
-                mManip.setCursor(xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str()));
+                mManip.mCursor = xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str());
                 stream >> str;
-                mManip.setToolTip(str);
+                mManip.mToolType = str;
                 return true;
                 //--------------------------------------------
             }
@@ -450,13 +450,13 @@ namespace xpln_bwc {
             if (!AbstractCommand::load(stream)) {
                 return false;
             }
-            mManip.setCursor(xobj::ECursor::fromString(mValues[0].c_str()));
-            mManip.setDown(sts::toFloat(mValues[1]));
-            mManip.setHold(sts::toFloat(mValues[2]));
-            mManip.setMinimum(sts::toFloat(mValues[3]));
-            mManip.setMaximum(sts::toFloat(mValues[4]));
-            mManip.setDataref(mValues[5]);
-            mManip.setToolTip(mValues[6]);
+            mManip.mCursor = xobj::ECursor::fromString(mValues[0].c_str());
+            mManip.mDown = sts::toFloat(mValues[1]);
+            mManip.mHold = sts::toFloat(mValues[2]);
+            mManip.mMin = sts::toFloat(mValues[3]);
+            mManip.mMax = sts::toFloat(mValues[4]);
+            mManip.mDataref = mValues[5];
+            mManip.mToolType = mValues[6];
             return true;
             //--------------------------------------------
         }
@@ -482,7 +482,7 @@ namespace xpln_bwc {
         }
 
         bool load(sts_bwc::DataStreamI & stream) override {
-            std::streampos begPos = stream.getStdIStream().tellg();
+            const auto begPos = stream.getStdIStream().tellg();
 
             SerializationId id1;
             id1.load(stream.getStdIStream());
@@ -499,18 +499,18 @@ namespace xpln_bwc {
                 // Certain manip data (version 1)
                 float val = 0.0f;
                 stream >> val;
-                mManip.setDirectionX(val);
+                mManip.mDirX = val;
                 stream >> val;
-                mManip.setDirectionY(val);
+                mManip.mDirY = val;
                 stream >> val;
-                mManip.setDirectionZ(val);
+                mManip.mDirZ = val;
                 stream >> val;
-                mManip.setVal1(val);
+                mManip.mVal1 = val;
                 stream >> val;
-                mManip.setVal2(val);
+                mManip.mVal2 = val;
                 std::string str;
                 stream >> str;
-                mManip.setDataref(str);
+                mManip.mDataref = str;
                 //--------------------------------------------
                 // From parent class (ObjAbstractManip sts x-plane lib 0.1.0)
                 SerializationId id;
@@ -529,9 +529,9 @@ namespace xpln_bwc {
 
                 int32_t ct = 0;
                 stream >> ct;
-                mManip.setCursor(xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str()));
+                mManip.mCursor = xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str());
                 stream >> str;
-                mManip.setToolTip(str);
+                mManip.mToolType = str;
                 return true;
                 //--------------------------------------------
             }
@@ -542,14 +542,14 @@ namespace xpln_bwc {
             if (!AbstractCommand::load(stream)) {
                 return false;
             }
-            mManip.setCursor(xobj::ECursor::fromString(mValues[0].c_str()));
-            mManip.setDirectionX(sts::toFloat(mValues[1]));
-            mManip.setDirectionY(sts::toFloat(mValues[2]));
-            mManip.setDirectionZ(sts::toFloat(mValues[3]));
-            mManip.setVal1(sts::toFloat(mValues[4]));
-            mManip.setVal2(sts::toFloat(mValues[5]));
-            mManip.setDataref(mValues[6]);
-            mManip.setToolTip(mValues[7]);
+            mManip.mCursor = xobj::ECursor::fromString(mValues[0].c_str());
+            mManip.mDirX = sts::toFloat(mValues[1]);
+            mManip.mDirY = sts::toFloat(mValues[2]);
+            mManip.mDirZ = sts::toFloat(mValues[3]);
+            mManip.mVal1 = sts::toFloat(mValues[4]);
+            mManip.mVal2 = sts::toFloat(mValues[5]);
+            mManip.mDataref = mValues[6];
+            mManip.mToolType = mValues[7];
             return true;
             //--------------------------------------------
         }
@@ -575,7 +575,7 @@ namespace xpln_bwc {
         }
 
         bool load(sts_bwc::DataStreamI & stream) override {
-            std::streampos begPos = stream.getStdIStream().tellg();
+            const auto begPos = stream.getStdIStream().tellg();
 
             SerializationId id1;
             id1.load(stream.getStdIStream());
@@ -593,19 +593,19 @@ namespace xpln_bwc {
                 float val = 0.0f;
                 int val_int = 0;
                 stream >> val_int;
-                mManip.setDxPix(val_int);
+                mManip.mDxPix = val_int;
                 stream >> val_int;
-                mManip.setStep(val_int);
+                mManip.mStep = val_int;
 
                 stream >> val;
-                mManip.setExp(val);
+                mManip.mExp = val;
                 stream >> val;
-                mManip.setVal1(val);
+                mManip.mVal1 = val;
                 stream >> val;
-                mManip.setVal2(val);
+                mManip.mVal2 = val;
                 std::string str;
                 stream >> str;
-                mManip.setDataref(str);
+                mManip.mDataref = str;
                 //--------------------------------------------
                 // From parent class (ObjAbstractManip sts x-plane lib 0.1.0)
                 SerializationId id;
@@ -624,9 +624,9 @@ namespace xpln_bwc {
 
                 int32_t ct = 0;
                 stream >> ct;
-                mManip.setCursor(xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str()));
+                mManip.mCursor = xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str());
                 stream >> str;
-                mManip.setToolTip(str);
+                mManip.mToolType = str;
                 return true;
                 //--------------------------------------------
             }
@@ -637,14 +637,14 @@ namespace xpln_bwc {
             if (!AbstractCommand::load(stream)) {
                 return false;
             }
-            mManip.setCursor(xobj::ECursor::fromString(mValues[0].c_str()));
-            mManip.setDxPix(sts::toInt32(mValues[1]));
-            mManip.setStep(sts::toInt32(mValues[2]));
-            mManip.setExp(sts::toFloat(mValues[3]));
-            mManip.setVal1(sts::toFloat(mValues[4]));
-            mManip.setVal2(sts::toFloat(mValues[5]));
-            mManip.setDataref(mValues[6]);
-            mManip.setToolTip(mValues[7]);
+            mManip.mCursor = xobj::ECursor::fromString(mValues[0].c_str());
+            mManip.mDxPix = sts::toInt32(mValues[1]);
+            mManip.mStep = sts::toInt32(mValues[2]);
+            mManip.mExp = sts::toFloat(mValues[3]);
+            mManip.mVal1 = sts::toFloat(mValues[4]);
+            mManip.mVal2 = sts::toFloat(mValues[5]);
+            mManip.mDataref = mValues[6];
+            mManip.mToolType = mValues[7];
             return true;
             //--------------------------------------------
         }
@@ -670,7 +670,7 @@ namespace xpln_bwc {
         }
 
         bool load(sts_bwc::DataStreamI & stream) override {
-            std::streampos begPos = stream.getStdIStream().tellg();
+            const auto begPos = stream.getStdIStream().tellg();
 
             SerializationId id1;
             id1.load(stream.getStdIStream());
@@ -687,23 +687,23 @@ namespace xpln_bwc {
                 // Certain manip data (version 1)
                 float val = 0.0f;
                 stream >> val;
-                mManip.setX(val);
+                mManip.mX = val;
                 stream >> val;
-                mManip.setXMin(val);
+                mManip.mXMin = val;
                 stream >> val;
-                mManip.setXMax(val);
+                mManip.mXMax = val;
                 std::string str;
                 stream >> str;
-                mManip.setXDataref(str);
+                mManip.mXDataref = str;
 
                 stream >> val;
-                mManip.setY(val);
+                mManip.mY = val;
                 stream >> val;
-                mManip.setYMin(val);
+                mManip.mYMin = val;
                 stream >> val;
-                mManip.setYMax(val);
+                mManip.mYMax = val;
                 stream >> str;
-                mManip.setYDataref(str);
+                mManip.mYDataref = str;
                 //--------------------------------------------
                 // From parent class (ObjAbstractManip sts x-plane lib 0.1.0)
                 SerializationId id;
@@ -722,9 +722,9 @@ namespace xpln_bwc {
 
                 int32_t ct = 0;
                 stream >> ct;
-                mManip.setCursor(xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str()));
+                mManip.mCursor = xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str());
                 stream >> str;
-                mManip.setToolTip(str);
+                mManip.mToolType = str;
                 return true;
                 //--------------------------------------------
             }
@@ -735,16 +735,16 @@ namespace xpln_bwc {
             if (!AbstractCommand::load(stream)) {
                 return false;
             }
-            mManip.setCursor(xobj::ECursor::fromString(mValues[0].c_str()));
-            mManip.setX(sts::toFloat(mValues[1]));
-            mManip.setXMin(sts::toFloat(mValues[3]));
-            mManip.setXMax(sts::toFloat(mValues[4]));
-            mManip.setXDataref(mValues[7]);
-            mManip.setY(sts::toFloat(mValues[2]));
-            mManip.setYMin(sts::toFloat(mValues[5]));
-            mManip.setYMax(sts::toFloat(mValues[6]));
-            mManip.setYDataref(mValues[8]);
-            mManip.setToolTip(mValues[9]);
+            mManip.mCursor = xobj::ECursor::fromString(mValues[0].c_str());
+            mManip.mX = sts::toFloat(mValues[1]);
+            mManip.mXMin = sts::toFloat(mValues[3]);
+            mManip.mXMax = sts::toFloat(mValues[4]);
+            mManip.mXDataref = mValues[7];
+            mManip.mY = sts::toFloat(mValues[2]);
+            mManip.mYMin = sts::toFloat(mValues[5]);
+            mManip.mYMax = sts::toFloat(mValues[6]);
+            mManip.mYDataref = mValues[8];
+            mManip.mToolType = mValues[9];
             return true;
             //--------------------------------------------
         }
@@ -770,7 +770,7 @@ namespace xpln_bwc {
         }
 
         bool load(sts_bwc::DataStreamI & stream) override {
-            std::streampos begPos = stream.getStdIStream().tellg();
+            const auto begPos = stream.getStdIStream().tellg();
 
             SerializationId id1;
             id1.load(stream.getStdIStream());
@@ -815,7 +815,7 @@ namespace xpln_bwc {
         }
 
         bool load(sts_bwc::DataStreamI & stream) override {
-            std::streampos begPos = stream.getStdIStream().tellg();
+            const auto begPos = stream.getStdIStream().tellg();
 
             SerializationId id1;
             id1.load(stream.getStdIStream());
@@ -832,12 +832,12 @@ namespace xpln_bwc {
                 // Certain manip data (version 1)
                 float val = 0.0f;
                 stream >> val;
-                mManip.setDown(val);
+                mManip.mDown = val;
                 stream >> val;
-                mManip.setUp(val);
+                mManip.mUp = val;
                 std::string str;
                 stream >> str;
-                mManip.setDataref(str);
+                mManip.mDataref = str;
                 //--------------------------------------------
                 // From parent class (ObjAbstractManip sts x-plane lib 0.1.0)
                 SerializationId id;
@@ -856,9 +856,9 @@ namespace xpln_bwc {
 
                 int32_t ct = 0;
                 stream >> ct;
-                mManip.setCursor(xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str()));
+                mManip.mCursor = xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str());
                 stream >> str;
-                mManip.setToolTip(str);
+                mManip.mToolType = str;
                 return true;
                 //--------------------------------------------
             }
@@ -869,11 +869,11 @@ namespace xpln_bwc {
             if (!AbstractCommand::load(stream)) {
                 return false;
             }
-            mManip.setCursor(xobj::ECursor::fromString(mValues[0].c_str()));
-            mManip.setDown(sts::toFloat(mValues[1]));
-            mManip.setUp(sts::toFloat(mValues[2]));
-            mManip.setDataref(mValues[3]);
-            mManip.setToolTip(mValues[4]);
+            mManip.mCursor = xobj::ECursor::fromString(mValues[0].c_str());
+            mManip.mDown = sts::toFloat(mValues[1]);
+            mManip.mUp = sts::toFloat(mValues[2]);
+            mManip.mDataref = mValues[3];
+            mManip.mToolType = mValues[4];
             return true;
             //--------------------------------------------
         }
@@ -899,7 +899,7 @@ namespace xpln_bwc {
         }
 
         bool load(sts_bwc::DataStreamI & stream) override {
-            std::streampos begPos = stream.getStdIStream().tellg();
+            const auto begPos = stream.getStdIStream().tellg();
 
             SerializationId id1;
             id1.load(stream.getStdIStream());
@@ -916,10 +916,10 @@ namespace xpln_bwc {
                 // Certain manip data (version 1)
                 float val = 0.0f;
                 stream >> val;
-                mManip.setDown(val);
+                mManip.mDown = val;
                 std::string str;
                 stream >> str;
-                mManip.setDataref(str);
+                mManip.mDataref = str;
                 //--------------------------------------------
                 // From parent class (ObjAbstractManip sts x-plane lib 0.1.0)
                 SerializationId id;
@@ -938,9 +938,9 @@ namespace xpln_bwc {
 
                 int32_t ct = 0;
                 stream >> ct;
-                mManip.setCursor(xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str()));
+                mManip.mCursor = xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str());
                 stream >> str;
-                mManip.setToolTip(str);
+                mManip.mToolType = str;
                 return true;
                 //--------------------------------------------
             }
@@ -951,10 +951,10 @@ namespace xpln_bwc {
             if (!AbstractCommand::load(stream)) {
                 return false;
             }
-            mManip.setCursor(xobj::ECursor::fromString(mValues[0].c_str()));
-            mManip.setDown(sts::toFloat(mValues[1]));
-            mManip.setDataref(mValues[2]);
-            mManip.setToolTip(mValues[3]);
+            mManip.mCursor = xobj::ECursor::fromString(mValues[0].c_str());
+            mManip.mDown = sts::toFloat(mValues[1]);
+            mManip.mDataref = mValues[2];
+            mManip.mToolType = mValues[3];
             return true;
             //--------------------------------------------
         }
@@ -980,7 +980,7 @@ namespace xpln_bwc {
         }
 
         bool load(sts_bwc::DataStreamI & stream) override {
-            std::streampos begPos = stream.getStdIStream().tellg();
+            const auto begPos = stream.getStdIStream().tellg();
 
             SerializationId id1;
             id1.load(stream.getStdIStream());
@@ -997,12 +997,12 @@ namespace xpln_bwc {
                 // Certain manip data (version 1)
                 float val = 0.0f;
                 stream >> val;
-                mManip.setOn(val);
+                mManip.mOn = val;
                 stream >> val;
-                mManip.setOff(val);
+                mManip.mOff = val;
                 std::string str;
                 stream >> str;
-                mManip.setDataref(str);
+                mManip.mDataref = str;
                 //--------------------------------------------
                 // From parent class (ObjAbstractManip sts x-plane lib 0.1.0)
                 SerializationId id;
@@ -1021,9 +1021,9 @@ namespace xpln_bwc {
 
                 int32_t ct = 0;
                 stream >> ct;
-                mManip.setCursor(xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str()));
+                mManip.mCursor = xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str());
                 stream >> str;
-                mManip.setToolTip(str);
+                mManip.mToolType = str;
                 return true;
                 //--------------------------------------------
             }
@@ -1034,11 +1034,11 @@ namespace xpln_bwc {
             if (!AbstractCommand::load(stream)) {
                 return false;
             }
-            mManip.setCursor(xobj::ECursor::fromString(mValues[0].c_str()));
-            mManip.setOn(sts::toFloat(mValues[1]));
-            mManip.setOff(sts::toFloat(mValues[2]));
-            mManip.setDataref(mValues[3]);
-            mManip.setToolTip(mValues[4]);
+            mManip.mCursor = xobj::ECursor::fromString(mValues[0].c_str());
+            mManip.mOn = sts::toFloat(mValues[1]);
+            mManip.mOff = sts::toFloat(mValues[2]);
+            mManip.mDataref = mValues[3];
+            mManip.mToolType = mValues[4];
             return true;
             //--------------------------------------------
         }
@@ -1064,7 +1064,7 @@ namespace xpln_bwc {
         }
 
         bool load(sts_bwc::DataStreamI & stream) override {
-            std::streampos begPos = stream.getStdIStream().tellg();
+            const auto begPos = stream.getStdIStream().tellg();
 
             SerializationId id1;
             id1.load(stream.getStdIStream());
@@ -1081,16 +1081,16 @@ namespace xpln_bwc {
                 // Certain manip data (version 1)
                 float val = 0.0f;
                 stream >> val;
-                mManip.setDown(val);
+                mManip.mDown = val;
                 stream >> val;
-                mManip.setHold(val);
+                mManip.mHold = val;
                 stream >> val;
-                mManip.setMinimum(val);
+                mManip.mMin = val;
                 stream >> val;
-                mManip.setMaximum(val);
+                mManip.mMax = val;
                 std::string str;
                 stream >> str;
-                mManip.setDataref(str);
+                mManip.mDataref = str;
                 //--------------------------------------------
                 // From parent class (ObjAbstractManip sts x-plane lib 0.1.0)
                 SerializationId id;
@@ -1109,9 +1109,9 @@ namespace xpln_bwc {
 
                 int32_t ct = 0;
                 stream >> ct;
-                mManip.setCursor(xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str()));
+                mManip.mCursor = xobj::ECursor::fromString(gCursor[static_cast<eCursorType>(ct)].c_str());
                 stream >> str;
-                mManip.setToolTip(str);
+                mManip.mToolType = str;
                 return true;
                 //--------------------------------------------
             }
@@ -1122,13 +1122,13 @@ namespace xpln_bwc {
             if (!AbstractCommand::load(stream)) {
                 return false;
             }
-            mManip.setCursor(xobj::ECursor::fromString(mValues[0].c_str()));
-            mManip.setDown(sts::toFloat(mValues[1]));
-            mManip.setHold(sts::toFloat(mValues[2]));
-            mManip.setMinimum(sts::toFloat(mValues[3]));
-            mManip.setMaximum(sts::toFloat(mValues[4]));
-            mManip.setDataref(mValues[5]);
-            mManip.setToolTip(mValues[6]);
+            mManip.mCursor = xobj::ECursor::fromString(mValues[0].c_str());
+            mManip.mDown = sts::toFloat(mValues[1]);
+            mManip.mHold = sts::toFloat(mValues[2]);
+            mManip.mMin = sts::toFloat(mValues[3]);
+            mManip.mMax = sts::toFloat(mValues[4]);
+            mManip.mDataref = mValues[5];
+            mManip.mToolType = mValues[6];
             return true;
             //--------------------------------------------
         }

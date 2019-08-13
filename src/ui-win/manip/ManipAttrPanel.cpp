@@ -71,15 +71,15 @@ namespace win {
             mHwnd.show(true);
         }
         else {
-            LError << WinCode(GetLastError());
+            XLError << WinCode(GetLastError());
         }
     }
 
     void ManipAttrPanel::destroy() {
         if (mHwnd) {
-            BOOL res = DestroyWindow(mHwnd.hwnd());
+            const BOOL res = DestroyWindow(mHwnd.hwnd());
             if (!res) {
-                LError << WinCode(GetLastError());
+                XLError << WinCode(GetLastError());
             }
             mHwnd.release();
         }
@@ -103,12 +103,15 @@ namespace win {
     //////////////////////////////////////////* Functions */////////////////////////////////////////////
     /**************************************************************************************************/
 
-    void ManipAttrPanel::setManip(const xobj::AttrManipBase & manip) {
-        if (manip.type() != mData.type()) {
-            LError << "Incorrect manipulator: " << manip.type().toString();
+    void ManipAttrPanel::setManip(const std::optional<xobj::AttrManip> & manip) {
+        assert(manip);
+        const auto data = std::get_if<xobj::AttrManipPanel>(&*manip);
+        if (!data) {
+            const xobj::EManipulator type = std::visit([](auto && m) { return m.mType; }, *manip);
+            XLError << "Incorrect manipulator type: " << type.toString();
             return;
         }
-        mData = static_cast<const xobj::AttrManipPanel &>(manip);
+        mData = *data;
     }
 
     /********************************************************************************************************/

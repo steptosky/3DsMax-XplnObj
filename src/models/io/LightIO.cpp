@@ -272,7 +272,7 @@ void LightIO::removeFromNode(INode * node) {
 
 bool LightIO::loadFromNode(INode * inNode, ILightIO * inCallback) {
     if (!inNode || !inCallback) {
-        LError << "One or more of the input parameters is nullptr";
+        XLError << "One or more of the input parameters is nullptr";
         return false;
     }
 
@@ -396,7 +396,7 @@ void LightIO::saveToNode(INode * outNode, const xobj::ObjAbstract * inLight) {
             saveToNodeInternal(outNode, *static_cast<const xobj::ObjLightSpillCust *>(inLight));
             break;
         default:
-            LError << LogNode(outNode) << "has got incorrect x-plane object.";
+            XLError << LogNode(outNode) << "has got incorrect x-plane object.";
             removeFromNode(outNode);
             break;
     }

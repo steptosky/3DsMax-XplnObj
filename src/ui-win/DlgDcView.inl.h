@@ -222,7 +222,7 @@ namespace win {
                     mCurrFile->loadData(mCurrFile->mFilePath);
                 }
                 catch (const std::exception & e) {
-                    LError << "Can't load file <" << xobj::fromMStr(mCurrFile->mFilePath.GetString()) << "> reason: " << e.what();
+                    XLError << "Can't load file <" << xobj::fromMStr(mCurrFile->mFilePath.GetString()) << "> reason: " << e.what();
                 }
 
                 auto index = mCurrFile->indexOfKey(res->mKey);

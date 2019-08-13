@@ -67,7 +67,7 @@ public:
     }
 
     static void toXTransform(const Matrix3 & inTm, xobj::Transform & outTransform) {
-        toXTMatrix(inTm, outTransform.pMatrix);
+        toXTMatrix(inTm, outTransform.mMatrix);
 
     }
 

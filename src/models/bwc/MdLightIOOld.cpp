@@ -90,7 +90,7 @@ struct ObjLightCustom {
         id.load(stream.getStdIStream());
         if (id != getSerializationId()) {
             log_unexpected_data(node, id);
-            LError << "Incorrect input data";
+            XLError << "Incorrect input data";
             return false;
         }
         unsigned char version;

@@ -68,7 +68,7 @@ namespace win {
             case WM_COMMAND: {
                 switch (LOWORD(wParam)) {
                     case CHK_ENABLE: {
-                        theDlg->mData.setEnabled(theDlg->mChkEnable.isChecked());
+                        theDlg->mChkEnable.isChecked() ? theDlg->mData.emplace() : theDlg->mData.reset();
                         theDlg->dataChanged();
                         break;
                     }
@@ -79,8 +79,10 @@ namespace win {
             case CC_SPINNER_CHANGE: {
                 switch (LOWORD(wParam)) {
                     case SPN_DELTA: {
-                        theDlg->mData.setDelta(theDlg->mSpnDelta->GetFVal());
-                        theDlg->dataChanged();
+                        if (theDlg->mData) {
+                            theDlg->mData->mWheelDelta = theDlg->mSpnDelta->GetFVal();
+                            theDlg->dataChanged();
+                        }
                         break;
                     }
                     default: break;
@@ -95,8 +97,6 @@ namespace win {
     /**************************************************************************************************/
     ////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
     /**************************************************************************************************/
-
-    ManipAttrWheel::ManipAttrWheel() { }
 
     ManipAttrWheel::~ManipAttrWheel() {
         ManipAttrWheel::destroy();
@@ -118,15 +118,15 @@ namespace win {
             mHwnd.show(true);
         }
         else {
-            LError << WinCode(GetLastError());
+            XLError << WinCode(GetLastError());
         }
     }
 
     void ManipAttrWheel::destroy() {
         if (mHwnd) {
-            BOOL res = DestroyWindow(mHwnd.hwnd());
+            const BOOL res = DestroyWindow(mHwnd.hwnd());
             if (!res) {
-                LError << WinCode(GetLastError());
+                XLError << WinCode(GetLastError());
             }
             mHwnd.release();
         }
@@ -162,8 +162,13 @@ namespace win {
 
     void ManipAttrWheel::toWindow() {
         if (mHwnd) {
-            mSpnDelta->SetValue(mData.delta(), FALSE);
-            mChkEnable.setState(mData.isEnabled());
+            if (mData) {
+                mSpnDelta->SetValue(mData->mWheelDelta, FALSE);
+                mChkEnable.setState(true);
+            }
+            else {
+                mChkEnable.setState(false);
+            }
             enablingControls();
         }
     }
@@ -174,7 +179,7 @@ namespace win {
 
     void ManipAttrWheel::enablingControls() {
         if (mHwnd) {
-            mData.isEnabled() ? mSpnDelta->Enable() : mSpnDelta->Disable();
+            mData ? mSpnDelta->Enable() : mSpnDelta->Disable();
         }
     }
 

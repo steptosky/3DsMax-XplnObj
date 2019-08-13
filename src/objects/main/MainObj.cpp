@@ -101,9 +101,9 @@ CreateMouseCallBack * MainObject::GetCreateMouseCallBack() {
 
 void MainObject::updateTexturesButtons() const {
     MainObjParamsWrapper wrapper(mAttrParamsPb, mGeomPb, GetCOREInterface()->GetTime(), FOREVER);
-    updateButtonText(mAttrParamsPb, MainObjAttr_Texture, sts::toString(wrapper.texture()).c_str());
-    updateButtonText(mAttrParamsPb, MainObjAttr_TextureLit, sts::toString(wrapper.textureLit()).c_str());
-    updateButtonText(mAttrParamsPb, MainObjAttr_TextureNormal, sts::toString(wrapper.textureNormal()).c_str());
+    updateButtonText(mAttrParamsPb, MainObjAttr_Texture, sts::toString(wrapper.texture().value_or(std::string())).c_str());
+    updateButtonText(mAttrParamsPb, MainObjAttr_TextureLit, sts::toString(wrapper.textureLit().value_or(std::string())).c_str());
+    updateButtonText(mAttrParamsPb, MainObjAttr_TextureNormal, sts::toString(wrapper.textureNormal().value_or(std::string())).c_str());
 }
 
 void MainObject::updateButtonText(IParamBlock2 * pBlock, const ParamID param, const MCHAR * value) {
@@ -142,8 +142,8 @@ void MainObject::updateLayerGroupSpinEnabling() const {
     //DbgAssert(map);
     if (map) {
         MainObjParamsWrapper wrapper(mAttrParamsPb, nullptr, GetCOREInterface()->GetTime(), FOREVER);
-        map->Enable(MainObjAttr_LayerGroupOffset, wrapper.layerGroup().layer().isValid() ? 1 : 0);
-        map->Enable(MainObjAttr_LayerGroupDrapedOffset, wrapper.drapedLayerGroup().layer().isValid() ? 1 : 0);
+        map->Enable(MainObjAttr_LayerGroupOffset, wrapper.layerGroup().value_or(xobj::AttrLayerGroup()).mLayer.isValid() ? 1 : 0);
+        map->Enable(MainObjAttr_LayerGroupDrapedOffset, wrapper.drapedLayerGroup().value_or(xobj::AttrDrapedLayerGroup()).mLayer.isValid() ? 1 : 0);
     }
 }
 
@@ -449,7 +449,7 @@ void MainObject::makeIcon() {
     float size = 1.0f;
     Interval interval = FOREVER;
     if (!mDisplayPb->GetValue(MainObjDisp_IconScale, mIp ? mIp->GetTime() : 0, size, interval)) {
-        LError << "Can't retrieve scale value from param block";
+        XLError << "Can't retrieve scale value from param block";
     }
 
     if (stsff::math::isEqual(mLastIconScale, size, 0.001f) && mIconMesh.getNumVerts() != 0) {
@@ -462,7 +462,7 @@ void MainObject::makeIcon() {
         size = size * masterScale;
         if (size < 0.00001f) {
             size = 0.00001f;
-            LError << "The icon scale is too small";
+            XLError << "The icon scale is too small";
         }
     }
 

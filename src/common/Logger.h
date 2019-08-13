@@ -30,66 +30,12 @@
 #pragma once
 
 #include <vector>
+#include <xpln/common/Logger.h>
 #include "additional/utils/Single.h"
-#include "additional/utils/BaseLogger.h"
 
 #pragma warning(push, 0)
 #include <strclass.h>
 #pragma warning(pop)
-
-#define LOG_CATEGORY_DIALOG  "Dlg"
-#define LOG_CATEGORY_CONSOLE  "Csl"
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-// Message to user console
-#define CLMessage    CategoryMessage(LOG_CATEGORY_CONSOLE)
-#define CLDebug      CategoryDebug(LOG_CATEGORY_CONSOLE)
-#define CLFatal      CategoryFatal(LOG_CATEGORY_CONSOLE)
-#define CLCritical   CategoryCritical(LOG_CATEGORY_CONSOLE)
-#define CLError      CategoryError(LOG_CATEGORY_CONSOLE)
-#define CLWarning    CategoryWarning(LOG_CATEGORY_CONSOLE)
-#define CLInfo       CategoryInfo(LOG_CATEGORY_CONSOLE)
-
-// Force push
-#define CLPush LPush
-
-// Message to dialog
-#define DLMessage    CategoryMessage(LOG_CATEGORY_DIALOG)
-#define DLDebug      CategoryDebug(LOG_CATEGORY_DIALOG)
-#define DLFatal      CategoryFatal(LOG_CATEGORY_DIALOG)
-#define DLCritical   CategoryCritical(LOG_CATEGORY_DIALOG)
-#define DLError      CategoryError(LOG_CATEGORY_DIALOG)
-#define DLWarning    CategoryWarning(LOG_CATEGORY_DIALOG)
-#define DLInfo       CategoryInfo(LOG_CATEGORY_DIALOG)
-
-// Force push
-#define DLPush LPush
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-#define LogNode(x) "Object: \"" << (x == nullptr ? "nullptr" : sts::toMbString(x->GetName())) << "\" - "
-#define WinCode(x) "win code:" << x
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-#ifndef Debug
-#	ifndef NDEBUG
-#		define Debug(x) x
-#	else
-#		define Debug(x)
-#	endif
-#endif
-
-#ifndef TOTEXT
-#	define TOTEXT(x) #x
-#endif
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,14 +43,14 @@
 
 class LogSys;
 
-class Logger : public sts::Single<Logger> {
+class Logger final : public sts::Single<Logger> {
     friend Single<Logger>;
     Logger();
 public:
 
-    typedef void (*UserConsoleCallBack)(sts::BaseLogger::eType type, const char * msg);
+    typedef void (*UserConsoleCallBack)(std::size_t level, const char * msg);
 
-    virtual ~Logger();
+    ~Logger() = default;
 
     //-------------------------------------------------------------------------
 
@@ -120,15 +66,6 @@ public:
      * \param callback [in] 
      */
     static void unregisterUserConsoleCallback(UserConsoleCallBack callback);
-
-    //-------------------------------------------------------------------------
-
-    static void logCallBack(sts::BaseLogger::eType inType,
-                            const char * inMsg,
-                            const char * file,
-                            int line,
-                            const char * function,
-                            const char * category);
 
     //-------------------------------------------------------------------------
 
@@ -148,6 +85,10 @@ public:
 
     static const std::string & versionShortString() { return mVersionShortString; }
     static const std::string & versionString() { return mVersionString; }
+
+    //-------------------------------------------------------------------------
+
+    static const char * levelAsString(std::size_t level);
 
     //-------------------------------------------------------------------------
 
@@ -173,9 +114,68 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-#define log_unexpected_data(NODE, ID) LError << LogNode(NODE) << "has got unexpected data input: " << ID.toString();
-#define log_unexpected_version(NODE, CURRENT) LError << LogNode(NODE) << "has got unexpected data version: " << CURRENT;
-#define log_unexpected_data_length(NODE, LENGTH) LError << LogNode(NODE) << "has got unexpected data length: " << LENGTH;
+#define LOG_CATEGORY_DIALOG  "Dlg"
+#define LOG_CATEGORY_CONSOLE  "Csl"
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+
+// Message to user console
+#define CLMessage    LcMessage(xobj::Logger::mInstance,LOG_CATEGORY_CONSOLE)
+#define CLDebug      LcDebug(xobj::Logger::mInstance,LOG_CATEGORY_CONSOLE)
+#define CLFatal      LcCritical(xobj::Logger::mInstance,LOG_CATEGORY_CONSOLE)
+#define CLCritical   LcCritical(xobj::Logger::mInstance,LOG_CATEGORY_CONSOLE)
+#define CLError      LcError(xobj::Logger::mInstance,LOG_CATEGORY_CONSOLE)
+#define CLWarning    LcWarning(xobj::Logger::mInstance,LOG_CATEGORY_CONSOLE)
+#define CLInfo       LcInfo(xobj::Logger::mInstance,LOG_CATEGORY_CONSOLE)
+
+// Force push
+#define CLPush LPush
+
+// Message to dialog
+#define DLMessage    LcMessage(xobj::Logger::mInstance,LOG_CATEGORY_DIALOG)
+#define DLDebug      LcDebug(xobj::Logger::mInstance,LOG_CATEGORY_DIALOG)
+#define DLFatal      LcCritical(xobj::Logger::mInstance,LOG_CATEGORY_DIALOG)
+#define DLCritical   LcCritical(xobj::Logger::mInstance,LOG_CATEGORY_DIALOG)
+#define DLError      LcError(xobj::Logger::mInstance,LOG_CATEGORY_DIALOG)
+#define DLWarning    LcWarning(xobj::Logger::mInstance,LOG_CATEGORY_DIALOG)
+#define DLInfo       LcInfo(xobj::Logger::mInstance,LOG_CATEGORY_DIALOG)
+
+// Force push
+#define DLPush LPush
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+
+#define LogNode(x) "Object: \"" << (x == nullptr ? "nullptr" : sts::toMbString(x->GetName())) << "\" - "
+#define LogNodeRef(x) "Object: \"" << sts::toMbString(x.GetName()) << "\" - "
+#define WinCode(x) "win code:" << x
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+
+#ifndef Debug
+#	ifndef NDEBUG
+#		define Debug(x) x
+#	else
+#		define Debug(x)
+#	endif
+#endif
+
+#ifndef TOTEXT
+#	define TOTEXT(x) #x
+#endif
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+
+#define log_unexpected_data(NODE, ID) XLError << LogNode(NODE) << "has got unexpected data input: " << ID.toString();
+#define log_unexpected_version(NODE, CURRENT) XLError << LogNode(NODE) << "has got unexpected data version: " << CURRENT;
+#define log_unexpected_data_length(NODE, LENGTH) XLError << LogNode(NODE) << "has got unexpected data length: " << LENGTH;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////

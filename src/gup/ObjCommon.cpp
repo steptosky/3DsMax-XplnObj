@@ -88,11 +88,11 @@ void ObjCommon::updateCheckWinCallback(HWND hwnd, UINT /*uMsg*/, UINT_PTR idEven
             KillTimer(maxHWND, WM_MY_TIMER_ID);
             if (!upd.error.empty()) {
                 for (auto & e : upd.error) {
-                    LError << "[version] " << e;
+                    XLError << "[version] " << e;
                 }
             }
             else {
-                LMessage << "[version] Got from the remote: " << upd.version.toString();
+                XLMessage << "[version] Got from the remote: " << upd.version.toString();
             }
         }
     }
@@ -196,7 +196,7 @@ IOResult ObjCommon::Save(ISave * isave) {
         //------------------------------------
     }
     catch (std::exception & e) {
-        LError << "Can't save " << TOTEXT(ObjCommon) << " Reason: " << e.what();
+        XLError << "Can't save " << TOTEXT(ObjCommon) << " Reason: " << e.what();
         return IO_ERROR;
     }
     return IO_OK;
@@ -214,7 +214,7 @@ IOResult ObjCommon::Load(ILoad * iload) {
                     iload->Read(reinterpret_cast<myByte *>(&version), sizeof(version), &temp);
                     DbgAssert(sizeof(mIoVersion) == temp);
                     if (version != mIoVersion) {
-                        LError << "Got incorrect version " << version << "/" << mIoVersion;
+                        XLError << "Got incorrect version " << version << "/" << mIoVersion;
                         return IO_ERROR;
                     }
                     break;
@@ -247,7 +247,7 @@ IOResult ObjCommon::Load(ILoad * iload) {
         //------------------------------------
     }
     catch (std::exception & e) {
-        LError << "Can't load " << TOTEXT(ObjCommon) << " Reason: " << e.what();
+        XLError << "Can't load " << TOTEXT(ObjCommon) << " Reason: " << e.what();
         return IO_ERROR;
     }
     return IO_OK;

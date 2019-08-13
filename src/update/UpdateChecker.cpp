@@ -69,10 +69,10 @@ void UpdateChecker::freeResources() {
 void UpdateChecker::checkForUpdate() {
 #ifdef CHECK_FOR_UPDATE
     if (mThread) {
-        LError << TOTEXT(UpdateChecker) << " - already has the thread";
+        LError(xobj::Logger::mInstance) << TOTEXT(UpdateChecker) << " - already has the thread";
         DbgAssert(false);
         return;
-}
+    }
     mThread = new std::thread(checkUpdateTask, this);
 #else
     mUpdateInfo = Update();
