@@ -178,7 +178,7 @@ bool ConverterToXpln::processNode(INode * node, xobj::Transform * xTransform,
     if (layers.empty() || std::any_of(layers.begin(), layers.end(), [&](const auto layer) { return layer == nodeLayer; })) {
         ObjAbstractList xObjList = xplnObj(node, params);
         for (auto curr : xObjList) {
-            tr.addObject(curr);
+            tr.mObjects.emplace_back(curr);
         }
     }
     //-------------------------------------------------------------------------
