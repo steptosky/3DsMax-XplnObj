@@ -1,5 +1,5 @@
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2019, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -29,8 +29,15 @@
 
 #pragma once
 
+#include <memory>
+
+#pragma warning(push, 0)
+#include <notify.h>
+#pragma warning(pop)
+
 #include "ui-win/controls/RollupBase.h"
 #include "AnimRotateAxisView.h"
+#include "ChangeControllerWatcher.h"
 
 namespace ui {
 namespace win {
@@ -39,7 +46,7 @@ namespace win {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /********************************************************************************************************/
 
-    class AnimRotateRollup : public max::ctrl::RollupBase {
+    class AnimRotateRollup final : public max::ctrl::RollupBase {
     public:
 
         void create(IRollupWindow * rollWin);
@@ -53,23 +60,40 @@ namespace win {
         void create() override;
 
         IRollupWindow * getInterface() override {
-            return mIp;
+            return mRollIp;
         }
 
         INT_PTR panelProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
         void initWindow(HWND hWnd) override;
         void destroyWindow(HWND hWnd) override;
 
-        IRollupWindow * mIp = nullptr;
-
+        IRollupWindow * mRollIp = nullptr;
+        Interface * mIp = nullptr;
         //-------------------------------------------------------------------------
+        void nodeSelected(INode * node);
+        void nodeChanged();
+
+        static void slotSelectionChange(void * param, NotifyInfo *);
 
         void adjustSize();
         //-------------------------------------------------------------------------
 
-        AnimRotateAxisView * mXView = nullptr;
-        AnimRotateAxisView * mYView = nullptr;
-        AnimRotateAxisView * mZView = nullptr;
+        static void deleteView(std::unique_ptr<AnimRotateAxisView> & viewPtr) {
+            if (viewPtr) {
+                viewPtr->destroy();
+                viewPtr.reset();
+            }
+        }
+
+        void setLinearView();
+        void setEulerView();
+
+        std::unique_ptr<AnimRotateAxisView> mLinearView;
+        std::unique_ptr<AnimRotateAxisView> mXView;
+        std::unique_ptr<AnimRotateAxisView> mYView;
+        std::unique_ptr<AnimRotateAxisView> mZView;
+
+        ChangeControllerWatcher mWatcher;
         //-------------------------------------------------------------------------
     };
 

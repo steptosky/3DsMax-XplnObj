@@ -45,7 +45,8 @@ struct MdAnimRot {
     enum eAxis {
         X = eAnimRotateIOID::ANIM_X_ROTATE,
         Y = eAnimRotateIOID::ANIM_Y_ROTATE,
-        Z = eAnimRotateIOID::ANIM_Z_ROTATE
+        Z = eAnimRotateIOID::ANIM_Z_ROTATE,
+        LINEAR = eAnimRotateIOID::ANIM_LINEAR_ROTATE
     };
 
     explicit MdAnimRot(eAxis inAxis);

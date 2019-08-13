@@ -4,6 +4,11 @@ Change-log
 
 .. note:: Don't forget to see :ref:`backward-compatibility`
 
+next
+-------------------------
+- Added: Supporting for linear rotate controller.
+- Removed: 'reverse' checkbox because this effect can be achieved with other instruments.
+
 2.6.0 (28.11.2018)
 -------------------------
 - Added: Settings - enable/disable project's DataRefs and Commands ID usage.

@@ -1,5 +1,5 @@
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2019, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -31,6 +31,7 @@
 #include "common/Logger.h"
 #include "resource/resource.h"
 #include "resource/ResHelper.h"
+#include "common/NodeUtils.h"
 
 namespace ui {
 namespace win {
@@ -48,7 +49,8 @@ namespace win {
     /**************************************************************************************************/
 
     AnimRotateRollup::AnimRotateRollup()
-        : RollupBase(ResHelper::hInstance) {}
+        : RollupBase(ResHelper::hInstance),
+          mIp(GetCOREInterface()) {}
 
     AnimRotateRollup::~AnimRotateRollup() {
         AnimRotateRollup::destroy();
@@ -59,17 +61,17 @@ namespace win {
     /**************************************************************************************************/
 
     void AnimRotateRollup::create(IRollupWindow * rollWin) {
-        mIp = rollWin;
+        mRollIp = rollWin;
         create();
     }
 
     void AnimRotateRollup::create() {
         createRollup(IDD_ROLL_ANIM_OBJ, _T("Animation Rotate"), this);
-        adjustSize();
+        setLinearView();
     }
 
     void AnimRotateRollup::destroy() {
-        if (this->hwnd() != nullptr) {
+        if (hwnd() != nullptr) {
             deleteRollup();
         }
     }
@@ -79,9 +81,13 @@ namespace win {
     /**************************************************************************************************/
 
     void AnimRotateRollup::initWindow(HWND hWnd) {
-        mXView = new AnimRotateAxisView(MdAnimRot::X);
-        mYView = new AnimRotateAxisView(MdAnimRot::Y);
-        mZView = new AnimRotateAxisView(MdAnimRot::Z);
+        mLinearView = std::make_unique<AnimRotateAxisView>(MdAnimRot::LINEAR);
+        mXView = std::make_unique<AnimRotateAxisView>(MdAnimRot::X);
+        mYView = std::make_unique<AnimRotateAxisView>(MdAnimRot::Y);
+        mZView = std::make_unique<AnimRotateAxisView>(MdAnimRot::Z);
+        if (!mLinearView->create(hWnd)) {
+            XLError << "Can't create dialog for linear rotation animation";
+        }
         if (!mXView->create(hWnd)) {
             XLError << "Can't create dialog for X rotation animation";
         }
@@ -91,31 +97,102 @@ namespace win {
         if (!mZView->create(hWnd)) {
             XLError << "Can't create dialog for Z rotation animation";
         }
+        RegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
+        RegisterNotification(slotSelectionChange, this, NOTIFY_ANIMATE_OFF);
+        RegisterNotification(slotSelectionChange, this, NOTIFY_ANIMATE_ON);
+        mWatcher.setCallback(std::bind(&AnimRotateRollup::nodeChanged, this));
     }
 
     void AnimRotateRollup::destroyWindow(HWND /*hWnd*/) {
-        mXView->destroy();
-        mYView->destroy();
-        mZView->destroy();
-        delete mXView;
-        delete mYView;
-        delete mZView;
+        UnRegisterNotification(slotSelectionChange, this, NOTIFY_SELECTIONSET_CHANGED);
+        UnRegisterNotification(slotSelectionChange, this, NOTIFY_ANIMATE_OFF);
+        UnRegisterNotification(slotSelectionChange, this, NOTIFY_ANIMATE_ON);
+        mWatcher.removeReference();
+        deleteView(mLinearView);
+        deleteView(mXView);
+        deleteView(mYView);
+        deleteView(mZView);
+    }
+
+    /**************************************************************************************************/
+    //////////////////////////////////////////* Functions */////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void AnimRotateRollup::nodeChanged() {
+        const auto node = mIp->GetSelNode(0);
+        nodeSelected(node);
+    }
+
+    void AnimRotateRollup::slotSelectionChange(void * param, NotifyInfo *) {
+        auto view = reinterpret_cast<AnimRotateRollup*>(param);
+        const auto selectedCount = view->mIp->GetSelNodeCount();
+        if (selectedCount == 0) {
+            view->nodeSelected(nullptr);
+            view->mWatcher.removeReference();
+        }
+        else if (selectedCount == 1) {
+            const auto node = view->mIp->GetSelNode(0);
+            view->nodeSelected(node);
+            view->mWatcher.createReference(node);
+        }
+        else {
+            view->nodeSelected(nullptr);
+            view->mWatcher.removeReference();
+        }
+    }
+
+    /**************************************************************************************************/
+    //////////////////////////////////////////* Functions */////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void AnimRotateRollup::setLinearView() {
+        mLinearView->active(true);
+        mXView->active(false);
+        mYView->active(false);
+        mZView->active(false);
+        adjustSize();
+    }
+
+    void AnimRotateRollup::setEulerView() {
+        mLinearView->active(false);
+        mXView->active(true);
+        mYView->active(true);
+        mZView->active(true);
+        adjustSize();
+    }
+
+    void AnimRotateRollup::nodeSelected(INode * node) {
+        if (!node) {
+            return;
+        }
+        if (NodeUtils::hasLinearRotateController(node)) {
+            setLinearView();
+        }
+        else {
+            setEulerView();
+        }
     }
 
     void AnimRotateRollup::adjustSize() {
-        RECT size = mXView->clientRect();
-        const auto height = (size.bottom - size.top) * 3;
+        int dlgHeight = 0;
+        if (mLinearView->isActive()) {
+            const RECT size = mLinearView->clientRect();
+            dlgHeight = size.bottom - size.top;
+        }
+        else {
+            RECT size = mXView->clientRect();
+            dlgHeight = (size.bottom - size.top) * 3;
 
-        size.top += size.bottom - size.top;
-        size.left = 0;
-        mYView->setWindowPos(size);
+            size.top += size.bottom - size.top;
+            size.left = 0;
+            mYView->setWindowPos(size);
 
-        size.top += size.top;
-        size.left = 0;
-        mZView->setWindowPos(size);
-
-        IRollupPanel * panel = mIp->GetPanel(hwnd());
-        panel->SetDlgHeight(height);
+            size.top += size.top;
+            size.left = 0;
+            mZView->setWindowPos(size);
+        }
+        IRollupPanel * panel = mRollIp->GetPanel(hwnd());
+        panel->SetDlgHeight(dlgHeight);
     }
 
     /********************************************************************************************************/

@@ -1,5 +1,7 @@
+#pragma once
+
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2019, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -27,41 +29,28 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
+class ExportParams;
+class ImportParams;
+class INode;
 
-#include <cstdint>
+namespace xobj {
+class Transform;
+}
 
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
 
-enum class eManipIOID : uint32_t {
-    MANIPULATOR = 1000,
+class ConverterAnimVisibility {
+public:
+
+    ConverterAnimVisibility() = delete;
+
+    static bool toXpln(INode & node, xobj::Transform & transform, const ExportParams & params);
+    static bool toMax(INode & node, xobj::Transform & transform, const ImportParams & params);
+
 };
 
-enum class eAnimRotateIOID : uint32_t {
-    ANIM_X_ROTATE = 1100,
-    ANIM_Y_ROTATE = 1101,
-    ANIM_Z_ROTATE = 1102,
-    ANIM_LINEAR_ROTATE = 1103,
-};
-
-enum class eAnimTransIOID : uint32_t {
-    ANIM_TRANS = 1200,
-};
-
-enum class eAnimVisIOID : uint32_t {
-    ANIM_VISIBILITY = 1300,
-};
-
-enum class eLightIOID : uint32_t {
-    LIGHT = 1400,
-};
-
-enum class eAttribuesIOID : uint32_t {
-    OBJ_ATTRIBUTES = 1500,
-};
-
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/

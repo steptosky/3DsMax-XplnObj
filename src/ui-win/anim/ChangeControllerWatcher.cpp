@@ -1,5 +1,5 @@
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2019, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -27,91 +27,86 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "NodeUtils.h"
+#include "ChangeControllerWatcher.h"
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
+namespace ui::win {
 
-#include "objects/main/MainObjParamsWrapper.h"
+/**************************************************************************************************/
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
+/**************************************************************************************************/
+
+ChangeControllerWatcher::~ChangeControllerWatcher() {
+    DeleteAllRefsFromMe();
+}
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool NodeUtils::visitChildrenOf(INode * root, const Function & fn) {
-    DbgAssert(fn);
-    const auto numChildren = root->NumberOfChildren();
-    for (int idx = 0; idx < numChildren; ++idx) {
-        if (!fn(root->GetChildNode(idx))) {
-            return false;
-        }
-    }
-    return true;
+void ChangeControllerWatcher::setCallback(std::function<void()> callback) {
+    mCallback = std::move(callback);
 }
 
-INode * NodeUtils::root(INode * child) {
-    DbgAssert(child);
-    if (!child) {
-        return nullptr;
-    }
+void ChangeControllerWatcher::createReference(const RefTargetHandle hTarget) {
+    ReplaceReference(0, hTarget);
+}
 
-    const INode * sceneRootNode = GetCOREInterface()->GetRootNode();
-    DbgAssert(child != sceneRootNode);
-    if (child == sceneRootNode) {
-        return child;
-    }
-
-    INode * currNode = child;
-    while (true) {
-        INode * parent = currNode->GetParentNode();
-        if (parent == sceneRootNode || !parent) {
-            return currNode;
-        }
-        currNode = parent;
+void ChangeControllerWatcher::removeReference() {
+    if (mRef0) {
+        DeleteReference(0);
+        mRef0 = nullptr;
     }
 }
 
-bool NodeUtils::visitAllOf(INode * root, const Function & fn) {
-    DbgAssert(fn);
-    const auto numChildren = root->NumberOfChildren();
-    for (int idx = 0; idx < numChildren; ++idx) {
-        INode * currNode = root->GetChildNode(idx);
-        if (!fn(currNode) || !visitAllOf(currNode, fn)) {
-            return false;
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+int ChangeControllerWatcher::NumRefs() {
+    return 1;
+}
+
+RefTargetHandle ChangeControllerWatcher::GetReference(const int i) {
+    DbgAssert(i == 0);
+    if (i == 0) {
+        return mRef0;
+    }
+    return nullptr;
+}
+
+void ChangeControllerWatcher::SetReference(const int i, const RefTargetHandle rTarget) {
+    if (i == 0) {
+        mRef0 = rTarget;
+    }
+    DbgAssert(i == 0);
+}
+
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+#if MAX_VERSION_MAJOR > 16
+RefResult ChangeControllerWatcher::NotifyRefChanged(const Interval & /*changeInt*/, RefTargetHandle /*hTarget*/,
+                                                    PartID & /*partId*/, const RefMessage message, BOOL /*propagate*/) {
+#else
+RefResult ChangeControllerWatcher::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /*hTarget*/,
+                                       PartID& /*partId*/, const RefMessage message) {
+#endif
+
+    // if (message == REFMSG_TARGET_DELETED) {
+    //     // The item we monitor has been deleted -- we're done...
+    //     return REF_SUCCEED;
+    // }
+    if (message == REFMSG_CONTROLREF_CHANGE) {
+        if (mCallback) {
+            mCallback();
         }
     }
-    return true;
+    return REF_SUCCEED;
 }
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-bool NodeUtils::isXplnScene() {
-    auto const hasMainObj = [](INode * n) ->bool { return !MainObjParamsWrapper::isMainObj(n); };
-    return !visitChildrenOf(GetCOREInterface()->GetRootNode(), hasMainObj);
 }
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/
-
-bool NodeUtils::hasLinearRotateController(INode * node) {
-    if (!node) {
-        return false;
-    }
-    Control * controller = node->GetTMController();
-    if (!controller) {
-        return false;
-    }
-    Control * rotation = controller->GetRotationController();
-    if (!rotation) {
-        return false;
-    }
-    return rotation->ClassID() == Class_ID(LININTERP_ROTATION_CLASS_ID, 0);
-}
-
-/**************************************************************************************************/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**************************************************************************************************/

@@ -1,5 +1,5 @@
 [requires]
-XplnObj/0.9.0@steptosky/stable
+XplnObj/0.9.0@steptosky/develop
 sts-signals/0.1.2@steptosky/stable
 sts-semver/0.2.1@steptosky/stable
 jsonformoderncpp/3.1.2@vthiery/stable

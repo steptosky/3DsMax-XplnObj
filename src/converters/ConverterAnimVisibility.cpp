@@ -1,5 +1,5 @@
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2019, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -27,41 +27,44 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
+#pragma warning(push, 0)
+#include <max.h>
+#pragma warning(pop)
 
-#include <cstdint>
-
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
-
-enum class eManipIOID : uint32_t {
-    MANIPULATOR = 1000,
-};
-
-enum class eAnimRotateIOID : uint32_t {
-    ANIM_X_ROTATE = 1100,
-    ANIM_Y_ROTATE = 1101,
-    ANIM_Z_ROTATE = 1102,
-    ANIM_LINEAR_ROTATE = 1103,
-};
-
-enum class eAnimTransIOID : uint32_t {
-    ANIM_TRANS = 1200,
-};
-
-enum class eAnimVisIOID : uint32_t {
-    ANIM_VISIBILITY = 1300,
-};
-
-enum class eLightIOID : uint32_t {
-    LIGHT = 1400,
-};
-
-enum class eAttribuesIOID : uint32_t {
-    OBJ_ATTRIBUTES = 1500,
-};
+#include <xpln/obj/Transform.h>
+#include "ConverterAnimVisibility.h"
+#include "models/MdAnimVis.h"
+#include "models/io/AnimIO.h"
+#include "ExportParams.h"
+#include "ImportParams.h"
 
 /********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////* Functions *///////////////////////////////////////////////
 /********************************************************************************************************/
+
+bool ConverterAnimVisibility::toXpln(INode & node, xobj::Transform & transform, const ExportParams & /*params*/) {
+    if (!AnimIO::canApply(&node)) {
+        return false;
+    }
+
+    MdAnimVis mdAnimVis;
+    if (!mdAnimVis.linkNode(&node, true)) {
+        return true;
+    }
+
+    if (!mdAnimVis.mEnable) {
+        return true;
+    }
+    transform.mVisibility.mKeys.swap(mdAnimVis.mKeyList);
+
+    return true;
+}
+
+bool ConverterAnimVisibility::toMax(INode &, xobj::Transform &, const ImportParams &) {
+    // TODO Implementation
+    return true;
+}
+
+/*********************************************************************************************************/
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*********************************************************************************************************/

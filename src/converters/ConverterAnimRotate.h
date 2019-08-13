@@ -1,5 +1,7 @@
+#pragma once
+
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2019, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -27,60 +29,39 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
-
 #pragma warning(push, 0)
 #include <max.h>
 #pragma warning(pop)
 
-#include <xpln/obj/animation/VisibilityController.h>
+#include <xpln/obj/Transform.h>
+
+class ExportParams;
+class ImportParams;
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-struct MdAnimVis {
+class ConverterAnimRotate {
+public:
 
-    MdAnimVis();
+    ConverterAnimRotate() = delete;
 
-    //-------------------------------------------------------------------------
+    static bool toXpln(INode & node, xobj::Transform & transform, const ExportParams & params);
+    static bool toMax(INode & node, xobj::Transform & transform, const ImportParams & params);
 
-    typedef xobj::VisibilityKey Key;
-    typedef xobj::VisibilityController::KeyList KeyList;
-
-    //-------------------------------------------------------------------------
-
-    void reset();
-    static void cloneData(INode * from, INode * to);
-
-    //-------------------------------------------------------------------------
-
-    void saveToNode() const { saveToNode(mNode); }
-    bool loadFromNode() { return loadFromNode(mNode); }
-    //-------------------------------------------------------------------------
-
-    bool hasLink() const { return mNode != nullptr; }
-    void clearLink();
-
-    bool linkNode(INode * node, bool loadData = true);
-    const INode * linkedNode() const { return mNode; }
-    INode * linkedNode() { return mNode; }
-    //-------------------------------------------------------------------------
-
-    bool mEnable = false;
-    KeyList mKeyList;
-    static const unsigned char mVersion = 1;
-
-    //-------------------------------------------------------------------------
+    static std::size_t calculateLinearAxisNum(INode * node);
 
 private:
 
-    void saveToNode(INode * node) const;
-    bool loadFromNode(INode * node);
+    static void processLinearRotate(INode & node, xobj::Transform & transform, Control & control, const ExportParams & params);
 
-    INode * mNode = nullptr;
-
-    //-------------------------------------------------------------------------
+    static void processEuler(INode * node, xobj::Transform & transform, Control & control, const ExportParams & params);
+    static void processEulerAxis(INode * node, Control * control, char axis,
+                                 xobj::RotationAxis & outAnim, const ExportParams & params);
+    static bool validateCtrl(INode * node, Control * control, const char * inCtrlName, char axis);
+    static bool checkKeys(INode * node, const xobj::RotationAxis::KeyList & keys,
+                                     const char * ctrlName, char axis);
 
 };
 

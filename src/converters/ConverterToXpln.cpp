@@ -43,7 +43,9 @@
 #include "ConverterMain.h"
 #include "ConverterLight.h"
 #include "ConverterATTR.h"
-#include "ConverterAnim.h"
+#include "ConverterAnimVisibility.h"
+#include "ConverterAnimTranslate.h"
+#include "ConverterAnimRotate.h"
 #include "ConverterUtils.h"
 #include "ConverterSmoke.h"
 #include "ConverterLod.h"
@@ -169,8 +171,11 @@ bool ConverterToXpln::processNode(INode * node, xobj::Transform * xTransform,
     ConverterUtils::toXTransform(node->GetNodeTM(mMainObj->timeValue()), tr);
     //-------------------------------------------------------------------------
     // animation
+    DbgAssert(node);
     if (mMainObj->isAnimationExport()) {
-        ConverterAnim::toXPLN(node, &tr, params);
+        ConverterAnimVisibility::toXpln(*node, tr, params);
+        ConverterAnimTranslate::toXpln(*node, tr, params);
+        ConverterAnimRotate::toXpln(*node, tr, params);
     }
     //-------------------------------------------------------------------------
     // transform object
