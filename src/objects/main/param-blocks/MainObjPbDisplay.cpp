@@ -95,6 +95,11 @@ ParamBlockDesc2 MainObjPbDisplay::mPb(static_cast<BlockID>(eMainObjParamsBlocks:
                                       p_ui, TYPE_SPINNER, EDITTYPE_POS_FLOAT, IDC_SCALE_EDIT, IDC_SCALE_SPIN, SPIN_AUTOSCALE,
                                       p_end,
                                       //-------------------------------------------------------------------------
+                                      MainObjDisp_DrawName, _T("DrawName"), TYPE_BOOL, 0, NO_IDS,
+                                      p_default, TRUE,
+                                      p_ui, TYPE_SINGLECHECKBOX, IDC_CHECK_DRAW_NAME,
+                                      p_end,
+                                      //-------------------------------------------------------------------------
                                       p_end);
 
 /**************************************************************************************************/

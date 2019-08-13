@@ -351,6 +351,7 @@
 #define IDC_CHK_DATAREFS_ID             1274
 #define IDC_CHK_COMMANDS_ID             1275
 #define IDC_COMBO_GEOMETRY_SOURCE       1275
+#define IDC_CHECK_DRAW_NAME             1275
 #define IDC_CHK_DATAREFS_SORT           1276
 #define IDC_CHK_COMMANDS_SORT           1277
 
@@ -360,7 +361,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        173
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1275
+#define _APS_NEXT_CONTROL_VALUE         1276
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

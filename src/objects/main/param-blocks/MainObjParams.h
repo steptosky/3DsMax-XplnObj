@@ -213,6 +213,7 @@ enum eMainObjGeometryParams : ParamID {
 
 enum eMainObjDisplayParams : ParamID {
     MainObjDisp_IconScale,
+    MainObjDisp_DrawName,
 };
 
 /**************************************************************************************************/
