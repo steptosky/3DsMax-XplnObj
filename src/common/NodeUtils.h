@@ -86,6 +86,16 @@ public:
     /// @{
 
     /*!
+     * \details Gets root node. It ignores scene root node because obviously it is root for any nodes.
+     * \return pointer to the root or pointer to specified child if it is the root.
+     */
+    static INode * root(INode * child);
+
+    /// @}
+    //-------------------------------------------------------------------------
+    /// @{
+
+    /*!
      * \details Checks whether the current scene contains at least one x-plane main object (X-Obj).
      *          It checks only children of the root node and 
      *          does not check children of children.

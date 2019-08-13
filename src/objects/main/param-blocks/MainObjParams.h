@@ -205,6 +205,10 @@ enum eMainObjGeometryParams : ParamID {
     MainObjAttr_ExportEnable = 50,
 
     //-------------------------------------
+
+    MainObjAttr_LinkingType = 60,
+
+    //-------------------------------------
 };
 
 enum eMainObjDisplayParams : ParamID {
