@@ -7,7 +7,9 @@ Change-log
 next
 -------------------------
 - Added: Supporting for linear rotate controller.
-- Removed: 'reverse' checkbox because this effect can be achieved with other instruments.
+- Added: Ability to use layers as objects list attached to X-Obj.
+- Added: Ability to offset main icon, useful when many X-Obj objects in the same place.
+- Removed: 'reverse' checkbox because this effect can be achieved with other instruments. (checkbox is still in GUI)
 
 2.6.0 (28.11.2018)
 -------------------------
