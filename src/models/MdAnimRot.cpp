@@ -64,13 +64,20 @@ void MdAnimRot::cloneData(INode * from, INode * to) {
 
 MdAnimRot::KeyTimeList MdAnimRot::getKeyTimeList(INode * inNode, eAxis inAxis) {
     if (!inNode) {
-        LError << "Node is nullptr";
+        XLError << "Node is nullptr";
         return KeyTimeList();
     }
 
     KeyTimeList keyTimeList;
     Control * rotateConrol = nullptr;
     switch (inAxis) {
+        case LINEAR: {
+            Control * tmctrl = inNode->GetTMController();
+            if (tmctrl) {
+                rotateConrol = tmctrl->GetRotationController();
+            }
+            break;
+        }
         case X: {
             Control * tmctrl = inNode->GetTMController();
             if (tmctrl) {
@@ -155,7 +162,7 @@ void MdAnimRot::saveToNode(INode * node) const {
             AnimIO::saveRotateToNode(node, *this, static_cast<eAnimRotateIOID>(mAxis));
         }
         catch (std::exception & e) {
-            LCritical << "Can't save data to <" << sts::toMbString(node->GetName())
+            XLCritical << "Can't save data to <" << sts::toMbString(node->GetName())
                     << "> object. Reason: <" << e.what() << ">";
         }
     }
@@ -167,7 +174,7 @@ bool MdAnimRot::loadFromNode(INode * node) {
             return AnimIO::loadRotateFromNode(node, *this, static_cast<eAnimRotateIOID>(mAxis));
         }
         catch (std::exception & e) {
-            LCritical << "Can't load data from <" << sts::toMbString(node->GetName())
+            XLCritical << "Can't load data from <" << sts::toMbString(node->GetName())
                     << "> object. Reason: <" << e.what() << ">";
         }
     }

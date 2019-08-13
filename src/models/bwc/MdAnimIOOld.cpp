@@ -27,7 +27,7 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "MdAnimIoOld.h"
+#include "MdAnimIOOld.h"
 #include "common/Logger.h"
 #include "gup/ObjCommon.h"
 #include "models/io/NodeIO.h"
@@ -50,7 +50,7 @@ namespace bcw {
 bool MdAnimIoOld::loadRotateFromNode(INode * inNode, AppDataChunk * data, MdAnimRot & outAnimRot) {
     outAnimRot.reset();
     if (!inNode) {
-        LError << "Node is nullptr";
+        XLError << "Node is nullptr";
         return false;
     }
 
@@ -84,7 +84,7 @@ bool MdAnimIoOld::loadRotateFromNode(INode * inNode, AppDataChunk * data, MdAnim
         float loopValue;
         bool enable;
         bool reverse;
-        bool loobEnable;
+        bool loopEnable;
         std::vector<float> keyValueList;
     } animData;
 
@@ -92,7 +92,7 @@ bool MdAnimIoOld::loadRotateFromNode(INode * inNode, AppDataChunk * data, MdAnim
     stream >> animData.loopValue;
     stream >> animData.enable;
     stream >> animData.reverse;
-    stream >> animData.loobEnable;
+    stream >> animData.loopEnable;
 
     unsigned size = 0;
     stream >> size;
@@ -105,7 +105,7 @@ bool MdAnimIoOld::loadRotateFromNode(INode * inNode, AppDataChunk * data, MdAnim
     outAnimRot.mLoopValue = animData.loopValue;
     outAnimRot.mEnable = animData.enable;
     outAnimRot.mReverse = animData.reverse;
-    outAnimRot.mLoopEnable = animData.loobEnable;
+    outAnimRot.mLoopEnable = animData.loopEnable;
     outAnimRot.mKeyList = std::move(animData.keyValueList);
     return true;
 }
@@ -117,7 +117,7 @@ bool MdAnimIoOld::loadRotateFromNode(INode * inNode, AppDataChunk * data, MdAnim
 bool MdAnimIoOld::loadTransFromNode(INode * inNode, AppDataChunk * data, MdAnimTrans & outAnimTrans) {
     outAnimTrans.reset();
     if (!inNode) {
-        LError << "Node is nullptr";
+        XLError << "Node is nullptr";
         return false;
     }
 
@@ -184,7 +184,7 @@ bool MdAnimIoOld::loadTransFromNode(INode * inNode, AppDataChunk * data, MdAnimT
 bool MdAnimIoOld::loadVisibilityFromNode(INode * inNode, AppDataChunk * data, MdAnimVis & outAnimVis) {
     outAnimVis.reset();
     if (!inNode) {
-        LError << "Node is nullptr";
+        XLError << "Node is nullptr";
         return false;
     }
 
@@ -239,7 +239,7 @@ bool MdAnimIoOld::loadVisibilityFromNode(INode * inNode, AppDataChunk * data, Md
     for (auto & curr : animData.mKeyList) {
         {
             // from sts x-xplane obj library 0.1.1
-            std::streampos begPos = stream.getStdStream().tellg();
+            const auto begPos = stream.getStdStream().tellg();
             unsigned char ver;
             stream.getStdStream().read(reinterpret_cast<char*>(&ver), 1);
             stream.getStdStream().seekg(begPos);
@@ -278,16 +278,16 @@ bool MdAnimIoOld::loadVisibilityFromNode(INode * inNode, AppDataChunk * data, Md
     outAnimVis.mEnable = animData.mEnable;
     outAnimVis.mKeyList.resize(size);
     for (size_t i = 0; i < outAnimVis.mKeyList.size(); ++i) {
-        outAnimVis.mKeyList[i].pDrf = animData.mKeyList[i].mDataref;
-        outAnimVis.mKeyList[i].pValue1 = animData.mKeyList[i].mValue1;
-        outAnimVis.mKeyList[i].pValue2 = animData.mKeyList[i].mValue2;
+        outAnimVis.mKeyList[i].mDataRef = xobj::String::from(animData.mKeyList[i].mDataref);
+        outAnimVis.mKeyList[i].mDrfValue1 = animData.mKeyList[i].mValue1;
+        outAnimVis.mKeyList[i].mDrfValue2 = animData.mKeyList[i].mValue2;
 
         switch (animData.mKeyList[i].mType) {
-            case AnimData::UNDEFINED: outAnimVis.mKeyList[i].pType = xobj::AnimVisibilityKey::UNDEFINED;
+            case AnimData::UNDEFINED: outAnimVis.mKeyList[i].mType = xobj::VisibilityKey::UNDEFINED;
                 break;
-            case AnimData::SHOW: outAnimVis.mKeyList[i].pType = xobj::AnimVisibilityKey::SHOW;
+            case AnimData::SHOW: outAnimVis.mKeyList[i].mType = xobj::VisibilityKey::SHOW;
                 break;
-            case AnimData::HIDE: outAnimVis.mKeyList[i].pType = xobj::AnimVisibilityKey::HIDE;
+            case AnimData::HIDE: outAnimVis.mKeyList[i].mType = xobj::VisibilityKey::HIDE;
                 break;
             default: break;
         }

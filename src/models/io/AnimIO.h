@@ -56,7 +56,7 @@ public:
     //-------------------------------------------------------------------------
 
     static bool loadRotateFromNode(INode * inNode, MdAnimRot & outAnimRot, eAnimRotateIOID axis);
-    static bool loadTransFromNode(INode * inNode, MdAnimTrans & outAnimRot);
+    static bool loadTransFromNode(INode * inNode, MdAnimTrans & outAnimTrans);
     static bool loadVisibilityFromNode(INode * inNode, MdAnimVis & outAnimVis);
 
     //-------------------------------------------------------------------------
@@ -68,7 +68,7 @@ public:
     //-------------------------------------------------------------------------
 
     static void saveRotateToNode(INode * outNode, const MdAnimRot & inAnimRot, eAnimRotateIOID axis);
-    static void saveTransToNode(INode * outNode, const MdAnimTrans & inAnimRot);
+    static void saveTransToNode(INode * outNode, const MdAnimTrans & inAnimTrans);
     static void saveVisibilityToNode(INode * outNode, const MdAnimVis & inAnimVis);
 
     //-------------------------------------------------------------------------

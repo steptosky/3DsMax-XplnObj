@@ -1,5 +1,7 @@
+#pragma once
+
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2019, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -27,41 +29,48 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
+#include <functional>
 
-#include <cstdint>
+#pragma warning(push, 0)
+#include <notify.h>
+#pragma warning(pop)
+
+namespace ui::win {
+
+/********************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************************************************************************/
+
+class ChangeControllerWatcher final : public ReferenceTarget {
+public:
+
+    explicit ChangeControllerWatcher() = default;
+    virtual ~ChangeControllerWatcher();
+
+    void setCallback(std::function<void()> callback);
+    void createReference(RefTargetHandle hTarget);
+    void removeReference();
+
+private:
+
+    int NumRefs() override;
+    RefTargetHandle GetReference(int i) override;
+    void SetReference(int i, RefTargetHandle rTarget) override;
+
+#if MAX_VERSION_MAJOR > 16
+    RefResult NotifyRefChanged(const Interval & changeInt, RefTargetHandle hTarget,
+                               PartID & partId, RefMessage message, BOOL propagate) override;
+#else
+    RefResult NotifyRefChanged(Interval changeInt, RefTargetHandle hTarget,
+                               PartID& partId, RefMessage message) override;
+#endif
+
+    RefTargetHandle mRef0 = nullptr;
+    std::function<void()> mCallback;
+};
 
 /********************************************************************************************************/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /********************************************************************************************************/
 
-enum class eManipIOID : uint32_t {
-    MANIPULATOR = 1000,
-};
-
-enum class eAnimRotateIOID : uint32_t {
-    ANIM_X_ROTATE = 1100,
-    ANIM_Y_ROTATE = 1101,
-    ANIM_Z_ROTATE = 1102,
-    ANIM_LINEAR_ROTATE = 1103,
-};
-
-enum class eAnimTransIOID : uint32_t {
-    ANIM_TRANS = 1200,
-};
-
-enum class eAnimVisIOID : uint32_t {
-    ANIM_VISIBILITY = 1300,
-};
-
-enum class eLightIOID : uint32_t {
-    LIGHT = 1400,
-};
-
-enum class eAttribuesIOID : uint32_t {
-    OBJ_ATTRIBUTES = 1500,
-};
-
-/********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************************************************************************/
+}

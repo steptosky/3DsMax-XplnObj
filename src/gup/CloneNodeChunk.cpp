@@ -61,7 +61,7 @@ void CloneNodeChunk::slotPostNodesClone(void * /* param */, NotifyInfo * info) {
 
     Data * data = reinterpret_cast<Data*>(info->callParam);
     if (data->origNodes->Count() != data->clonedNodes->Count()) {
-        LError << "Internal error while the nodes cloning: mismatch count.";
+        XLError << "Internal error while the nodes cloning: mismatch count.";
         return;
     }
 

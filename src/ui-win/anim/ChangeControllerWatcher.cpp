@@ -1,5 +1,5 @@
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2019, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -27,76 +27,86 @@
 **  Contacts: www.steptosky.com
 */
 
-#include "ConverterSmoke.h"
+#include "ChangeControllerWatcher.h"
 
-#pragma warning(push, 0)
-#include <max.h>
-#pragma warning(pop)
-
-#include "common/String.h"
-#include "ConverterUtils.h"
-#include "objects/smoke/SmokeObjParamsWrapper.h"
-#include "objects/smoke/SmokeObj.h"
-#include "common/Logger.h"
-#include "classes-desc/ClassesDescriptions.h"
-#include "ExportParams.h"
-#include "ImportParams.h"
+namespace ui::win {
 
 /**************************************************************************************************/
-//////////////////////////////////////////* Functions */////////////////////////////////////////////
+////////////////////////////////////* Constructors/Destructor */////////////////////////////////////
 /**************************************************************************************************/
 
-xobj::ObjSmoke * ConverterSmoke::toXpln(INode * inNode, const ExportParams & params) {
-    if (!SmokeObjParamsWrapper::isSmokeObj(inNode)) {
-        return nullptr;
-    }
-
-    SmokeObjParamsWrapper paramWrapper(inNode, params.mCurrTime, FOREVER);
-
-    std::unique_ptr<xobj::ObjSmoke> smoke = std::make_unique<xobj::ObjSmoke>();
-    smoke->setSmokeType(paramWrapper.type());
-    smoke->setSize(paramWrapper.size());
-    smoke->setObjectName(sts::toMbString(inNode->GetName()));
-
-    Matrix3 mOffsetTm = ConverterUtils::offsetMatrix(inNode);
-    smoke->applyTransform(ConverterUtils::toXTMatrix(mOffsetTm));
-    return smoke.release();
+ChangeControllerWatcher::~ChangeControllerWatcher() {
+    DeleteAllRefsFromMe();
 }
 
 /**************************************************************************************************/
 //////////////////////////////////////////* Functions */////////////////////////////////////////////
 /**************************************************************************************************/
 
-INode * ConverterSmoke::toMax(const xobj::ObjAbstract * object, const ImportParams & params) {
-    if (object->objType() != xobj::OBJ_SMOKE) {
-        return nullptr;
-    }
+void ChangeControllerWatcher::setCallback(std::function<void()> callback) {
+    mCallback = std::move(callback);
+}
 
-    const xobj::ObjSmoke * smoke = static_cast<const xobj::ObjSmoke*>(object);
+void ChangeControllerWatcher::createReference(const RefTargetHandle hTarget) {
+    ReplaceReference(0, hTarget);
+}
 
-    HelperObject * pobj = reinterpret_cast<SmokeObject*>(params.mCoreInterface->CreateInstance(HELPER_CLASS_ID,
-                                                                                               ClassesDescriptions::smokeObj()->ClassID()));
-    if (pobj == nullptr) {
-        XLCritical << "Lod object <" << object->objectName() << "> couldn't be created.";
-        return nullptr;
+void ChangeControllerWatcher::removeReference() {
+    if (mRef0) {
+        DeleteReference(0);
+        mRef0 = nullptr;
     }
+}
 
-    INode * pnode = params.mCoreInterface->CreateObjectNode(pobj);
-    if (pnode == nullptr) {
-        XLCritical << "Max node for the object <" << object->objectName() << "> couldn't be created.";
-        return nullptr;
-    }
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
 
-    SmokeObjParamsWrapper values(pnode, params.mCurrTime, FOREVER);
-    values.setType(smoke->smokeType());
-    values.setSize(smoke->size());
-    if (!smoke->objectName().empty()) {
-        pnode->SetName(xobj::toMStr(smoke->objectName()));
+int ChangeControllerWatcher::NumRefs() {
+    return 1;
+}
+
+RefTargetHandle ChangeControllerWatcher::GetReference(const int i) {
+    DbgAssert(i == 0);
+    if (i == 0) {
+        return mRef0;
     }
-    // todo set the position XYZ
-    return pnode;
+    return nullptr;
+}
+
+void ChangeControllerWatcher::SetReference(const int i, const RefTargetHandle rTarget) {
+    if (i == 0) {
+        mRef0 = rTarget;
+    }
+    DbgAssert(i == 0);
+}
+
+/**************************************************************************************************/
+//////////////////////////////////////////* Functions */////////////////////////////////////////////
+/**************************************************************************************************/
+
+#if MAX_VERSION_MAJOR > 16
+RefResult ChangeControllerWatcher::NotifyRefChanged(const Interval & /*changeInt*/, RefTargetHandle /*hTarget*/,
+                                                    PartID & /*partId*/, const RefMessage message, BOOL /*propagate*/) {
+#else
+RefResult ChangeControllerWatcher::NotifyRefChanged(Interval /*changeInt*/, RefTargetHandle /*hTarget*/,
+                                       PartID& /*partId*/, const RefMessage message) {
+#endif
+
+    // if (message == REFMSG_TARGET_DELETED) {
+    //     // The item we monitor has been deleted -- we're done...
+    //     return REF_SUCCEED;
+    // }
+    if (message == REFMSG_CONTROLREF_CHANGE) {
+        if (mCallback) {
+            mCallback();
+        }
+    }
+    return REF_SUCCEED;
 }
 
 /**************************************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
+
+}

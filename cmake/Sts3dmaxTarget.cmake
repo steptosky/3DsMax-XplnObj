@@ -110,6 +110,9 @@ function(SETUP_MAX_TERGET)
             find_package(Qt5Widgets)
             find_package(Qt5Core)
             find_package(Qt5Gui)
+
+            set_property(DIRECTORY PROPERTY Qt5Core_VERSION_MAJOR ${Qt5Core_VERSION_MAJOR})
+            set_property(DIRECTORY PROPERTY Qt5Core_VERSION_MINOR ${Qt5Core_VERSION_MINOR})
         endif()
         
         #--------------------------------------------------------------------------#
@@ -172,6 +175,7 @@ function(SETUP_MAX_TERGET)
         )
 
         target_compile_options(${PROJECT}
+            PUBLIC  $<$<CXX_COMPILER_ID:MSVC>:-D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING>
             PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/Yustdafx.h>     # pre-compile headers
             PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/FIstdafx.h>     # pre-compile headers
             PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/MP>

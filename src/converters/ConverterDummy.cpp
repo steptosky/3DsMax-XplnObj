@@ -49,13 +49,13 @@ INode * ConverterDummy::toMax(const xobj::ObjAbstract * inXObj, const ImportPara
     }
     HelperObject * pobj = reinterpret_cast<HelperObject*>(params.mCoreInterface->CreateInstance(HELPER_CLASS_ID, Class_ID(POINTHELP_CLASS_ID, 0)));
     if (pobj == nullptr) {
-        LError << "Object couldn't be created.";
+        XLError << "Object couldn't be created.";
         return nullptr;
     }
 
     INode * pnode = params.mCoreInterface->CreateObjectNode(pobj);
     if (pnode == nullptr) {
-        LError << "Node couldn't be created.";
+        XLError << "Node couldn't be created.";
         return nullptr;
     }
 

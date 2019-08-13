@@ -43,7 +43,7 @@ class MainObjPbGeometry {
 public:
 
     enum eVersions {
-        PbVersionGeometry = 1,
+        PbVersionGeometry = 2,
     };
 
     static ParamBlockDesc2 mPb;

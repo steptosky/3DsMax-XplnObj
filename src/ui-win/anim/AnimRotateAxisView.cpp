@@ -1,5 +1,5 @@
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2019, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -29,11 +29,11 @@
 
 #include "AnimRotateAxisView.h"
 #include "common/Logger.h"
-#include "resource/resource.h"
 #include "ui-win/Utils.h"
 #include "ui-win/AnimCalc.h"
 #include "resource/ResHelper.h"
 #include "presenters/Datarefs.h"
+#include "converters/ConverterAnimRotate.h"
 
 namespace ui {
 namespace win {
@@ -133,7 +133,7 @@ namespace win {
         Tab<INode*> * nodeTab = reinterpret_cast<Tab<INode*>*>(info->callParam);
 
         if (view->mData.linkedNode()) {
-            int count = nodeTab->Count();
+            const auto count = nodeTab->Count();
             for (int i = 0; i < count; ++i) {
                 if (view->mData.linkedNode() == *nodeTab->Addr(i)) {
                     view->mData.clearLink();
@@ -142,22 +142,26 @@ namespace win {
         }
     }
 
-    void AnimRotateAxisView::slotSelectionChange(void * param, NotifyInfo *) {
-        AnimRotateAxisView * view = reinterpret_cast<AnimRotateAxisView*>(param);
-        int selectedCount = view->mIp->GetSelNodeCount();
+    void AnimRotateAxisView::loadSelection() {
+        const auto selectedCount = mIp->GetSelNodeCount();
         if (selectedCount == 0) {
-            view->clearValues();
-            view->mData.clearLink();
+            clearValues();
+            mData.clearLink();
         }
         else if (selectedCount == 1) {
-            view->cSpnValue->SetValue(0.0f, FALSE);
-            view->mData.linkNode(view->mIp->GetSelNode(0));
+            cSpnValue->SetValue(0.0f, FALSE);
+            mData.linkNode(mIp->GetSelNode(0));
         }
         else {
-            view->clearValues();
-            view->mData.clearLink();
+            clearValues();
+            mData.clearLink();
         }
-        view->toWindow();
+        toWindow();
+    }
+
+    void AnimRotateAxisView::slotSelectionChange(void * param, NotifyInfo *) {
+        auto view = reinterpret_cast<AnimRotateAxisView*>(param);
+        view->loadSelection();
     }
 
     void AnimRotateAxisView::slotAnimationModeOff(void * param, NotifyInfo *) {
@@ -176,8 +180,6 @@ namespace win {
                                      reinterpret_cast<LPARAM>(this));
         if (res != nullptr) {
             registerCallbacks();
-            ctrl::Base win(res);
-            win.show();
         }
         return res != nullptr;
     }
@@ -185,6 +187,28 @@ namespace win {
     void AnimRotateAxisView::destroy() {
         unRegisterCallbacks();
         DestroyWindow(hwnd());
+    }
+
+    /**************************************************************************************************/
+    ///////////////////////////////////////////* Functions *////////////////////////////////////////////
+    /**************************************************************************************************/
+
+    void AnimRotateAxisView::active(const bool state) {
+        mIsActive = state;
+        if (!mIsActive) {
+            ctrl::Base(hwnd()).hide();
+            unRegisterCallbacks();
+            mData.clearLink();
+        }
+        else {
+            registerCallbacks();
+            loadSelection();
+            ctrl::Base(hwnd()).show();
+        }
+    }
+
+    bool AnimRotateAxisView::isActive() const {
+        return mIsActive;
     }
 
     /**************************************************************************************************/
@@ -222,6 +246,8 @@ namespace win {
         cBtnUpdate.setToolTip(sts::toString("Update animation keys. Use it to update your animation keys when you have changed your animation without pressing auto-key button."));
 
         switch (mData.mAxis) {
+            case MdAnimRot::LINEAR: cStcName.setText("Linear");
+                break;
             case MdAnimRot::X: cStcName.setText("X axis");
                 break;
             case MdAnimRot::Y: cStcName.setText("Y axis");
@@ -334,7 +360,7 @@ namespace win {
     /**************************************************************************************************/
 
     void AnimRotateAxisView::makeUiList() {
-        int sCurrSelected = cListKeys.currSelected();
+        const auto sCurrSelected = cListKeys.currSelected();
         cListKeys.clear();
         MdAnimRot::KeyTimeList timeList = mData.getKeyTimeList();
 
@@ -342,11 +368,16 @@ namespace win {
             mData.mKeyList.resize(timeList.size());
         }
 
-        int tpt = GetTicksPerFrame();
+        const auto tpt = GetTicksPerFrame();
         for (size_t i = 0; i < timeList.size(); ++i) {
             cListKeys.addItem(sts::StrUtils::join(_T("#:"), i + 1, _T(" F:"), timeList[i] / tpt, _T(" V:"), mData.mKeyList[i]));
         }
         cListKeys.setCurrSelected(sCurrSelected);
+
+        if (mData.mAxis == MdAnimRot::LINEAR) {
+            const auto axisNum = ConverterAnimRotate::calculateLinearAxisNum(mData.linkedNode());
+            cStcName.setText("Linear (got "s.append(std::to_string(axisNum)).append(" axis)"));
+        }
     }
 
     void AnimRotateAxisView::setEnable() {
@@ -391,24 +422,24 @@ namespace win {
         mCurrSelected = cListKeys.currSelected();
         auto list1 = sts::StrUtils::split<sts::StrUtils::Vector>(sts::toString(cListKeys.currSelectedText()), _T(" "));
         if (list1.size() != 3) {
-            LError << "Internal error 1.";
+            XLError << "Internal error 1.";
             return;
         }
         sts::StrUtils::trim(list1[2]);
         auto list2 = sts::StrUtils::split<sts::StrUtils::Vector>(list1[2], _T(":"));
         if (list2.size() != 2) {
-            LError << "Internal error 2.";
+            XLError << "Internal error 2.";
             return;
         }
         cSpnValue->SetValue(sts::toFloat(list2[1]), FALSE);
     }
 
     void AnimRotateAxisView::reverseValues() {
-        MdAnimRot::KeyValueList newvList;
+        MdAnimRot::KeyValueList keyValues;
         for (auto rIt = mData.mKeyList.rbegin(); rIt != mData.mKeyList.rend(); ++rIt) {
-            newvList.push_back(*rIt);
+            keyValues.push_back(*rIt);
         }
-        mData.mKeyList.swap(newvList);
+        mData.mKeyList.swap(keyValues);
         mData.saveToNode();
         makeUiList();
     }
@@ -418,20 +449,20 @@ namespace win {
         if (tList.size() != mData.mKeyList.size()) {
             mData.mKeyList.resize(tList.size());
         }
-        AnimCalc::KeyList klist;
+        AnimCalc::KeyList keys;
         size_t i = 0;
         for (auto & curr : tList) {
-            klist.push_back(AnimCalc::Key());
-            AnimCalc::Key & k = klist.back();
+            keys.push_back(AnimCalc::Key());
+            AnimCalc::Key & k = keys.back();
             k.keyTime = curr;
             k.datarefValue = mData.mKeyList[i];
             ++i;
         }
-        if (!AnimCalc().calculate(klist, cBtnCalculateValue.hwnd()))
+        if (!AnimCalc().calculate(keys, cBtnCalculateValue.hwnd()))
             return;
 
         i = 0;
-        for (auto & curr : klist) {
+        for (auto & curr : keys) {
             mData.mKeyList[i] = curr.datarefValue;
             ++i;
         }

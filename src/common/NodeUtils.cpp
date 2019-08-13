@@ -50,6 +50,28 @@ bool NodeUtils::visitChildrenOf(INode * root, const Function & fn) {
     return true;
 }
 
+INode * NodeUtils::root(INode * child) {
+    DbgAssert(child);
+    if (!child) {
+        return nullptr;
+    }
+
+    const INode * sceneRootNode = GetCOREInterface()->GetRootNode();
+    DbgAssert(child != sceneRootNode);
+    if (child == sceneRootNode) {
+        return child;
+    }
+
+    INode * currNode = child;
+    while (true) {
+        INode * parent = currNode->GetParentNode();
+        if (parent == sceneRootNode || !parent) {
+            return currNode;
+        }
+        currNode = parent;
+    }
+}
+
 bool NodeUtils::visitAllOf(INode * root, const Function & fn) {
     DbgAssert(fn);
     const auto numChildren = root->NumberOfChildren();
@@ -69,6 +91,25 @@ bool NodeUtils::visitAllOf(INode * root, const Function & fn) {
 bool NodeUtils::isXplnScene() {
     auto const hasMainObj = [](INode * n) ->bool { return !MainObjParamsWrapper::isMainObj(n); };
     return !visitChildrenOf(GetCOREInterface()->GetRootNode(), hasMainObj);
+}
+
+/**************************************************************************************************/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**************************************************************************************************/
+
+bool NodeUtils::hasLinearRotateController(INode * node) {
+    if (!node) {
+        return false;
+    }
+    Control * controller = node->GetTMController();
+    if (!controller) {
+        return false;
+    }
+    Control * rotation = controller->GetRotationController();
+    if (!rotation) {
+        return false;
+    }
+    return rotation->ClassID() == Class_ID(LININTERP_ROTATION_CLASS_ID, 0);
 }
 
 /**************************************************************************************************/

@@ -1,5 +1,7 @@
+#pragma once
+
 /*
-**  Copyright(C) 2017, StepToSky
+**  Copyright(C) 2019, StepToSky
 **
 **  Redistribution and use in source and binary forms, with or without
 **  modification, are permitted provided that the following conditions are met:
@@ -27,16 +29,11 @@
 **  Contacts: www.steptosky.com
 */
 
-#pragma once
-
 #pragma warning(push, 0)
 #include <max.h>
 #pragma warning(pop)
 
 #include <xpln/obj/Transform.h>
-#include "additional/utils/Single.h"
-#include "models/MdAnimRot.h"
-#include "xpln/common/EulerXyzHelper.h"
 
 class ExportParams;
 class ImportParams;
@@ -45,52 +42,20 @@ class ImportParams;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /**************************************************************************************************/
 
-class ConverterAnim : public sts::Single<ConverterAnim> {
-
-    ConverterAnim() = default;
-    ~ConverterAnim() = default;
-
+class ConverterAnimTranslate {
 public:
 
-    //------------------------------------------------------------------
+    ConverterAnimTranslate() = delete;
 
-    static bool toXPLN(INode * node, xobj::Transform * transform, const ExportParams & params);
-
-    static bool toMax(INode * /*node*/, xobj::Transform * /*transform*/, const ImportParams & /*params*/) {
-        // TODO Implementation
-        return true;
-    }
-
-    //------------------------------------------------------------------
+    static bool toXpln(INode & node, xobj::Transform & transform, const ExportParams & params);
+    static bool toMax(INode & node, xobj::Transform & transform, const ImportParams & params);
 
 private:
 
-    static void visibilityToXPLN(INode * node, xobj::Transform & transform, const ExportParams & params);
-
-    static void objAnimRotate(INode * node, xobj::Transform & transform, const ExportParams & params);
-    static void objAnimRotateAxis(INode * node, Control * control, char axis,
-                                  xobj::AnimRotate & outXAnim, const ExportParams & params);
-    static xobj::AnimRotate::KeyList * getRotateAxisAnimation(Control * inAxis, const MdAnimRot::KeyValueList & inVals,
-                                                              int inIsReversed, const ExportParams & params);
-
-    //------------------------------------------------------------------
-
     static void objAnimTrans(INode * node, xobj::Transform & transform, const ExportParams & params);
-    static Point3 translateValue(Control * inXCtrl, Control * inYCtrl, Control * inZCtrl, TimeValue time);
-
-    //------------------------------------------------------------------
-
-    static bool rotAnimValidation(INode * node, Control * inControl, const char * inCtrlName, char axis);
-    static bool transAnimValidation(INode * node, Control * inControl, const char * inCtrlName, char axis);
-
-    //------------------------------------------------------------------
-
-    static bool checkRotateKeysValue(INode * node,
-                                     const xobj::AnimRotate::KeyList & keyList, const char * inCtrlName, char axis);
-    static bool checkTransKeysValue(INode * node,
-                                    const xobj::AnimTrans::KeyList & keyList, const char * inCtrlName);
-
-    static float rotateValue(Control * inAxis, TimeValue t);
+    static Point3 translateValue(Control * xCtrl, Control * yCtrl, Control * zCtrl, TimeValue time);
+    static bool transAnimValidation(INode * node, Control * control, const char * ctrlName, char axis);
+    static bool checkTransKeysValue(INode * node, const xobj::Translate::KeyList & keyList, const char * ctrlName);
 
 };
 
