@@ -154,6 +154,17 @@ void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & tr
         return;
     }
     //------------------------------------------------------------
+    // print mirrored
+    {
+        auto * currNode = &node;
+        while (currNode) {
+            if (currNode->GetNodeTM(params.mCurrTime).Parity()) {
+                XULWarning << LogNode(currNode) << "is mirrored";
+            }
+            currNode = currNode->GetParentNode();
+        }
+    }
+    //------------------------------------------------------------
     // const auto printQuat = [](const Quat & q, const std::string & text = std::string()) {
     //     const AngAxis a(q);
     //     CLInfo << std::fixed << "[" << text << "] Q[" << q.w << " " << q.x << " " << q.y << " " << q.z << "] "
