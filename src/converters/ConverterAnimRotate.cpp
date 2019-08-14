@@ -167,12 +167,6 @@ void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & tr
         return q;
     };
 
-    const auto quatFromMtx = [](const Matrix3 & mtx) ->Quat {
-        AffineParts affParts;
-        decomp_affine(mtx, & affParts);
-        return affParts.q;
-    };
-
     const auto quatDiff = [](const Quat & q1, const Quat & q2) ->Quat {
         return q1 * q2.Inverse();
     };
@@ -181,12 +175,14 @@ void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & tr
     if (numKeys != 0) {
         xobj::AxisSetRotation & rotate = transform.mRotation.mAnimation;
 
-        // this offset doesn't take into account the time position and is always constant.
-        const Quat offset = quatFromMtx(Inverse(node.GetNodeTM(0)) * node.GetParentTM(0));
-        const Quat fullOffsetMtx = quatFromMtx(Inverse(node.GetNodeTM(params.mCurrTime)) * node.GetParentTM(params.mCurrTime));
+        // this extracts rotation relative parent considering current time position 
+        const Quat offsetByTime = getQuat(params.mCurrTime).Inverse();
 
-        // the library considers one key as just a rotation, this code just rotate object back taking into account curr time.
-        const AngAxis aaOffset(quatDiff(offset, fullOffsetMtx));
+        // the first key contains rotation diff from parent without considering current time position i.e it is not affected by GetCOREInterface->GetTime()
+        const Quat offset = getQuat(control.GetKeyTime(0)).Inverse();
+
+        // the library considers one key as just a rotation, this code just rotate object back considering curr time position.
+        const AngAxis aaOffset(quatDiff(offset, offsetByTime));
         // it doesn't make a sense to write this key if there is no rotation that is made by sliding time position.
         if (!stsff::math::isEqual(aaOffset.angle, 0.0f) && !stsff::math::isEqual(aaOffset.angle, 360.0f)) {
             auto & axis = rotate.mAxes.emplace_back();
@@ -198,11 +194,8 @@ void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & tr
         keys.reserve(std::size_t(numKeys));
 
         for (int i = 0; i < numKeys; ++i) {
-            const Quat quat = getQuat(control.GetKeyTime(i));
-            keys.emplace_back(xobj::LinearRotation::Key{
-                xobj::Quat(quat.w, quat.x, quat.y, quat.z),
-                animRotate.mKeyList.at(i)
-            });
+            const Quat q = getQuat(control.GetKeyTime(i));
+            keys.emplace_back(xobj::LinearRotation::Key{xobj::Quat(q.w, q.x, q.y, q.z), animRotate.mKeyList.at(i)});
         }
 
         const auto check = xobj::LinearRotation::checkDatarefValuesOrder(keys);
@@ -211,7 +204,7 @@ void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & tr
                     << check.value() + 1 << " value:" << keys.at(check.value()).mDrfValue;
         }
 
-        xobj::AxisSetRotation axes = xobj::LinearRotation::retrieveAxes(keys, xobj::Quat(fullOffsetMtx.w, fullOffsetMtx.x, fullOffsetMtx.y, fullOffsetMtx.z));
+        xobj::AxisSetRotation axes = xobj::LinearRotation::retrieveAxes(keys, xobj::Quat(offsetByTime.w, offsetByTime.x, offsetByTime.y, offsetByTime.z));
         for (auto & a : axes.mAxes) {
             a.mLoop = animRotate.mLoopEnable ? std::optional(animRotate.mLoopValue) : std::nullopt;
             a.mDataRef.set(animRotate.mDataref);
