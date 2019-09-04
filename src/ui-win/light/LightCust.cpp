@@ -276,7 +276,7 @@ namespace win {
             mSpnS2->SetValue(mData->textureRect().point2().x, FALSE);
             mSpnT2->SetValue(mData->textureRect().point2().y, FALSE);
 
-            cEdtDataRef->SetText(xobj::toMStr(mData->dataRef()));
+            cEdtDataRef->SetText(xobj::toMStr(mData->dataRef().str()));
         }
         else {
             disableControls();

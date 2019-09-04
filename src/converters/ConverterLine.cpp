@@ -84,7 +84,7 @@ ConverterLine::ObjLineList ConverterLine::toXpln(INode * inNode, const Matrix3 &
         }
         // TODO: Doesn't work after refactoring
         // xLine->setClosed(spline->Closed() ? true : false);
-        xLine->setObjectName(sts::toMbString(inNode->GetName()).c_str());
+        xLine->setObjectName(inNode->GetName());
     }
 
     return linelist;

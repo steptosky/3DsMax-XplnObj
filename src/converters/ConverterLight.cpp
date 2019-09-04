@@ -105,13 +105,13 @@ public:
         }
 
         try {
-            const bool isSpill = sts::MbStrUtils::endsWith(xLight->name(), "_sp");
+            const bool isSpill = sts::MbStrUtils::endsWith(xLight->name().str(), "_sp");
             if (isSpill) {
-                params = std::regex_replace(params, std::regex(R"(\$direction)"), "$direction_sp");
+                params = std::regex_replace(params.str(), std::regex(R"(\$direction)"), "$direction_sp");
             }
             else {
-                params = std::regex_replace(params, std::regex(R"(\$direction_sp)"), "$direction");
-                auto vars = sts::MbStrUtils::splitToVector(params, " ");
+                params = std::regex_replace(params.str(), std::regex(R"(\$direction_sp)"), "$direction");
+                auto vars = sts::MbStrUtils::splitToVector(params.str(), " ");
                 const auto directionVar = std::find_if(vars.begin(), vars.end(), [](const auto & val) {
                     return sts::MbStrUtils::startsWith(val, "$direction");
                 });

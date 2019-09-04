@@ -220,8 +220,8 @@ namespace win {
         if (mData) {
             enableControls();
 
-            cName->SetText(xobj::toMStr(mData->name()));
-            const auto iter = mPreDefinedList.find(mData->name());
+            cName->SetText(xobj::toMStr(mData->name().str()));
+            const auto iter = mPreDefinedList.find(mData->name().str());
             if (iter != mPreDefinedList.end()) {
                 cCmbName.setCurrSelected(sts::toString(*iter));
             }

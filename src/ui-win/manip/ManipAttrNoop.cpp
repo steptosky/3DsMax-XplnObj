@@ -162,7 +162,7 @@ namespace win {
     }
 
     void ManipAttrNoop::toWindow() {
-        cEdtToolType->SetText(xobj::toMStr(mData.mToolType));
+        cEdtToolType->SetText(xobj::toMStr(mData.mToolType.str()));
     }
 
     /********************************************************************************************************/

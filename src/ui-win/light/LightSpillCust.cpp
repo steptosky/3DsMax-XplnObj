@@ -222,7 +222,7 @@ namespace win {
             mSpnB->SetValue(color.blue(), FALSE);
             mSpnA->SetValue(color.alpha(), FALSE);
             mSpnSize->SetValue(mData->size(), FALSE);
-            cEdtDataRef->SetText(xobj::toMStr(mData->dataRef()));
+            cEdtDataRef->SetText(xobj::toMStr(mData->dataRef().str()));
         }
         else {
             disableControls();

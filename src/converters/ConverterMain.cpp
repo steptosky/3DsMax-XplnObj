@@ -139,18 +139,18 @@ INode * ConverterMain::toMax(const xobj::ObjMain & inXObj) {
     const std::string resPrefix3;
 
     if (inXObj.mAttr.mTexture) {
-        makeTexturePath(*inXObj.mAttr.mTexture, resTexture, resPrefix1);
+        makeTexturePath(inXObj.mAttr.mTexture->str(), resTexture, resPrefix1);
         attr.setPathPrefix(resPrefix1);
         attr.setTexture(resTexture);
     }
 
     if (inXObj.mAttr.mTextureLit) {
-        makeTexturePath(*inXObj.mAttr.mTextureLit, resTexture, resPrefix1);
+        makeTexturePath(inXObj.mAttr.mTextureLit->str(), resTexture, resPrefix1);
         attr.setTextureLit(resTexture);
     }
 
     if (inXObj.mAttr.mTextureNormal) {
-        makeTexturePath(*inXObj.mAttr.mTextureNormal, resTexture, resPrefix1);
+        makeTexturePath(inXObj.mAttr.mTextureNormal->str(), resTexture, resPrefix1);
         attr.setTextureNormal(resTexture);
     }
 
@@ -179,7 +179,7 @@ INode * ConverterMain::toMax(const xobj::ObjMain & inXObj) {
     attr.setCockpitRegion(inXObj.mAttr.mCockpitRegion3, xobj::AttrCockpitRegion::r3);
     attr.setCockpitRegion(inXObj.mAttr.mCockpitRegion4, xobj::AttrCockpitRegion::r4);
 
-    node->SetName(xobj::toMStr(inXObj.objectName()));
+    node->SetName(xobj::toMStr(inXObj.objectName().str()));
     return node;
 }
 

@@ -59,7 +59,7 @@ INode * ConverterDummy::toMax(const xobj::ObjAbstract * inXObj, const ImportPara
         return nullptr;
     }
 
-    pnode->SetName(xobj::toMStr(inXObj->objectName()));
+    pnode->SetName(xobj::toMStr(inXObj->objectName().str()));
     return pnode;
 }
 

@@ -221,9 +221,9 @@ namespace win {
         if (mData) {
             enableControls();
 
-            cEdtCustomName->SetText(xobj::toMStr(mData->name()));
-            cEdtAdditional->SetText(xobj::toMStr(mData->params()));
-            const auto iter = mPreDefinedList.find(mData->name());
+            cEdtCustomName->SetText(xobj::toMStr(mData->name().str()));
+            cEdtAdditional->SetText(xobj::toMStr(mData->params().str()));
+            const auto iter = mPreDefinedList.find(mData->name().str());
             if (iter != mPreDefinedList.end()) {
                 cCmbName.setCurrSelected(sts::toString(iter->first));
             }

@@ -265,8 +265,8 @@ namespace win {
         mSpnHold->SetValue(mData.mHold, FALSE);
         mSpnMim->SetValue(mData.mMin, FALSE);
         mSpnMax->SetValue(mData.mMax, FALSE);
-        cEdtDataRef->SetText(xobj::toMStr(mData.mDataref));
-        cEdtToolType->SetText(xobj::toMStr(mData.mToolType));
+        cEdtDataRef->SetText(xobj::toMStr(mData.mDataref.str()));
+        cEdtToolType->SetText(xobj::toMStr(mData.mToolType.str()));
         cCmbCursor.setCurrSelected(sts::toString(mData.mCursor.toUiString()));
     }
 

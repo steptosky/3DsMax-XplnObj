@@ -218,7 +218,7 @@ void ConverterAnimRotate::processLinearRotate(INode & node, xobj::Transform & tr
         xobj::AxisSetRotation axes = xobj::LinearRotation::retrieveAxes(keys, xobj::Quat(offsetByTime.w, offsetByTime.x, offsetByTime.y, offsetByTime.z));
         for (auto & a : axes.mAxes) {
             a.mLoop = animRotate.mLoopEnable ? std::optional(animRotate.mLoopValue) : std::nullopt;
-            a.mDataRef.set(animRotate.mDataref);
+            a.mDataRef = animRotate.mDataref;
             rotate.mAxes.emplace_back(std::move(a));
         }
     }
@@ -299,7 +299,7 @@ void ConverterAnimRotate::processEulerAxis(INode * node, Control * control, cons
         key.mDrfValue = mdAnimRot->mKeyList.at(currentKey);
     }
     //------------------------------------------------------------
-    outAnim.mDataRef.set(mdAnimRot->mDataref);
+    outAnim.mDataRef = mdAnimRot->mDataref;
     outAnim.mLoop = mdAnimRot->mLoopEnable ? std::optional(mdAnimRot->mLoopValue) : std::nullopt;
     checkKeys(node, outAnim.mKeys, "rotate", axis);
 }

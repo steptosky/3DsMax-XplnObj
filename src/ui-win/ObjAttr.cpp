@@ -598,7 +598,7 @@ namespace win {
     void ObjAttr::loadToUiLightLevel() {
         cChkLightLevel.setState(mData.mLightLevel.has_value());
         if (mData.mLightLevel.has_value()) {
-            cEdtLightLevelDrf->SetText(xobj::toMStr(mData.mLightLevel->mDataref));
+            cEdtLightLevelDrf->SetText(xobj::toMStr(mData.mLightLevel->mDataref.str()));
             cSpnLightLevelVal1->SetValue(mData.mLightLevel->mVal1, FALSE);
             cSpnLightLevelVal2->SetValue(mData.mLightLevel->mVal2, FALSE);
         }

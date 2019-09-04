@@ -79,7 +79,7 @@ INode * ConverterLod::toMax(const xobj::ObjLodGroup & inXObj, const ImportParams
     LodObjParamsWrapper values(node, params.mCurrTime, FOREVER);
     values.setNearValue(inXObj.nearVal());
     values.setFarValue(inXObj.nearVal());
-    node->SetName(xobj::toMStr(inXObj.objectName()));
+    node->SetName(xobj::toMStr(inXObj.objectName().str()));
     return node;
 }
 

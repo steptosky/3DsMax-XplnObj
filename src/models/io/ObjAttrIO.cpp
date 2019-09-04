@@ -182,7 +182,7 @@ void ObjAttrIO::save(sts::DataStreamO & stream, const std::optional<xobj::AttrLi
     const xobj::AttrLightLevel actual(attr.value_or(xobj::AttrLightLevel()));
     stream.setValue<float>(actual.mVal1);
     stream.setValue<float>(actual.mVal2);
-    stream.setValue<std::string>(actual.mDataref);
+    stream.setValue<std::string>(actual.mDataref.str());
     stream.setValue<bool>(attr.has_value());
 }
 

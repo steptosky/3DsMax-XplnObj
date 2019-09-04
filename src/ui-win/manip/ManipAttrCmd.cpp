@@ -206,8 +206,8 @@ namespace win {
     }
 
     void ManipAttrCmd::toWindow() {
-        cEdtCommand->SetText(xobj::toMStr(mData.mCommand));
-        cEdtToolType->SetText(xobj::toMStr(mData.mToolType));
+        cEdtCommand->SetText(xobj::toMStr(mData.mCommand.str()));
+        cEdtToolType->SetText(xobj::toMStr(mData.mToolType.str()));
         cCmbCursor.setCurrSelected(sts::toString(mData.mCursor.toUiString()));
     }
 

@@ -276,8 +276,8 @@ namespace win {
         mSpnStep->SetValue(mData.mStep, FALSE);
         mSpnExp->SetValue(mData.mExp, FALSE);
 
-        cEdtDataRef->SetText(xobj::toMStr(mData.mDataref));
-        cEdtToolType->SetText(xobj::toMStr(mData.mToolType));
+        cEdtDataRef->SetText(xobj::toMStr(mData.mDataref.str()));
+        cEdtToolType->SetText(xobj::toMStr(mData.mToolType.str()));
         cCmbCursor.setCurrSelected(sts::toString(mData.mCursor.toUiString()));
     }
 

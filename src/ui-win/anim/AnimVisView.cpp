@@ -284,7 +284,7 @@ namespace win {
     /**************************************************************************************************/
 
     void AnimVisView::addItem(const MdAnimVis::Key::eType type) {
-        const xobj::String dataref = xobj::String::from(sts::toMbString(Utils::getText(cEditDataRef)));
+        const xobj::String dataref(Utils::getText(cEditDataRef));
         mData.mKeyList.push_back(MdAnimVis::Key(type, cSpnValue1->GetFVal(), cSpnValue2->GetFVal(), dataref));
         cListKeys.addItem(toText(mData.mKeyList.back()));
         mData.saveToNode();
@@ -327,7 +327,7 @@ namespace win {
             MdAnimVis::Key & key = mData.mKeyList[static_cast<size_t>(mCurrSelected)];
             key.mDrfValue1 = cSpnValue1->GetFVal();
             key.mDrfValue2 = cSpnValue2->GetFVal();
-            key.mDataRef = xobj::String::from(sts::toMbString(Utils::getText(cEditDataRef)));
+            key.mDataRef = Utils::getText(cEditDataRef);
         }
         makeUiList();
     }

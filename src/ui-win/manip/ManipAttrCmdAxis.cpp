@@ -256,9 +256,9 @@ namespace win {
         mSpnX->SetValue(mData.mDirX, FALSE);
         mSpnY->SetValue(mData.mDirY, FALSE);
         mSpnZ->SetValue(mData.mDirZ, FALSE);
-        cEdtCmdPos->SetText(xobj::toMStr(mData.mPosCommand));
-        cEdtCmdNeg->SetText(xobj::toMStr(mData.mNegCommand));
-        cEdtToolType->SetText(xobj::toMStr(mData.mToolType));
+        cEdtCmdPos->SetText(xobj::toMStr(mData.mPosCommand.str()));
+        cEdtCmdNeg->SetText(xobj::toMStr(mData.mNegCommand.str()));
+        cEdtToolType->SetText(xobj::toMStr(mData.mToolType.str()));
         cCmbCursor.setCurrSelected(sts::toString(mData.mCursor.toUiString()));
     }
 

@@ -279,14 +279,14 @@ namespace win {
         mSpnX->SetValue(mData.mX, FALSE);
         mSpnXMin->SetValue(mData.mXMin, FALSE);
         mSpnXMax->SetValue(mData.mXMax, FALSE);
-        cEdtXDataRef->SetText(xobj::toMStr(mData.mXDataref));
+        cEdtXDataRef->SetText(xobj::toMStr(mData.mXDataref.str()));
 
         mSpnY->SetValue(mData.mY, FALSE);
         mSpnYMin->SetValue(mData.mYMin, FALSE);
         mSpnYMax->SetValue(mData.mYMax, FALSE);
-        cEdtYDataRef->SetText(xobj::toMStr(mData.mYDataref));
+        cEdtYDataRef->SetText(xobj::toMStr(mData.mYDataref.str()));
 
-        cEdtToolType->SetText(xobj::toMStr(mData.mToolType));
+        cEdtToolType->SetText(xobj::toMStr(mData.mToolType.str()));
         cCmbCursor.setCurrSelected(sts::toString(mData.mCursor.toUiString()));
     }
 

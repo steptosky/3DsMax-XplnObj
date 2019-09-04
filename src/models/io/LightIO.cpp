@@ -86,7 +86,7 @@ void LightIO::save(sts::DataStreamO & stream, const xobj::ObjLightCustom & inLig
     stream.setValue<uint8_t>(uint8_t(1)); // io version
 
     stream.setValue<float>(inLight.size());
-    stream.setValue<std::string>(inLight.dataRef());
+    stream.setValue<std::string>(inLight.dataRef().str());
 
     const xobj::Color & color = inLight.color();
     stream.setValue<float>(color.red());
@@ -132,7 +132,7 @@ bool LightIO::load(INode * node, sts::DataStreamI & stream, xobj::ObjLightCustom
 
 void LightIO::save(sts::DataStreamO & stream, const xobj::ObjLightNamed & inLight) {
     stream.setValue<uint8_t>(uint8_t(1)); // io version
-    stream.setValue<std::string>(inLight.name());
+    stream.setValue<std::string>(inLight.name().str());
 }
 
 bool LightIO::load(INode * node, sts::DataStreamI & stream, xobj::ObjLightNamed & outLight) {
@@ -151,9 +151,9 @@ void LightIO::save(sts::DataStreamO & stream, const xobj::ObjLightParam & inLigh
     stream.setValue<std::uint8_t>(std::uint8_t(2)); // io version
     // script version
     // It may be needed when syntax of script should be updated or correctly read.
-    stream.setValue<std::string>(inLight.name());
+    stream.setValue<std::string>(inLight.name().str());
     stream.setValue<std::uint8_t>(std::uint8_t(1));
-    stream.setValue<std::string>(inLight.params());
+    stream.setValue<std::string>(inLight.params().str());
 }
 
 bool LightIO::load(INode * node, sts::DataStreamI & stream, xobj::ObjLightParam & outLight) {
@@ -214,7 +214,7 @@ void LightIO::save(sts::DataStreamO & stream, const xobj::ObjLightSpillCust & in
     stream.setValue<uint8_t>(uint8_t(1)); // io version
 
     stream.setValue<float>(inLight.size());
-    stream.setValue<std::string>(inLight.dataRef());
+    stream.setValue<std::string>(inLight.dataRef().str());
 
     const xobj::Color & color = inLight.color();
     stream.setValue<float>(color.red());
